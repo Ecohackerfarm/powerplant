@@ -17,6 +17,7 @@
   },
   "homepage": "https://github.com/Ecohackerfarm/plant-match#readme",
   "dependencies": {
+    "body-parser": "^1.17.2",
     "express": "^4.15.3",
     "firebase": "^4.1.2",
     "firebase-admin": "^5.0.0"
