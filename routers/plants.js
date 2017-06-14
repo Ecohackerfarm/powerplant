@@ -23,12 +23,13 @@ module.exports = function(app, database) {
       // Or that are just not bad for any of them?
       // For now, going with at least one good and zero bad.
       // Talk to aimee and kim about this though.
-      companionResult = processCompanionsSnapshots(snapshots);
+      companionResult = getCompanionScores(snapshots);
       res.send(companionResult);
       console.log("Sent results");
     });
   });
 
+  // GET all plants info
   app.get('/plants', function(req, res) {
     database.ref('/').child("plants").once("value", function(snapshot) {
       res.send(snapshot.val());
@@ -36,16 +37,39 @@ module.exports = function(app, database) {
   });
 
   // GET request to retrieve information about a specific plant
-  app.get('/plants/:plant', function(req, res) {
-    // make a query to firebase
-    var promise = getPromiseForPlantSearch(database, req.params.plant);
-    promise.then(function(snapshot) {
-      res.send(snapshot.val());
+  app.get('/plants/id/:plantId', function(req, res) {
+    // database.ref('/').child('plants').child(req.params.plantId).once('value', function(snapshot) {
+    database.ref('/').child('plants').orderByKey().equalTo(req.params.plantId).once('value', function(snapshot) {
+      if (snapshot.val() === null) {
+        res.status(404).send("Invalid plant id");
+      }
+      else {
+        res.send(snapshot.val());
+      }
     });
+  });
+
+  // GET a list of plants starting with the query
+  app.get('/plants/name/:plantName', function(req, res) {
+    // make a query to firebase
+    var promise = getPromiseForPlantSearch(database, req.params.plantName);
+    promise.then(function(snapshot) {
+      res.send(snapshot.val() || {});
+    });
+  });
+
+  // create a new plant
+  app.post('/plants', function(req, res) {
+    res.status(501).send("TODO");
+  });
+
+  // modify a plant
+  app.put('/plants/:plantid', function(req, res) {
+    res.status(501).send("TODO");
   });
 };
 
-function processCompanionsSnapshots(snapshots) {
+function getCompanionScores(snapshots) {
   // create an intersection of the companion snapshots
   // plants with any negative interactions will have a value of 0
   // all other plants will give a percentage score which is how many they complement in the set
@@ -54,11 +78,12 @@ function processCompanionsSnapshots(snapshots) {
   snapshots.forEach(function(snapshot) {
     var data = snapshot.val();
     for (var id in data) {
+      // building the companion scores, storing in result
       if (data[id] === "bad") {
-        result[id] = 0;
+        result[id] = -1;
       }
       else if(data[id] === "good" && result.hasOwnProperty(id)) {
-        if (result[id] != 0) {
+        if (result[id] != -1) {
           result[id] += 1/snapshots.length;
         }
       }
