@@ -9,50 +9,46 @@ module.exports = function(app) {
       plantName = req.query.name;
     }
 
-    Plant.searchByPrefix(plantName, function(err, results) {
-      res.send(results);
-    });
-  });
-
-  // main GET request to query companions of combinations of plants
-  app.get('/plants/companions', function(req, res) {
-    // what plants to do we need the results to be companions with
-    var companions = req.query.id || [];
-
-    // make sure we have an array, not just a single element
-    if (companions.constructor !== Array) {
-      companions = [companions];
-    }
-    var companionResult = {};
-
-    Plant.getCompanions(companions, function(err, result) {
-      if (err === null) {
-        res.send(result);
+    // Plant.searchByPrefix(plantName, function(err, results) {
+    //   res.send(results);
+    // });
+    var regex = new RegExp(plantName, "i");
+    Plant.find({name: regex}, function(err, plants) {
+      if (err) {
+        res.send(err);
       }
-      else {
-        res.status(err.status).send(err.message);
-      }
+      res.send(plants);
     });
+
   });
 
   // GET all plants info
   app.get('/plants', function(req, res) {
-    Plant.all(function(err, result) {
-      res.send(result);
+    Plant.find({}, function(err, plants) {
+      if (err) {
+        res.send(err);
+      }
+      res.send(plants);
     });
   });
 
   // GET request to retrieve information about a specific plant
   app.get('/plants/id/:plantId', function(req, res) {
     var id = req.params.plantId;
-    Plant.getById(id, function(err, plant) {
-      if (err === null) {
-        res.send(plant);
+    Plant.findById(id, function(err, plant) {
+      if (err) {
+        res.send(err);
       }
-      else {
-        res.status(err.status).send(err.message);
-      }
+      res.send(plant);
     });
+    // Plant.getById(id, function(err, plant) {
+    //   if (err === null) {
+    //     res.send(plant);
+    //   }
+    //   else {
+    //     res.status(err.status).send(err.message);
+    //   }
+    // });
   });
 
   // create a new plant
