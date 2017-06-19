@@ -1,15 +1,30 @@
+
+
 module.exports = function(app, database) {
-  // main GET request to query the plants with different attributes
-  app.get('/plants/search', function(req, res) {
+  // search for plant info that matches parameters
+  app.get('/plants/search', function(req, res)) {
+    // validate req
+    var plantName = "";
+    if (typeof req.query.name !== 'undefined') {
+      plantName = req.query.name;
+    }
+
+
+  }
+
+  // main GET request to query companions of combinations of plants
+  app.get('/plants/companions', function(req, res) {
     // what plants to do we need the results to be companions with
-    var companions = req.query.companion || [];
+    var companions = req.query.id || [];
+
     // make sure we have an array, not just a single element
-    if (companions.constructor != Array) {
+    if (companions.constructor !== Array) {
       companions = [companions];
     }
     var companionResult = {};
 
     // first we need to figure out what plants the user is talking about
+    // make a query to firebase
 
     var promises = companions.map(function(item) {
       return getPromiseForPlantCompanions(database, item);
@@ -24,6 +39,17 @@ module.exports = function(app, database) {
       // For now, going with at least one good and zero bad.
       // Talk to aimee and kim about this though.
       companionResult = getCompanionScores(snapshots);
+
+      if (typeof req.query.name !== 'undefined') {
+        var promise = getPromiseForPlantSearch(database, req.query.name);
+        promise.then(function(snapshot) {
+          for (plant in snapshot.val()) {
+
+          }
+          res.send(snapshot.val() || {});
+        });
+      }
+
       res.send(companionResult);
       console.log("Sent results");
     });
