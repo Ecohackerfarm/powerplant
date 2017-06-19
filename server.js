@@ -36,7 +36,7 @@ firebase.initializeApp(config);
 
 // use external router files to organize the api better
 // pass in reference to firebase
-require('./routers/plants')(app, firebase.database());
+require('./controllers/plants')(app);
 
 app.listen(port, function(event) {
   console.log("Server running on port " + port);

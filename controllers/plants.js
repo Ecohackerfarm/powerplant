@@ -1,16 +1,18 @@
+var Plant = require('../models/plant.js');
 
-
-module.exports = function(app, database) {
+module.exports = function(app) {
   // search for plant info that matches parameters
-  app.get('/plants/search', function(req, res)) {
+  app.get('/plants/search', function(req, res) {
     // validate req
     var plantName = "";
     if (typeof req.query.name !== 'undefined') {
       plantName = req.query.name;
     }
 
-
-  }
+    Plant.searchByPrefix(plantName, function(err, results) {
+      res.send(results);
+    });
+  });
 
   // main GET request to query companions of combinations of plants
   app.get('/plants/companions', function(req, res) {
@@ -23,64 +25,33 @@ module.exports = function(app, database) {
     }
     var companionResult = {};
 
-    // first we need to figure out what plants the user is talking about
-    // make a query to firebase
-
-    var promises = companions.map(function(item) {
-      return getPromiseForPlantCompanions(database, item);
-    });
-    // only start doing stuff once every requeset is fulfilled
-    Promise.all(promises).then(function(snapshots) {
-      console.log("All promises returned");
-      // TODO figure out EXACTLY what we want to return
-      // given the good and bad companions for each plant
-      // Is it just the ones that are good for all?
-      // Or that are just not bad for any of them?
-      // For now, going with at least one good and zero bad.
-      // Talk to aimee and kim about this though.
-      companionResult = getCompanionScores(snapshots);
-
-      if (typeof req.query.name !== 'undefined') {
-        var promise = getPromiseForPlantSearch(database, req.query.name);
-        promise.then(function(snapshot) {
-          for (plant in snapshot.val()) {
-
-          }
-          res.send(snapshot.val() || {});
-        });
+    Plant.getCompanions(companions, function(err, result) {
+      if (err === null) {
+        res.send(result);
       }
-
-      res.send(companionResult);
-      console.log("Sent results");
+      else {
+        res.status(err.status).send(err.message);
+      }
     });
   });
 
   // GET all plants info
   app.get('/plants', function(req, res) {
-    database.ref('/').child("plants").once("value", function(snapshot) {
-      res.send(snapshot.val());
+    Plant.all(function(err, result) {
+      res.send(result);
     });
   });
 
   // GET request to retrieve information about a specific plant
   app.get('/plants/id/:plantId', function(req, res) {
-    // database.ref('/').child('plants').child(req.params.plantId).once('value', function(snapshot) {
-    database.ref('/').child('plants').orderByKey().equalTo(req.params.plantId).once('value', function(snapshot) {
-      if (snapshot.val() === null) {
-        res.status(404).send("Invalid plant id");
+    var id = req.params.plantId;
+    Plant.getById(id, function(err, plant) {
+      if (err === null) {
+        res.send(plant);
       }
       else {
-        res.send(snapshot.val());
+        res.status(err.status).send(err.message);
       }
-    });
-  });
-
-  // GET a list of plants starting with the query
-  app.get('/plants/name/:plantName', function(req, res) {
-    // make a query to firebase
-    var promise = getPromiseForPlantSearch(database, req.params.plantName);
-    promise.then(function(snapshot) {
-      res.send(snapshot.val() || {});
     });
   });
 
@@ -94,40 +65,3 @@ module.exports = function(app, database) {
     res.status(501).send("TODO");
   });
 };
-
-function getCompanionScores(snapshots) {
-  // create an intersection of the companion snapshots
-  // plants with any negative interactions will have a value of 0
-  // all other plants will give a percentage score which is how many they complement in the set
-  console.log("Processing...");
-  var result = {};
-  snapshots.forEach(function(snapshot) {
-    var data = snapshot.val();
-    for (var id in data) {
-      // building the companion scores, storing in result
-      if (data[id] === "bad") {
-        result[id] = -1;
-      }
-      else if(data[id] === "good" && result.hasOwnProperty(id)) {
-        if (result[id] != -1) {
-          result[id] += 1/snapshots.length;
-        }
-      }
-      else {
-        result[id] = 1/snapshots.length;
-      }
-    }
-  });
-  return result;
-}
-
-function getPromiseForPlantSearch(database, plantName) {
-  // name in db should be all lower case, allows for case insensitive search
-  plantName = plantName.toLowerCase();
-  // will give us everything with a name starting with plantName
-  return database.ref('/').child('plants').orderByChild('name').startAt(plantName).endAt(plantName + String.fromCharCode(255)).once('value');
-}
-
-function getPromiseForPlantCompanions(database, plantId) {
-  return database.ref('/').child('companions').child(plantId).once('value');
-}
