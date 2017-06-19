@@ -1,5 +1,5 @@
-var firebase = require('firebase');
-var database = firebase.database();
+// var firebase = require('firebase');
+// var database = firebase.database();
 
 var mongoose = require('mongoose');
 var Schema = mongoose.Schema;
