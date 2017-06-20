@@ -1,5 +1,5 @@
 {
-  "name": "plant-match",
+  "name": "powerplant",
   "version": "1.0.0",
   "description": "Make the garden planning process easier and more efficient",
   "main": "server.js",

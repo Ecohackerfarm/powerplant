@@ -18,16 +18,7 @@ app.use(bodyParser.urlencoded({
   extended: true
 }));
 
-// Setting up Firebase
-
-// For now, we don't need admin priviledges, since we are only retrieving info
-// Leaving this here just in case we need it in the future
-// var admin = require("firebase-admin");
-// var serviceAccount = require("../service_account.json");
-// admin.initializeApp({
-//   credential: admin.credential.cert(srrviceAccount),
-//   databaseURL: "https://companion-planting-b56b5.firebaseio.com"
-// });
+// Setting up Firebase (would only need to run migration)
 
 // can just use regular firebase
 // var firebase = require("firebase");
@@ -40,14 +31,16 @@ app.use(bodyParser.urlencoded({
 //   storageBucket: "companion-planting-b56b5.appspot.com",
 //   messagingSenderId: "158677284326"
 // };
+// var firebase = require('firebase');
 // firebase.initializeApp(config);
 
 
 // use external router files to organize the api better
-// pass in reference to firebase
 require('./controllers/plants')(app);
 require('./controllers/companions')(app);
 
 app.listen(port, function(event) {
   console.log("Server running on port " + port);
 });
+
+// require('./migration/companion-migration')();

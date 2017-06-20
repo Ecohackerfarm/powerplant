@@ -9,9 +9,6 @@ module.exports = function(app) {
       plantName = req.query.name;
     }
 
-    // Plant.searchByPrefix(plantName, function(err, results) {
-    //   res.send(results);
-    // });
     var regex = new RegExp(plantName, "i");
     Plant.find({name: regex}, function(err, plants) {
       if (err) {
@@ -41,14 +38,6 @@ module.exports = function(app) {
       }
       res.send(plant);
     });
-    // Plant.getById(id, function(err, plant) {
-    //   if (err === null) {
-    //     res.send(plant);
-    //   }
-    //   else {
-    //     res.status(err.status).send(err.message);
-    //   }
-    // });
   });
 
   // create a new plant
