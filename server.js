@@ -19,12 +19,28 @@ app.use(bodyParser.urlencoded({
 }));
 
 
-// use external router files to organize the api better
-require('./controllers/plants')(app);
-require('./controllers/companions')(app);
+// set up our routers
+app.use('/api', require('./routers/api'));
+
+// 404 handler
+app.get('*', function(req, res, next) {
+  var err = new Error();
+  err.status = 404;
+  next(err);
+});
+
+// error handling middleware
+app.use(function(err, req, res, next) {
+  if (err.status !== 404) {
+    return next();
+  }
+  else {
+    res.send(err.message || "Content not found");
+  }
+});
 
 app.listen(port, function(event) {
   console.log("Server running on port " + port);
 });
 
-require('./migration/full-migration')();
+// require('./migration/full-migration')();
