@@ -1,7 +1,7 @@
 var express = require('express');
 var Plant = require('../models/plant.js');
 var Companion = require('../models/companion.js');
-var Helper = require('./helper');
+var Helper = require('../helpers/data_validation');
 
 var router = express.Router();
 

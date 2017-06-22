@@ -4,16 +4,12 @@ var Companion = require('../models/companion');
 
 module.exports.idValidator = function(req, res, next) {
   var ids = req.ids;
-  console.log("Validating " + ids.length + " ids: " + ids);
-  console.log(ids.constructor);
   var valid = ids.every(mongoose.Types.ObjectId.isValid);
 
   if (valid) {
-    console.log("Valid");
     next();
   }
   else {
-    console.log("Invalid");
     var err = new Error();
     err.status = 400;
     err.message = "Malformed object ID";
@@ -56,9 +52,11 @@ module.exports.getCompanionScores = function(snapshots, ids) {
   return result;
 }
 
+module.exports.fetchModel = fetchModel;
 module.exports.fetchPlants = fetchModel(Plant, "plants");
 module.exports.fetchCompanions = fetchModel(Companion, "companions");
 
+module.exports.checkModel = checkModel;
 module.exports.checkPlants = checkModel(Plant);
 module.exports.checkCompanions = checkModel(Companion);
 
@@ -67,13 +65,13 @@ function fetchModel(model, resultName) {
   return function(req, res, next) {
     req[resultName] = [];
     req.ids.forEach(function(id) {
-      console.log("Searching for " + resultName + ": " + id);
       model.findById(id, function(err, item) {
         if (item !== null) {
           req[resultName].push(item);
           if (req[resultName].length === req.ids.length) {
             // finished fetching plants
             next();
+            return;
           }
         }
         else {

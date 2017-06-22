@@ -1,6 +1,6 @@
 var express = require('express');
 var Companion = require('../models/companion');
-var Helper = require('./helper');
+var Helper = require('../helpers/data_validation');
 
 var router = express.Router();
 
