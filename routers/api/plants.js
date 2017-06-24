@@ -112,13 +112,21 @@ router.route('/:plantId1/companions/:plantId2')
              (id2.equals(req.params.plantId1) && id1.equals(req.params.plantId2));
     };
     var companion = companions.find(isCompanion);
-    console.log("Found match: " + companion);
-    req.ids = [companion._id];
-    next();
-  },
-  Helper.fetchCompanions,
-  function(req, res, next) {
-    res.json(req.companions[0]);
-  });
+    if (typeof companion === 'undefined') {
+      // both plants exist, they are just neutral about each other
+      next({status: 204}); // HTTP code indicating no response on purpose
+    }
+    else {
+      console.log("Found match: " + companion);
+      res.status(303).location('/api/companions/' + companion._id).send(); // see other
+      // req.ids = [companion._id];
+      // next();
+    }
+  }
+  // Helper.fetchCompanions,
+  // function(req, res, next) {
+  //   res.json(req.companions[0]);
+  // }
+);
 
 module.exports = router;

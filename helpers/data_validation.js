@@ -72,7 +72,6 @@ function fetchModel(model, resultName, populate) {
       }
       query.exec(function(err, item) {
         if (item !== null) {
-          console.log("Found " + resultName + " with ID " + id);
           req[resultName].push(item);
           if (req[resultName].length === req.ids.length) {
             // finished fetching plants

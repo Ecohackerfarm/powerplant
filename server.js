@@ -17,27 +17,9 @@ app.use(express.static(__dirname + '/public'));
 app.use(bodyParser.urlencoded({
   extended: true
 }));
-
-
 // set up our routers
 app.use('/api', require('./routers/api'));
-
-// 404 handler
-app.get('*', function(req, res, next) {
-  var err = new Error();
-  err.status = 404;
-  next(err);
-});
-
-// error handling middleware
-app.use(function(err, req, res, next) {
-  if (err.status !== 404) {
-    return next();
-  }
-  else {
-    res.send(err.message || "Content not found");
-  }
-});
+app.use('/', require('./routers/lib'));
 
 app.listen(port, function(event) {
   console.log("Server running on port " + port);

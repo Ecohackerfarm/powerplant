@@ -56,7 +56,7 @@ router.route('/:id')
     // fetching a specific companion
     // will be stored in req.companions by Helper.fetchCompanions
     if (req.companions.length === 1) {
-      res.json(req.companions[0]);
+      res.status(200).json(req.companions[0]);
     }
     else {
       console.log("Something went wrong in fetchCompanions");
