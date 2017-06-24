@@ -1,7 +1,7 @@
 var express = require('express');
-var Plant = require('../models/plant.js');
-var Companion = require('../models/companion.js');
-var Helper = require('../helpers/data_validation');
+var Plant = require('../../models/plant.js');
+var Companion = require('../../models/companion.js');
+var Helper = require('../../helpers/data_validation');
 
 var router = express.Router();
 
@@ -84,11 +84,14 @@ router.route('/:plantId/companions')
     next();
   },
   Helper.idValidator,
-  Helper.checkPlants)
+  Helper.fetchPlantsWithCompanions)
   .get(function(req, res, next) {
-    var id = req.params.plantId;
-    Companion.find().or({plant1: id}, {plant2: id}).exec(function(err, data) {
-      res.send(data);
+    var plant = req.plants[0];
+    var promises = plant.companions.map(function(companion) {
+      return Companion.findById(companion);
+    });
+    Promise.all(promises).then(function(companions) {
+      res.json(companions);
     });
   });
 
@@ -99,21 +102,23 @@ router.route('/:plantId1/companions/:plantId2')
     next();
   },
   Helper.idValidator,
-  Helper.checkPlants)
+  Helper.fetchPlantsWithCompanions)
   .get(function(req, res, next) {
-    var query = [];
-    query.push({plant1: req.ids[0], plant2: req.ids[1]});
-    query.push({plant1: req.ids[1], plant2: req.ids[0]});
-
-    Companion.find().or(query).exec(function(err, data) {
-      if (data.length !== 1) {
-        res.json(500, data);
-        console.log(data);
-      }
-      else {
-        res.json(data[0]);
-      }
-    })
+    var companions = req.plants[0].companions;
+    var isCompanion = function(c) {
+      var id1 = c.plant1;
+      var id2 = c.plant2;
+      return (id1.equals(req.params.plantId1) && id2.equals(req.params.plantId2)) ||
+             (id2.equals(req.params.plantId1) && id1.equals(req.params.plantId2));
+    };
+    var companion = companions.find(isCompanion);
+    console.log("Found match: " + companion);
+    req.ids = [companion._id];
+    next();
+  },
+  Helper.fetchCompanions,
+  function(req, res, next) {
+    res.json(req.companions[0]);
   });
 
 module.exports = router;

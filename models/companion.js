@@ -1,9 +1,11 @@
 var mongoose = require('mongoose');
 var Schema = mongoose.Schema;
+var ObjectId = Schema.Types.ObjectId;
 
 var companionSchema = new Schema({
-  plant1: Schema.Types.ObjectId,
-  plant2: Schema.Types.ObjectId,
+  plant1: {type: ObjectId, ref: "Plant"},
+  plant2: {type: ObjectId, ref: "Plant"},
+  description: String,
   compatibility: Boolean
 });
 

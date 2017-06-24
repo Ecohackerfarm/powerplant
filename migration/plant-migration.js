@@ -17,7 +17,8 @@ function migratePlants(callback) {
       var plantModel = new Plant({
         name: data[plant].name,
         display_name: data[plant].display_name,
-        alternate_name: ""
+        alternate_name: "",
+        compaions: []
       });
       console.log("Saving plant: " + data[plant].name);
       return plantModel.save();

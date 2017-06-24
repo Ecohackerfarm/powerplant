@@ -2,6 +2,12 @@
 
 // can just use regular firebase
 var firebase = require("firebase");
+var mongoose = require('mongoose');
+
+// initialize mongo
+mongoose.connect('mongodb://localhost/pp_main');
+mongoose.Promise = global.Promise;
+
 // Initialize Firebase
 var config = {
   apiKey: "AIzaSyCKLggXck_1fxtoSn0uvjQ00gEapjLJDbM",
@@ -14,4 +20,5 @@ var config = {
 var firebase = require('firebase');
 firebase.initializeApp(config);
 
-module.exports = require('./plant-migration.js');
+console.log("Beginning migration");
+require('./plant-migration.js')();

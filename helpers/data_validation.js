@@ -54,19 +54,25 @@ module.exports.getCompanionScores = function(snapshots, ids) {
 
 module.exports.fetchModel = fetchModel;
 module.exports.fetchPlants = fetchModel(Plant, "plants");
-module.exports.fetchCompanions = fetchModel(Companion, "companions");
+module.exports.fetchPlantsWithCompanions = fetchModel(Plant, "plants", "companions");
+module.exports.fetchCompanions = fetchModel(Companion, "companions", "plant1 plant2");
 
 module.exports.checkModel = checkModel;
 module.exports.checkPlants = checkModel(Plant);
 module.exports.checkCompanions = checkModel(Companion);
 
 // assumes pre-validated ids!
-function fetchModel(model, resultName) {
+function fetchModel(model, resultName, populate) {
   return function(req, res, next) {
     req[resultName] = [];
     req.ids.forEach(function(id) {
-      model.findById(id, function(err, item) {
+      var query = model.findById(id);
+      if (typeof populate !== 'undefined') {
+        query = query.populate(populate);
+      }
+      query.exec(function(err, item) {
         if (item !== null) {
+          console.log("Found " + resultName + " with ID " + id);
           req[resultName].push(item);
           if (req[resultName].length === req.ids.length) {
             // finished fetching plants

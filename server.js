@@ -42,5 +42,3 @@ app.use(function(err, req, res, next) {
 app.listen(port, function(event) {
   console.log("Server running on port " + port);
 });
-
-// require('./migration/full-migration')();
