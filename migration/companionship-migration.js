@@ -1,18 +1,18 @@
-var Companion = require('../models/companion');
+var Companionship = require('../models/companionship');
 var Crop = require('../models/crop');
 var firebase = require('firebase');
 
-module.exports = migrateCompanions;
+module.exports = migrateCompanionships;
 
-function migrateCompanions() {
+function migrateCompanionships() {
   // Delete all previous entries
-  Companion.find({}).remove().exec();
+  Companionship.find({}).remove().exec();
 
 
   var search = firebase.database().ref('/').once('value');
   search.then(function(snapshot) {
     var data = snapshot.val();
-    var companions = data.companions;
+    var companionships = data.companions;
     var crops = data.plants;
 
     // we need to replace all the firebase keys with mongodb keys otherwise it's a huge pain
@@ -32,30 +32,30 @@ function migrateCompanions() {
       }
 
       // now we have a map from firebase ids to mongo ids
-      // need to add each companionship in firebase to mongo
+      // need to add each companionshipship in firebase to mongo
       var savePromises = [];
-      for (var crop1 in companions) {
-        for (var crop2 in companions[crop1]) {
-          var compatibility = companions[crop1][crop2] === "good";
-          savePromises.push(new Companion({crop1: fbToMongo[crop1], crop2: fbToMongo[crop2], compatibility: compatibility}).save());
+      for (var crop1 in companionships) {
+        for (var crop2 in companionships[crop1]) {
+          var compatibility = companionships[crop1][crop2] === "good";
+          savePromises.push(new Companionship({crop1: fbToMongo[crop1], crop2: fbToMongo[crop2], compatibility: compatibility}).save());
           console.log(crop1 + " and " + crop2 + " are " + compatibility);
           // want to make sure it doesn't get added twice
-          delete companions[crop2][crop1];
+          delete companionships[crop2][crop1];
         }
       }
-      Promise.all(savePromises).then(function(companions) {
+      Promise.all(savePromises).then(function(companionships) {
         var cropPromises = [];
-        console.log("Saved all companions...starting to save references in Crops");
-        companions.forEach(function(companion) {
-          // save reference to companion in each of the crops
+        console.log("Saved all companionships...starting to save references in Crops");
+        companionships.forEach(function(companionship) {
+          // save reference to companionship in each of the crops
           cropPromises.push(Crop.findByIdAndUpdate(
-            companion.crop1,
-            {$push: {companions: companion}}
+            companionship.crop1,
+            {$push: {companionships: companionship}}
           ));;
-          if (!companion.crop1.equals(companion.crop2)) {
+          if (!companionship.crop1.equals(companionship.crop2)) {
             cropPromises.push(Crop.findByIdAndUpdate(
-              companion.crop2,
-              {$push: {companions: companion}}
+              companionship.crop2,
+              {$push: {companionships: companionship}}
             ));
           }
         });

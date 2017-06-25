@@ -1,9 +1,9 @@
-var Companion = require('../models/companion');
+var Companionship = require('../models/companionship');
 var Crop = require('../models/crop');
 var firebase = require('firebase');
 
 module.exports = function() {
-  migrateCrops(require('./companion-migration'));
+  migrateCrops(require('./companionship-migration'));
 }
 
 function migrateCrops(callback) {

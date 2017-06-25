@@ -1,6 +1,6 @@
 var express = require('express');
 var Crop = require('../../models/crop.js');
-var Companion = require('../../models/companion.js');
+var Companionship = require('../../models/companionship.js');
 var Helper = require('../../helpers/data_validation');
 
 var router = express.Router();
@@ -80,57 +80,58 @@ router.route('/:cropId')
     });
   });
 
-// all associated companion objects of the given cropid
-router.route('/:cropId/companions')
+// all associated companionship objects of the given cropid
+router.route('/:cropId/companionships')
   .all(function(req, res, next) {
     req.ids = [req.params.cropId];
     next();
   },
   Helper.idValidator,
-  Helper.fetchCropsWithCompanions)
+  Helper.fetchCropsWithCompanionships)
   .get(function(req, res, next) {
     var crop = req.crops[0];
-    var promises = crop.companions.map(function(companion) {
-      return Companion.findById(companion);
+    var promises = crop.companionships.map(function(companionship) {
+      return Companionship.findById(companionship);
     });
-    Promise.all(promises).then(function(companions) {
-      res.json(companions);
+    Promise.all(promises).then(function(companionships) {
+      res.json(companionships);
     });
   });
 
-// fetching a Companion object given crop ids
-// TODO: make a hashmap from two crop ids to a companion object
-// to fetch the right companion quicker than using Array.find()
-router.route('/:cropId1/companions/:cropId2')
+// fetching a Companionship object given crop ids
+// TODO: make a hashmap from two crop ids to a companionship object
+// to fetch the right companionship quicker than using Array.find()
+// TODO: think about renaming this to make more sense
+router.route('/:cropId1/companionships/:cropId2')
   .all(function(req, res, next) {
     req.ids = [req.params.cropId1, req.params.cropId2];
     next();
   },
   Helper.idValidator,
-  Helper.fetchCropsWithCompanions)
+  Helper.fetchCropsWithCompanionships)
   .get(function(req, res, next) {
-    var companions = req.crops[0].companions;
-    var isCompanion = function(c) {
+    var companionships = req.crops[0].companionships;
+    var isCompanionship = function(c) {
       var id1 = c.crop1;
       var id2 = c.crop2;
       return (id1.equals(req.params.cropId1) && id2.equals(req.params.cropId2)) ||
              (id2.equals(req.params.cropId1) && id1.equals(req.params.cropId2));
     };
-    var companion = companions.find(isCompanion);
-    if (typeof companion === 'undefined') {
+    var companionship = companionships.find(isCompanionship);
+    if (typeof companionship === 'undefined') {
       // both crops exist, they are just neutral about each other
       next({status: 204}); // HTTP code indicating no response on purpose
     }
     else {
-      console.log("Found match: " + companion);
-      res.status(303).location('/api/companions/' + companion._id).send(); // see other
-      // req.ids = [companion._id];
+      console.log("Found match: " + companionship);
+      res.status(303).location('/api/companionships/' + companionship._id).send(); // see other
+      // req.ids = [companionship._id];
       // next();
     }
   }
-  // Helper.fetchCompanions,
+  // Helper.fetchCompanionships,
   // function(req, res, next) {
-  //   res.json(req.companions[0]);
+  //   res.json(req.companionships[0]);
   // }
 );
 

@@ -1,6 +1,6 @@
 var mongoose = require('mongoose');
 var Crop = require('../models/crop');
-var Companion = require('../models/companion');
+var Companionship = require('../models/companionship');
 
 module.exports.idValidator = function(req, res, next) {
   var ids = req.ids;
@@ -18,8 +18,8 @@ module.exports.idValidator = function(req, res, next) {
 }
 
 
-module.exports.getCompanionScores = function(snapshots, ids) {
-  // create an intersection of the companion snapshots
+module.exports.getCompanionshipScores = function(snapshots, ids) {
+  // create an intersection of the companionship snapshots
   // crops with any negative interactions will have a value of 0
   // all other crops will give a percentage score which is how many they complement in the set
   var result = {};
@@ -35,7 +35,7 @@ module.exports.getCompanionScores = function(snapshots, ids) {
         id = pair.crop1;
       }
 
-      // building the companion scores, storing in result
+      // building the companionship scores, storing in result
       if (!pair.compatibility) {
         result[id] = -1;
       }
@@ -54,12 +54,12 @@ module.exports.getCompanionScores = function(snapshots, ids) {
 
 module.exports.fetchModel = fetchModel;
 module.exports.fetchCrops = fetchModel(Crop, "crops");
-module.exports.fetchCropsWithCompanions = fetchModel(Crop, "crops", "companions");
-module.exports.fetchCompanions = fetchModel(Companion, "companions", "crop1 crop2");
+module.exports.fetchCropsWithCompanionships = fetchModel(Crop, "crops", "companionships");
+module.exports.fetchCompanionships = fetchModel(Companionship, "companionships", "crop1 crop2");
 
 module.exports.checkModel = checkModel;
 module.exports.checkCrops = checkModel(Crop);
-module.exports.checkCompanions = checkModel(Companion);
+module.exports.checkCompanionships = checkModel(Companionship);
 
 // assumes pre-validated ids!
 function fetchModel(model, resultName, populate) {

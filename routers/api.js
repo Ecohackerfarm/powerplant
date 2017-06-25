@@ -8,7 +8,7 @@ var router = express.Router();
 
 // assume a base url of '/api'
 router.use('/crops', require('./api/crops'));
-router.use('/companions', require('./api/companions'));
+router.use('/companionships', require('./api/companionships'));
 
 // our error handler middleware function
 router.use(function(err, req, res, next) {
@@ -18,6 +18,10 @@ router.use(function(err, req, res, next) {
   else {
     next();
   }
+});
+
+router.get('*', function(req, res, next) {
+  next({status: 404, message: "No such route"});
 });
 
 module.exports = router;

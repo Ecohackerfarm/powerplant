@@ -29,7 +29,7 @@ describe('data_validation', function() {
       expect(req.ids).to.equal(ids);
     });
   });
-  describe('#getCompanionScores()', function() {
+  describe('#getCompanionshipScores()', function() {
     var ids = [objId()];
     var a = objId();
     var b = objId();
@@ -46,12 +46,12 @@ describe('data_validation', function() {
       compatibility: true}
     ]];
     it("should return 1 or -1 for correct crops", function() {
-      var results = validation.getCompanionScores(sample, ids);
+      var results = validation.getCompanionshipScores(sample, ids);
       expect(results[a]).to.equal(1);
       expect(results[b]).to.equal(-1);
       expect(results[c]).to.equal(1);
     });
-    it("should override positive companions with a negative", function() {
+    it("should override positive companionships with a negative", function() {
       ids.push(objId());
       var d = objId();
       var newData = [
@@ -66,7 +66,7 @@ describe('data_validation', function() {
         compatibility: true}
       ];
       sample.push(newData);
-      var results = validation.getCompanionScores(sample, ids);
+      var results = validation.getCompanionshipScores(sample, ids);
       expect(results[a]).to.equal(-1);
       expect(results[b]).to.equal(-1);
       expect(results[c]).to.equal(.5);
