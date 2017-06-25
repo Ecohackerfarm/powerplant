@@ -1,5 +1,5 @@
 {
-  "name": "powerplant",
+  "name": "powercrop",
   "version": "1.0.0",
   "description": "Make the garden planning process easier and more efficient",
   "main": "server.js",
@@ -9,14 +9,14 @@
   },
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/Ecohackerfarm/plant-match.git"
+    "url": "git+https://github.com/Ecohackerfarm/crop-match.git"
   },
   "author": "Simon Ever-Hale",
   "license": "ISC",
   "bugs": {
-    "url": "https://github.com/Ecohackerfarm/plant-match/issues"
+    "url": "https://github.com/Ecohackerfarm/crop-match/issues"
   },
-  "homepage": "https://github.com/Ecohackerfarm/plant-match#readme",
+  "homepage": "https://github.com/Ecohackerfarm/crop-match#readme",
   "dependencies": {
     "body-parser": "^1.17.2",
     "chai": "^4.0.2",

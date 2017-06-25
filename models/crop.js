@@ -2,7 +2,7 @@ var mongoose = require('mongoose');
 var Schema = mongoose.Schema;
 var ObjectId = Schema.Types.ObjectId;
 
-var plantSchema = new Schema({
+var cropSchema = new Schema({
   name: String,
   display_name: String,
   alternate_display: String,
@@ -10,5 +10,5 @@ var plantSchema = new Schema({
   preferred_soil: String,
   preferred_climate: String
 });
-var Plant = mongoose.model('Plant', plantSchema);
-module.exports = Plant;
+var Crop = mongoose.model('Crop', cropSchema);
+module.exports = Crop;

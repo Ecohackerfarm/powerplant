@@ -1,5 +1,5 @@
 var Companion = require('../models/companion');
-var Plant = require('../models/plant');
+var Crop = require('../models/crop');
 var firebase = require('firebase');
 
 module.exports = migrateCompanions;
@@ -13,19 +13,19 @@ function migrateCompanions() {
   search.then(function(snapshot) {
     var data = snapshot.val();
     var companions = data.companions;
-    var plants = data.plants;
+    var crops = data.plants;
 
     // we need to replace all the firebase keys with mongodb keys otherwise it's a huge pain
     // to do this we will create a map from firebase keys to mongodb keys
     var fbToMongo = {};
-    var fbIds = Object.keys(plants);
+    var fbIds = Object.keys(crops);
     var promises = fbIds.map(function(id) {
-      return Plant.findOne({name: plants[id].name}).exec();
+      return Crop.findOne({name: crops[id].name}).exec();
     });
     Promise.all(promises).then(function(data) {
-      // now data holds a list of all the plants IN THE SAME ORDER AS fbIds
-      var mongoIds = data.map(function(plant) {
-        return plant._id;
+      // now data holds a list of all the crops IN THE SAME ORDER AS fbIds
+      var mongoIds = data.map(function(crop) {
+        return crop._id;
       });
       for (var i=0; i<mongoIds.length; i++) {
         fbToMongo[fbIds[i]] = mongoIds[i];
@@ -34,32 +34,32 @@ function migrateCompanions() {
       // now we have a map from firebase ids to mongo ids
       // need to add each companionship in firebase to mongo
       var savePromises = [];
-      for (var plant1 in companions) {
-        for (var plant2 in companions[plant1]) {
-          var compatibility = companions[plant1][plant2] === "good";
-          savePromises.push(new Companion({plant1: fbToMongo[plant1], plant2: fbToMongo[plant2], compatibility: compatibility}).save());
-          console.log(plant1 + " and " + plant2 + " are " + compatibility);
+      for (var crop1 in companions) {
+        for (var crop2 in companions[crop1]) {
+          var compatibility = companions[crop1][crop2] === "good";
+          savePromises.push(new Companion({crop1: fbToMongo[crop1], crop2: fbToMongo[crop2], compatibility: compatibility}).save());
+          console.log(crop1 + " and " + crop2 + " are " + compatibility);
           // want to make sure it doesn't get added twice
-          delete companions[plant2][plant1];
+          delete companions[crop2][crop1];
         }
       }
       Promise.all(savePromises).then(function(companions) {
-        var plantPromises = [];
-        console.log("Saved all companions...starting to save references in Plants");
+        var cropPromises = [];
+        console.log("Saved all companions...starting to save references in Crops");
         companions.forEach(function(companion) {
-          // save reference to companion in each of the plants
-          plantPromises.push(Plant.findByIdAndUpdate(
-            companion.plant1,
+          // save reference to companion in each of the crops
+          cropPromises.push(Crop.findByIdAndUpdate(
+            companion.crop1,
             {$push: {companions: companion}}
           ));;
-          if (!companion.plant1.equals(companion.plant2)) {
-            plantPromises.push(Plant.findByIdAndUpdate(
-              companion.plant2,
+          if (!companion.crop1.equals(companion.crop2)) {
+            cropPromises.push(Crop.findByIdAndUpdate(
+              companion.crop2,
               {$push: {companions: companion}}
             ));
           }
         });
-        Promise.all(plantPromises).then(function(plants) {
+        Promise.all(cropPromises).then(function(crops) {
           console.log("Migration complete!");
           process.exit();
         });

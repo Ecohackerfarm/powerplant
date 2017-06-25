@@ -21,4 +21,4 @@ var firebase = require('firebase');
 firebase.initializeApp(config);
 
 console.log("Beginning migration");
-require('./plant-migration.js')();
+require('./crop-migration.js')();

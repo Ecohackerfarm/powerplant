@@ -1,24 +1,24 @@
 var express = require('express');
-var Plant = require('../../models/plant.js');
+var Crop = require('../../models/crop.js');
 var Companion = require('../../models/companion.js');
 var Helper = require('../../helpers/data_validation');
 
 var router = express.Router();
 
-// All routes have the base route /plants
+// All routes have the base route /crops
 
 router.route('/')
   .get(function(req, res, next) {
     // validate req
-    var plantName = "";
+    var cropName = "";
     if (typeof req.query.name !== 'undefined') {
-      plantName = req.query.name;
-      var regex = new RegExp(plantName, "i");
-      Plant.find({name: regex}, function(err, plants) {
+      cropName = req.query.name;
+      var regex = new RegExp(cropName, "i");
+      Crop.find({name: regex}, function(err, crops) {
         if (err) {
           res.json(err);
         }
-        res.json(plants);
+        res.json(crops);
       });
     }
     else {
@@ -27,70 +27,70 @@ router.route('/')
     }
   })
   .get(function(req, res) {
-    Plant.find({}, function(err, plants) {
+    Crop.find({}, function(err, crops) {
       if (err) {
         //TODO: use error handling middleware
         res.json(err);
       }
-      res.json(plants);
+      res.json(crops);
     });
   })
   .post(function(req, res, next) {
-    new Plant(req.body).save(function(err, plant) {
+    new Crop(req.body).save(function(err, crop) {
       if (err) {
         next({status: 500, message: err});
       }
       else {
-        res.location('/api/plants/' + plant._id);
-        res.json(201, plant);
+        res.location('/api/crops/' + crop._id);
+        res.json(201, crop);
       }
     });
   });
 
-router.route('/:plantId')
+router.route('/:cropId')
   // first validate the id by extracting and using helper function
   .all(function(req, res, next) {
-    req.ids = [req.params.plantId];
+    req.ids = [req.params.cropId];
     next();
   },
   Helper.idValidator,
-  Helper.fetchPlants)
+  Helper.fetchCrops)
   .get(function(req, res, next) {
-    // helper function should have stored array of plants in req.plants
-    if (req.plants.length === 1) {
-      res.json(req.plants[0]);
+    // helper function should have stored array of crops in req.crops
+    if (req.crops.length === 1) {
+      res.json(req.crops[0]);
     }
     else {
-      console.log("Something went wrong in fetchPlants");
+      console.log("Something went wrong in fetchCrops");
       res.status(500).json();
     }
   })
   .put(function(req, res) {
-    // since object ids are generated internally, this can never be used to create a new plant
-    // thus the user is trying to update a plant
-    Plant.findByIdAndUpdate(req.params.plantId, req.body, function(err, plant) {
+    // since object ids are generated internally, this can never be used to create a new crop
+    // thus the user is trying to update a crop
+    Crop.findByIdAndUpdate(req.params.cropId, req.body, function(err, crop) {
       if (err) {
         var error = new Error();
         error.status = 404;
-        error.message = "No plants exist with this ID";
+        error.message = "No crops exist with this ID";
       }
       else {
-        res.json(plant);
+        res.json(crop);
       }
     });
   });
 
-// all associated companion objects of the given plantid
-router.route('/:plantId/companions')
+// all associated companion objects of the given cropid
+router.route('/:cropId/companions')
   .all(function(req, res, next) {
-    req.ids = [req.params.plantId];
+    req.ids = [req.params.cropId];
     next();
   },
   Helper.idValidator,
-  Helper.fetchPlantsWithCompanions)
+  Helper.fetchCropsWithCompanions)
   .get(function(req, res, next) {
-    var plant = req.plants[0];
-    var promises = plant.companions.map(function(companion) {
+    var crop = req.crops[0];
+    var promises = crop.companions.map(function(companion) {
       return Companion.findById(companion);
     });
     Promise.all(promises).then(function(companions) {
@@ -98,27 +98,27 @@ router.route('/:plantId/companions')
     });
   });
 
-// fetching a Companion object given plant ids
-// TODO: make a hashmap from two plant ids to a companion object
+// fetching a Companion object given crop ids
+// TODO: make a hashmap from two crop ids to a companion object
 // to fetch the right companion quicker than using Array.find()
-router.route('/:plantId1/companions/:plantId2')
+router.route('/:cropId1/companions/:cropId2')
   .all(function(req, res, next) {
-    req.ids = [req.params.plantId1, req.params.plantId2];
+    req.ids = [req.params.cropId1, req.params.cropId2];
     next();
   },
   Helper.idValidator,
-  Helper.fetchPlantsWithCompanions)
+  Helper.fetchCropsWithCompanions)
   .get(function(req, res, next) {
-    var companions = req.plants[0].companions;
+    var companions = req.crops[0].companions;
     var isCompanion = function(c) {
-      var id1 = c.plant1;
-      var id2 = c.plant2;
-      return (id1.equals(req.params.plantId1) && id2.equals(req.params.plantId2)) ||
-             (id2.equals(req.params.plantId1) && id1.equals(req.params.plantId2));
+      var id1 = c.crop1;
+      var id2 = c.crop2;
+      return (id1.equals(req.params.cropId1) && id2.equals(req.params.cropId2)) ||
+             (id2.equals(req.params.cropId1) && id1.equals(req.params.cropId2));
     };
     var companion = companions.find(isCompanion);
     if (typeof companion === 'undefined') {
-      // both plants exist, they are just neutral about each other
+      // both crops exist, they are just neutral about each other
       next({status: 204}); // HTTP code indicating no response on purpose
     }
     else {

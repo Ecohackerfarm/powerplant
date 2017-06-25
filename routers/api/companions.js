@@ -12,11 +12,11 @@ router.route('/scores')
     next();
   },
   Helper.idValidator,
-  Helper.fetchPlantsWithCompanions)
+  Helper.fetchCropsWithCompanions)
   .get(function(req, res, next) {
-    var plants = req.plants;
-    var companions = plants.map(function(plant) {
-      return plant.companions;
+    var crops = req.crops;
+    var companions = crops.map(function(crop) {
+      return crop.companions;
     });
     var ids = req.ids;
     var scores = Helper.getCompanionScores(companions, ids);

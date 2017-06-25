@@ -1,6 +1,6 @@
 var expect = require('chai').expect;
 var validation = require('../../helpers/data_validation');
-var Plant = require('../../models/plant');
+var Crop = require('../../models/crop');
 var mongoose = require('mongoose');
 var objId = mongoose.Types.ObjectId;
 
@@ -35,17 +35,17 @@ describe('data_validation', function() {
     var b = objId();
     var c = objId();
     var sample = [[
-      {plant1: ids[0],
-      plant2: a,
+      {crop1: ids[0],
+      crop2: a,
       compatibility: true},
-      {plant1: b,
-      plant2: ids[0],
+      {crop1: b,
+      crop2: ids[0],
       compatibility: false},
-      {plant1: ids[0],
-      plant2: c,
+      {crop1: ids[0],
+      crop2: c,
       compatibility: true}
     ]];
-    it("should return 1 or -1 for correct plants", function() {
+    it("should return 1 or -1 for correct crops", function() {
       var results = validation.getCompanionScores(sample, ids);
       expect(results[a]).to.equal(1);
       expect(results[b]).to.equal(-1);
@@ -55,14 +55,14 @@ describe('data_validation', function() {
       ids.push(objId());
       var d = objId();
       var newData = [
-        {plant1: ids[1],
-        plant2: a,
+        {crop1: ids[1],
+        crop2: a,
         compatibility: false},
-        {plant1: b,
-        plant2: ids[1],
+        {crop1: b,
+        crop2: ids[1],
         compatibility: true},
-        {plant1: ids[1],
-        plant2: d,
+        {crop1: ids[1],
+        crop2: d,
         compatibility: true}
       ];
       sample.push(newData);
@@ -75,12 +75,12 @@ describe('data_validation', function() {
   });
   describe('#fetchModel()', function() {
     it("should throw 404 on nonexistant id", function() {
-      return Plant.findOne({}).then(function(plant) {
-        validId = plant._id;
-        var ids = [objId(), plant._id];
+      return Crop.findOne({}).then(function(crop) {
+        validId = crop._id;
+        var ids = [objId(), crop._id];
         var req = {ids: ids};
         var res = {};
-        return fetchModelError(Plant, "plants", req, res).then(function(err) {
+        return fetchModelError(Crop, "crops", req, res).then(function(err) {
           expect(err.status).to.equal(404);
         });
       });
@@ -89,8 +89,8 @@ describe('data_validation', function() {
       var ids = [validId, validId];
       var req = {ids: ids};
       var res = {};
-      return fetchModelError(Plant, "plants", req, res).then(function(err) {
-        expect(req.plants).to.have.length(2);
+      return fetchModelError(Crop, "crops", req, res).then(function(err) {
+        expect(req.crops).to.have.length(2);
         expect(typeof err).to.equal('undefined');
       });
     });
@@ -100,7 +100,7 @@ describe('data_validation', function() {
       var ids = [objId(), validId];
       var req = {ids: ids};
       var res = {};
-      return checkModelError(Plant, req, res).then(function(err) {
+      return checkModelError(Crop, req, res).then(function(err) {
         expect(err.status).to.equal(404);
       });
     });
@@ -108,7 +108,7 @@ describe('data_validation', function() {
       var ids = [validId, validId];
       var req = {ids: ids};
       var res = {};
-      return checkModelError(Plant, req, res).then(function(err) {
+      return checkModelError(Crop, req, res).then(function(err) {
         expect(typeof error).to.equal('undefined');
         expect(req.ids).to.equal(ids);
       });

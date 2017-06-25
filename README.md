@@ -1,4 +1,4 @@
-# powerplant
+# powercrop
 Optimize and assist planning your garden
 
 

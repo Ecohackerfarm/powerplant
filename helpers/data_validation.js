@@ -1,5 +1,5 @@
 var mongoose = require('mongoose');
-var Plant = require('../models/plant');
+var Crop = require('../models/crop');
 var Companion = require('../models/companion');
 
 module.exports.idValidator = function(req, res, next) {
@@ -20,8 +20,8 @@ module.exports.idValidator = function(req, res, next) {
 
 module.exports.getCompanionScores = function(snapshots, ids) {
   // create an intersection of the companion snapshots
-  // plants with any negative interactions will have a value of 0
-  // all other plants will give a percentage score which is how many they complement in the set
+  // crops with any negative interactions will have a value of 0
+  // all other crops will give a percentage score which is how many they complement in the set
   var result = {};
   for (var i=0; i<ids.length; i++) {
     var data = snapshots[i];
@@ -30,9 +30,9 @@ module.exports.getCompanionScores = function(snapshots, ids) {
       // look at the one that is NOT the corresponding id in ids
       // at the same index as the current snapshot
       // Because the current data is for the snapshot for a single crop
-      var id = pair.plant2;
+      var id = pair.crop2;
       if (id.equals(queryId)) {
-        id = pair.plant1;
+        id = pair.crop1;
       }
 
       // building the companion scores, storing in result
@@ -53,12 +53,12 @@ module.exports.getCompanionScores = function(snapshots, ids) {
 }
 
 module.exports.fetchModel = fetchModel;
-module.exports.fetchPlants = fetchModel(Plant, "plants");
-module.exports.fetchPlantsWithCompanions = fetchModel(Plant, "plants", "companions");
-module.exports.fetchCompanions = fetchModel(Companion, "companions", "plant1 plant2");
+module.exports.fetchCrops = fetchModel(Crop, "crops");
+module.exports.fetchCropsWithCompanions = fetchModel(Crop, "crops", "companions");
+module.exports.fetchCompanions = fetchModel(Companion, "companions", "crop1 crop2");
 
 module.exports.checkModel = checkModel;
-module.exports.checkPlants = checkModel(Plant);
+module.exports.checkCrops = checkModel(Crop);
 module.exports.checkCompanions = checkModel(Companion);
 
 // assumes pre-validated ids!
@@ -74,7 +74,7 @@ function fetchModel(model, resultName, populate) {
         if (item !== null) {
           req[resultName].push(item);
           if (req[resultName].length === req.ids.length) {
-            // finished fetching plants
+            // finished fetching crops
             next();
             return;
           }

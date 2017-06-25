@@ -7,7 +7,7 @@ var express = require('express');
 var router = express.Router();
 
 // assume a base url of '/api'
-router.use('/plants', require('./api/plants'));
+router.use('/crops', require('./api/crops'));
 router.use('/companions', require('./api/companions'));
 
 // our error handler middleware function
