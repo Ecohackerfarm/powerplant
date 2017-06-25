@@ -29,18 +29,21 @@ router.route('/')
   .get(function(req, res) {
     Plant.find({}, function(err, plants) {
       if (err) {
+        //TODO: use error handling middleware
         res.json(err);
       }
       res.json(plants);
     });
   })
-  .post(function(req, res) {
+  .post(function(req, res, next) {
     new Plant(req.body).save(function(err, plant) {
       if (err) {
-        res.json(500, err);
+        next({status: 500, message: err});
       }
-      res.location('/api/plants/' + plant._id);
-      res.json(201, plant);
+      else {
+        res.location('/api/plants/' + plant._id);
+        res.json(201, plant);
+      }
     });
   });
 
@@ -96,6 +99,8 @@ router.route('/:plantId/companions')
   });
 
 // fetching a Companion object given plant ids
+// TODO: make a hashmap from two plant ids to a companion object
+// to fetch the right companion quicker than using Array.find()
 router.route('/:plantId1/companions/:plantId2')
   .all(function(req, res, next) {
     req.ids = [req.params.plantId1, req.params.plantId2];
