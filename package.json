@@ -25,6 +25,10 @@
     "firebase-admin": "^5.0.0",
     "fs": "0.0.1-security",
     "mocha": "^3.4.2",
-    "mongoose": "^4.10.7"
+    "mongoose": "^4.10.7",
+    "supertest": "^3.0.0"
+  },
+  "devDependencies": {
+    "mongoose-explain": "^0.1.1"
   }
 }

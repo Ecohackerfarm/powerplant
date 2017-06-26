@@ -6,6 +6,7 @@ var app = express();
 var mongoose = require('mongoose');
 mongoose.connect('mongodb://localhost/pp_main');
 mongoose.Promise = global.Promise;
+mongoose.set('debug', true)
 
 var bodyParser = require('body-parser');
 
@@ -24,3 +25,5 @@ app.use('/', require('./routers/lib'));
 app.listen(port, function(event) {
   console.log("Server running on port " + port);
 });
+
+module.exports = app;

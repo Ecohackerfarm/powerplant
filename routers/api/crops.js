@@ -16,9 +16,11 @@ router.route('/')
       var regex = new RegExp(cropName, "i");
       Crop.find({name: regex}, function(err, crops) {
         if (err) {
-          res.json(err);
+          next({status: 500, message: "Error fetching crops", err: err});
         }
-        res.json(crops);
+        else {
+          res.json(crops);
+        }
       });
     }
     else {
@@ -29,10 +31,11 @@ router.route('/')
   .get(function(req, res) {
     Crop.find({}, function(err, crops) {
       if (err) {
-        //TODO: use error handling middleware
-        res.json(err);
+        next({status: 500, message: "Error fetching crops", err: err});
       }
-      res.json(crops);
+      else {
+        res.json(crops);
+      }
     });
   })
   .post(function(req, res, next) {
@@ -65,7 +68,7 @@ router.route('/:cropId')
       res.status(500).json();
     }
   })
-  .put(function(req, res) {
+  .put(function(req, res, next) {
     // since object ids are generated internally, this can never be used to create a new crop
     // thus the user is trying to update a crop
     Crop.findByIdAndUpdate(req.params.cropId, req.body, function(err, crop) {
@@ -73,6 +76,7 @@ router.route('/:cropId')
         var error = new Error();
         error.status = 404;
         error.message = "No crops exist with this ID";
+        next(error);
       }
       else {
         res.json(crop);
@@ -89,18 +93,15 @@ router.route('/:cropId/companionships')
   Helper.idValidator,
   Helper.fetchCropsWithCompanionships)
   .get(function(req, res, next) {
-    var crop = req.crops[0];
-    var promises = crop.companionships.map(function(companionship) {
-      return Companionship.findById(companionship);
-    });
-    Promise.all(promises).then(function(companionships) {
-      res.json(companionships);
-    });
+    if (req.crops.length === 1) {
+      res.json(req.crops[0].companionships);
+    }
+    else {
+      next({status: 500, message: "Something went wrong with fetchCropsWithCompanionships"});
+    }
   });
 
 // fetching a Companionship object given crop ids
-// TODO: make a hashmap from two crop ids to a companionship object
-// to fetch the right companionship quicker than using Array.find()
 // TODO: think about renaming this to make more sense
 router.route('/:cropId1/companionships/:cropId2')
   .all(function(req, res, next) {
@@ -108,31 +109,26 @@ router.route('/:cropId1/companionships/:cropId2')
     next();
   },
   Helper.idValidator,
-  Helper.fetchCropsWithCompanionships)
+  Helper.checkCrops)
   .get(function(req, res, next) {
-    var companionships = req.crops[0].companionships;
-    var isCompanionship = function(c) {
-      var id1 = c.crop1;
-      var id2 = c.crop2;
-      return (id1.equals(req.params.cropId1) && id2.equals(req.params.cropId2)) ||
-             (id2.equals(req.params.cropId1) && id1.equals(req.params.cropId2));
-    };
-    var companionship = companionships.find(isCompanionship);
-    if (typeof companionship === 'undefined') {
-      // both crops exist, they are just neutral about each other
-      next({status: 204}); // HTTP code indicating no response on purpose
-    }
-    else {
-      console.log("Found match: " + companionship);
-      res.status(303).location('/api/companionships/' + companionship._id).send(); // see other
-      // req.ids = [companionship._id];
-      // next();
-    }
+    // uses the intersection of the crop1 index and the crop2 index, should be efficient
+    Companionship.find({$or: [
+      {crop1: req.ids[0], crop2: req.ids[1]},
+      {crop1: req.ids[1], crop2: req.ids[0]}
+    ]}, function(err, matches) {
+      if (err) {
+        next({status: 500, err: err});
+      }
+      else if (matches.length === 0) {
+        // both crops exist, they are just neutral about each other
+        res.status(204).json(); // 204 = intentionally not sending a response
+      }
+      else {
+        res.status(303).location('/api/companionships/' + matches[0]._id).send(); // see other
+        // in a browser, this will result in a redirect
+      }
+    });
   }
-  // Helper.fetchCompanionships,
-  // function(req, res, next) {
-  //   res.json(req.companionships[0]);
-  // }
 );
 
 module.exports = router;
