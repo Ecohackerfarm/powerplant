@@ -74,7 +74,7 @@ describe('data_validation', function() {
     });
   });
   describe('#fetchModel()', function() {
-    it("should throw 404 on nonexistant id", function() {
+    it("should throw 404 on nonexistent id", function() {
       return Crop.findOne({}).then(function(crop) {
         validId = crop._id;
         var ids = [objId(), crop._id];

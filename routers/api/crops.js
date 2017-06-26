@@ -10,13 +10,12 @@ var router = express.Router();
 router.route('/')
   .get(function(req, res, next) {
     // validate req
-    var cropName = "";
     if (typeof req.query.name !== 'undefined') {
-      cropName = req.query.name;
+      var cropName = Helper.escapeRegEx(req.query.name);
       var regex = new RegExp(cropName, "i");
       Crop.find({name: regex}, function(err, crops) {
         if (err) {
-          next({status: 500, message: "Error fetching crops", err: err});
+          next({status: 500, message: "Error fetching crops"});
         }
         else {
           res.json(crops);
@@ -41,11 +40,11 @@ router.route('/')
   .post(function(req, res, next) {
     new Crop(req.body).save(function(err, crop) {
       if (err) {
-        next({status: 500, message: err});
+        next({status: 400, message: err.message});
       }
       else {
         res.location('/api/crops/' + crop._id);
-        res.json(201, crop);
+        res.status(201).json(crop);
       }
     });
   });
@@ -71,17 +70,25 @@ router.route('/:cropId')
   .put(function(req, res, next) {
     // since object ids are generated internally, this can never be used to create a new crop
     // thus the user is trying to update a crop
-    Crop.findByIdAndUpdate(req.params.cropId, req.body, function(err, crop) {
+    Crop.findByIdAndUpdate(req.params.cropId, req.body, {new: true}, function(err, crop) {
       if (err) {
-        var error = new Error();
-        error.status = 404;
-        error.message = "No crops exist with this ID";
-        next(error);
+        // we already know the crop exists, so it must be bad data
+        next({status: 400, message: err.message});
       }
       else {
         res.json(crop);
       }
     });
+  })
+  .delete(function(req, res, next) {
+    Crop.findByIdAndRemove(req.params.cropId, function(err) {
+      if (err) {
+        next({status: 500, message: err.message});
+      }
+      else {
+        res.status(204).json();
+      }
+    })
   });
 
 // all associated companionship objects of the given cropid

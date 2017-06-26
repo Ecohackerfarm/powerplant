@@ -11,7 +11,7 @@ var companionshipSchema = new Schema({
   compatibility: Boolean
 });
 
-companionshipSchema.plugin(explain);
+// companionshipSchema.plugin(explain);
 
 var Companionship = mongoose.model('Companionship', companionshipSchema);
 module.exports = Companionship;

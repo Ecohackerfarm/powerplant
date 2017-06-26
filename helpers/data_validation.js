@@ -114,3 +114,9 @@ function checkModel(model) {
     });
   }
 }
+
+function escapeRegEx(text) {
+  return text.replace(/[-[\]{}()*+?.,\\^$|#\s]/g, '\\$&');
+}
+
+module.exports.escapeRegEx = escapeRegEx;

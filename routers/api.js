@@ -10,6 +10,10 @@ var router = express.Router();
 router.use('/crops', require('./api/crops'));
 router.use('/companionships', require('./api/companionships'));
 
+router.get('*', function(req, res, next) {
+  next({status: 404, message: "No such route"});
+});
+
 // our error handler middleware function
 router.use(function(err, req, res, next) {
   if (err) {
@@ -18,10 +22,6 @@ router.use(function(err, req, res, next) {
   else {
     next();
   }
-});
-
-router.get('*', function(req, res, next) {
-  next({status: 404, message: "No such route"});
 });
 
 module.exports = router;

@@ -3,8 +3,8 @@ var Schema = mongoose.Schema;
 var ObjectId = Schema.Types.ObjectId;
 
 var cropSchema = new Schema({
-  name: {type: String, index: true},
-  display_name: String,
+  name: {type: String, index: true, required: true},
+  display_name: {type: String, required: true},
   alternate_display: String,
   companionships: [{type: ObjectId, ref: "Companionship"}],
   preferred_soil: String,
