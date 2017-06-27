@@ -4,16 +4,21 @@ var Companionship = require('../models/companionship');
 
 module.exports.idValidator = function(req, res, next) {
   var ids = req.ids;
-  var valid = ids.every(mongoose.Types.ObjectId.isValid);
-
-  if (valid) {
+  if (typeof ids === 'undefined') {
     next();
   }
   else {
-    var err = new Error();
-    err.status = 400;
-    err.message = "Malformed object ID";
-    next(err);
+    var valid = ids.every(mongoose.Types.ObjectId.isValid);
+
+    if (valid) {
+      next();
+    }
+    else {
+      var err = new Error();
+      err.status = 400;
+      err.message = "Malformed object ID";
+      next(err);
+    }
   }
 }
 
@@ -64,6 +69,10 @@ module.exports.checkCompanionships = checkModel(Companionship);
 // assumes pre-validated ids!
 function fetchModel(model, resultName, populate) {
   return function(req, res, next) {
+    if (typeof req.ids === 'undefined') {
+      next();
+      return;
+    }
     req[resultName] = [];
     req.ids.forEach(function(id) {
       var query = model.findById(id);
@@ -94,20 +103,21 @@ function fetchModel(model, resultName, populate) {
 // function factory to check if ids exist in a given model
 function checkModel(model) {
   return function(req, res, next) {
+    if (typeof req.ids === 'undefined') {
+      next();
+      return;
+    }
     var counter = 0;
     req.ids.forEach(function(id) {
       model.count({_id: id}, function (err, count){
         if(count > 0){
-            counter += 1;
-            if (counter === req.ids.length) {
-              next();
-            }
+          counter += 1;
+          if (counter === req.ids.length) {
+            next();
+          }
         }
         else {
-          var error = new Error();
-          error.status = 404;
-          error.message = "No object with this ID found";
-          next(error);
+          next({status: 404});
           return;
         }
       });

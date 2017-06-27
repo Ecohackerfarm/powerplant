@@ -1,36 +1,47 @@
-var rootDir = '../../../../';
+var rootDir = '../../../..';
 var rootUrl = '/api/crops';
 var jsonType = 'application/json; charset=utf-8';
 
 var expect = require('chai').expect;
 var express = require('express');
-var app = require(rootDir + 'app.js');
+var app = require(rootDir + '/app.js');
 var Helper = require('../routerHelpers');
 var sendForm = Helper.sendForm;
 var randString = Helper.randString;
 var allStrings = Helper.allStrings;
 var request = require('supertest')(app);
 var ObjectId = require('mongoose').Types.ObjectId;
+var Crop = require(rootDir + "/models/crop");
 
 var createdCropId;
 describe(rootUrl + "/", function() {
+  var count;
+  before(function(done) {
+    Helper.createTestCrop(function(crop) {
+      createdCropId = crop._id;
+      Crop.count({}, function(err, num) {
+        count = num;
+        done();
+      });
+    });
+  });
   describe("GET", function() {
     it("should return all crops with no arguments", function() {
       return request.get(rootUrl)
         .expect(200)
         .expect('Content-Type', jsonType)
         .then(function(res) {
-          expect(res.body).to.have.length.above(64);
+          expect(res.body).to.have.length(count);
         });
     });
     it("should return crops matching a query string", function() {
-      return request.get(rootUrl + "?name=apple")
+      return request.get(rootUrl + "?name=test")
         .expect(200)
         .expect('Content-Type', jsonType)
         .then(function(res) {
           expect(res.body).to.have.length.above(0);
           res.body.forEach(function(apple) {
-            expect(apple.name).to.include("apple");
+            expect(apple.name).to.include("test");
           });
         });
     });
@@ -80,11 +91,13 @@ describe(rootUrl + "/", function() {
 
 describe(rootUrl + "/:cropId", function() {
   var testId;
-  before(function() {
-    return request.get(rootUrl + "?name=test")
-      .then(function(res) {
-        testId = res.body[0]._id;
-      });
+  var compId;
+  before(function(done) {
+    Helper.createTestCompanionship(function(comp) {
+      testId = comp.crop1._id.toString();
+      compId = comp._id.toString();
+      done();
+    });
   });
   describe("GET", function() {
     it("should 400 a bad id", function() {
@@ -147,16 +160,20 @@ describe(rootUrl + "/:cropId", function() {
       return request.delete(rootUrl + "/" + testId)
         .expect(204);
     });
+    it("should delete all associated companionships", function() {
+      return request.get('/api/companionships/' + compId)
+        .expect(404);
+    });
   });
 });
 
 describe(rootUrl + "/:cropId/companionships", function() {
   var testId;
-  before(function() {
-    return request.get(rootUrl + "?name=apple")
-      .then(function(res) {
-        testId = res.body[0]._id;
-      });
+  before(function(done) {
+    Helper.createTestCompanionship(function(comp) {
+      testId = comp.crop1._id.toString();
+      done();
+    });
   });
   describe("GET", function() {
     it("should fetch an array", function() {

@@ -1,11 +1,12 @@
 {
-  "name": "powercrop",
+  "name": "powerplant",
   "version": "1.0.0",
   "description": "Make the garden planning process easier and more efficient",
   "main": "server.js",
   "scripts": {
     "test": "mocha",
-    "migrate": "node ./migration/full-migration.js"
+    "migrate": "node ./migration/full-migration.js",
+    "mocha-spec": "mocha -R markdown"
   },
   "repository": {
     "type": "git",
@@ -26,6 +27,8 @@
     "fs": "0.0.1-security",
     "mocha": "^3.4.2",
     "mongoose": "^4.10.7",
+    "mongoose-exists": "^0.1.0",
+    "mongoose-idexists": "^1.0.5",
     "supertest": "^3.0.0"
   },
   "devDependencies": {

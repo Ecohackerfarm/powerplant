@@ -81,12 +81,19 @@ router.route('/:cropId')
     });
   })
   .delete(function(req, res, next) {
-    Crop.findByIdAndRemove(req.params.cropId, function(err) {
-      if (err) {
+    Companionship.find().byCrop(req.params.cropId).remove().exec(function(err) {
+      if(err) {
         next({status: 500, message: err.message});
       }
       else {
-        res.status(204).json();
+        Crop.findByIdAndRemove(req.params.cropId, function(err) {
+          if (err) {
+            next({status: 500, message: err.message});
+          }
+          else {
+            res.status(204).json();
+          }
+        });
       }
     })
   });
@@ -118,13 +125,9 @@ router.route('/:cropId1/companionships/:cropId2')
   Helper.idValidator,
   Helper.checkCrops)
   .get(function(req, res, next) {
-    // uses the intersection of the crop1 index and the crop2 index, should be efficient
-    Companionship.find({$or: [
-      {crop1: req.ids[0], crop2: req.ids[1]},
-      {crop1: req.ids[1], crop2: req.ids[0]}
-    ]}, function(err, matches) {
+    Companionship.find().byCrop(req.ids[0], req.ids[1]).exec(function(err, matches) {
       if (err) {
-        next({status: 500, err: err});
+        next({status: 500, message: err.message});
       }
       else if (matches.length === 0) {
         // both crops exist, they are just neutral about each other

@@ -51,7 +51,7 @@ function migrateCompanionships() {
           cropPromises.push(Crop.findByIdAndUpdate(
             companionship.crop1,
             {$push: {companionships: companionship}}
-          ));;
+          ));
           if (!companionship.crop1.equals(companionship.crop2)) {
             cropPromises.push(Crop.findByIdAndUpdate(
               companionship.crop2,
