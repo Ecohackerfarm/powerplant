@@ -4,17 +4,18 @@ var ObjectId = Schema.Types.ObjectId;
 var explain = require('mongoose-explain');
 // var idExists = require('mongoose-idexists');
 
-// TODO: change compatibility to an integer and also change the scoring system and the migration code
 // TODO: Get code working to validate crops to make sure they exist
 var companionshipSchema = new Schema({
   crop1: {type: ObjectId, ref: "Crop", index: true, required: true},
   crop2: {type: ObjectId, ref: "Crop", index: true, required: true},
   description: String,
-  compatibility: {type: Boolean, required: true}
+  compatibility: {type: Number, required: true, min: -1, max: 3}
 });
 
 companionshipSchema.index({crop1: 1, crop2: 1}, {unique: true});
 
+// custom query allowing for things like Companionship.find().byCrop(crop1, crop2)
+// much nicer than Companionship.find({$or: etc...})
 companionshipSchema.query.byCrop = function(crop1, crop2) {
   if (typeof crop1 !== 'undefined' && typeof crop2 !== 'undefined') {
     if (crop1 > crop2) {
@@ -32,6 +33,7 @@ companionshipSchema.query.byCrop = function(crop1, crop2) {
   }
 };
 
+// pre-save hook to make sure that even if the crops somehow got mixed up, when they are saved they are in alphabetic order
 companionshipSchema.pre('save', function(next) {
   // middleware to make sure we only save our crops in alphabetic order
   if (this.crop1 > this.crop2) {

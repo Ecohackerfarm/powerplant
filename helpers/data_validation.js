@@ -28,6 +28,9 @@ module.exports.getCompanionshipScores = function(snapshots, ids) {
   // crops with any negative interactions will have a value of 0
   // all other crops will give a percentage score which is how many they complement in the set
   var result = {};
+  var maxScore = Companionship.schema.paths.compatibility.options.max;
+  console.log(maxScore);
+  var maxTotal = maxScore * snapshots.length;
   for (var i=0; i<ids.length; i++) {
     var data = snapshots[i];
     var queryId = ids[i];
@@ -41,16 +44,18 @@ module.exports.getCompanionshipScores = function(snapshots, ids) {
       }
 
       // building the companionship scores, storing in result
-      if (!pair.compatibility) {
+      // if a companion crop is incompatible with any query crop, its score will be -1
+      // otherwise, it will be the average of all of its compatiblity scores with the query crops
+      if (pair.compatibility === -1) {
         result[id] = -1;
       }
-      else if(pair.compatibility && result.hasOwnProperty(id)) {
+      else if(pair.compatibility !== -1 && result.hasOwnProperty(id)) {
         if (result[id] != -1) {
-          result[id] += 1/snapshots.length;
+          result[id] += pair.compatibility/maxTotal;
         }
       }
       else {
-        result[id] = 1/snapshots.length;
+        result[id] = pair.compatibility/maxTotal;
       }
     });
   }

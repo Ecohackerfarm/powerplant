@@ -37,13 +37,13 @@ describe('data_validation', function() {
     var sample = [[
       {crop1: ids[0],
       crop2: a,
-      compatibility: true},
+      compatibility: 3},
       {crop1: b,
       crop2: ids[0],
-      compatibility: false},
+      compatibility: -1},
       {crop1: ids[0],
       crop2: c,
-      compatibility: true}
+      compatibility: 3}
     ]];
     it("should return 1 or -1 for correct crops", function() {
       var results = validation.getCompanionshipScores(sample, ids);
@@ -57,20 +57,21 @@ describe('data_validation', function() {
       var newData = [
         {crop1: ids[1],
         crop2: a,
-        compatibility: false},
+        compatibility: -1},
         {crop1: b,
         crop2: ids[1],
-        compatibility: true},
+        compatibility: 3},
         {crop1: ids[1],
         crop2: d,
-        compatibility: true}
+        compatibility: 2}
       ];
       sample.push(newData);
       var results = validation.getCompanionshipScores(sample, ids);
+      var max = 6;
       expect(results[a]).to.equal(-1);
       expect(results[b]).to.equal(-1);
-      expect(results[c]).to.equal(.5);
-      expect(results[d]).to.equal(.5);
+      expect(results[c]).to.equal(3/6);
+      expect(results[d]).to.equal(2/6);
     });
   });
   describe('#fetchModel()', function() {

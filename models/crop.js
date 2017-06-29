@@ -12,5 +12,10 @@ var cropSchema = new Schema({
   preferred_climate: String
 });
 
+cropSchema.query.byName = function(name) {
+  var regex = new RegExp(name, "i");
+  return this.find({name: regex});
+}
+
 var Crop = mongoose.model('Crop', cropSchema);
 module.exports = Crop;

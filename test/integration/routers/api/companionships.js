@@ -45,7 +45,7 @@ describe(rootUrl + "/", function() {
       var newComp = {
         crop1: crop1,
         crop2: crop2,
-        compatibility: false
+        compatibility: -1
       };
       return sendForm(request.post(url), newComp)
         .expect(201);
@@ -54,7 +54,7 @@ describe(rootUrl + "/", function() {
       var newComp = {
         crop1: crop2,
         crop2: crop1,
-        compatibility: false
+        compatibility: -1
       };
       return sendForm(request.post(url), newComp)
         .expect(303)
@@ -167,14 +167,14 @@ describe(rootUrl + "/:id", function() {
   describe("PUT", function() {
     it("should modify the specified fields of a valid id", function() {
       var changes = {
-        compatibility: !validCompatibility
+        compatibility: validCompatibility>0?-1:3
       };
       return sendForm(request.put(url + "/" + validId), changes)
         .expect(200)
         .expect('Content-Type', jsonType)
         .then(function(res) {
           expect(res.body).to.have.property('_id').and.to.equal(validId);
-          expect(res.body).to.have.property('compatibility').and.to.equal(!validCompatibility);
+          expect(res.body).to.have.property('compatibility').and.to.equal(changes.compatibility);
         });
     });
     it("should 404 on nonexistent id", function() {

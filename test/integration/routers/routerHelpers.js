@@ -3,6 +3,8 @@ var rootDir = '../../..';
 var Crop = require(rootDir + "/models/crop");
 var Companionship = require(rootDir + "/models/companionship");
 
+// Helper functions for integration tests go here
+
 module.exports.sendForm = function(request, data) {
   return request
     .set('Content-Type', 'application/x-www-form-urlencoded')
@@ -24,10 +26,12 @@ module.exports.checkCompanionship = function(item) {
   expect(item.crop1 <= item.crop2).to.equal(true);
 }
 
+var sessionString = "test" + module.exports.randString();
+
 module.exports.createTestCrop = function(cb) {
   new Crop({
-    name: "test",
-    display_name: "test"
+    name: sessionString,
+    display_name: sessionString
   }).save(function(err, crop) {
     cb(crop);
   });
@@ -39,7 +43,7 @@ module.exports.createTestCompanionship = function(cb) {
       new Companionship({
         crop1: crop1,
         crop2: crop2,
-        compatibility: true
+        compatibility: 3
       }).save(function(err, comp) {
         crop1.companionships.push(comp._id);
         crop1.save(function() {
@@ -49,6 +53,22 @@ module.exports.createTestCompanionship = function(cb) {
           });
         });
       });
+    });
+  });
+}
+
+// remove all companionships with things with the word
+module.exports.cleanDb = function(cb) {
+  Crop.find().byName(sessionString).exec(function(err, list) {
+    console.log("Found " + list.length + " test crop instances");
+    list.forEach(function(crop) {
+      Companionship.find().byCrop(crop).exec(function(err, comps) {
+        console.log("Found " + comps.length + " test companionship instances");
+        comps.forEach(function(c) {
+          c.remove();
+        });
+      });
+      crop.remove();
     });
   });
 }

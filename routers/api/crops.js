@@ -13,7 +13,7 @@ router.route('/')
     if (typeof req.query.name !== 'undefined') {
       var cropName = Helper.escapeRegEx(req.query.name);
       var regex = new RegExp(cropName, "i");
-      Crop.find({name: regex}, function(err, crops) {
+      Crop.find().byName(cropName).exec(function(err, crops) {
         if (err) {
           next({status: 500, message: "Error fetching crops"});
         }

@@ -36,7 +36,7 @@ function migrateCompanionships() {
       var savePromises = [];
       for (var crop1 in companionships) {
         for (var crop2 in companionships[crop1]) {
-          var compatibility = companionships[crop1][crop2] === "good";
+          var compatibility = companionships[crop1][crop2] === "good"?1:-1;
           savePromises.push(new Companionship({crop1: fbToMongo[crop1], crop2: fbToMongo[crop2], compatibility: compatibility}).save());
           console.log(crop1 + " and " + crop2 + " are " + compatibility);
           // want to make sure it doesn't get added twice

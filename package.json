@@ -6,7 +6,7 @@
   "scripts": {
     "test": "mocha",
     "migrate": "node ./migration/full-migration.js",
-    "mocha-spec": "mocha -R markdown"
+    "mocha-spec": "mocha --reporter markdown > docs/spec.md"
   },
   "repository": {
     "type": "git",
