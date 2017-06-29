@@ -1,7 +1,6 @@
 3
 3
 3
-
 # TOC
    - [data_validation](#data_validation)
      - [#idValidation()](#data_validation-idvalidation)
@@ -330,8 +329,11 @@ should delete a valid companionship.
 
 ```js
 return request.delete(url + "/" + validId)
+  .expect(200)
   .then(function(res) {
-    console.log(res.body);
+    return Companionship.findById(validId, function(err, comp) {
+      expect(comp).to.be.null;
+    });
   });
 ```
 

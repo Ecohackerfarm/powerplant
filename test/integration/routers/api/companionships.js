@@ -189,8 +189,11 @@ describe(rootUrl + "/:id", function() {
   describe("DELETE", function() {
     it("should delete a valid companionship", function() {
       return request.delete(url + "/" + validId)
+        .expect(200)
         .then(function(res) {
-          console.log(res.body);
+          return Companionship.findById(validId, function(err, comp) {
+            expect(comp).to.be.null;
+          });
         });
     });
   });
