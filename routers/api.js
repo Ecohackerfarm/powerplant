@@ -6,6 +6,15 @@ var express = require('express');
 
 var router = express.Router();
 
+// adding headers to allow cross-origin requests
+// this means it's a publicly available API!
+router.all('*', function(req, res, next) {
+  res.header('Access-Control-Allow-Origin', '*');
+  res.header('Access-Control-Allow-Methods', 'GET');
+  res.header('Access-Control-Allow-Headers', 'Content-Type');
+  next();
+});
+
 // assume a base url of '/api'
 router.use('/crops', require('./api/crops'));
 router.use('/companionships', require('./api/companionships'));

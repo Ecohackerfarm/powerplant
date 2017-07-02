@@ -6,7 +6,8 @@
   "scripts": {
     "test": "mocha",
     "migrate": "node ./migration/full-migration.js",
-    "mocha-spec": "mocha --reporter markdown > docs/spec.md"
+    "mocha-spec": "mocha --reporter markdown > docs/spec.md",
+    "mongo": "docker run -p 27017:27017 --name pp_main -d mongo"
   },
   "repository": {
     "type": "git",
