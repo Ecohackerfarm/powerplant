@@ -33,6 +33,7 @@
     "mongoose-idexists": "^1.0.5",
     "react": "^15.6.1",
     "react-dom": "^15.6.1",
+    "react-router-dom": "^4.1.1",
     "supertest": "^3.0.0"
   },
   "devDependencies": {

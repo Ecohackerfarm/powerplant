@@ -1,8 +1,15 @@
 import React from 'react';
+import Header from './Header';
+import Main from './Main';
 
 class App extends React.Component {
   render() {
-    return <h1>Hello from react</h1>
+    return (
+      <div>
+        <Header />
+        <Main />
+      </div>
+    )
   }
 }
 
