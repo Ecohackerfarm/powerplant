@@ -1,19 +1,21 @@
-var rootDir = '../../../..';
-var rootUrl = '/api/crops';
-var jsonType = 'application/json; charset=utf-8';
+const rootUrl = '/api/crops';
+const jsonType = 'application/json; charset=utf-8';
 
-var expect = require('chai').expect;
-var express = require('express');
-var app = require(rootDir + '/app.js');
-var Helper = require('../routerHelpers');
-var sendForm = Helper.sendForm;
-var randString = Helper.randString;
-var allStrings = Helper.allStrings;
-var request = require('supertest')(app);
-var ObjectId = require('mongoose').Types.ObjectId;
-var Crop = require(rootDir + "/models/crop");
+import {expect} from 'chai';
+import express from 'express';
+import app from  '/server/app';
+import Helper from '../routerHelpers';
+import {sendForm,
+        randString,
+        allStrings} from '../routerHelpers';
+import supertest from 'supertest';
+import Crop from "/server/models/crop";
+import {Types} from 'mongoose';
+const {ObjectId} = Types;
 
-var createdCropId;
+const request = supertest(app);
+
+let createdCropId;
 describe(rootUrl + "/", function() {
   var count;
   before(function(done) {

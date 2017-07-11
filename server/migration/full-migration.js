@@ -1,8 +1,8 @@
 // Setting up Firebase (would only need to run migration)
 
 // can just use regular firebase
-var firebase = require("firebase");
-var mongoose = require('mongoose');
+import firebase from "firebase";
+import mongoose from 'mongoose';
 
 // initialize mongo
 mongoose.connect('mongodb://localhost/pp_main');
@@ -17,7 +17,7 @@ var config = {
   storageBucket: "companion-planting-b56b5.appspot.com",
   messagingSenderId: "158677284326"
 };
-var firebase = require('firebase');
+import firebase from 'firebase';
 firebase.initializeApp(config);
 
 console.log("Beginning migration");

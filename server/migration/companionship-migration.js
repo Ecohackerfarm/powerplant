@@ -1,6 +1,6 @@
-var Companionship = require('../models/companionship');
-var Crop = require('../models/crop');
-var firebase = require('firebase');
+import Companionship from '../models/companionship';
+import Crop from '../models/crop';
+import firebase from 'firebase';
 
 module.exports = migrateCompanionships;
 

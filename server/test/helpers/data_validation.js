@@ -1,8 +1,8 @@
-var expect = require('chai').expect;
-var validation = require('../../helpers/data_validation');
-var Crop = require('../../models/crop');
-var mongoose = require('mongoose');
-var objId = mongoose.Types.ObjectId;
+import {expect} from 'chai';
+import validation from '../../helpers/data_validation';
+import Crop from '../../models/crop';
+import {Types} from 'mongoose';
+const {ObjectId} = Types;
 
 describe('data_validation', function() {
   var validId;
@@ -19,7 +19,7 @@ describe('data_validation', function() {
       expect(error.status).to.equal(400);
     });
     it("should accept valid ids", function() {
-      var ids = [objId(), objId()];
+      var ids = [ObjectId(), ObjectId()];
       var req = {ids: ids};
       var res = {};
       var error;
@@ -32,10 +32,10 @@ describe('data_validation', function() {
     });
   });
   describe('#getCompanionshipScores()', function() {
-    var ids = [objId()];
-    var a = objId();
-    var b = objId();
-    var c = objId();
+    var ids = [ObjectId()];
+    var a = ObjectId();
+    var b = ObjectId();
+    var c = ObjectId();
     var sample = [[
       {crop1: ids[0],
       crop2: a,
@@ -54,8 +54,8 @@ describe('data_validation', function() {
       expect(results[c]).to.equal(1);
     });
     it("should override positive companionships with a negative", function() {
-      ids.push(objId());
-      var d = objId();
+      ids.push(ObjectId());
+      var d = ObjectId();
       var newData = [
         {crop1: ids[1],
         crop2: a,
@@ -80,7 +80,7 @@ describe('data_validation', function() {
     it("should throw 404 on nonexistent id", function() {
       return Crop.findOne({}).then(function(crop) {
         validId = crop._id;
-        var ids = [objId(), crop._id];
+        var ids = [ObjectId(), crop._id];
         var req = {ids: ids};
         var res = {};
         return fetchModelError(Crop, "crops", req, res).then(function(err) {
@@ -100,7 +100,7 @@ describe('data_validation', function() {
   });
   describe("#checkModel()", function() {
     it("should return false for invalid id", function() {
-      var ids = [objId(), validId];
+      var ids = [ObjectId(), validId];
       var req = {ids: ids};
       var res = {};
       return checkModelError(Crop, req, res).then(function(err) {

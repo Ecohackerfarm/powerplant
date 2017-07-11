@@ -1,4 +1,4 @@
-var express = require('express');
+import express from 'express';
 
 // this is where our error handling middleware for the api will go
 // error responses should look different if they're in the api vs. in the front end

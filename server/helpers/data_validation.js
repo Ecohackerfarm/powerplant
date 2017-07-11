@@ -1,6 +1,6 @@
-var mongoose = require('mongoose');
-var Crop = require('../models/crop');
-var Companionship = require('../models/companionship');
+import mongoose from 'mongoose';
+import Crop from '../models/crop';
+import Companionship from '../models/companionship';
 
 module.exports.idValidator = function(req, res, next) {
   var ids = req.ids;

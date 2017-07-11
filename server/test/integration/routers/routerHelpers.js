@@ -1,7 +1,6 @@
-var expect = require('chai').expect;
-var rootDir = '../../..';
-var Crop = require(rootDir + "/models/crop");
-var Companionship = require(rootDir + "/models/companionship");
+import {expect} from 'chai';
+import Crop from "/server/models/crop";
+import Companionship from "/server/models/companionship";
 
 // Helper functions for integration tests go here
 

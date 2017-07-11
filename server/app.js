@@ -7,7 +7,7 @@ import webpackMiddleware from 'webpack-dev-middleware';
 import webpackHotWiddleware from 'webpack-hot-middleware';
 import webpackConfig from '../webpack.config.dev';
 
-var bodyParser = require('body-parser');
+import bodyParser from 'body-parser';
 
 // build our express app
 var app = express();

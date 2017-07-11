@@ -1,7 +1,7 @@
-var express = require('express');
-var Companionship = require('../../models/companionship');
-var Crop = require('../../models/crop');
-var Helper = require('../../helpers/data_validation');
+import express from 'express';
+import Companionship from '../../models/companionship';
+import Crop from '../../models/crop';
+import Helper from '../../helpers/data_validation';
 
 var router = express.Router();
 

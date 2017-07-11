@@ -1,7 +1,7 @@
-var mongoose = require('mongoose');
+import mongoose from 'mongoose';
 var Schema = mongoose.Schema;
 var ObjectId = Schema.Types.ObjectId;
-// var idExists = require('mongoose-idexists');
+// import idExists from 'mongoose-idexists';
 
 var cropSchema = new Schema({
   name: {type: String, index: true, required: true},

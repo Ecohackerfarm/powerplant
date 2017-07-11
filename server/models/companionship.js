@@ -1,8 +1,8 @@
-var mongoose = require('mongoose');
+import mongoose from 'mongoose';
 var Schema = mongoose.Schema;
 var ObjectId = Schema.Types.ObjectId;
-var explain = require('mongoose-explain');
-// var idExists = require('mongoose-idexists');
+import explain from 'mongoose-explain';
+// import idExists from 'mongoose-idexists';
 
 // TODO: Get code working to validate crops to make sure they exist
 var companionshipSchema = new Schema({

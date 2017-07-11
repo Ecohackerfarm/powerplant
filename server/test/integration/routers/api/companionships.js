@@ -1,16 +1,19 @@
-var rootDir = '../../../..';
-var rootUrl = '/api/companionships';
-var jsonType = 'application/json; charset=utf-8';
+const rootUrl = '/api/companionships';
+const jsonType = 'application/json; charset=utf-8';
 
-var expect = require('chai').expect;
-var app = require(rootDir + '/app.js');
-var request = require('supertest')(app);
-var Helper = require('../routerHelpers');
-var checkCompanionship = Helper.checkCompanionship;
-var sendForm = Helper.sendForm;
-var randString = Helper.randString;
-var ObjectId = require('mongoose').Types.ObjectId;
-var Companionship = require(rootDir + "/models/companionship");
+import {expect} from 'chai';
+import path from 'path';
+import app from "/server/app";
+import supertest from 'supertest';
+import Helper from '../routerHelpers';
+import Companionship from "/server/models/companionship";
+const checkCompanionship = Helper.checkCompanionship;
+const sendForm = Helper.sendForm;
+const randString = Helper.randString;
+import {Types} from 'mongoose';
+const {ObjectId} = Types;
+
+const request = supertest(app);
 
 describe(rootUrl + "/", function() {
   var url = rootUrl + "/";

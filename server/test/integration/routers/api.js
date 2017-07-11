@@ -1,12 +1,13 @@
-var root = '../../../';
 var rootUrl = '/api';
 var jsonType = 'application/json; charset=utf-8';
 
 
-var expect = require('chai').expect;
-var express = require('express');
-var app = require(root + 'app.js');
-var request = require('supertest')(app);
+import {expect} from 'chai';
+import express from 'express';
+import app from '/server/app.js';
+import supertest from 'supertest';
+
+const request = supertest(app);
 
 describe(rootUrl + '/*', function() {
   describe('GET', function() {
