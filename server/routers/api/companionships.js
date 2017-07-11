@@ -3,29 +3,28 @@ import Companionship from '../../models/companionship';
 import Crop from '../../models/crop';
 import Helper from '../../helpers/data_validation';
 
-var router = express.Router();
+const router = express.Router();
 
 // All routes have the base route: /companionships
 
 router.route('/')
-  .get(function(req, res) {
+  .get((req, res) => {
     // get all combinations - this is REALLY slow (over 2s) but it's also a huge request
     // could consider pagination - return 50 results and a link to the next 50
-    Companionship.find({}, function(err, result) {
-      console.log("Fetched " + result.length + " companionships");
+    Companionship.find({}, (err, result) => {
       res.json(result);
     });
   })
-  .post(function(req, res, next) {
+  .post((req, res, next) => {
     req.ids = [req.body.crop1, req.body.crop2];
     next();
   },
   Helper.idValidator,
   Helper.checkCrops,
-  function(req, res, next) {
+  (req, res, next) => {
     // This should be the ONLY route to add a new combination
     // first need to check if it exists already
-    Companionship.find().byCrop(req.ids[0], req.ids[1]).exec(function(err, matches) {
+    Companionship.find().byCrop(req.ids[0], req.ids[1]).exec((err, matches) => {
       if (err) {
         next({status: 500, message: err.message});
       }
@@ -34,7 +33,7 @@ router.route('/')
           res.status(303).location('/api/companionships/' + matches[0]).json();
         }
         else {
-          new Companionship(req.body).save(function(err, combo) {
+          new Companionship(req.body).save((err, combo) => {
             if (err) {
               next({status:400, message: err.message});
             }
@@ -57,45 +56,46 @@ router.route('/')
   });
 
 router.route('/scores')
-  .all(function(req, res, next) {
+  .all((req, res, next) => {
     req.ids = (req.query.id || "").split(",");
     next();
   },
   Helper.idValidator,
   Helper.fetchCropsWithCompanionships)
-  .get(function(req, res, next) {
-    var crops = req.crops;
-    var companionships = crops.map(function(crop) {
+  .get((req, res, next) => {
+    const crops = req.crops;
+    const companionships = crops.map((crop) => {
       return crop.companionships;
     });
-    var ids = req.ids;
-    var scores = Helper.getCompanionshipScores(companionships, ids);
+    const ids = req.ids;
+    const scores = Helper.getCompanionshipScores(companionships, ids);
     res.json(scores);
   });
 
 router.route('/:id')
-  .all(function(req, res, next) {
+  .all((req, res, next) => {
     // storing the id in the request for idValidator
     req.ids = [req.params.id];
     next();
   },
   Helper.idValidator, // validate id (sends 400 if malformed id)
   Helper.fetchCompanionships) // fetch item (sends 404 if nonexistent)
-  .get(function(req, res, next) {
+  .get((req, res, next) => {
     // fetching a specific companionship
     // will be stored in req.companionships by Helper.fetchCompanionships
-    if (req.companionships.length === 1) {
-      res.status(200).json(req.companionships[0]);
+    const [companionship] = req.companionships;
+    if (typeof companionship !== 'undefined') {
+      res.status(200).json(companionship);
     }
     else {
       console.log("Something went wrong in fetchCompanionships");
       next({status: 500}); // sending an http 500 code to the error handling middleware
     }
   })
-  .put(function(req, res, next) {
+  .put((req, res, next) => {
     // TODO: validate crop1 and crop2
-    var c1Exists = req.body.hasOwnProperty("crop1");
-    var c2Exists = req.body.hasOwnProperty("crop2");
+    const c1Exists = req.body.hasOwnProperty("crop1");
+    const c2Exists = req.body.hasOwnProperty("crop2");
     req.ids = [];
     if (c1Exists) {
       req.ids.push(req.body.crop1);
@@ -110,13 +110,14 @@ router.route('/:id')
   },
   Helper.idValidator,
   Helper.checkCrops,
-  function(req, res, next) {
+  (req, res, next) => {
     // keep in mind we probably don't want anyone changing the crops this refers to
     // but maybe we do. could potentially be useful in case someone makes companionship info with the wrong crops
     // by accident. leaving for now.
-    if (req.companionships.length === 1) {
-      Object.assign(req.companionships[0], req.body); // adding the properties specific in the request body to the companionship
-      req.companionships[0].save(function(err, result) {
+    const [companionship] = req.companionships;
+    if (typeof companionship !== 'undefined') {
+      Object.assign(companionship, req.body); // adding the properties specific in the request body to the companionship
+      companionship.save((err, result) => {
         if (err) {
           err.status = 400;
           console.log("Error: " + err.message);
@@ -132,9 +133,10 @@ router.route('/:id')
       next({status: 500});
     }
   })
-  .delete(function(req, res, next) {
-    if (req.companionships.length === 1) {
-      req.companionships[0].remove(function(err) {
+  .delete((req, res, next) => {
+    const [companionship] = req.companionships;
+    if (typeof companionship !== 'undefined') {
+      companionship.remove((err) => {
         if (err) {
           // could be an authentication error, but that doesn't exist yet
           err.status = 500;
@@ -151,4 +153,4 @@ router.route('/:id')
     }
   });
 
-module.exports = router;
+export default router;

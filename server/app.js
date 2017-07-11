@@ -6,8 +6,8 @@ import webpack from 'webpack';
 import webpackMiddleware from 'webpack-dev-middleware';
 import webpackHotWiddleware from 'webpack-hot-middleware';
 import webpackConfig from '../webpack.config.dev';
-
 import bodyParser from 'body-parser';
+import apiRouter from './routers/api';
 
 // build our express app
 var app = express();
@@ -29,7 +29,7 @@ app.use(bodyParser.urlencoded({
   bodyParser.json());
 
 // set up our routers
-app.use('/api', require('./routers/api'));
+app.use('/api', apiRouter);
 // thank the LORD this works correctly
 app.get("*", function(req, res) {
   res.sendFile(path.join(DIST_DIR, "index.html"));

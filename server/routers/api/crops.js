@@ -8,12 +8,12 @@ var router = express.Router();
 // All routes have the base route /crops
 
 router.route('/')
-  .get(function(req, res, next) {
+  .get((req, res, next) => {
     // validate req
     if (typeof req.query.name !== 'undefined') {
       var cropName = Helper.escapeRegEx(req.query.name);
       var regex = new RegExp(cropName, "i");
-      Crop.find().byName(cropName).exec(function(err, crops) {
+      Crop.find().byName(cropName).exec((err, crops) => {
         if (err) {
           next({status: 500, message: "Error fetching crops"});
         }
@@ -27,8 +27,8 @@ router.route('/')
       next();
     }
   })
-  .get(function(req, res) {
-    Crop.find({}, function(err, crops) {
+  .get((req, res) => {
+    Crop.find({}, (err, crops) => {
       if (err) {
         next({status: 500, message: "Error fetching crops", err: err});
       }
@@ -37,8 +37,8 @@ router.route('/')
       }
     });
   })
-  .post(function(req, res, next) {
-    new Crop(req.body).save(function(err, crop) {
+  .post((req, res, next) => {
+    new Crop(req.body).save((err, crop) => {
       if (err) {
         next({status: 400, message: err.message});
       }
@@ -51,13 +51,13 @@ router.route('/')
 
 router.route('/:cropId')
   // first validate the id by extracting and using helper function
-  .all(function(req, res, next) {
+  .all((req, res, next) => {
     req.ids = [req.params.cropId];
     next();
   },
   Helper.idValidator,
   Helper.fetchCrops)
-  .get(function(req, res, next) {
+  .get((req, res, next) => {
     // helper function should have stored array of crops in req.crops
     if (req.crops.length === 1) {
       res.json(req.crops[0]);
@@ -67,10 +67,10 @@ router.route('/:cropId')
       res.status(500).json();
     }
   })
-  .put(function(req, res, next) {
+  .put((req, res, next) => {
     // since object ids are generated internally, this can never be used to create a new crop
     // thus the user is trying to update a crop
-    Crop.findByIdAndUpdate(req.params.cropId, req.body, {new: true}, function(err, crop) {
+    Crop.findByIdAndUpdate(req.params.cropId, req.body, {new: true}, (err, crop) => {
       if (err) {
         // we already know the crop exists, so it must be bad data
         next({status: 400, message: err.message});
@@ -80,13 +80,13 @@ router.route('/:cropId')
       }
     });
   })
-  .delete(function(req, res, next) {
-    Companionship.find().byCrop(req.params.cropId).remove().exec(function(err) {
+  .delete((req, res, next) => {
+    Companionship.find().byCrop(req.params.cropId).remove().exec((err) => {
       if(err) {
         next({status: 500, message: err.message});
       }
       else {
-        Crop.findByIdAndRemove(req.params.cropId, function(err) {
+        Crop.findByIdAndRemove(req.params.cropId, (err) => {
           if (err) {
             next({status: 500, message: err.message});
           }
@@ -100,13 +100,13 @@ router.route('/:cropId')
 
 // all associated companionship objects of the given cropid
 router.route('/:cropId/companionships')
-  .all(function(req, res, next) {
+  .all((req, res, next) => {
     req.ids = [req.params.cropId];
     next();
   },
   Helper.idValidator,
   Helper.fetchCropsWithCompanionships)
-  .get(function(req, res, next) {
+  .get((req, res, next) => {
     if (req.crops.length === 1) {
       res.json(req.crops[0].companionships);
     }
@@ -118,14 +118,14 @@ router.route('/:cropId/companionships')
 // fetching a Companionship object given crop ids
 // TODO: think about renaming this to make more sense
 router.route('/:cropId1/companionships/:cropId2')
-  .all(function(req, res, next) {
+  .all((req, res, next) => {
     req.ids = [req.params.cropId1, req.params.cropId2];
     next();
   },
   Helper.idValidator,
   Helper.checkCrops)
-  .get(function(req, res, next) {
-    Companionship.find().byCrop(req.ids[0], req.ids[1]).exec(function(err, matches) {
+  .get((req, res, next) => {
+    Companionship.find().byCrop(req.ids[0], req.ids[1]).exec((err, matches) => {
       if (err) {
         next({status: 500, message: err.message});
       }
@@ -141,4 +141,4 @@ router.route('/:cropId1/companionships/:cropId2')
   }
 );
 
-module.exports = router;
+export default router;
