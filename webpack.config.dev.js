@@ -21,7 +21,10 @@ export default {
     loaders: [
       {
         test: /\.js$/,
-        include: path.join(__dirname, 'client'),
+        include: [
+          path.join(__dirname, 'client'),
+          path.join(__dirname, 'shared')
+        ],
         loaders: [ 'react-hot-loader', 'babel-loader' ]
       }
     ]
@@ -29,6 +32,7 @@ export default {
   resolve: {
     extensions: [ '*', '.js' ],
     alias: {
+      shared: path.resolve(__dirname, 'shared'),
       utils: path.resolve(__dirname, 'client/utils')
     }
   }

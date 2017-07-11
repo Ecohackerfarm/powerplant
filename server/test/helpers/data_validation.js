@@ -11,6 +11,7 @@ describe('data_validation', function() {
       var ids = ['12345', 'JF(jrf9Nd3gkd0fj2ln  j F)'];
       var res = {};
       var req = {ids: ids};
+      var error;
       var next = function(err) {
         error = err;
       }
@@ -21,6 +22,7 @@ describe('data_validation', function() {
       var ids = [objId(), objId()];
       var req = {ids: ids};
       var res = {};
+      var error;
       var next = function(err) {
         error = err;
       }

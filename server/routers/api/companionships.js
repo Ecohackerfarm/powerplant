@@ -9,8 +9,10 @@ var router = express.Router();
 
 router.route('/')
   .get(function(req, res) {
-    // get all combinations
+    // get all combinations - this is REALLY slow (over 2s) but it's also a huge request
+    // could consider pagination - return 50 results and a link to the next 50
     Companionship.find({}, function(err, result) {
+      console.log("Fetched " + result.length + " companionships");
       res.json(result);
     });
   })

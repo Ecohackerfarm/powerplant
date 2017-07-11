@@ -16,6 +16,7 @@ describe(rootUrl + "/", function() {
   var url = rootUrl + "/";
   describe("GET", function() {
     it("should return an array of companionships", function() {
+      this.timeout(5000);
       return request.get(url)
         .expect(200)
         .expect('Content-Type', jsonType)
