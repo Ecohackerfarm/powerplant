@@ -24,8 +24,9 @@ app.use(webpackMiddleware(compiler, {
 }));
 app.use(webpackHotWiddleware(compiler));
 app.use(bodyParser.urlencoded({
-  extended: true
-}));
+    extended: true
+  }),
+  bodyParser.json());
 
 // set up our routers
 app.use('/api', require('./routers/api'));

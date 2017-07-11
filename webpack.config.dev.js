@@ -27,6 +27,9 @@ export default {
     ]
   },
   resolve: {
-    extensions: [ '*', '.js' ]
+    extensions: [ '*', '.js' ],
+    alias: {
+      utils: path.resolve(__dirname, 'client/utils')
+    }
   }
 }

@@ -1,16 +1,20 @@
 import React from 'react';
+import PropTypes from 'prop-types';
+import {post} from 'utils';
+import {connect} from 'react-redux';
+import {userSignupRequest} from '../../actions/registerActions';
+
+import RegisterForm from './RegisterForm';
 
 class Register extends React.Component {
+  static propTypes = {
+    userSignupRequest: PropTypes.func.isRequired
+  }
+
   render() {
-    return (
-      <form action="">
-        <input id="username" hint="Username" type="text"/>
-        <input id="email" hint="Email" type="text"/>
-        <input id="password" hint="Password" type="password"/>
-        <button>Register</button>
-      </form>
-    )
+    const {userSignupRequest} = this.props;
+    return <RegisterForm userSignupRequest={userSignupRequest} />
   }
 }
 
-export default Register;
+export default connect(null, {userSignupRequest})(Register)
