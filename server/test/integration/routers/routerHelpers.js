@@ -2,52 +2,55 @@ import {expect} from 'chai';
 import Crop from "/server/models/crop";
 import Companionship from "/server/models/companionship";
 
+import * as myself from './routerHelpers'; // import myself (it's ok es6 supports cyclic imports)
+export default myself; // this allows default importing AND named importing
+
 // Helper functions for integration tests go here
 
-module.exports.sendForm = function(request, data) {
+export function sendForm(request, data) {
   return request
     .set('Content-Type', 'application/x-www-form-urlencoded')
     .send(data);
 }
 
-module.exports.randString = function() {
+export function randString() {
   return Math.random().toString(36).substring(7);
 }
 
-module.exports.allStrings = function(array) {
-  return array.every(function(item) {
+export function allStrings(array) {
+  return array.every((item) => {
     return typeof item === 'string';
   });
 }
 
-module.exports.checkCompanionship = function(item) {
+export function checkCompanionship(item) {
   expect(item).to.contain.all.keys('crop1', 'crop2', 'compatibility');
   expect(item.crop1 <= item.crop2).to.equal(true);
 }
 
-var sessionString = "test" + module.exports.randString();
+const sessionString = "test" + module.exports.randString();
 
-module.exports.createTestCrop = function(cb) {
+export function createTestCrop(cb) {
   new Crop({
     name: sessionString,
     display_name: sessionString
-  }).save(function(err, crop) {
+  }).save((err, crop) => {
     cb(crop);
   });
 }
 
-module.exports.createTestCompanionship = function(cb) {
-  module.exports.createTestCrop(function(crop1) {
-    module.exports.createTestCrop(function(crop2) {
+export function createTestCompanionship(cb) {
+  module.exports.createTestCrop((crop1) => {
+    module.exports.createTestCrop((crop2) => {
       new Companionship({
         crop1: crop1,
         crop2: crop2,
         compatibility: 3
-      }).save(function(err, comp) {
+      }).save((err, comp) => {
         crop1.companionships.push(comp._id);
-        crop1.save(function() {
+        crop1.save(() => {
           crop2.companionships.push(comp._id);
-          crop2.save(function() {
+          crop2.save(() => {
             cb(comp);
           });
         });
@@ -57,13 +60,13 @@ module.exports.createTestCompanionship = function(cb) {
 }
 
 // remove all companionships with things with the word
-module.exports.cleanDb = function(cb) {
-  Crop.find().byName(sessionString).exec(function(err, list) {
+export function cleanDb(cb) {
+  Crop.find().byName(sessionString).exec((err, list) => {
     console.log("Found " + list.length + " test crop instances");
-    list.forEach(function(crop) {
-      Companionship.find().byCrop(crop).exec(function(err, comps) {
+    list.forEach((crop) => {
+      Companionship.find().byCrop(crop).exec((err, comps) => {
         console.log("Found " + comps.length + " test companionship instances");
-        comps.forEach(function(c) {
+        comps.forEach((c) => {
           c.remove();
         });
       });

@@ -5,48 +5,48 @@ import {expect} from 'chai';
 import path from 'path';
 import app from "/server/app";
 import supertest from 'supertest';
-import Helper from '../routerHelpers';
+import {checkCompanionship,
+      sendForm,
+      randString,
+      createTestCompanionship} from '../routerHelpers';
 import Companionship from "/server/models/companionship";
-const checkCompanionship = Helper.checkCompanionship;
-const sendForm = Helper.sendForm;
-const randString = Helper.randString;
 import {Types} from 'mongoose';
 const {ObjectId} = Types;
 
 const request = supertest(app);
 
-describe(rootUrl + "/", function() {
-  var url = rootUrl + "/";
-  describe("GET", function() {
+describe(rootUrl + "/", () => {
+  const url = rootUrl + "/";
+  describe("GET", () => {
     it("should return an array of companionships", function() {
-      this.timeout(5000);
+      this.timeout(5000); // needed to leave as a non-arrow function so that 'this' reference above works
       return request.get(url)
         .expect(200)
         .expect('Content-Type', jsonType)
-        .then(function(res) {
+        .then((res) => {
           expect(res.body).to.be.an('array').and.to.have.length.above(0);
           res.body.forEach(checkCompanionship);
         });
     });
   });
-  describe("POST", function() {
-    var crop1, crop2;
-    before(function() {
-      var cropData = {
+  describe("POST", () => {
+    let crop1, crop2;
+    before(() => {
+      const cropData = {
         name: randString(),
         display_name: "Snozzberry"
       };
       return sendForm(request.post('/api/crops'), cropData)
-        .then(function(res) {
+        .then((res) => {
           crop1 = res.body._id.toString();
           return sendForm(request.post('/api/crops'), cropData)
-            .then(function(res) {
+            .then((res) => {
               crop2 = res.body._id.toString();
             });
         });
     });
-    it("should create a new companionship with valid existing crop ids", function() {
-      var newComp = {
+    it("should create a new companionship with valid existing crop ids", () => {
+      const newComp = {
         crop1: crop1,
         crop2: crop2,
         compatibility: -1
@@ -54,24 +54,24 @@ describe(rootUrl + "/", function() {
       return sendForm(request.post(url), newComp)
         .expect(201);
     });
-    it("should 303 if trying to create a companionship that already exists", function() {
-      var newComp = {
+    it("should 303 if trying to create a companionship that already exists", () => {
+      const newComp = {
         crop1: crop2,
         crop2: crop1,
         compatibility: -1
       };
       return sendForm(request.post(url), newComp)
         .expect(303)
-        .then(function(res) {
+        .then((res) => {
           expect(res.header).to.have.property('location').and.to.contain("/api/companionships/");
         });
     });
-    it("should 404 with nonexistent crop ids", function() {
+    it("should 404 with nonexistent crop ids", () => {
       // TODO: This is a BIZARRE bug
       // when using a nonexistent but valid object id here, the error object gets printed to the console
       // i see no print statement in the entire project that prints an error object
       // figure out where this is coming from?
-      var newComp = {
+      const newComp = {
         crop1: ObjectId().toString(),
         crop2: ObjectId().toString(),
         compatibility: false
@@ -79,8 +79,8 @@ describe(rootUrl + "/", function() {
       return sendForm(request.post(url), newComp)
         .expect(404);
     });
-    it("should 400 with invalid crop ids", function() {
-      var newComp = {
+    it("should 400 with invalid crop ids", () => {
+      const newComp = {
         crop1: "ja;fsifa093",
         crop2: "jf930wjf93wf",
         compatiblity: true
@@ -91,111 +91,111 @@ describe(rootUrl + "/", function() {
   });
 });
 
-describe(rootUrl + "/scores", function() {
-  var url = rootUrl + "/scores";
-  describe("GET", function() {
-    var appleId, potatoId, beanId;
-    before(function() {
+describe(rootUrl + "/scores", () => {
+  const url = rootUrl + "/scores";
+  describe("GET", () => {
+    let appleId, potatoId, beanId;
+    before(() => {
       // fetching 3 crops
-      var cropUrl = '/api/crops?name=';
+      const cropUrl = '/api/crops?name=';
       return request.get(cropUrl + "apple")
-        .then(function(appleRes) {
+        .then((appleRes) => {
           appleId = appleRes.body[0]._id;
           return request.get(cropUrl + "potato")
-            .then(function(potatoRes) {
+            .then((potatoRes) => {
               potatoId = potatoRes.body[0]._id;
               return request.get(cropUrl + "bean")
-                .then(function(beanRes) {
+                .then((beanRes) => {
                   beanId = beanRes.body[0]._id;
                 });
             });
         });
     });
-    it("should 400 with no query", function() {
+    it("should 400 with no query", () => {
       return request.get(url)
         .expect(400);
     });
-    it("should return numerical scores with all valid crop ids", function() {
+    it("should return numerical scores with all valid crop ids", () => {
       return request.get(url + "?id=" + appleId + "," + potatoId + "," + beanId)
         .expect(200)
         .expect('Content-Type', jsonType)
-        .then(function(res) {
+        .then((res) => {
           expect(Object.keys(res.body)).to.have.length.above(0);
-          for (var id in res.body) {
+          for (let id in res.body) {
             expect(res.body[id]).to.be.within(-1, 1);
           }
         });
     });
-    it("should 400 if there is a malformed crop id", function() {
+    it("should 400 if there is a malformed crop id", () => {
       return request.get(url + "?id=" + appleId + ",fa3j9w0f a0f9jwf")
         .expect(400);
     });
-    it("should 404 if there is a nonexistent crop id", function() {
+    it("should 404 if there is a nonexistent crop id", () => {
       return request.get(url + "?id=" + appleId + "," + ObjectId().toString())
         .expect(404);
     });
   });
 });
 
-describe(rootUrl + "/:id", function() {
-  var url = rootUrl;
-  var validId;
-  var validCompatibility;
-  var valid;
-  before(function(done) {
-    Helper.createTestCompanionship(function(comp) {
+describe(rootUrl + "/:id", () => {
+  const url = rootUrl;
+  let validId;
+  let validCompatibility;
+  let valid;
+  before((done) => {
+    createTestCompanionship((comp) => {
       validId = comp._id.toString();
       validCompatibility = comp.compatibility;
       valid = comp;
       done();
     })
   });
-  describe("GET", function() {
-    it("should 400 for a malformed id", function() {
+  describe("GET", () => {
+    it("should 400 for a malformed id", () => {
       return request.get(url + "/a")
         .expect(400);
     });
-    it("should 404 for a nonexistent id", function() {
+    it("should 404 for a nonexistent id", () => {
       return request.get(url + "/" + ObjectId().toString())
         .expect(404);
     });
-    it("should return the correct companionship for a valid id", function() {
+    it("should return the correct companionship for a valid id", () => {
       return request.get(url + "/" + validId)
         .expect(200)
         .expect('Content-Type', jsonType)
-        .then(function(res) {
+        .then((res) => {
           expect(res.body).to.have.property('_id').and.to.equal(validId)
         });
     });
   });
-  describe("PUT", function() {
-    it("should modify the specified fields of a valid id", function() {
-      var changes = {
+  describe("PUT", () => {
+    it("should modify the specified fields of a valid id", () => {
+      const changes = {
         compatibility: validCompatibility>0?-1:3
       };
       return sendForm(request.put(url + "/" + validId), changes)
         .expect(200)
         .expect('Content-Type', jsonType)
-        .then(function(res) {
+        .then((res) => {
           expect(res.body).to.have.property('_id').and.to.equal(validId);
           expect(res.body).to.have.property('compatibility').and.to.equal(changes.compatibility);
         });
     });
-    it("should 404 on nonexistent id", function() {
+    it("should 404 on nonexistent id", () => {
       return sendForm(request.put(url + "/" + ObjectId().toString()), {})
         .expect(404);
     });
-    it("should 400 on invalid id", function() {
+    it("should 400 on invalid id", () => {
       return sendForm(request.put(url + "/afw2j"), {})
         .expect(400);
     });
   });
-  describe("DELETE", function() {
-    it("should delete a valid companionship", function() {
+  describe("DELETE", () => {
+    it("should delete a valid companionship", () => {
       return request.delete(url + "/" + validId)
         .expect(200)
-        .then(function(res) {
-          return Companionship.findById(validId, function(err, comp) {
+        .then((res) => {
+          return Companionship.findById(validId, (err, comp) => {
             expect(comp).to.be.null;
           });
         });
