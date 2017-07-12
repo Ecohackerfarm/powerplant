@@ -1,9 +1,9 @@
 # TOC
-   - [data_validation](#data_validation)
-     - [#idValidation()](#data_validation-idvalidation)
-     - [#getCompanionshipScores()](#data_validation-getcompanionshipscores)
-     - [#fetchModel()](#data_validation-fetchmodel)
-     - [#checkModel()](#data_validation-checkmodel)
+   - [data-validation](#data-validation)
+     - [#idValidation()](#data-validation-idvalidation)
+     - [#getCompanionshipScores()](#data-validation-getcompanionshipscores)
+     - [#fetchModel()](#data-validation-fetchmodel)
+     - [#checkModel()](#data-validation-checkmodel)
    - [/api/companionships/](#apicompanionships)
      - [GET](#apicompanionships-get)
      - [POST](#apicompanionships-post)
@@ -28,9 +28,9 @@
      - [GET](#api-get)
 <a name=""></a>
  
-<a name="data_validation"></a>
-# data_validation
-<a name="data_validation-idvalidation"></a>
+<a name="data-validation"></a>
+# data-validation
+<a name="data-validation-idvalidation"></a>
 ## #idValidation()
 should reject invalid ids.
 
@@ -42,7 +42,7 @@ var error = void 0;
 var next = function next(err) {
   error = err;
 };
-_data_validation2.default.idValidator(req, res, next);
+_data-validation2.default.idValidator(req, res, next);
 (0, _chai.expect)(error.status).to.equal(400);
 ```
 
@@ -56,17 +56,17 @@ var error = void 0;
 var next = function next(err) {
   error = err;
 };
-_data_validation2.default.idValidator(req, res, next);
+_data-validation2.default.idValidator(req, res, next);
 (0, _chai.expect)(typeof error === 'undefined' ? 'undefined' : _typeof(error)).to.equal('undefined');
 (0, _chai.expect)(req.ids).to.equal(ids);
 ```
 
-<a name="data_validation-getcompanionshipscores"></a>
+<a name="data-validation-getcompanionshipscores"></a>
 ## #getCompanionshipScores()
 should return 1 or -1 for correct crops.
 
 ```js
-var results = _data_validation2.default.getCompanionshipScores(sample, ids);
+var results = _data-validation2.default.getCompanionshipScores(sample, ids);
 (0, _chai.expect)(results[a]).to.equal(1);
 (0, _chai.expect)(results[b]).to.equal(-1);
 (0, _chai.expect)(results[c]).to.equal(1);
@@ -85,7 +85,7 @@ var newData = [{ crop1: ids[1],
   crop2: d,
   compatibility: 2 }];
 sample.push(newData);
-var results = _data_validation2.default.getCompanionshipScores(sample, ids);
+var results = _data-validation2.default.getCompanionshipScores(sample, ids);
 var max = 6;
 (0, _chai.expect)(results[a]).to.equal(-1);
 (0, _chai.expect)(results[b]).to.equal(-1);
@@ -93,7 +93,7 @@ var max = 6;
 (0, _chai.expect)(results[d]).to.equal(2 / 6);
 ```
 
-<a name="data_validation-fetchmodel"></a>
+<a name="data-validation-fetchmodel"></a>
 ## #fetchModel()
 should throw 404 on nonexistent id.
 
@@ -121,7 +121,7 @@ return fetchModelError(_crop2.default, "crops", req, res).then(function (err) {
 });
 ```
 
-<a name="data_validation-checkmodel"></a>
+<a name="data-validation-checkmodel"></a>
 ## #checkModel()
 should return false for invalid id.
 

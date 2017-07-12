@@ -1,7 +1,7 @@
 import express from 'express';
 import Companionship from '../../models/companionship';
 import Crop from '../../models/crop';
-import Helper from '../../helpers/data_validation';
+import Helper from '../../helpers/data-validation';
 
 const router = express.Router();
 

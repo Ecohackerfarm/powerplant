@@ -2,7 +2,7 @@ import mongoose from 'mongoose';
 import Crop from '../models/crop';
 import Companionship from '../models/companionship';
 
-import * as myself from './data_validation';
+import * as myself from './data-validation';
 export default myself;
 
 export function idValidator(req, res, next) {

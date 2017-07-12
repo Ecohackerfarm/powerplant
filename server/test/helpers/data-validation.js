@@ -1,10 +1,10 @@
 import {expect} from 'chai';
-import validation from '../../helpers/data_validation';
+import validation from '../../helpers/data-validation';
 import Crop from '../../models/crop';
 import {Types} from 'mongoose';
 const {ObjectId} = Types;
 
-describe('data_validation', () => {
+describe('data-validation', () => {
   let validId;
   describe('#idValidation()', () => {
     it("should reject invalid ids", () => {

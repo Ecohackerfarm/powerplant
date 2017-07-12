@@ -1,7 +1,7 @@
 import express from 'express';
 import Crop from '../../models/crop.js';
 import Companionship from '../../models/companionship.js';
-import Helper from '../../helpers/data_validation';
+import Helper from '../../helpers/data-validation';
 
 var router = express.Router();
 

@@ -6,7 +6,7 @@
   "scripts": {
     "start": "nodemon --watch server --exec babel-node -- server/server.js",
     "test": "mocha --compilers js:babel-register",
-    "migrate": "node ./server/migration/full-migration.js",
+    "migrate": "babel-node ./server/migration/full-migration.js",
     "mocha-spec": "mocha --compilers js:babel-register --reporter markdown > docs/spec.md",
     "mongo": "docker run -p 27017:27017 --name pp_main -d mongo"
   },
