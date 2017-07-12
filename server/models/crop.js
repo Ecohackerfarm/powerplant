@@ -1,9 +1,9 @@
 import mongoose from 'mongoose';
-var Schema = mongoose.Schema;
-var ObjectId = Schema.Types.ObjectId;
+const Schema = mongoose.Schema;
+const ObjectId = Schema.Types.ObjectId;
 // import idExists from 'mongoose-idexists';
 
-var cropSchema = new Schema({
+const cropSchema = new Schema({
   name: {type: String, index: true, required: true},
   display_name: {type: String, required: true},
   alternate_display: String,
@@ -13,9 +13,9 @@ var cropSchema = new Schema({
 });
 
 cropSchema.query.byName = function(name) {
-  var regex = new RegExp(name, "i");
+  const regex = new RegExp(name, "i");
   return this.find({name: regex});
 }
 
-var Crop = mongoose.model('Crop', cropSchema);
-module.exports = Crop;
+const Crop = mongoose.model('Crop', cropSchema);
+export default Crop;

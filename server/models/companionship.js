@@ -1,11 +1,11 @@
 import mongoose from 'mongoose';
-var Schema = mongoose.Schema;
-var ObjectId = Schema.Types.ObjectId;
+const Schema = mongoose.Schema;
+const ObjectId = Schema.Types.ObjectId;
 import explain from 'mongoose-explain';
 // import idExists from 'mongoose-idexists';
 
 // TODO: Get code working to validate crops to make sure they exist
-var companionshipSchema = new Schema({
+const companionshipSchema = new Schema({
   crop1: {type: ObjectId, ref: "Crop", index: true, required: true},
   crop2: {type: ObjectId, ref: "Crop", index: true, required: true},
   description: String,
@@ -44,5 +44,5 @@ companionshipSchema.pre('save', function(next) {
   next();
 });
 
-var Companionship = mongoose.model('Companionship', companionshipSchema);
-module.exports = Companionship;
+const Companionship = mongoose.model('Companionship', companionshipSchema);
+export default Companionship;
