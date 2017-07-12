@@ -3,7 +3,7 @@ import Crop from '../../models/crop.js';
 import Companionship from '../../models/companionship.js';
 import Helper from '../../helpers/data-validation';
 
-var router = express.Router();
+const router = express.Router();
 
 // All routes have the base route /crops
 
@@ -11,8 +11,8 @@ router.route('/')
   .get((req, res, next) => {
     // validate req
     if (typeof req.query.name !== 'undefined') {
-      var cropName = Helper.escapeRegEx(req.query.name);
-      var regex = new RegExp(cropName, "i");
+      const cropName = Helper.escapeRegEx(req.query.name);
+      const regex = new RegExp(cropName, "i");
       Crop.find().byName(cropName).exec((err, crops) => {
         if (err) {
           next({status: 500, message: "Error fetching crops"});

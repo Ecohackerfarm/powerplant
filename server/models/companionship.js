@@ -19,7 +19,7 @@ companionshipSchema.index({crop1: 1, crop2: 1}, {unique: true});
 companionshipSchema.query.byCrop = function(crop1, crop2) {
   if (typeof crop1 !== 'undefined' && typeof crop2 !== 'undefined') {
     if (crop1 > crop2) {
-      var tmp = crop1;
+      const tmp = crop1;
       crop1 = crop2;
       crop2 = tmp;
     }
@@ -37,7 +37,7 @@ companionshipSchema.query.byCrop = function(crop1, crop2) {
 companionshipSchema.pre('save', function(next) {
   // middleware to make sure we only save our crops in alphabetic order
   if (this.crop1 > this.crop2) {
-    var tmp = this.crop1;
+    const tmp = this.crop1;
     this.crop1 = this.crop2;
     this.crop2 = tmp;
   }
