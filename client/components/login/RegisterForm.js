@@ -2,6 +2,8 @@ import React from 'react';
 import PropTypes from 'prop-types';
 import {post} from 'utils';
 import validateUser from 'shared/validation/userValidation'
+import {Button, Row, Col} from 'react-bootstrap';
+import TextFieldGroup from '../shared/TextFieldGroup';
 
 export default class RegisterForm extends React.Component {
   state = {
@@ -17,7 +19,7 @@ export default class RegisterForm extends React.Component {
 
   onChange = (evt) => {
     this.setState({
-      [evt.target.name]: evt.target.value
+      [evt.target.id]: evt.target.value
     });
   }
 
@@ -28,30 +30,42 @@ export default class RegisterForm extends React.Component {
     if (isValid) {
       this.props.userSignupRequest(this.state);
     }
-    else {
-      this.setState({errors: errors});
-    }
+    this.setState({errors: errors});
   }
 
   render() {
     const errors = this.state.errors;
     return (
-      <form onSubmit={this.onSubmit}>
-        <h2>Join the powerplant community!</h2>
-        <input onChange={this.onChange} value={this.state.username}
-          name="username" placeholder="Username" type="text"/>
-        {errors.username && <span>{errors.username}</span>}
+      <Col md={8} mdOffset={2}>
+        <form onSubmit={this.onSubmit}>
+          <h2>Join the powerplant community!</h2>
+          <TextFieldGroup
+            id="username"
+            onChange={this.onChange}
+            placeholder="Username"
+            error={errors.username}
+            value={this.state.username}/>
 
-        <input onChange={this.onChange} value={this.state.email}
-          name="email" placeholder="Email" type="text"/>
-        {errors.email && <span>{errors.email}</span>}
+          <TextFieldGroup
+            id="email"
+            onChange={this.onChange}
+            placeholder="Email"
+            error={errors.email}
+            value={this.state.email}/>
 
-        <input onChange={this.onChange} value={this.state.password}
-          name="password" placeholder="Password" type="password"/>
-        {errors.password && <span>{errors.password}</span>}
+          <TextFieldGroup
+            id="password"
+            onChange={this.onChange}
+            placeholder="Password"
+            error={errors.password}
+            type="password"
+            value={this.state.password}/>
 
-        <button>Register</button>
-      </form>
+          <Button type="submit">
+            Register
+          </Button>
+        </form>
+      </Col>
     )
   }
 }
