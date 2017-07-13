@@ -8,6 +8,7 @@ import HeaderBrand from './HeaderBrand';
 
 class Header extends React.Component {
   render() {
+
     const customToggleStyle = {float:"left", marginLeft:"15px"};
     return (
       <Navbar collapseOnSelect>
@@ -16,7 +17,7 @@ class Header extends React.Component {
           <HeaderBrand />
         </Navbar.Header>
         <Navbar.Collapse>
-          <Nav>
+          <Nav pullLeft>
             <LinkContainer exact to="/">
               <NavItem eventKey={1}>Home</NavItem>
             </LinkContainer>

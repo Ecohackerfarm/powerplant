@@ -3,11 +3,11 @@ import PropTypes from 'prop-types';
 import {connect} from 'react-redux';
 import {Col} from 'react-bootstrap';
 import {userSignupRequest} from '/client/actions/userActions';
-import HeaderTitle from '../shared/HeaderTitle';
+import SetHeaderTitle from '../shared/SetHeaderTitle';
 
 import RegisterForm from './RegisterForm';
 
-class Register extends React.Component {
+class RegisterPage extends React.Component {
   static propTypes = {
     userSignupRequest: PropTypes.func.isRequired
   }
@@ -27,11 +27,11 @@ class Register extends React.Component {
     return (
       <Col md={6} mdOffset={3}>
         {this.state.success && <Redirect to="/" />}
-        <HeaderTitle>Sign up</HeaderTitle>
+        <SetHeaderTitle>Sign up</SetHeaderTitle>
         <RegisterForm onSuccess={this.onSuccess} userSignupRequest={userSignupRequest} />
       </Col>
       )
   }
 }
 
-export default connect(null, {userSignupRequest})(Register)
+export default connect(null, {userSignupRequest})(RegisterPage)

@@ -1,9 +1,13 @@
 import React from 'react';
 import PropTypes from 'prop-types';
+import {Col} from 'react-bootstrap';
 import {connect} from 'react-redux';
 import {setTitle} from '/client/actions/headerActions';
 
-class HeaderTitle extends React.Component {
+// for over md: show in header
+// for under md: hide in header, show inline
+
+class SetHeaderTitle extends React.Component {
   static propTypes = {
     setTitle: PropTypes.func.isRequired
   }
@@ -21,4 +25,4 @@ class HeaderTitle extends React.Component {
   }
 }
 
-export default connect(null, {setTitle})(HeaderTitle);
+export default connect(null, {setTitle})(SetHeaderTitle);

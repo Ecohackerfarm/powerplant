@@ -1,16 +1,18 @@
-import * as type from './actions/types';
+import {combineReducers} from 'redux';
+import * as reducers from './reducers';
 
 const initialState = {
-  title: "powerplant"
+  title: "powerplant",
+  auth: {
+    isAuthenticated: false,
+    currentUser: null
+  },
+  currLocation: null,
+  beds: [],
+  crops: [],
+  cropInfos: [],
+  cropRelationships: [],
+
 }
 
-export default function(state=initialState, action={}) {
-  switch (action.type) {
-    case type.SET_TITLE:
-      return Object.assign({}, state, {
-        title: action.title
-      });
-    default:
-      return state;
-  }
-}
+export default combineReducers({...reducers});

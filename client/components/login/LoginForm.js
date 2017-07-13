@@ -79,8 +79,8 @@ export default class LoginForm extends React.Component {
 
         <Button
           bsStyle="primary"
-          disabled={isLoading} t
-          ype={!isLoading ? "submit" : null}>
+          disabled={isLoading}
+          type={!isLoading ? "submit" : null}>
           Login
         </Button>
       </form>

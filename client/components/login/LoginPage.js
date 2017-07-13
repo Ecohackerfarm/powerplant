@@ -5,7 +5,7 @@ import PropTypes from 'prop-types';
 import LoginForm from './LoginForm';
 import {Col} from 'react-bootstrap';
 import {userLoginRequest} from '/client/actions/userActions';
-import HeaderTitle from '../shared/HeaderTitle';
+import SetHeaderTitle from '../shared/SetHeaderTitle';
 
 class Login extends React.Component {
   static propTypes = {
@@ -30,7 +30,7 @@ class Login extends React.Component {
       // back to the home screen
       <Col md={6} mdOffset={3}>
         {this.state.success && <Redirect to="/" />}
-        <HeaderTitle>Login</HeaderTitle>
+        <SetHeaderTitle>Login</SetHeaderTitle>
         <LoginForm
           onSuccess={this.onSuccess}
           userLoginRequest={userLoginRequest}/>

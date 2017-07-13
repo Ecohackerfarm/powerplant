@@ -1,7 +1,7 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 import {connect} from 'react-redux';
-import {Navbar} from 'react-bootstrap';
+import {Navbar, Col} from 'react-bootstrap';
 
 class HeaderBrand extends React.Component {
   static propTypes = {
@@ -14,7 +14,7 @@ class HeaderBrand extends React.Component {
 
   render() {
     return (
-        <Navbar.Brand>{this.props.title}</Navbar.Brand>
+        <Col mdHidden lgHidden componentClass={Navbar.Brand}>{this.props.title}</Col>
     );
   }
 }
