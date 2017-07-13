@@ -30,10 +30,6 @@ export default {
     ]
   },
   resolve: {
-    extensions: [ '*', '.js' ],
-    alias: {
-      shared: path.resolve(__dirname, 'shared'),
-      utils: path.resolve(__dirname, 'client/utils')
-    }
+    extensions: [ '*', '.js' ]
   }
 }

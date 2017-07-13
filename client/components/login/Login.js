@@ -23,9 +23,14 @@ class Login extends React.Component {
 
   render() {
     return (
+      // in react-router v4 a Redirect is a page element
+      // so we want to include a redirect element if we want to switch
+      // back to the home screen
       <Col md={8} mdOffset={2}>
-        <LoginForm onSuccess={this.onSuccess} userLoginRequest={userLoginRequest}/>
         {this.state.success && <Redirect to="/" />}
+           <LoginForm
+            onSuccess={this.onSuccess}
+            userLoginRequest={this.props.userLoginRequest}/>
       </Col>
     )
   }

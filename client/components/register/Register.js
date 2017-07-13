@@ -1,6 +1,5 @@
 import React from 'react';
 import PropTypes from 'prop-types';
-import {post} from 'utils';
 import {connect} from 'react-redux';
 import {userSignupRequest} from '/client/actions/userActions';
 

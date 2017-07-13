@@ -7,6 +7,7 @@ import {createStore, applyMiddleware} from 'redux';
 
 import App from './components/App';
 
+// create redux store
 const store = createStore(
   (state = {}) => state,
   applyMiddleware(thunk)

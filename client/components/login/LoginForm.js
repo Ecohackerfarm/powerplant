@@ -26,10 +26,15 @@ export default class LoginForm extends React.Component {
       errors: errors
     });
     if (isValid) {
-      // TODO: this is where we request a JSON web token from the server
-      // (i think)
-      this.props.userLoginRequest(this.state);
-      this.props.onSuccess();
+      // calling our redux action to log in
+      // TODO: is the best way to do this to store success in redux store
+      // and then redirect from Login based on that?
+      this.props.userLoginRequest(this.state)
+      .then(this.props.onSuccess, this.props.onSuccess);
+      // (res) => {
+      //   this.setState({
+      //     errors: res.data.errors
+      //   });
     }
   }
 

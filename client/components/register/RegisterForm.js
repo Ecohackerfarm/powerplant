@@ -1,7 +1,6 @@
 import React from 'react';
 import PropTypes from 'prop-types';
-import {post} from 'utils';
-import validateUser from 'shared/validation/userValidation'
+import validateUser from '/shared/validation/userValidation'
 import {Button, Row, Col} from 'react-bootstrap';
 import TextFieldGroup from '../shared/TextFieldGroup';
 
