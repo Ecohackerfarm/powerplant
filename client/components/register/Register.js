@@ -2,7 +2,7 @@ import React from 'react';
 import PropTypes from 'prop-types';
 import {post} from 'utils';
 import {connect} from 'react-redux';
-import {userSignupRequest} from '../../actions/registerActions';
+import {userSignupRequest} from '/client/actions/userActions';
 
 import RegisterForm from './RegisterForm';
 

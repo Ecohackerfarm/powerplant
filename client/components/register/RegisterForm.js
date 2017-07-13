@@ -25,7 +25,6 @@ export default class RegisterForm extends React.Component {
 
   onSubmit = (evt) => {
     evt.preventDefault();
-    this.state.errors = {};
     const {errors, isValid} = validateUser(this.state);
     if (isValid) {
       this.props.userSignupRequest(this.state);

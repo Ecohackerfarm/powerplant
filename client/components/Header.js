@@ -15,16 +15,16 @@ class Header extends React.Component {
         </Navbar.Header>
         <Navbar.Collapse>
           <Nav>
-            <LinkContainer to="/">
+            <LinkContainer exact to="/">
               <NavItem eventKey={1}>Home</NavItem>
             </LinkContainer>
           </Nav>
           <Nav pullRight>
-            <LinkContainer to="/register">
-              <NavItem eventKey={1}>Sign up</NavItem>
+            <LinkContainer exact to="/register">
+              <NavItem eventKey={2}>Sign up</NavItem>
             </LinkContainer>
-            <LinkContainer to="/login">
-              <NavItem eventKey={2}>Log in</NavItem>
+            <LinkContainer exact to="/login">
+              <NavItem eventKey={3}>Log in</NavItem>
             </LinkContainer>
           </Nav>
         </Navbar.Collapse>

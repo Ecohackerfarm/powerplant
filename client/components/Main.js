@@ -2,8 +2,8 @@ import React from 'react';
 import {Route, Switch} from 'react-router-dom';
 import Hello from './Hello';
 import Login from './login/Login';
-import Register from './login/Register';
-import Recover from './login/Recover';
+import Register from './register/Register';
+import Recover from './recover/Recover';
 
 
 class Main extends React.Component {

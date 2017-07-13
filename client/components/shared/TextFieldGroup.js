@@ -28,7 +28,7 @@ export default class TextFieldGroup extends React.Component {
         <FormControl
           type={this.props.type}
           value={this.props.value}
-          placeholder={this.props.placeholder}
+          placeholder={this.props.placeholder || this.props.id}
           onChange = {this.props.onChange}/>
 
         <FormControl.Feedback />
