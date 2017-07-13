@@ -1,13 +1,20 @@
 import React from 'react';
+import PropTypes from 'prop-types';
 import TextFieldGroup from '../shared/TextFieldGroup';
 import validateLogin from '/shared/validation/loginValidation';
 import {Button, FormGroup, HelpBlock} from 'react-bootstrap';
 
 export default class LoginForm extends React.Component {
+
+  static propTypes = {
+    userLoginRequest: PropTypes.func.isRequired
+  }
+
   state = {
     username: '',
     password: '',
-    errors: {}
+    errors: {},
+    isLoading: false
   }
 
   // since we reference the id, we need to make the id of each field
@@ -24,13 +31,19 @@ export default class LoginForm extends React.Component {
     const isValid = !errors.username && !errors.password;
     if (isValid) {
       // calling our redux action to log in
+      this.setState({
+        isLoading: true
+      });
       this.props.userLoginRequest(this.state)
       .then(this.props.onSuccess,
       (res) => {
         // if we get a response, use its errors
         const errors = typeof res.data === 'undefined' ?
           {form: "Unable to log in"} : res.data.errors;
-        this.setState({errors});
+        this.setState({
+          errors,
+          isLoading: false
+        });
       });
     }
     else {
@@ -41,7 +54,7 @@ export default class LoginForm extends React.Component {
   }
 
   render() {
-    const errors = this.state.errors;
+    const {errors, isLoading} = this.state;
     return (
       <form onSubmit={this.onSubmit}>
       {errors.form &&
@@ -64,7 +77,10 @@ export default class LoginForm extends React.Component {
           placeholder="Password"
           type="password" />
 
-        <Button type="submit">
+        <Button
+          bsStyle="primary"
+          disabled={isLoading} t
+          ype={!isLoading ? "submit" : null}>
           Login
         </Button>
       </form>

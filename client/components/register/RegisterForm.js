@@ -14,7 +14,8 @@ export default class RegisterForm extends React.Component {
     username: '',
     email: '',
     password: '',
-    errors: {}
+    errors: {},
+    isLoading: false
   };
 
   static propTypes = {
@@ -33,21 +34,27 @@ export default class RegisterForm extends React.Component {
     evt.preventDefault();
     const {errors, isValid} = validateUser(this.state);
     if (isValid) {
+      this.setState({
+        isLoading: true
+      });
       this.props.userSignupRequest(this.state)
       .then(this.props.onSuccess,
       (res) => {
         const errors = typeof res.data === 'undefined'?
           {form: 'Unable to sign up'} : res.data.errors
-        this.setState({errors});
+        this.setState({
+          errors,
+          isLoading: false
+        });
       });
     }
     else {
-      this.setState({errors: errors});
+      this.setState({errors});
     }
   }
 
   render() {
-    const errors = this.state.errors;
+    const {errors, isLoading} = this.state;
     return (
       <form onSubmit={this.onSubmit}>
         <h2>Join the powerplant community!</h2>
@@ -55,7 +62,7 @@ export default class RegisterForm extends React.Component {
           <FormGroup validationState="error">
             <HelpBlock>{errors.form}</HelpBlock>
           </FormGroup>}
-          
+
         <TextFieldGroup
           id="username"
           onChange={this.onChange}
@@ -78,7 +85,9 @@ export default class RegisterForm extends React.Component {
           type="password"
           value={this.state.password}/>
 
-        <Button type="submit">
+        <Button bsStyle="primary"
+          disabled={isLoading}
+          type={!isLoading ? "submit" : null}>
           Register
         </Button>
       </form>

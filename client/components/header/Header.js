@@ -1,27 +1,19 @@
 import React from 'react';
 import {Link} from 'react-router-dom';
+import {connect} from 'react-redux';
 import {Navbar, NavItem, NavDropdown, MenuItem, Nav} from 'react-bootstrap';
 import {LinkContainer} from 'react-router-bootstrap';
 import PropTypes from 'prop-types';
+import HeaderBrand from './HeaderBrand';
 
 class Header extends React.Component {
-  static propTypes = {
-    title: PropTypes.string
-  }
-
-  static defaultProps = {
-    title: 'powerplant v0.6'
-  }
-
   render() {
     const customToggleStyle = {float:"left", marginLeft:"15px"};
     return (
       <Navbar collapseOnSelect>
         <Navbar.Header>
           <Navbar.Toggle style={customToggleStyle} />
-          <Navbar.Brand>
-              {this.props.title}
-          </Navbar.Brand>
+          <HeaderBrand />
         </Navbar.Header>
         <Navbar.Collapse>
           <Nav>

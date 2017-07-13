@@ -1,7 +1,7 @@
 import React from 'react'
-import {Link} from 'react-router-dom';
+import HeaderTitle from './shared/HeaderTitle';
 
 export default () => {
   console.log("Rendering hello");
-  return <Link to="/login">LOGIN</Link>
+  return <HeaderTitle>Home</HeaderTitle>
 }

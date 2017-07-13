@@ -3,6 +3,7 @@ import PropTypes from 'prop-types';
 import {connect} from 'react-redux';
 import {Col} from 'react-bootstrap';
 import {userSignupRequest} from '/client/actions/userActions';
+import HeaderTitle from '../shared/HeaderTitle';
 
 import RegisterForm from './RegisterForm';
 
@@ -26,6 +27,7 @@ class Register extends React.Component {
     return (
       <Col md={6} mdOffset={3}>
         {this.state.success && <Redirect to="/" />}
+        <HeaderTitle>Sign up</HeaderTitle>
         <RegisterForm onSuccess={this.onSuccess} userSignupRequest={userSignupRequest} />
       </Col>
       )

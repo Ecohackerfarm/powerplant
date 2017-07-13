@@ -1,8 +1,9 @@
 import axios from 'axios';
-import {store} from '/client/index';
 import {setAuthorizationToken} from '/client/utils'
 import jwtDecode from 'jwt-decode';
+import {SET_CURRENT_USER} from './types';
 
+// TODO: either make this a redux action or just a HTTP regular request
 export function userSignupRequest(userData) {
   return dispatch => axios.post('/api/users', userData);
 }
@@ -23,7 +24,7 @@ export function userLoginRequest(loginData) {
 
 export function setCurrentUser(user) {
   return {
-    type: 'SET_CURRENT_USER',
+    type: SET_CURRENT_USER,
     user
   }
 }
