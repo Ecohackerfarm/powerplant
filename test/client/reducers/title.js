@@ -1,8 +1,10 @@
 import {expect} from 'chai';
 import * as types from '/client/actions/types';
-import {title} from '/client/reducers/title';
+import {title} from '/client/reducers';
+import {expectNoActionForAllBut as sanityCheck} from './Helper';
 
-describe("title reducer", function() {
+
+describe("title reducer", () => {
   const {SET_TITLE} = types;
   const actions = [SET_TITLE];
   describe("SET_TITLE", () => {
@@ -19,16 +21,13 @@ describe("title reducer", function() {
   });
   // little bit of a sanity check
   // make sure we don't modify the store when we're not supposed to
-  describe.skip("everything else", () => {
+  describe("everything else", () => {
     it("should do nothing", () => {
-      const myTitle = "another test title";
-      Object.keys(types)
-      .filter(type => (type in actions))
-      .forEach((type) => {
-        console.log("Type: " + type);
-        const action = {type};
-        expect(title(myTitle, action)).to.equal(myTitle);
-      })
+      const state = "title";
+      const action = {
+        title: "newTitle"
+      };
+      sanityCheck(title, actions, state, action);
     });
   });
 });

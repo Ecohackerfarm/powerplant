@@ -1,6 +1,6 @@
 import {expect} from 'chai';
-import validation from '../../helpers/data-validation';
-import Crop from '../../models/crop';
+import validation from '/server/helpers/data-validation';
+import Crop from '/server/models/crop';
 import {Types} from 'mongoose';
 const {ObjectId} = Types;
 

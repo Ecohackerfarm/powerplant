@@ -8,6 +8,7 @@ const initialState = {
     currentUser: null
   },
   currLocation: null,
+  locations: [],
   beds: [],
   crops: [],
   cropInfos: [],
