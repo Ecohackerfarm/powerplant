@@ -1,7 +1,7 @@
 import React from 'react';
 import TextFieldGroup from '../shared/TextFieldGroup';
 import validateLogin from '/shared/validation/loginValidation';
-import {Button} from 'react-bootstrap';
+import {Button, HelpBlock} from 'react-bootstrap';
 
 export default class LoginForm extends React.Component {
   state = {
@@ -22,19 +22,21 @@ export default class LoginForm extends React.Component {
     evt.preventDefault();
     const {errors} = validateLogin(this.state);
     const isValid = !errors.username && !errors.password;
-    this.setState({
-      errors: errors
-    });
     if (isValid) {
       // calling our redux action to log in
-      // TODO: is the best way to do this to store success in redux store
-      // and then redirect from Login based on that?
       this.props.userLoginRequest(this.state)
-      .then(this.props.onSuccess, this.props.onSuccess);
-      // (res) => {
-      //   this.setState({
-      //     errors: res.data.errors
-      //   });
+      .then(this.props.onSuccess,
+      (res) => {
+        // if we get a response, use its errors
+        const errors = typeof res.data === 'undefined' ?
+          {form: "Unable to log in"} : res.data.errors;
+        this.setState({errors});
+      });
+    }
+    else {
+      this.setState({
+        errors: errors
+      });
     }
   }
 
@@ -42,6 +44,8 @@ export default class LoginForm extends React.Component {
     const errors = this.state.errors;
     return (
       <form onSubmit={this.onSubmit}>
+        {errors.form && <HelpBlock>{errors.form}</HelpBlock>}
+
         <TextFieldGroup
           value={this.state.username}
           onChange={this.onChange}

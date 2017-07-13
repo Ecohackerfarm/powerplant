@@ -4,7 +4,7 @@ import {setAuthorizationToken} from '/client/utils'
 import jwtDecode from 'jwt-decode';
 
 export function userSignupRequest(userData) {
-  return dispatch => post('/api/users', userData);
+  return dispatch => axios.post('/api/users', userData);
 }
 
 export function userLoginRequest(loginData) {

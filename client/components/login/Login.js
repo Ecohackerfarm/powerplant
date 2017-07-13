@@ -22,6 +22,7 @@ class Login extends React.Component {
   }
 
   render() {
+    const {userLoginRequest} = this.props;
     return (
       // in react-router v4 a Redirect is a page element
       // so we want to include a redirect element if we want to switch
@@ -30,7 +31,7 @@ class Login extends React.Component {
         {this.state.success && <Redirect to="/" />}
            <LoginForm
             onSuccess={this.onSuccess}
-            userLoginRequest={this.props.userLoginRequest}/>
+            userLoginRequest={userLoginRequest}/>
       </Col>
     )
   }
