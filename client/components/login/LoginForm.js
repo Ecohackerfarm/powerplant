@@ -1,7 +1,7 @@
 import React from 'react';
 import TextFieldGroup from '../shared/TextFieldGroup';
 import validateLogin from '/shared/validation/loginValidation';
-import {Button, HelpBlock} from 'react-bootstrap';
+import {Button, FormGroup, HelpBlock} from 'react-bootstrap';
 
 export default class LoginForm extends React.Component {
   state = {
@@ -44,7 +44,10 @@ export default class LoginForm extends React.Component {
     const errors = this.state.errors;
     return (
       <form onSubmit={this.onSubmit}>
-        {errors.form && <HelpBlock>{errors.form}</HelpBlock>}
+      {errors.form &&
+        <FormGroup validationState="error">
+          <HelpBlock>{errors.form}</HelpBlock>
+        </FormGroup>}
 
         <TextFieldGroup
           value={this.state.username}

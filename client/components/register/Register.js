@@ -24,7 +24,7 @@ class Register extends React.Component {
   render() {
     const {userSignupRequest} = this.props;
     return (
-      <Col md={8} mdOffset={2}>
+      <Col md={6} mdOffset={3}>
         {this.state.success && <Redirect to="/" />}
         <RegisterForm onSuccess={this.onSuccess} userSignupRequest={userSignupRequest} />
       </Col>

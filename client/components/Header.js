@@ -2,15 +2,25 @@ import React from 'react';
 import {Link} from 'react-router-dom';
 import {Navbar, NavItem, NavDropdown, MenuItem, Nav} from 'react-bootstrap';
 import {LinkContainer} from 'react-router-bootstrap';
+import PropTypes from 'prop-types';
 
 class Header extends React.Component {
+  static propTypes = {
+    title: PropTypes.string
+  }
+
+  static defaultProps = {
+    title: 'powerplant v0.6'
+  }
+
   render() {
+    const customToggleStyle = {float:"left", marginLeft:"15px"};
     return (
       <Navbar collapseOnSelect>
         <Navbar.Header>
-        <Navbar.Toggle />
+          <Navbar.Toggle style={customToggleStyle} />
           <Navbar.Brand>
-            <Link to="/">powerplant v0.6</Link>
+              {this.props.title}
           </Navbar.Brand>
         </Navbar.Header>
         <Navbar.Collapse>

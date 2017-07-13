@@ -1,7 +1,7 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 import validateUser from '/shared/validation/userValidation'
-import {Button, HelpBlock} from 'react-bootstrap';
+import {Button, FormGroup, HelpBlock} from 'react-bootstrap';
 import TextFieldGroup from '../shared/TextFieldGroup';
 import {userSignupRequest} from '/client/actions/userActions';
 
@@ -51,7 +51,11 @@ export default class RegisterForm extends React.Component {
     return (
       <form onSubmit={this.onSubmit}>
         <h2>Join the powerplant community!</h2>
-        {errors.form && <HelpBlock>{errors.form}</HelpBlock>}
+        {errors.form &&
+          <FormGroup validationState="error">
+            <HelpBlock>{errors.form}</HelpBlock>
+          </FormGroup>}
+          
         <TextFieldGroup
           id="username"
           onChange={this.onChange}
