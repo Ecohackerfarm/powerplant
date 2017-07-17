@@ -2,7 +2,6 @@ const rootUrl = '/api/crops';
 const jsonType = 'application/json; charset=utf-8';
 
 import {expect} from 'chai';
-import express from 'express';
 import app from  '/server/app';
 import {sendForm,
   randString,
@@ -14,7 +13,6 @@ import Crop from "/server/models/crop";
 import {Types} from 'mongoose';
 
 const {ObjectId} = Types;
-
 const request = supertest(app);
 
 let createdCropId;

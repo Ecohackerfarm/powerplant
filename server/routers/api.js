@@ -1,6 +1,7 @@
 import express from 'express';
 import cropRouter from './api/crops';
 import companionshipRouter from './api/companionships';
+import userRouter from './api/users';
 
 // this is where our error handling middleware for the api will go
 // error responses should look different if they're in the api vs. in the front end
@@ -20,6 +21,7 @@ router.all('*', (req, res, next) => {
 // assume a base url of '/api'
 router.use('/crops', cropRouter);
 router.use('/companionships', companionshipRouter);
+router.use('/users', userRouter);
 
 router.get('*', (req, res, next) => {
   next({status: 404, message: "No such route"});

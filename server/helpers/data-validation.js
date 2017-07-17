@@ -1,6 +1,7 @@
 import mongoose from 'mongoose';
-import Crop from '../models/crop';
-import Companionship from '../models/companionship';
+import Crop from '/server/models/crop';
+import Companionship from '/server/models/companionship';
+import User from '/server/models/user';
 
 import * as myself from './data-validation';
 export default myself;
@@ -67,6 +68,9 @@ export const fetchCompanionships = fetchModel(Companionship, "companionships", "
 
 export const checkCrops = checkModel(Crop);
 export const checkCompanionships = checkModel(Companionship);
+
+export const fetchUsers = fetchModel(User, "users");
+export const checkUsers = checkModel(User);
 
 // assumes pre-validated ids!
 export function fetchModel(model, resultName, populate) {
