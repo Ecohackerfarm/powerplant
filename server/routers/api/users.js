@@ -26,7 +26,11 @@ router.route('/')
       }
       else {
         if (err.name === "ValidationError") {
-          next({status: 409, ...err}); //ooh baby that object spread
+          const errors = {};
+          for (let field in err.errors) {
+            errors[field] = "This " + field + " is taken";
+          }
+          next({status: 409, errors}); //ooh baby that object spread
         }
         else {
           next({status: 400, message: err.message});

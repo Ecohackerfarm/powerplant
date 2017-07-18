@@ -38,14 +38,15 @@ export default class RegisterForm extends React.Component {
         isLoading: true
       });
       this.props.userSignupRequest(this.state)
-      .then(this.props.onSuccess,
-      (res) => {
+      .then(this.props.onSuccess)
+      .catch((err) => {
+        const res = err.response;
         const errors = typeof res.data === 'undefined'?
           {form: 'Unable to sign up'} : res.data.errors
         this.setState({
           errors,
           isLoading: false
-        });
+        })
       });
     }
     else {

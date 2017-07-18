@@ -27,7 +27,7 @@ export default class LoginForm extends React.Component {
 
   onSubmit = (evt) => {
     evt.preventDefault();
-    const {errors} = validateLogin(this.state);
+    let {errors} = validateLogin(this.state);
     const isValid = !errors.username && !errors.password;
     if (isValid) {
       // calling our redux action to log in
@@ -35,11 +35,13 @@ export default class LoginForm extends React.Component {
         isLoading: true
       });
       this.props.userLoginRequest(this.state)
-      .then(this.props.onSuccess,
-      (res) => {
-        // if we get a response, use its errors
-        const errors = typeof res.data === 'undefined' ?
-          {form: "Unable to log in"} : res.data.errors;
+      .catch(err => {
+        const res = err.response;
+        // if (typeof res !== 'undefined') {
+          // if we get a response, use its errors
+          errors = (typeof res.data === 'undefined') ?
+          {form: "Unable to log in"} : res.data.errors || {};
+        // }
         this.setState({
           errors,
           isLoading: false
@@ -47,9 +49,7 @@ export default class LoginForm extends React.Component {
       });
     }
     else {
-      this.setState({
-        errors: errors
-      });
+      this.setState({errors});
     }
   }
 

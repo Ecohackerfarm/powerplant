@@ -9,17 +9,8 @@ import SetHeaderTitle from '../shared/SetHeaderTitle';
 
 class Login extends React.Component {
   static propTypes = {
-    userLoginRequest: PropTypes.func.isRequired
-  }
-
-  state = {
-    success: false
-  }
-
-  onSuccess = () => {
-    this.setState({
-      success: true
-    });
+    userLoginRequest: PropTypes.func.isRequired,
+    success: PropTypes.bool.isRequired
   }
 
   render() {
@@ -29,14 +20,15 @@ class Login extends React.Component {
       // so we want to include a redirect element if we want to switch
       // back to the home screen
       <Col md={6} mdOffset={3}>
-        {this.state.success && <Redirect to="/" />}
+        {this.props.success && <Redirect to="/" />}
         <SetHeaderTitle>Login</SetHeaderTitle>
         <LoginForm
-          onSuccess={this.onSuccess}
           userLoginRequest={userLoginRequest}/>
       </Col>
     )
   }
 }
 
-export default connect(null, {userLoginRequest})(Login);
+const stateToProps = state => ({success: state.auth.isAuthenticated});
+
+export default connect(stateToProps, {userLoginRequest})(Login);

@@ -19,13 +19,6 @@ class HeaderBrand extends React.Component {
   }
 }
 
-const stateToProps = (state) => {
-  console.log("Detected state change");
-  console.log(state);
-  return {
-    title: state.title
-  }
-}
+const stateToProps = ({title}) => ({title});
 
-// export default Header;
 export default connect(stateToProps, null)(HeaderBrand);

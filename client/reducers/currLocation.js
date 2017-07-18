@@ -1,9 +1,13 @@
-import {SET_CURRENT_LOCATION} from '/client/actions/types';
-import * as types from '/client/actions/types';
-export const currLocation = (state=null, action) => {
+import {SET_CURRENT_LOCATION, LOGOUT} from '/client/actions/types';
+
+const defaultState = null;
+
+export const currLocation = (state=defaultState, action) => {
   switch (action.type) {
-    case types.SET_CURRENT_LOCATION:
+    case SET_CURRENT_LOCATION:
       return action.location;
+    case LOGOUT:
+      return defaultState;
     default:
       return state;
   }

@@ -32,17 +32,8 @@ userSchema.query.byUsername = function(username) {
   return this.findOne({username});
 }
 
-userSchema.methods.checkPassword = function(password) {
-  return new Promise((resolve, reject) => {
-    bcrypt.compare(password, this.password, (err, isMatch) => {
-      if (err) {
-        reject(err);
-      }
-      else {
-        resolve(isMatch);
-      }
-    });
-  });
+userSchema.methods.checkPassword = function(password, callback) {
+  return bcrypt.compare(password, this.password, callback);
 }
 
 userSchema.plugin(uniqueValidator);

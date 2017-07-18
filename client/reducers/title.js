@@ -1,9 +1,13 @@
-import * as types from '../actions/types';
+import {SET_TITLE, LOGOUT} from '../actions/types';
 
-export const title = (state='powerplant', action) => {
+const defaultState = 'powerplant';
+
+export const title = (state=defaultState, action) => {
   switch (action.type) {
-    case types.SET_TITLE:
+    case SET_TITLE:
       return action.title;
+    case LOGOUT:
+      return defaultState;
     default:
       return state;
   }

@@ -3,11 +3,7 @@ const jsonType = 'application/json; charset=utf-8';
 
 import {expect} from 'chai';
 import app from  '/server/app';
-import {sendForm,
-  randString,
-  allStrings,
-  createTestCrop,
-  createTestCompanionship} from '../routerHelpers';
+import {sendForm} from '../routerHelpers';
 import supertest from 'supertest';
 import User from '/server/models/user';
 import {Types} from 'mongoose';
@@ -16,38 +12,34 @@ const {ObjectId} = Types;
 const request = supertest(app);
 
 let userId;
-let user;
+export const user = {
+  username: "testUser",
+  email: "testEmail@email.com",
+  password: "testPassword"
+};
 
-// creating a test user before everything
+// creating/fetching the test user before everything
+// using the done callback because it kept throwing an error
+// if i return a promise and the user already exists
 before((done) => {
-  user = {
-    username: "testUser",
-    email: "testEmail@email.com",
-    password: "testPassword"
-  };
   new User(user).save((err, newUser) => {
     if (err) {
       User.find().byUsername(user.username)
       .exec((err, {_id}) => {
         userId = _id.toString();
-        console.log("2: " + userId);
+        user._id = _id;
         done();
       })
     }
     else {
       userId = newUser._id.toString();
-      console.log("1: " + userId);
+      user._id = _id;
       done();
     }
   });
 });
 
-// delete test user after everything
-after(() => {
-  return User.findByIdAndRemove(userId);
-})
-
-describe.only(rootUrl + "/", () => {
+describe(rootUrl + "/", () => {
   before(() => {
     return User.find().byUsername("testUser1").remove();
   });
@@ -89,7 +81,7 @@ describe.only(rootUrl + "/", () => {
   });
 });
 
-describe.only(rootUrl + "/id/:userId", () => {
+describe(rootUrl + "/id/:userId", () => {
   describe("GET", () => {
     it("should return correct user for valid id", function() {
       this.retries(3);
