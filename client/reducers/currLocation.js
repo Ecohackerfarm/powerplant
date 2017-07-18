@@ -1,6 +1,6 @@
 import {SET_CURRENT_LOCATION, LOGOUT} from '/client/actions/types';
 
-const defaultState = null;
+export const defaultState = null;
 
 export const currLocation = (state=defaultState, action) => {
   switch (action.type) {

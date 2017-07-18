@@ -1,6 +1,6 @@
 import {SET_TITLE, LOGOUT} from '../actions/types';
 
-const defaultState = 'powerplant';
+export const defaultState = 'powerplant';
 
 export const title = (state=defaultState, action) => {
   switch (action.type) {

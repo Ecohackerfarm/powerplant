@@ -21,7 +21,7 @@ const request = supertest(app);
 
 let locId;
 let userId;
-describe.only(rootUrl + "/:locId", () => {
+describe(rootUrl + "/:locId", () => {
   before(() => {
     // need to add a location to our test user
     return User.find().byUsername(testUser.username).exec((err, {_id}) => {
