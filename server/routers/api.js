@@ -3,6 +3,7 @@ import cropRouter from './api/crops';
 import companionshipRouter from './api/companionships';
 import userRouter from './api/users';
 import loginRouter from './api/login';
+import {authenticate as authenticationMiddleware} from '/server/middleware/authentication';
 
 // this is where our error handling middleware for the api will go
 // error responses should look different if they're in the api vs. in the front end
@@ -18,6 +19,9 @@ router.all('*', (req, res, next) => {
   res.header('Access-Control-Allow-Headers', 'Content-Type');
   next();
 });
+
+// setting up authentication middleware
+router.use(authenticationMiddleware);
 
 // assume a base url of '/api'
 router.use('/crops', cropRouter);
