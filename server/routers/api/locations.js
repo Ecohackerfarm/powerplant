@@ -4,11 +4,34 @@ import Helper from '/server/helpers/data-validation';
 
 const router = Router();
 
+router.route('/')
+  .post((req, res, next) => {
+    if (!req.user) {
+      next({status: 401, message: "Authentication required to create a location"})
+    }
+    else {
+      const location = req.body;
+      new Location(location).save((err, loc) => {
+        req.user.locations.push(loc);
+        return loc;
+      })
+      .then(loc => {
+        req.user.save((err, user) => {
+          if (err) {
+            next({status: 500, message: "Unable to update user with location"});
+          }
+          else {
+            res.status(201).json(loc);
+          }
+        })
+      })
+    }
+  })
+
 router.route('/:locId')
   .get((req, res, next) => {
-    console.log("Got location request");
     if (!req.user) {
-      next({status: 401, message: "Please log in to access this location"})
+      next({status: 401, message: "Authentication required to access this location"})
     }
     else {
       req.ids = [req.params.locId];
