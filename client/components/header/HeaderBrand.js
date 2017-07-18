@@ -1,24 +1,13 @@
 import React from 'react';
 import PropTypes from 'prop-types';
-import {connect} from 'react-redux';
 import {Navbar, Col} from 'react-bootstrap';
 
-class HeaderBrand extends React.Component {
-  static propTypes = {
-    title: PropTypes.string
-  }
+const HeaderBrand = ({title}) => (
+  <Col mdHidden lgHidden componentClass={Navbar.Brand}>{title}</Col>
+);
 
-  static defaultProps = {
-    title: 'powerplant v0.6'
-  }
-
-  render() {
-    return (
-        <Col mdHidden lgHidden componentClass={Navbar.Brand}>{this.props.title}</Col>
-    );
-  }
+HeaderBrand.propTypes = {
+  title: PropTypes.string.isRequired
 }
 
-const stateToProps = ({title}) => ({title});
-
-export default connect(stateToProps, null)(HeaderBrand);
+export default HeaderBrand;

@@ -14,7 +14,8 @@ class Header extends React.Component {
 
   static propTypes = {
     userLogoutRequest: PropTypes.func.isRequired,
-    authenticated: PropTypes.bool.isRequired
+    authenticated: PropTypes.bool.isRequired,
+    title: PropTypes.string.isRequired
   }
 
   render() {
@@ -23,7 +24,7 @@ class Header extends React.Component {
       <Navbar collapseOnSelect>
         <Navbar.Header>
           <Navbar.Toggle style={customToggleStyle} />
-          <HeaderBrand />
+          <HeaderBrand title={this.props.title} />
         </Navbar.Header>
         <Navbar.Collapse>
           <Nav pullLeft>
@@ -41,4 +42,6 @@ class Header extends React.Component {
   }
 }
 
-export default withRouter(connect(null, {userLogoutRequest})(Header));
+const stateToProps = ({title}) => ({title});
+
+export default withRouter(connect(stateToProps, {userLogoutRequest})(Header));
