@@ -3,6 +3,7 @@ import cropRouter from './api/crops';
 import companionshipRouter from './api/companionships';
 import userRouter from './api/users';
 import loginRouter from './api/login';
+import locationRouter from './api/locations';
 import {authenticate as authenticationMiddleware} from '/server/middleware/authentication';
 
 // this is where our error handling middleware for the api will go
@@ -28,6 +29,7 @@ router.use('/crops', cropRouter);
 router.use('/companionships', companionshipRouter);
 router.use('/users', userRouter);
 router.use('/login', loginRouter);
+router.use('/locations', locationRouter);
 
 router.get('*', (req, res, next) => {
   next({status: 404, message: "No such route"});

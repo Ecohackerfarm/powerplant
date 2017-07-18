@@ -6,7 +6,9 @@ const ObjectId = Schema.Types.ObjectId;
 const locationSchema = new Schema({
   user: {type: ObjectId, index: true, required: true},
   name: String,
-  loc: {type: "Point", coordinates: [Number]}
+  loc: {type: {type: String, default: "Point"},
+    coordinates: {type: [], default: [0, 0]}
+  }
 })
 
 // we can index gardens by location on a 2d sphere

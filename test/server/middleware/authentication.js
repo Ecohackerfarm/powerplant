@@ -4,7 +4,7 @@ import jwtSecret from '/jwt-secret';
 import User from '/server/models/user';
 import {authenticate as auth} from '/server/middleware/authentication';
 
-describe.only("authentication middleware", () => {
+describe("authentication middleware", () => {
   describe("#authenticate()", () => {
     it("should do nothing with no authentication header", (done) => {
       const req = {
