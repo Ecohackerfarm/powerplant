@@ -3,11 +3,23 @@ import {setAuthorizationToken} from '/client/utils'
 import jwtDecode from 'jwt-decode';
 import {SET_CURRENT_USER, LOGOUT} from './types';
 
-// TODO: either make this a redux action or just a HTTP regular request
+// creating a thunk action that dispatches SET_CURRENT_USER once the sign up request is successful
+// the desired functionality: a user creates an account, and all local data that they had previously
+// saved while not logged in gets saved to their new account, and they become authenticated as that user
 export function userSignupRequest(userData) {
-  return dispatch => axios.post('/api/users', userData);
+  return dispatch => axios.post('/api/users', userData)
+    .then((res) => {
+      return dispatch(userLoginRequest(userData))
+    })
+    .then((res) => {
+      // now we are logged in
+      // TODO: figure out how to transfer all redux data to server-stored user data
+
+    });
 }
 
+// creating a thunk action that only dispatches a SET_CURRENT_USER request
+// once the login request is successful
 export function userLoginRequest(loginData) {
   return dispatch => {
     return axios.post('/api/login', loginData)
@@ -22,16 +34,8 @@ export function userLoginRequest(loginData) {
   }
 }
 
-export function userLogoutRequest() {
-  return dispatch => {
-    // since every reducer listens for this and resets data on logout
-    // this is all we need to do
-    dispatch(logoutUser());
-  }
-}
-
 // pure action for when the user is ready to log out
-export function logoutUser() {
+export function userLogoutRequest() {
   return {
     type: LOGOUT
   }

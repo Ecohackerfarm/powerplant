@@ -1,11 +1,10 @@
 import {SET_TITLE} from './types';
 
+// Dispatches a title change, which gets propogated to the header
 export function setTitle(title) {
-  console.log("Dispatching title change");
   const action = {
     type: SET_TITLE,
     title: title
   }
-  console.log(action);
   return action;
 }

@@ -8,21 +8,19 @@ import {withRouter} from 'react-router-dom';
 class App extends React.Component {
 
   static propTypes = {
-    authenticated: PropTypes.bool.isRequired
+    auth: PropTypes.object.isRequired
   }
 
   render() {
     return (
       <div>
-        <Header authenticated={this.props.authenticated} />
-        <Main />
+        <Header auth={this.props.auth} />
+        <Main auth={this.props.auth} />
       </div>
     )
   }
 }
 
-const stateToProps = (state) => ({
-  authenticated: state.auth.isAuthenticated
-});
+const stateToProps = ({auth}) => ({auth});
 
 export default withRouter(connect(stateToProps)(App));

@@ -14,7 +14,7 @@ class Header extends React.Component {
 
   static propTypes = {
     userLogoutRequest: PropTypes.func.isRequired,
-    authenticated: PropTypes.bool.isRequired,
+    auth: PropTypes.object.isRequired,
     title: PropTypes.string.isRequired
   }
 
@@ -32,7 +32,7 @@ class Header extends React.Component {
               <NavItem eventKey={1}>Home</NavItem>
             </LinkContainer>
           </Nav>
-          {this.props.authenticated?
+          {this.props.auth.isAuthenticated?
             <HeaderLogoutNav userLogoutRequest={this.props.userLogoutRequest} />
             :
             <HeaderLoginNav />}
