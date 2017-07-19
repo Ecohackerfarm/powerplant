@@ -45,9 +45,11 @@ export function setUserFromToken(token) {
 }
 
 export function userLogoutRequest() {
-  setAuthorizationToken(false);
-  localStorage.removeItem('jwtToken');
-  dispatch(logoutUser());
+  return dispatch => {
+    setAuthorizationToken(false);
+    localStorage.removeItem('jwtToken');
+    dispatch(logoutUser());
+  }
 }
 
 // pure action for when the user is ready to log out
