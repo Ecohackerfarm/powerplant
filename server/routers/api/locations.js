@@ -28,7 +28,7 @@ router.route('/')
     }
   })
 
-router.route('/:locId')
+router.route('/id/:locId')
   .get((req, res, next) => {
     if (!req.user) {
       next({status: 401, message: "Authentication required to access this location"})

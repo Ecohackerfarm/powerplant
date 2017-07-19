@@ -71,17 +71,17 @@ describe(rootUrl + "/", () => {
   });
 });
 
-describe(rootUrl + "/:locId", () => {
+describe(rootUrl + "/id/:locId", () => {
   describe("GET", () => {
     it("should 401 without authorization", function() {
       this.timeout(15000);
-      const url = rootUrl + "/" + locId;
+      const url = rootUrl + "/id/" + locId;
       console.log(url);
       return request.get(url)
       .expect(401);
     });
     it("should return location with authorization", () => {
-      return request.get(rootUrl + "/" + locId)
+      return request.get(rootUrl + "/id/" + locId)
       .set('authorization', 'Bearer ' + token)
       .expect(200)
       .expect('Content-Type', jsonType)
@@ -95,7 +95,7 @@ describe(rootUrl + "/:locId", () => {
         username: testUser.username,
         email: testUser.email
       }, jwtSecret);
-      return request.get(rootUrl + "/" + locId)
+      return request.get(rootUrl + "/id/" + locId)
       .set('authorization', 'Bearer ' + token)
       .expect(200)
       .expect('Content-Type', jsonType)

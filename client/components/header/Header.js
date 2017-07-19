@@ -29,7 +29,10 @@ class Header extends React.Component {
         <Navbar.Collapse>
           <Nav pullLeft>
             <LinkContainer exact to="/">
-              <NavItem eventKey={1}>Home</NavItem>
+              <NavItem eventKey={1.0}>Home</NavItem>
+            </LinkContainer>
+            <LinkContainer exact to="/locations">
+              <NavItem eventKey={1.1}>Locations</NavItem>
             </LinkContainer>
           </Nav>
           {this.props.auth.isAuthenticated?
