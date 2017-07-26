@@ -7,7 +7,7 @@ import migrateCrops from './crop-migration';
 import migrateCompanionships from './companionship-migration';
 
 // initialize mongo
-mongoose.connect('mongodb://localhost/pp_main');
+mongoose.connect('mongodb://192.168.99.100/pp_main');
 mongoose.Promise = global.Promise;
 
 // Initialize Firebase

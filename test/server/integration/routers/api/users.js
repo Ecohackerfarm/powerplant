@@ -45,7 +45,6 @@ before((done) => {
     }
     else {
       userId = newUser._id.toString();
-      user._id = _id;
       buildToken(userId);
       done();
     }

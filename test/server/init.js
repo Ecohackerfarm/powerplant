@@ -3,7 +3,7 @@ import {buildApp} from '/server/app';
 
 before(() => {
   //TODO: Set up a test database! (pp_test)
-  mongoose.connect('mongodb://localhost/pp_main');
+  mongoose.connect('mongodb://192.168.99.100/pp_main');
   mongoose.Promise = global.Promise;
   console.log("Connected to database");
 
