@@ -117,6 +117,9 @@ class AddLocationForm extends React.Component {
         if (success) {
           this.props.onSuccess();
         }
+        else {
+          console.log("Error saving");
+        }
       })
     }
   }

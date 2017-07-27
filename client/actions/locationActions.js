@@ -1,6 +1,7 @@
 import axios from 'axios';
 import {EDIT_LOCATION, ADD_LOCATION, DELETE_LOCATION, SET_LOCATIONS} from './types';
 import {store} from '/client/index';
+import {randString} from '/client/utils';
 
 export const getLocationsRequest = (id) => {
   return dispatch => axios.get('/api/users/id/' + id + '/locations')
@@ -27,6 +28,19 @@ export const saveLocationRequest = (location) => {
             ...res.data // es7 object spread
           };
         }
+      })
+    }
+    else {
+      // in LocationItem we specified that locations need ids
+      // we should make this look the same as a mongodb location item
+      // user is not authenticated so we will just save it to redux
+      // returning a promise so it looks the same to the component that called it as if it had been a server request
+      return new Promise(resolve => {
+        location._id = store.getState().locations.length.toString();
+        dispatch(addLocation(location));
+        resolve({
+          success: true
+        });
       })
     }
   }
