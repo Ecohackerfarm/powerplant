@@ -11,6 +11,7 @@ router.route('/')
     }
     else {
       const location = req.body;
+      location.user = req.user._id;
       new Location(location).save((err, loc) => {
         req.user.locations.push(loc);
         return loc;

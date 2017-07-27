@@ -3,7 +3,6 @@ import PropTypes from 'prop-types';
 import validateUser from '/shared/validation/userValidation'
 import {Button, FormGroup, HelpBlock} from 'react-bootstrap';
 import TextFieldGroup from '../shared/TextFieldGroup';
-import {userSignupRequest} from '/client/actions/userActions';
 
 // RegisterForm is a stateful form used to register new users
 // Props:

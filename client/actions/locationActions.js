@@ -11,12 +11,26 @@ export const getLocationsRequest = (id) => {
     })
 }
 
+export const saveLocationRequest = (location) => {
+  return dispatch => {
+    return axios.post('/api/locations', location)
+    .then((res) => {
+      if (res.status === 201) {
+        console.log("Added location successfuly");
+        console.log(res.data);
+        dispatch(addLocation(res.data));
+      }
+      return res;
+    })
+  }
+}
+
 // since we are only just posting these to the server, these locations could possibly not have valid ids yet
 // if it doesn't, we need to change its id once saved (in the reducer)
 export const saveAllLocationsRequest = (locations) => {
   return dispatch => {
     const oldLocations = locations.slice(); // make a copy
-    const requests = locations.map(loc => axios.post('/api/locations'));
+    const requests = locations.map(loc => axios.post('/api/locations', loc));
     Promise.all(requests)
     .then((results) => {
       results.forEach((res, i) => {

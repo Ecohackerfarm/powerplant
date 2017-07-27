@@ -19,10 +19,10 @@ class Main extends React.Component {
       <div>
         <Switch>
           <Route exact path="/" render={() => <Hello auth={this.props.auth} />} />
-          <Route exact path="/login" component={Login} />
-          <Route exact path="/register" component={Register} />
-          <Route exact path="/recover" component={Recover} />
-          <Route exact path="/locations" component={LocationsPage} />
+          <Route path="/login" component={Login} />
+          <Route path="/register" component={Register} />
+          <Route path="/recover" component={Recover} />
+          <Route path="/locations" component={LocationsPage} />
         </Switch>
       </div>
     )

@@ -9,6 +9,7 @@ export default class TextFieldGroup extends React.Component {
     onChange: PropTypes.func.isRequired,
     value: PropTypes.string.isRequired,
     error: PropTypes.string,
+    success: PropTypes.bool,
     label: PropTypes.string,
     placeholder: PropTypes.string,
     type: PropTypes.string
@@ -21,7 +22,13 @@ export default class TextFieldGroup extends React.Component {
   render() {
     return (
       <FormGroup controlId={this.props.id}
-        validationState={this.props.error ? 'error' : null}>
+        validationState={this.props.error ?
+          'error'
+          :
+          this.props.success ?
+          'success'
+          :
+          null}>
 
         {this.props.label && <ControlLabel>{this.props.label}</ControlLabel>}
 

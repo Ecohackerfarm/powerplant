@@ -1,25 +1,29 @@
 import React from 'react';
+import {Switch, Route} from 'react-router-dom';
+import {LinkContainer} from 'react-router-bootstrap';
 import {connect} from 'react-redux';
 import PropTypes from 'prop-types';
+import {Grid, Row, Col, HelpBlock, Button} from 'react-bootstrap';
 import SetHeaderTitle from '../shared/SetHeaderTitle';
 import LocationList from './LocationList';
 import LocationItem from './LocationItem';
-import {Grid, Row, Col, HelpBlock} from 'react-bootstrap';
+import AddLocation from './addLocation/AddLocationPage';
 
-const LocationsPage = ({locations}) => (
+const LocationsPage = ({locations, match}) => (
   <Grid>
-    <Row>
-      <Col>
-        <SetHeaderTitle>Locations</SetHeaderTitle>
-        {locations.length > 0 ?
-          <LocationList>
-            {locations.map(loc => <LocationItem key={loc._id} loc={loc} />)}
-          </LocationList>
-          :
-          <HelpBlock>No locations yet...</HelpBlock>
-        }
-      </Col>
-    </Row>
+    <SetHeaderTitle>Locations</SetHeaderTitle>
+    {console.log(match) && false}
+    <Switch>
+      <Route path={`${match.url}/add`} component={AddLocation} />
+      <Route exact path={match.url} render={() => (
+        <div>
+          <LocationList locations={locations} />
+          <LinkContainer exact to={`${match.url}/add`}>
+            <Button bsStyle="floating">+</Button>
+          </LinkContainer>
+        </div>
+      )} />
+    </Switch>
   </Grid>
 )
 
