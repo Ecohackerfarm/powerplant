@@ -12,7 +12,6 @@ import AddLocation from './addLocation/AddLocationPage';
 const LocationsPage = ({locations, match}) => (
   <Grid>
     <SetHeaderTitle>Locations</SetHeaderTitle>
-    {console.log(match) && false}
     <Switch>
       <Route path={`${match.url}/add`} component={AddLocation} />
       <Route exact path={match.url} render={() => (

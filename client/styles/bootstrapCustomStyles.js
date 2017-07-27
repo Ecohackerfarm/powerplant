@@ -5,16 +5,18 @@
 // so if you add Button: ['floating'] there MUST be a btn-floating style in main.scss
 
 import {bootstrapUtils} from 'react-bootstrap/lib/utils';
+import * as components from 'react-bootstrap';
 
 export const styles = {
-  Button: ['floating']
-};
+  Button: ['floating'],
+  Panel: ['custom']
+}
 
 export const addAllStyles = () => {
   for (let component in styles) {
     styles[component].forEach((style) => {
       console.log("Adding style " + style + " to component " + component);
-      bootstrapUtils.addStyle(component, style);
+      bootstrapUtils.addStyle(components[component], style);
     })
   }
 }

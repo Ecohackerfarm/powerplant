@@ -1,5 +1,6 @@
 import axios from 'axios';
 import {EDIT_LOCATION, ADD_LOCATION, DELETE_LOCATION, SET_LOCATIONS} from './types';
+import {store} from '/client/index';
 
 export const getLocationsRequest = (id) => {
   return dispatch => axios.get('/api/users/id/' + id + '/locations')
@@ -13,15 +14,21 @@ export const getLocationsRequest = (id) => {
 
 export const saveLocationRequest = (location) => {
   return dispatch => {
-    return axios.post('/api/locations', location)
-    .then((res) => {
-      if (res.status === 201) {
-        console.log("Added location successfuly");
-        console.log(res.data);
-        dispatch(addLocation(res.data));
-      }
-      return res;
-    })
+    if (store.getState().auth.isAuthenticated) {
+      return axios.post('/api/locations', location)
+      .then((res) => {
+        if (res.status === 201) {
+          dispatch(addLocation(res.data));
+          return {success: true};
+        }
+        else {
+          return {
+            success: false,
+            ...res.data // es7 object spread
+          };
+        }
+      })
+    }
   }
 }
 

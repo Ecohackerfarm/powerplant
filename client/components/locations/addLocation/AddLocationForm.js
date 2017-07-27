@@ -78,6 +78,11 @@ class AddLocationForm extends React.Component {
         });
       }
     })
+    .catch(() => {
+      this.setState({
+        errors: Object.assign({}, this.state.errors, {address: "Unable to fetch location results"})
+      });
+    })
   }
 
   // gets called when the user selects a location from the list
@@ -107,7 +112,12 @@ class AddLocationForm extends React.Component {
       })
     }
     else {
-      this.props.saveLocationRequest(location);
+      this.props.saveLocationRequest(location)
+      .then(({success}) => {
+        if (success) {
+          this.props.onSuccess();
+        }
+      })
     }
   }
 

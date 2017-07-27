@@ -17,7 +17,7 @@ addAllStyles();
 console.log("added styles");
 
 // creating the redux store
-const store = createStore(
+export const store = createStore(
   reducer,
   undefined,
   compose(
