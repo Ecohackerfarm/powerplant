@@ -7,7 +7,17 @@ const ObjectId = Schema.Types.ObjectId;
 
 const saltRounds = 11;
 
-
+/**
+ * Mongoose User model
+ * When fetched with a query, unless explicitly selecting other fields, only the username and id will be returned
+ * @constructor
+ * @alias User
+ * @param {Object} user
+ * @param {String} user.username
+ * @param {String} user.email
+ * @param {String} user.password passed in plaintext, but will be salted and hashed on save
+ * @param {ObjectId[]} [locations] ids of all locations stored under the user
+ */
 const userSchema = new Schema({
   username: {type: String, index: {unique: true}, required: true},
   email: {type: String, select: false, index: {unique: true}, required: true},
@@ -29,13 +39,39 @@ userSchema.pre('save', function(next) {
   }
 });
 
+/**
+ * Custom query method for finding a single User by their username
+ * @example
+ * // fetch the user with username "testUser"
+ * User.find().byUsername("testUser").exec((err, user) => {
+ *   // do something with user
+ * })
+ * @alias byUsername
+ * @memberof server.models.User
+ * @static
+ * @param  {String} username exact username to find
+ * @return {Mongoose.Query}
+ */
 userSchema.query.byUsername = function(username) {
   return this.findOne({username});
 }
 
+/**
+ * @alias checkPassword
+ * @memberof server.models.User
+ * @param  {String}   password hashed password to check
+ * @param  {server.models.User~passwordCheckCallback} callback callback function when done checking
+ * @return {None}
+ */
 userSchema.methods.checkPassword = function(password, callback) {
-  return bcrypt.compare(password, this.password, callback);
+  bcrypt.compare(password, this.password, callback);
 }
+
+/**
+ * @callback server.models.User~passwordCheckCallback
+ * @param {String} err error message, if there was one
+ * @param {Boolean} success did the passwords match or not?
+ */
 
 userSchema.plugin(uniqueValidator);
 

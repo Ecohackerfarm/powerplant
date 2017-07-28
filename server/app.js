@@ -1,7 +1,11 @@
-// import express
+/**
+ * Holds the instance of the express app
+ * @namespace app
+ * @memberof server
+ */
+
 import express from 'express';
 import path from 'path';
-// just updated to es2015 so now we can use import
 import bodyParser from 'body-parser';
 import apiRouter from './routers/api';
 import webpack from 'webpack';
@@ -9,8 +13,17 @@ import webpackMiddleware from 'webpack-dev-middleware';
 import webpackHotWiddleware from 'webpack-hot-middleware';
 import webpackConfig from '../webpack.config.dev';
 
+/**
+ * the express app
+ * @type {Object}
+ */
 const app = express();
 
+/**
+ * Sets up the express application with all middleware
+ * @param  {Boolean} useWebpack whether or not webpack should be used to bundle the client files. Generally should only be false when testing, and server-client communication is not necessary
+ * @return {Object} the express app
+ */
 export const buildApp = (useWebpack) => {
   const DIST_DIR = path.join(__dirname, "../dist");
   // set the static files location /public/img will be /img for users
@@ -42,6 +55,4 @@ export const buildApp = (useWebpack) => {
   return app;
 }
 
-// by default, we build with webpack
-// sometimes, don't want to (like if we're only testing the server)
 export default app;

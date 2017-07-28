@@ -17,7 +17,7 @@ export default myself;
  * Express middleware function
  * Checks each id in req.ids to see if it is a valid ObjectId. If not, sends a 400 error to the client
  * @param  {Object}   req -  request object
- * @param {string[]} req.ids - List of ids to be checked
+ * @param {String[]} req.ids - List of ids to be checked
  * @param  {Object}   res  response object
  * @param  {Function} next callback to next function
  * @return {None}
@@ -89,7 +89,7 @@ export function getCompanionshipScores(companionshipTable, ids) {
  * If a crop does not exist, it will send a 404 to the client
  * @function
  * @param  {Object}   req -  request object
- * @param {string[]} req.ids - List of ids to be fetched
+ * @param {String[]} req.ids - List of ids to be fetched
  * @param  {Object}   res  response object
  * @param  {Function} next callback to next function
  * @return {None}
@@ -101,7 +101,7 @@ export const fetchCrops = fetchModel(Crop, "crops");
  * Same as {@link data-validation.fetchCrops}, but also populates the companionships of each crop with full Companionship objects, rather than just ids
  * @function
  * @param  {Object}   req -  request object
- * @param {string[]} req.ids - List of ids to be fetched
+ * @param {String[]} req.ids - List of ids to be fetched
  * @param  {Object}   res  response object
  * @param  {Function} next callback to next function
  * @return {None}
@@ -114,7 +114,7 @@ export const fetchCropsWithCompanionships = fetchModel(Crop, "crops", "companion
  * If one doesn't exist, sends 404 to client
  * @function
  * @param  {Object}   req -  request object
- * @param {string[]} req.ids - List of ids to be checked
+ * @param {String[]} req.ids - List of ids to be checked
  * @param  {Object}   res  response object
  * @param  {Function} next callback to next function
  * @return {None}
@@ -128,7 +128,7 @@ export const checkCrops = checkModel(Crop);
  * If a companionship does not exist, it will send a 404 to the client
  * @function
  * @param  {Object}   req -  request object
- * @param {string[]} req.ids - List of ids to be fetched
+ * @param {String[]} req.ids - List of ids to be fetched
  * @param  {Object}   res  response object
  * @param  {Function} next callback to next function
  * @return {None}
@@ -141,7 +141,7 @@ export const fetchCompanionships = fetchModel(Companionship, "companionships", "
  * If one doesn't exist, sends 404 to client
  * @function
  * @param  {Object}   req -  request object
- * @param {string[]} req.ids - List of ids to be checked
+ * @param {String[]} req.ids - List of ids to be checked
  * @param  {Object}   res  response object
  * @param  {Function} next callback to next function
  * @return {None}
@@ -154,7 +154,7 @@ export const checkCompanionships = checkModel(Companionship);
  * If a user does not exist, it will send a 404 to the client
  * @function
  * @param  {Object}   req -  request object
- * @param {string[]} req.ids - List of ids to be fetched
+ * @param {String[]} req.ids - List of ids to be fetched
  * @param  {Object}   res  response object
  * @param  {Function} next callback to next function
  * @return {None}
@@ -167,7 +167,7 @@ export const fetchUsers = fetchModel(User, "users");
  * If one doesn't exist, sends 404 to client
  * @function
  * @param  {Object}   req -  request object
- * @param {string[]} req.ids - List of ids to be checked
+ * @param {String[]} req.ids - List of ids to be checked
  * @param  {Object}   res  response object
  * @param  {Function} next callback to next function
  * @return {None}
@@ -180,7 +180,7 @@ export const checkUsers = checkModel(User);
  * If a location does not exist, it will send a 404 to the client
  * @function
  * @param  {Object}   req -  request object
- * @param {string[]} req.ids - List of ids to be fetched
+ * @param {String[]} req.ids - List of ids to be fetched
  * @param  {Object}   res  response object
  * @param  {Function} next callback to next function
  * @return {None}
@@ -193,7 +193,7 @@ export const fetchLocations = fetchModel(Location, "locations");
  * If one doesn't exist, sends 404 to client
  * @function
  * @param  {Object}   req -  request object
- * @param {string[]} req.ids - List of ids to be checked
+ * @param {String[]} req.ids - List of ids to be checked
  * @param  {Object}   res  response object
  * @param  {Function} next callback to next function
  * @return {None}
@@ -204,8 +204,8 @@ export const checkLocations = checkModel(Location);
  * A function factory to generate express middleware for fetching models. See {@link data-validation.fetchCrops} for specifications
  * of generated function
  * @param  {Mongoose.Model} model      Model type to be fetched
- * @param  {string} resultName name of the property in the request object where the fetched models will be stored
- * @param  {string} [populate='']   fields in the fetched models to populate
+ * @param  {String} resultName name of the property in the request object where the fetched models will be stored
+ * @param  {String} [populate='']   fields in the fetched models to populate
  * @return {Function}
  */
 export function fetchModel(model, resultName, populate='') {
@@ -273,8 +273,8 @@ export function checkModel(model) {
 
 /**
  * Converts a string into regex-friendly format, escaping all regex special characters
- * @param  {string} text string to convert
- * @return {string}      escaped string
+ * @param  {String} text string to convert
+ * @return {String}      escaped string
  */
 export function escapeRegEx(text) {
   return text.replace(/[-[\]{}()*+?.,\\^$|#\s]/g, '\\$&');

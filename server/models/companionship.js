@@ -5,6 +5,15 @@ import explain from 'mongoose-explain';
 // import idExists from 'mongoose-idexists';
 
 // TODO: Get code working to validate crops to make sure they exist
+/**
+ * @constructor
+ * @alias Companionship
+ * @param {Object} companionship
+ * @param {ObectId} companionship.crop1 id referencing the first crop
+ * @param {ObectId} companionship.crop2 id referencing the second crop
+ * @param {String} [companionship.description] description of the relationship
+ * @param {Number} companionship.compatibility compatibility score for the companionship
+ */
 const companionshipSchema = new Schema({
   crop1: {type: ObjectId, ref: "Crop", index: true, required: true},
   crop2: {type: ObjectId, ref: "Crop", index: true, required: true},
@@ -16,6 +25,20 @@ companionshipSchema.index({crop1: 1, crop2: 1}, {unique: true});
 
 // custom query allowing for things like Companionship.find().byCrop(crop1, crop2)
 // much nicer than Companionship.find({$or: etc...})
+/**
+ * Custom query for searching for a companionship by crop id
+ * @example
+ * // finds all companionships involving cropId
+ * Companionship.find().byCrop(cropId).exec((err, results) => {
+ *   // do something with results
+ * })
+ * @alias byCrop
+ * @memberof server.models.Companionship
+ * @static
+ * @param  {ObjectId} crop1
+ * @param  {ObjectId} [crop2]
+ * @return {Mongoose.Query}
+ */
 companionshipSchema.query.byCrop = function(crop1, crop2) {
   if (typeof crop1 !== 'undefined' && typeof crop2 !== 'undefined') {
     if (crop1 > crop2) {

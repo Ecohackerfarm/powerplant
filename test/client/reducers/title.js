@@ -6,7 +6,7 @@ import {expectNoActionForAllBut as sanityCheck} from './Helper';
 
 
 describe("title reducer", () => {
-  const {SET_TITLE, LOGOUT} = types;
+  const {SET_TITLE} = types;
   const actions = [];
   describe("SET_TITLE", () => {
     const type = SET_TITLE;
@@ -20,17 +20,6 @@ describe("title reducer", () => {
       }
       expect(title(oldTitle, action)).to.equal(myTitle);
       expect(title(oldTitle, action)).not.to.equal(oldTitle);
-    });
-  });
-  describe("LOGOUT", () => {
-    const type = LOGOUT;
-    actions.push(type);
-    it("should reset on LOGOUT", () => {
-      const action = {type};
-      const state = "old title";
-      const newState = title(state, action);
-      expect(newState).to.equal(defaultState);
-      expect(newState).not.to.equal(state);
     });
   });
   // little bit of a sanity check

@@ -4,7 +4,7 @@
 <head>
 	<meta charset="utf-8">
 	<meta name="viewport" content="width=device-width">
-	<title>powerplant Namespace: migration</title>
+	<title>powerplant Class: companionshipSchema</title>
 
 	<!--[if lt IE 9]>
 	<script src="//html5shiv.googlecode.com/svn/trunk/html5.js"></script>
@@ -33,14 +33,14 @@
 			<li class="dropdown">
 				<a href="namespaces.list.html" class="dropdown-toggle" data-toggle="dropdown">Namespaces<b class="caret"></b></a>
 				<ul class="dropdown-menu ">
-					<li><a href="server.html">server</a></li><li><a href="server.app.html">server.app</a></li><li><a href="server.middleware.html">server.middleware</a></li><li><a href="server.middleware.authentication.html">server.middleware.authentication</a></li><li><a href="server.middleware.data-validation.html">server.middleware.data-validation</a></li><li><a href="server.migration.html">server.migration</a></li><li><a href="server.models.html">server.models</a></li>
+					<li><a href="server.html">server</a></li><li><a href="server.middleware.html">server.middleware</a></li><li><a href="server.middleware.authentication.html">server.middleware.authentication</a></li><li><a href="server.middleware.data-validation.html">server.middleware.data-validation</a></li><li><a href="server.migration.html">server.migration</a></li><li><a href="server.models.html">server.models</a></li><li><a href="server.models.Companionship.html">server.models.Companionship</a></li>
 				</ul>
 			</li>
 			
 			<li class="dropdown">
 				<a href="classes.list.html" class="dropdown-toggle" data-toggle="dropdown">Classes<b class="caret"></b></a>
 				<ul class="dropdown-menu ">
-					<li><a href="server.models.Companionship.html">server.models.Companionship</a></li><li><a href="server.models.Crop.html">server.models.Crop</a></li><li><a href="server.models.Location.html">server.models.Location</a></li><li><a href="server.models.User.html">server.models.User</a></li>
+					<li><a href="server.models.Companionship.companionshipSchema.html">server.models.Companionship.companionshipSchema</a></li>
 				</ul>
 			</li>
 			
@@ -72,15 +72,15 @@
 		<div id="main">
 			
 
-	<h1 class="page-title">Namespace: migration</h1>
+	<h1 class="page-title">Class: companionshipSchema</h1>
 <section>
 
 <header>
     
         <h2>
-            <span class="ancestors"><a href="server.html">server</a>.</span>
+            <span class="ancestors"><a href="server.html">server</a><a href="server.models.html">.models</a><a href="server.models.Companionship.html">.Companionship</a>.</span>
         
-        migration
+        companionshipSchema
         </h2>
         
     
@@ -91,8 +91,196 @@
     <div class="container-overview">
     
         
+<hr>
+<dt>
+    <h4 class="name" id="companionshipSchema"><span class="type-signature"></span>new companionshipSchema(companionship)</h4>
+    
+    
+</dt>
+<dd>
+
+    
+
+    
+
+    
+
+    
+    
+        <h5>Parameters:</h5>
+        
+
+<table class="params table table-striped">
+    <thead>
+    <tr>
+        
+        <th>Name</th>
+        
+
+        <th>Type</th>
 
         
+
+        
+
+        <th class="last">Description</th>
+    </tr>
+    </thead>
+
+    <tbody>
+    
+
+        <tr>
+            
+                <td class="name"><code>companionship</code></td>
+            
+
+            <td class="type">
+            
+                
+<span class="param-type">Object</span>
+
+
+
+            
+            </td>
+
+            
+
+            
+
+            <td class="description last">
+                <h6 class="method-params-label method-subparams-label">Properties</h6>
+                
+
+<table class="params table table-striped">
+    <thead>
+    <tr>
+        
+        <th>Name</th>
+        
+
+        <th>Type</th>
+
+        
+
+        
+
+        <th class="last">Description</th>
+    </tr>
+    </thead>
+
+    <tbody>
+    
+
+        <tr>
+            
+                <td class="name"><code>crop1</code></td>
+            
+
+            <td class="type">
+            
+                
+<span class="param-type">ObectId</span>
+
+
+
+            
+            </td>
+
+            
+
+            
+
+            <td class="description last">id referencing the first crop</td>
+        </tr>
+
+    
+
+        <tr>
+            
+                <td class="name"><code>crop2</code></td>
+            
+
+            <td class="type">
+            
+                
+<span class="param-type">ObectId</span>
+
+
+
+            
+            </td>
+
+            
+
+            
+
+            <td class="description last">id referencing the second crop</td>
+        </tr>
+
+    
+
+        <tr>
+            
+                <td class="name"><code>description</code></td>
+            
+
+            <td class="type">
+            
+                
+<span class="param-type">string</span>
+
+
+
+            
+            </td>
+
+            
+
+            
+
+            <td class="description last">description of the relationship</td>
+        </tr>
+
+    
+
+        <tr>
+            
+                <td class="name"><code>compatibility</code></td>
+            
+
+            <td class="type">
+            
+                
+<span class="param-type">Number</span>
+
+
+
+            
+            </td>
+
+            
+
+            
+
+            <td class="description last">compatibility score for the companionship</td>
+        </tr>
+
+    
+    </tbody>
+</table>
+
+            </td>
+        </tr>
+
+    
+    </tbody>
+</table>
+
+    
+
+    
 <dl class="details">
     
 
@@ -132,7 +320,21 @@
 </dl>
 
 
-        
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+</dd>
+
     
     </div>
 
@@ -155,7 +357,7 @@
             
 <hr>
 <dt>
-    <h4 class="name" id=".migrateCompanionships"><span class="type-signature">&lt;static> </span>migrateCompanionships()</h4>
+    <h4 class="name" id=".query.byCrop"><span class="type-signature">&lt;static> </span>query.byCrop(crop1 [, crop2])</h4>
     
     
 </dt>
@@ -163,7 +365,7 @@
 
     
     <div class="description">
-        Migrate the companionships from the Firebase database to the local mongodb databaseRequires that all the crops be done migrating first
+        Custom query for searching for a companionship by crop id
     </div>
     
 
@@ -172,6 +374,100 @@
     
 
     
+    
+        <h5>Parameters:</h5>
+        
+
+<table class="params table table-striped">
+    <thead>
+    <tr>
+        
+        <th>Name</th>
+        
+
+        <th>Type</th>
+
+        
+        <th>Argument</th>
+        
+
+        
+
+        <th class="last">Description</th>
+    </tr>
+    </thead>
+
+    <tbody>
+    
+
+        <tr>
+            
+                <td class="name"><code>crop1</code></td>
+            
+
+            <td class="type">
+            
+                
+<span class="param-type">ObjectId</span>
+
+
+
+            
+            </td>
+
+            
+                <td class="attributes">
+                
+
+                
+
+                
+                </td>
+            
+
+            
+
+            <td class="description last"></td>
+        </tr>
+
+    
+
+        <tr>
+            
+                <td class="name"><code>crop2</code></td>
+            
+
+            <td class="type">
+            
+                
+<span class="param-type">ObjectId</span>
+
+
+
+            
+            </td>
+
+            
+                <td class="attributes">
+                
+                    &lt;optional><br>
+                
+
+                
+
+                
+                </td>
+            
+
+            
+
+            <td class="description last"></td>
+        </tr>
+
+    
+    </tbody>
+</table>
+
     
 
     
@@ -236,7 +532,7 @@
     </dt>
     <dd>
         
-<span class="param-type">None</span>
+<span class="param-type">Mongoose.Query</span>
 
 
 
@@ -247,106 +543,11 @@
         
 
     
-</dd>
-
+        <h5>Example</h5>
         
-            
-<hr>
-<dt>
-    <h4 class="name" id=".migrateCrops"><span class="type-signature">&lt;static> </span>migrateCrops()</h4>
-    
-    
-</dt>
-<dd>
+    <pre class="sunlight-highlight-javascript">// finds all companionships involving cropIdCompanionship.find().byCrop(cropId)
+ // * @alias server.models.Companionship.byCrop</pre>
 
-    
-    <div class="description">
-        Migrate all crops from firebase to local mongodb database
-    </div>
-    
-
-    
-
-    
-
-    
-    
-
-    
-<dl class="details">
-    
-
-	
-
-	
-
-	
-
-    
-
-    
-
-    
-
-    
-
-	
-
-	
-
-	
-
-	
-
-	
-
-
-
-	
-
-	
-
-	
-
-	
-</dl>
-
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-    <h5>Returns:</h5>
-    
-            
-<div class="param-desc">
-    passes the migrated crops to resolve once they all finish migrating
-</div>
-
-
-
-<dl>
-    <dt>
-        Type
-    </dt>
-    <dd>
-        
-<span class="param-type">Promise</span>
-
-
-
-    </dd>
-</dl>
-
-
-        
 
     
 </dd>
@@ -401,7 +602,7 @@
 <span class="jsdoc-message">
 	Documentation generated by <a href="https://github.com/jsdoc3/jsdoc">JSDoc 3.5.3</a>
 	
-		on Saturday, July 29th 2017, 1:21:14 am
+		on Saturday, July 29th 2017, 12:18:53 am
 	
 	using the <a href="https://github.com/docstrap/docstrap">DocStrap template</a>.
 </span>
