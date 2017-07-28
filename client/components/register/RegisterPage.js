@@ -2,7 +2,7 @@ import React from 'react';
 import {Redirect} from 'react-router-dom';
 import PropTypes from 'prop-types';
 import {connect} from 'react-redux';
-import {Col} from 'react-bootstrap';
+import {Grid, Row, Col} from 'react-bootstrap';
 import {userSignupRequest} from '/client/actions/userActions';
 import SetHeaderTitle from '../shared/SetHeaderTitle';
 
@@ -26,11 +26,15 @@ class RegisterPage extends React.Component {
   render() {
     const {userSignupRequest} = this.props;
     return (
-      <Col md={6} mdOffset={3}>
-        {this.state.success && <Redirect to="/" />}
-        <SetHeaderTitle>Sign up</SetHeaderTitle>
-        <RegisterForm onSuccess={this.onSuccess} userSignupRequest={userSignupRequest} />
-      </Col>
+      <Grid>
+        <Row>
+          <Col md={6} mdOffset={3}>
+            {this.state.success && <Redirect to="/" />}
+            <SetHeaderTitle>Sign up</SetHeaderTitle>
+            <RegisterForm onSuccess={this.onSuccess} userSignupRequest={userSignupRequest} />
+          </Col>
+        </Row>
+      </Grid>
       )
   }
 }

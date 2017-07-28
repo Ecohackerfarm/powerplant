@@ -1,6 +1,7 @@
 import {expect} from 'chai';
 import * as types from '/client/actions/types';
 import {currLocation} from '/client/reducers';
+import {defaultState} from '/client/reducers/currLocation'
 import {expectNoActionForAllBut as sanityCheck} from './Helper';
 
 describe("currLocation reducer", () => {
@@ -14,6 +15,17 @@ describe("currLocation reducer", () => {
       const state = "Before location";
       const newState = currLocation(state, action);
       expect(newState).to.equal(location);
+      expect(newState).not.to.equal(state);
+    });
+  });
+  describe("LOGOUT", () => {
+    const type = types.LOGOUT;
+    actions.push(type);
+    it("should clear on LOGOUT", () => {
+      const action = {type};
+      const state = "Before location";
+      const newState = currLocation(state, action);
+      expect(newState).to.equal(defaultState);
       expect(newState).not.to.equal(state);
     });
   });

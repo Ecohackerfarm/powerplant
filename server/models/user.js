@@ -12,6 +12,7 @@ const userSchema = new Schema({
   username: {type: String, index: {unique: true}, required: true},
   email: {type: String, select: false, index: {unique: true}, required: true},
   password: {type: String, select: false, required: true},
+  locations: [{type: ObjectId, select: false, ref: "Location"}]
 });
 
 userSchema.pre('save', function(next) {

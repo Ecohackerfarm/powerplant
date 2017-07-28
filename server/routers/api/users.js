@@ -56,4 +56,33 @@ router.route('/id/:userId')
     }
   });
 
+router.route('/id/:userId/locations')
+  .get((req, res, next) => {
+    if (!req.user) {
+      next({status: 401, message: "Authentication required to view locations"});
+    }
+    else {
+      req.ids = [req.params.userId];
+      next();
+    }
+  },
+  Helper.idValidator,
+  Helper.checkUsers,
+  (req, res, next) => {
+    const [id] = req.ids;
+    if (typeof id !== 'undefined') {
+      if (req.user._id.equals(id)) {
+        User.findById(id).populate('locations').exec((err, match) => {
+          res.json(match.locations);
+        })
+      }
+      else {
+        next({status: 403, message: "You may not view another user's locations"})
+      }
+    }
+    else {
+      next({status: 404, message: "User not found"});
+    }
+  })
+
 export default router;

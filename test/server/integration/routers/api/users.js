@@ -7,16 +7,27 @@ import {sendForm} from '../routerHelpers';
 import supertest from 'supertest';
 import User from '/server/models/user';
 import {Types} from 'mongoose';
+import jwt from 'jsonwebtoken';
+import jwtSecret from '/jwt-secret';
 
 const {ObjectId} = Types;
 const request = supertest(app);
 
 let userId;
+let token;
 export const user = {
   username: "testUser",
   email: "testEmail@email.com",
   password: "testPassword"
 };
+
+function buildToken(id) {
+  token = jwt.sign({
+    id,
+    username: user.username,
+    email: user.email
+  }, jwtSecret);
+}
 
 // creating/fetching the test user before everything
 // using the done callback because it kept throwing an error
@@ -28,12 +39,13 @@ before((done) => {
       .exec((err, {_id}) => {
         userId = _id.toString();
         user._id = _id;
+        buildToken(userId);
         done();
       })
     }
     else {
       userId = newUser._id.toString();
-      user._id = _id;
+      buildToken(userId);
       done();
     }
   });
@@ -84,7 +96,6 @@ describe(rootUrl + "/", () => {
 describe(rootUrl + "/id/:userId", () => {
   describe("GET", () => {
     it("should return correct user for valid id", function() {
-      this.retries(3);
       return request.get(rootUrl + "/id/" + userId)
         .expect(200)
         .expect('Content-Type', jsonType)
@@ -102,5 +113,28 @@ describe(rootUrl + "/id/:userId", () => {
           expect(res.body).not.to.have.property('email');
         });
     });
+  });
+});
+
+describe(rootUrl + "/id/:userId/locations", () => {
+  describe("GET", () => {
+    it("should 401 if not authenticated", () => {
+      return request.get(rootUrl + "/id/" + userId + "/locations")
+        .expect(401);
+    });
+    it("should return locations if authenticated", () => {
+      return request.get(rootUrl + "/id/" + userId + "/locations")
+        .set('authorization', 'Bearer ' + token)
+        .expect(200)
+        .then((res) => {
+          console.log(res.body);
+        })
+    });
+    it("should not return locations if invalid authentication", () => {
+      return request.get(rootUrl + "/id/" + userId + "/locations")
+        .set('authorization', 'Bearer ' + token + 'f)(#)')
+        .expect(401);
+    });
+    // TODO: test if a user is authenticated but accessing another users locations
   });
 });

@@ -36,6 +36,8 @@ export default class LoginForm extends React.Component {
       });
       this.props.userLoginRequest(this.state)
       .catch(err => {
+        console.log("ERROR");
+        console.log(err);
         const res = err.response;
         // if (typeof res !== 'undefined') {
           // if we get a response, use its errors

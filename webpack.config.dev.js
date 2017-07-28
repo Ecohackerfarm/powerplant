@@ -2,7 +2,7 @@ import path from 'path';
 import webpack from 'webpack';
 
 export default {
-  devtool: 'eval-source-map',
+  devtool: 'source-map',
   entry: [
     'webpack-hot-middleware/client',
     path.join(__dirname, '/client/index.js')
@@ -26,6 +26,19 @@ export default {
           path.join(__dirname, 'shared')
         ],
         loaders: [ 'react-hot-loader', 'babel-loader' ]
+      },
+      {
+        test: /\.scss$/,
+        use: [{
+          loader: "style-loader" // creates style nodes from JS strings
+        }, {
+          loader: "css-loader" // translates CSS into CommonJS
+        }, {
+          loader: "sass-loader",
+          options: {
+            includePaths: ["client/styles"]
+          } // compiles Sass to CSS
+        }]
       }
     ]
   },
