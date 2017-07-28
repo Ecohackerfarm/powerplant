@@ -3,7 +3,7 @@ import PropTypes from 'prop-types';
 import {Navbar, Col} from 'react-bootstrap';
 
 const HeaderBrand = ({title}) => (
-  <Col mdHidden lgHidden componentClass={Navbar.Brand}>{title}</Col>
+  <Col componentClass={Navbar.Brand}>{title}</Col>
 );
 
 HeaderBrand.propTypes = {

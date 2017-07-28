@@ -24,6 +24,7 @@ export const saveLocationRequest = (location) => {
         }
         else {
           return {
+            // TODO: properly handle server error
             success: false,
             ...res.data // es7 object spread
           };
