@@ -1,0 +1,4 @@
+/**
+ * @namespace migration
+ * @memberof server
+ */

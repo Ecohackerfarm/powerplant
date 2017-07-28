@@ -1,6 +1,6 @@
 import {Router} from 'express';
 import User from '/server/models/user';
-import Helper from '/server/helpers/data-validation';
+import Helper from '/server/middleware/data-validation';
 import validate from '/shared/validation/userValidation';
 
 const router = Router();

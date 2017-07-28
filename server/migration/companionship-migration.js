@@ -2,7 +2,12 @@ import Companionship from '../models/companionship';
 import Crop from '../models/crop';
 import firebase from 'firebase';
 
-export default function migrateCompanionships() {
+/**
+ * Migrate the companionships from the Firebase database to the local mongodb database
+ * Requires that all the crops be done migrating first
+ * @return {None}
+ */
+function migrateCompanionships() {
   return new Promise((resolve) => {
   // Delete all previous entries
     Companionship.find({}).remove().exec();
@@ -64,3 +69,5 @@ export default function migrateCompanionships() {
     });
   });
 }
+
+export default migrateCompanionships;

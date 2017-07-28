@@ -3,7 +3,11 @@ import Crop from '../models/crop';
 import migrateCompanionships from './companionship-migration';
 import firebase from 'firebase';
 
-export default function migrateCrops() {
+/**
+ * Migrate all crops from firebase to local mongodb database
+ * @return {Promise} passes the migrated crops to resolve once they all finish migrating
+ */
+function migrateCrops() {
   // returning a promise so we can wait until it resolves to migrate companionships
   return new Promise((resolve) => {
     Crop.find({}).remove().exec();
@@ -24,3 +28,5 @@ export default function migrateCrops() {
     });
   });
 }
+
+export default migrateCrops;

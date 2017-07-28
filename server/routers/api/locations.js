@@ -1,6 +1,6 @@
 import {Router} from 'express';
 import Location from '/server/models/location';
-import Helper from '/server/helpers/data-validation';
+import Helper from '/server/middleware/data-validation';
 
 const router = Router();
 
