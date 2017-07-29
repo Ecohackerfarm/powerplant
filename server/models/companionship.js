@@ -9,8 +9,8 @@ import explain from 'mongoose-explain';
  * @constructor
  * @alias Companionship
  * @param {Object} companionship
- * @param {ObectId} companionship.crop1 id referencing the first crop
- * @param {ObectId} companionship.crop2 id referencing the second crop
+ * @param {(ObectId|server.models.Crop)} companionship.crop1 id referencing the first crop
+ * @param {(ObectId|server.models.Crop)} companionship.crop2 id referencing the second crop
  * @param {String} [companionship.description] description of the relationship
  * @param {Number} companionship.compatibility compatibility score for the companionship
  */
@@ -35,8 +35,8 @@ companionshipSchema.index({crop1: 1, crop2: 1}, {unique: true});
  * @alias byCrop
  * @memberof server.models.Companionship
  * @static
- * @param  {ObjectId} crop1
- * @param  {ObjectId} [crop2]
+ * @param  {(ObjectId|server.models.Crop)} crop1
+ * @param  {(ObjectId|server.models.Crop)} [crop2]
  * @return {Mongoose.Query}
  */
 companionshipSchema.query.byCrop = function(crop1, crop2) {

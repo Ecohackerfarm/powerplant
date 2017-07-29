@@ -16,7 +16,7 @@ const saltRounds = 11;
  * @param {String} user.username
  * @param {String} user.email
  * @param {String} user.password passed in plaintext, but will be salted and hashed on save
- * @param {ObjectId[]} [locations] ids of all locations stored under the user
+ * @param {(ObjectId[]|server.models.Location[])} [locations] ids of all locations stored under the user
  */
 const userSchema = new Schema({
   username: {type: String, index: {unique: true}, required: true},

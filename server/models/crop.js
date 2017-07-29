@@ -12,7 +12,7 @@ const ObjectId = Schema.Types.ObjectId;
  * @param {String} crop.name internal name
  * @param {String} crop.display_name display name 1
  * @param {String} [crop.alternate_display] display name 2
- * @param {ObjectId[]} companionships all companionships involving this crop
+ * @param {(ObjectId[]|server.models.Companionship[])} companionships all companionships involving this crop
  * @param {}
  */
 const cropSchema = new Schema({

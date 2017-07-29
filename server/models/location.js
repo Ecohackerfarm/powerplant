@@ -8,7 +8,7 @@ const ObjectId = Schema.Types.ObjectId;
  * @constructor
  * @alias Location
  * @param {Object} location
- * @param {ObjectId} location.user id of the user owning this location
+ * @param {(ObjectId|server.models.User)} location.user id of the user owning this location
  * @param {Object} [location.loc] the geographic location details
  * @param {String} [location.loc.type="Point"] location type, likely never needs to be anything but the default
  * @param {Number[]} location.loc.coordinates an array of two coordinates in the order [lng, lat]
