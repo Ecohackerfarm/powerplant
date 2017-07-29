@@ -3,26 +3,13 @@
  * @memberof client.actions
  */
 
-import {SET_TITLE} from './types';
+import {setTitle} from '.';
 
 /**
- * Returns an action to make a title change
- * @param {String} title the new title which will be displayed
- * @return {client.actions.headerActions.SET_TITLE}
+ * Request a title change
+ * @param {String} title
+ * @return {client.actions.setTitleAction}
  */
-export function setTitle(title) {
-  const action = {
-    type: SET_TITLE,
-    title: title
-  }
-  return action;
+export function setTitleRequest(title) {
+  return setTitle(title);
 }
-
-
-/**
- * Pure action to set the title
- * @typedef {Object} SET_TITLE
- * @memberof client.actions.headerActions
- * @property {String} [type=SET_TITLE]
- * @property {String} title new title to be displayed
- */

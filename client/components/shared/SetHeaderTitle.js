@@ -2,18 +2,18 @@ import React from 'react';
 import PropTypes from 'prop-types';
 import {Col} from 'react-bootstrap';
 import {connect} from 'react-redux';
-import {setTitle} from '/client/actions/headerActions';
+import {setTitleRequest} from '/client/actions/headerActions';
 
 // for over md: show in header
 // for under md: hide in header, show inline
 
 class SetHeaderTitle extends React.Component {
   static propTypes = {
-    setTitle: PropTypes.func.isRequired
+    setTitleRequest: PropTypes.func.isRequired
   }
 
   componentWillMount() {
-    this.props.setTitle(this.props.children);
+    this.props.setTitleRequest(this.props.children);
   }
 
   //
@@ -25,4 +25,4 @@ class SetHeaderTitle extends React.Component {
   }
 }
 
-export default connect(null, {setTitle})(SetHeaderTitle);
+export default connect(null, {setTitleRequest})(SetHeaderTitle);

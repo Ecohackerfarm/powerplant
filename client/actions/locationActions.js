@@ -4,15 +4,15 @@
  */
 
 import axios from 'axios';
-import {EDIT_LOCATION, ADD_LOCATION, DELETE_LOCATION, SET_LOCATIONS} from './types';
+import {editLocation, addLocation, deleteLocation, setLocations} from '.';
 import {store} from '/client/index';
 import {randString} from '/client/utils';
 
 /**
  * Async sends a request to get all the user's locations
- * On response, dispatches a {@link client.actions.locationActions.SET_LOCATIONS SET_LOCATIONS} action
+ * On response, dispatches a {@link client.actions.setLocationsAction setLocationsAction}
  * @function
- * @param  {String} id id of users whose locations are being fetched
+ * @param  {String} id id of user whose locations are being fetched
  * @return {Promise}    the network request
  */
 export const getLocationsRequest = (id) => {
@@ -26,7 +26,7 @@ export const getLocationsRequest = (id) => {
 }
 
 /**
- * Async sends a request to save a location, dispatches an {@link client.actions.locationActions.ADD_LOCATION ADD_LOCATION} action
+ * Async sends a request to save a location, dispatches an {@link client.actions.addLocationAction addLocationAction}
  * on success
  * @function
  * @param  {server.models.Location} location unlike server model, does not require an _id parameter
@@ -69,7 +69,8 @@ export const saveLocationRequest = (location) => {
 // since we are only just posting these to the server, these locations could possibly not have valid ids yet
 // if it doesn't, we need to change its id once saved (in the reducer)
 /**
- * Async makes a request to save an array of locations on the server, then updates them in the store if successful by dispatching {@link client.action.locationActions.EDIT_LOCATION EDIT_LOCATION} requests
+ * Async makes a request to save an array of locations on the server, then updates them in the store if successful by
+ * dispatching {@link client.actions.editLocationAction editLocationAction} requests
  * @function
  * @param  {server.model.Location[]} locations locations to be saved
  * @return {Promise} resolves to a {@link client.actions.responseObject}
@@ -94,68 +95,3 @@ export const saveAllLocationsRequest = (locations) => {
     })
   }
 }
-
-/**
- * Build an {@link client.actions.locationActions.ADD_LOCATION ADD_LOCATION} action
- * @function
- * @param {server.models.Location} location location to be added
- * @return {client.actions.locationActions.ADD_LOCATION}
- */
-export const addLocation = (location) => {
-  return {
-    type: ADD_LOCATION,
-    location
-  }
-}
-
-/**
- * Build an {@link client.actions.locationActions.EDIT_LOCATION EDIT_LOCATION} action
- * @function
- * @param  {server.models.Location} before [description]
- * @param  {server.models.Location} after  [description]
- * @return {client.actions.locationActions.EDIT_LOCATION}        [description]
- */
-export const editLocation = (before, after) => {
-  type: EDIT_LOCATION,
-  before,
-  after
-}
-
-/**
- * Build a {@link client.actions.locationActions.SET_LOCATIONS SET_LOCATIONS} action
- * @function
- * @param {server.models.Location[]} locations
- * @return {client.actions.locationActions.SET_LOCATIONS}
- */
-export const setLocations = (locations) => {
-  return {
-    type: SET_LOCATIONS,
-    locations
-  }
-}
-
-/**
- * Pure action to add a single location
- * @typedef {Object} ADD_LOCATION
- * @memberof client.actions.locationActions
- * @property {String} [type=ADD_LOCATION]
- * @property {server.models.Location} location location to be added
- */
-
-/**
-* Pure action to set all locations in the redux store
-* Will remove all current locations and replace them will the specified array
-* @typedef {Object} SET_LOCATIONS
-* @memberof client.actions.locationActions
-* @property {String} [type=SET_LOCATIONS]
-* @property {server.models.Location[]} locations locations to replace the current locations in the store
-*/
-
-/**
- * Pure action to edit a location
- * @typedef {Object} EDIT_LOCATION
- * @memberof client.actions.locationActions
- * @property {String} [type=EDIT_LOCATION]
- * @property {server.models.Location} before the location to be replaced
- * @property {server.models.Location} after the new location
- */
