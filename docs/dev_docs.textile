@@ -37,15 +37,17 @@ h1. Architecture
 
 h2. Codebase
 
-The entire codebase, front and back, is written in ES6 using Babel to transpile to CommonJS.
+The entire codebase, front and back, is written in ES6 using Babel to transpile to CommonJS. Through Babel and webpack, some importing conveniences are available, namely using a slash ('/') to specify the root of the project, allowing for absolute imports rather than just relative.
 
 h2. Documentation
 
-Documentation can be found in the @/docs@ folder. @/docs/index.html@ loads a fully navigatible documentation site.
+Documentation can be found in the @/docs@ folder. @/docs/index.html@ loads a fully navigatible documentation site. It is also available online through github pages at https://ecohackerfarm.github.io/powerplant
 
 h3. JSDoc
 
 All documentation is generated with JSDoc (and "docstrap":https://www.npmjs.com/package/ink-docstrap for the template). See the http://usejsdoc.org/ for documentation on how to properly document things. The documentation pattern used is to make every folder and file a namespace (unless a file should not be its own namespace, like if you only ever import it through the directory's index.js). Each @namespace@ should also specify who it is a @memberof@. This allows for proper navigation of the file hierarchy in the documentation. Additionally, a plugin called "jsdoc-memberof-namespace":https://www.npmjs.com/package/jsdoc-memberof-namespace is used to generate proper nesting structure for methods, constants, and classes within namespaces. This was the best way I could find to maintain the right file hierarchy in the documentation.
+
+The one exception is that classes can be documented as @class@es rather than @namespace@s. This is only for things that you would instantiate with the @new@ keyword. Mongoose models, for example, can be documented as classes because they are instantiated as @new@ objects. Take a look at @/server/models@ for examples of how this works.
 
 Here's an example for documenting a file called @bar@ within a folder called @foo@ (although you should be able to find plenty in the code, at least in @/server/data-validation@)
 
