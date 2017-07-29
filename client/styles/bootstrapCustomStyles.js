@@ -15,7 +15,6 @@ export const styles = {
 export const addAllStyles = () => {
   for (let component in styles) {
     styles[component].forEach((style) => {
-      console.log("Adding style " + style + " to component " + component);
       bootstrapUtils.addStyle(components[component], style);
     })
   }

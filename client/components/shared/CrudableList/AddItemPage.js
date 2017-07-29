@@ -7,10 +7,11 @@ import SetHeaderTitle from '/client/components/shared/SetHeaderTitle';
 
 class AddItemPage extends React.Component {
   static propTypes = {
-    saveItemRequest: PropTypes.func.isRequired,
+    onSubmit: PropTypes.func.isRequired,
     itemName: PropTypes.string.isRequired,
     AddItemForm: PropTypes.func.isRequired,
     homeUrl: PropTypes.string.isRequired,
+    itemToEdit: PropTypes.object
   }
 
   state = {
@@ -33,7 +34,7 @@ class AddItemPage extends React.Component {
       <Grid>
         <Row>
           <Col md={6} mdOffset={3}>
-            <AddItemForm onSuccess={this.onSuccess} saveItemRequest={this.props.saveItemRequest} />
+            <AddItemForm onSuccess={this.onSuccess} onSubmit={this.props.onSubmit} itemToEdit={this.props.itemToEdit} />
           </Col>
         </Row>
       </Grid>

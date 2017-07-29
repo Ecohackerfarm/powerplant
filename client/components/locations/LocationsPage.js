@@ -24,7 +24,7 @@ const stateToProps = ({locations}) => ({locations});
 const dispatchToProps = dispatch => ({
   actions: {
     create: (location) => dispatch(saveLocationRequest(location)),
-    update: (id, newItem) => {
+    edit: (id, newItem) => {
 
     },
     delete: (id) => {

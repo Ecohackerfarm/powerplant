@@ -18,7 +18,6 @@ import '/client/styles/main.scss';
 
 // adding in our bootstrap custom styles
 addAllStyles();
-console.log("added styles");
 
 // creating the redux store
 export const store = createStore(
@@ -31,19 +30,40 @@ export const store = createStore(
     autoRehydrate()
   )
 )
-// setting up redux-persist to save our redux store locally
-persistStore(store)
 
 // jwtToken is loaded and saved to localStorage, but there's no reason not to switch this to the persistent
 // redux store. i just haven't gotten to it. pretty sure redux-persist uses localStorage anyway
-if (localStorage.jwtToken) {
-  store.dispatch(setUserFromToken(localStorage.jwtToken));
+
+class AppProvider extends React.Component {
+
+  state = {
+    rehydrated: false
+  }
+
+  componentWillMount(){
+    persistStore(store, {}, () => {
+      this.setState({ rehydrated: true })
+    });
+
+    if (localStorage.jwtToken) {
+      store.dispatch(setUserFromToken(localStorage.jwtToken));
+    };
+  }
+
+  render() {
+    if(!this.state.rehydrated){
+      return <div>Loading...</div>
+    }
+    return (
+      <Provider store={store}>
+        <Router>
+          <App/>
+        </Router>
+      </Provider>
+    )
+  }
 }
 
 render((
-  <Provider store={store}>
-    <Router>
-      <App/>
-    </Router>
-  </Provider>
+  <AppProvider />
 ), document.getElementById('app'));

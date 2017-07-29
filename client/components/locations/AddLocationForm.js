@@ -9,19 +9,39 @@ class AddLocationForm extends React.Component {
   static propTypes = {
     // both will be passed in by the Crudable AddItemPage
     onSuccess: PropTypes.func.isRequired,
-    saveItemRequest: PropTypes.func.isRequired
+    onSubmit: PropTypes.func.isRequired,
+    itemToEdit: PropTypes.object
   }
 
-  state = {
-    name: '',
-    address: '',
-    loc: {
-      coordinates: []
-    },
-    locationResults: [],
-    errors: {},
-    isLoading: false,
-    selectedLocation: false
+  constructor(props) {
+    super(props);
+    const {itemToEdit} = props;
+    console.log(props);
+    if (itemToEdit) {
+      console.log("Setting to location " + itemToEdit.name);
+      this.state = {
+        name: itemToEdit.name,
+        loc: itemToEdit.loc,
+        locationResults: [],
+        errors: {},
+        isLoading: false,
+        selectedLocation: true
+      }
+    }
+    else {
+      console.log("Not editing anything");
+      this.state = {
+        name: '',
+        loc: {
+          address: '',
+          coordinates: []
+        },
+        locationResults: [],
+        errors: {},
+        isLoading: false,
+        selectedLocation: false
+      }
+    }
   }
 
   typingTimer = {
@@ -32,30 +52,36 @@ class AddLocationForm extends React.Component {
   // gets called when user types in a textbox
   onChange = (evt) => {
     const {typingTimer, requestLocationResults} = this;
-    this.setState({
-      [evt.target.id]: evt.target.value,
-      errors: Object.assign({}, this.state.errors, {[evt.target.id]: undefined})
-    });
-    if (evt.target.id === 'address') {
+    let errors = Object.assign({}, this.state.errors, {[evt.target.id]: undefined});
+    let id = evt.target.id;
+
+    if (id === 'address') {
       clearTimeout(typingTimer.value);
-      const errors = Object.assign({}, this.state.errors, {address: undefined});
+      errors = Object.assign({}, errors, {address: undefined});
       if (evt.target.value) {
         typingTimer.value = setTimeout(requestLocationResults, typingTimer.timeout);
       }
       this.setState({
         loc: {
-          coordinates: []
+          coordinates: [],
+          address: evt.target.value
         },
         selectedLocation: false,
         errors
       })
+    }
+    else {
+      this.setState({
+        [evt.target.id]: evt.target.value,
+        errors
+      });
     }
   }
 
   // gets called when the user types a query in the address textbox
   // fetches possible locations from google geocode api
   requestLocationResults = () => {
-    const address = this.state.address;
+    const address = this.state.loc.address;
     fetch('http://maps.google.com/maps/api/geocode/json?address=' + address)
     .then(res => res.json())
     .then(data => {
@@ -66,10 +92,10 @@ class AddLocationForm extends React.Component {
       }
       else {
         let locationResults = data.results.map((location) => ({
-          name: location.formatted_address,
           loc: {
             // yes, I know this is backwards
             // it's a mongodb thing :(
+            address: location.formatted_address,
             coordinates: [location.geometry.location.lng, location.geometry.location.lat]
           }
         }))
@@ -89,11 +115,9 @@ class AddLocationForm extends React.Component {
   // gets called when the user selects a location from the list
   setLocation(index) {
     let loc = this.state.locationResults[index].loc;
-    let address = this.state.locationResults[index].name;
     let locationResults = [];
     this.setState({
       loc,
-      address,
       locationResults,
       selectedLocation: true
     });
@@ -113,7 +137,7 @@ class AddLocationForm extends React.Component {
       })
     }
     else {
-      this.props.saveItemRequest(location)
+      this.props.onSubmit(location)
       .then(({success}) => {
         if (success) {
           this.props.onSuccess();
@@ -142,14 +166,14 @@ class AddLocationForm extends React.Component {
           placeholder="Address"
           error={errors.address}
           success = {this.state.selectedLocation}
-          value={this.state.address} />
+          value={this.state.loc.address} />
 
         {locationResults.length > 0 &&
           <ListGroup>
             <ListGroupItem bsStyle="info">Select your location</ListGroupItem>
-            {locationResults.map(({name}, index) => (
-              <ListGroupItem key={name} onClick={this.setLocation.bind(this, index)}>
-                {name}
+            {locationResults.map(({loc}, index) => (
+              <ListGroupItem key={index} onClick={this.setLocation.bind(this, index)}>
+                {loc.address}
               </ListGroupItem>
             ))}
         </ListGroup>
