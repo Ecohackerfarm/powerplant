@@ -9,11 +9,20 @@ import {setTitleRequest} from '/client/actions/headerActions';
 
 class SetHeaderTitle extends React.Component {
   static propTypes = {
-    setTitleRequest: PropTypes.func.isRequired
+    setTitleRequest: PropTypes.func.isRequired,
+    title: PropTypes.string
+  }
+
+  static defaultProps = {
+    title: 'powerplant'
   }
 
   componentWillMount() {
-    this.props.setTitleRequest(this.props.children);
+    let title = this.props.children;
+    if (!title) {
+      title = this.props.title;
+    }
+    this.props.setTitleRequest(title);
   }
 
   //

@@ -3,14 +3,14 @@ import {Redirect} from 'react-router-dom';
 import PropTypes from 'prop-types';
 import {connect} from 'react-redux';
 import {Grid, Row, Col} from 'react-bootstrap';
-import {saveLocationRequest} from '/client/actions/locationActions';
 import SetHeaderTitle from '/client/components/shared/SetHeaderTitle';
 
-import AddLocationForm from './AddLocationForm';
-
-class AddLocationPage extends React.Component {
+class AddItemPage extends React.Component {
   static propTypes = {
-    saveLocationRequest: PropTypes.func.isRequired
+    saveItemRequest: PropTypes.func.isRequired,
+    itemName: PropTypes.string.isRequired,
+    AddItemForm: PropTypes.func.isRequired,
+    homeUrl: PropTypes.string.isRequired,
   }
 
   state = {
@@ -25,15 +25,15 @@ class AddLocationPage extends React.Component {
 
   render() {
     if (this.state.success) {
-      return <Redirect to="/locations" />
+      return <Redirect to={this.props.homeUrl} />
     }
     else {
+      const AddItemForm = this.props.AddItemForm;
       return (
       <Grid>
         <Row>
           <Col md={6} mdOffset={3}>
-            <SetHeaderTitle>Add location</SetHeaderTitle>
-            <AddLocationForm onSuccess={this.onSuccess} saveLocationRequest={this.props.saveLocationRequest} />
+            <AddItemForm onSuccess={this.onSuccess} saveItemRequest={this.props.saveItemRequest} />
           </Col>
         </Row>
       </Grid>
@@ -42,4 +42,4 @@ class AddLocationPage extends React.Component {
   }
 }
 
-export default connect(null, {saveLocationRequest})(AddLocationPage);
+export default AddItemPage;

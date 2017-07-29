@@ -7,8 +7,9 @@ import TextFieldGroup from '/client/components/shared/TextFieldGroup';
 
 class AddLocationForm extends React.Component {
   static propTypes = {
+    // both will be passed in by the Crudable AddItemPage
     onSuccess: PropTypes.func.isRequired,
-    saveLocationRequest: PropTypes.func.isRequired
+    saveItemRequest: PropTypes.func.isRequired
   }
 
   state = {
@@ -112,7 +113,7 @@ class AddLocationForm extends React.Component {
       })
     }
     else {
-      this.props.saveLocationRequest(location)
+      this.props.saveItemRequest(location)
       .then(({success}) => {
         if (success) {
           this.props.onSuccess();

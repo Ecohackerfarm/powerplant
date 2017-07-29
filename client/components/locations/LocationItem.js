@@ -2,14 +2,14 @@ import React from 'react';
 import {Col, Panel} from 'react-bootstrap';
 import PropTypes from 'prop-types';
 
-const LocationItem = ({loc, handleClick}) => (
+const LocationItem = ({item, handleClick}) => (
   <Col sm={6} lg={3}>
-    <Panel onClick={handleClick} className="panel-custom" header={loc.name}>{loc.loc.coordinates}</Panel>
+    <Panel onClick={handleClick} className="panel-custom" header={item.name}>{item.loc.coordinates}</Panel>
   </Col>
 )
 
 LocationItem.propTypes = {
-  loc: PropTypes.shape({
+  item: PropTypes.shape({
     _id: PropTypes.string.isRequired,
     name: PropTypes.string,
     loc: PropTypes.shape({
