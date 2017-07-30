@@ -41,14 +41,15 @@ router.route('/id/:locId')
   },
   Helper.idValidator,
   // first, get the location
-  Helper.fetchLocations)
-  .get((req, res, next) => {
+  Helper.fetchLocations,
+  (req, res, next) => {
     const [location] = req.locations;
     if (typeof location !== 'undefined') {
       // then check agains req.user and see if they're owned by the same person
       if (req.user._id.equals(location.user)) {
-        // if they are, return the location
-        res.json(location);
+        // if so, pass it on to the next handler
+        req.location = location;
+        next();
       }
       else {
         // otherwise return a 403 forbidden
@@ -58,6 +59,21 @@ router.route('/id/:locId')
     else {
       next({status: 500, message: "Error fetching locations"});
     }
-  }); //TODO: PUT request for modifying a location
+  })
+  .get((req, res, next) => {
+    res.json(req.location);
+  })
+  .put((req, res, next) => {
+    const location = req.location;
+    Object.assign(location, req.body);
+    location.save((err, newLoc) => {
+      if (err) {
+        next({status: 400, errors: err.errors, message: err._message})
+      }
+      else {
+        res.json(newLoc);
+      }
+    })
+  })
 
 export default router;

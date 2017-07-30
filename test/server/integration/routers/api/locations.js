@@ -91,17 +91,31 @@ describe(rootUrl + "/id/:locId", () => {
     });
     it("should 404 with nonexistent", () => {
       const token = jwt.sign({
-        id: userId,
-        username: testUser.username,
-        email: testUser.email
+        id: "this is a made up user id",
+        username: "this is a made up username",
+        email: "this is a made up email"
       }, jwtSecret);
       return request.get(rootUrl + "/id/" + locId)
+      .set('authorization', 'Bearer ' + token)
+      .expect(404)
+    });
+  });
+  describe.only("PUT", () => {
+    it("should update the location with proper authorization", () => {
+      const changes = {name: randString()};
+      return sendForm(request.put(rootUrl + "/id/" + locId), changes)
       .set('authorization', 'Bearer ' + token)
       .expect(200)
       .expect('Content-Type', jsonType)
       .then((res) => {
-        expect(res.body).to.have.property('_id').and.to.equal(locId);
+        expect(res.body).to.have.property('name').and.to.equal(changes.name);
       })
-    });
-  });
+    })
+    it("should not update with invalid data", () => {
+      const changes = {name: {a: 1}};
+      return sendForm(request.put(rootUrl + "/id/" + locId), changes)
+      .set('authorization', 'Bearer ' + token)
+      .expect(400)
+    })
+  })
 });
