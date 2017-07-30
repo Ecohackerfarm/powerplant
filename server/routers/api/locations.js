@@ -77,5 +77,16 @@ router.route('/id/:locId')
       }
     })
   })
+  .delete((req, res, next) => {
+    const location = req.location;
+    location.remove((err) => {
+      if (err) {
+        next({status: 400, errors: err.errors, message: err._message});
+      }
+      else {
+        res.status(200).json();
+      }
+    });
+  })
 
 export default router;

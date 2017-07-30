@@ -4,7 +4,7 @@
 <head>
 	<meta charset="utf-8">
 	<meta name="viewport" content="width=device-width">
-	<title>powerplant Namespace: models</title>
+	<title>powerplant Namespace: actionHelpers</title>
 
 	<!--[if lt IE 9]>
 	<script src="//html5shiv.googlecode.com/svn/trunk/html5.js"></script>
@@ -72,15 +72,15 @@
 		<div id="main">
 			
 
-	<h1 class="page-title">Namespace: models</h1>
+	<h1 class="page-title">Namespace: actionHelpers</h1>
 <section>
 
 <header>
     
         <h2>
-            <span class="ancestors"><a href="server.html">server</a>.</span>
+            <span class="ancestors"><a href="client.html">client</a><a href="client.actions.html">.actions</a>.</span>
         
-        models
+        actionHelpers
         </h2>
         
     
@@ -141,24 +141,427 @@
     
 
     
-        <h3 class="subsection-title">Classes</h3>
+
+    
+
+    
+
+    
+
+    
+        <h3 class="subsection-title">Methods</h3>
 
         <dl>
-            <dt><a href="server.models.Companionship.html">Companionship</a></dt>
-            <dd></dd>
+            
+<hr>
+<dt>
+    <h4 class="name" id=".authCheckedRequest"><span class="type-signature">&lt;static> </span>authCheckedRequest(authAction, nonAuthAction)</h4>
+    
+    
+</dt>
+<dd>
+
+    
+    <div class="description">
+        A convenience function which passes dispatch to authAction if authorized and passes it to nonAuthAction if not authorized
+    </div>
+    
+
+    
+
+    
+
+    
+    
+        <h5>Parameters:</h5>
         
-            <dt><a href="server.models.Crop.html">Crop</a></dt>
-            <dd></dd>
+
+<table class="params table table-striped">
+    <thead>
+    <tr>
         
-            <dt><a href="server.models.Location.html">Location</a></dt>
-            <dd></dd>
+        <th>Name</th>
         
-            <dt><a href="server.models.User.html">User</a></dt>
-            <dd></dd>
+
+        <th>Type</th>
+
+        
+
+        
+
+        <th class="last">Description</th>
+    </tr>
+    </thead>
+
+    <tbody>
+    
+
+        <tr>
+            
+                <td class="name"><code>authAction</code></td>
+            
+
+            <td class="type">
+            
+                
+<span class="param-type"><a href="client.actions.actionHelpers.html#~dispatchCallback">client.actions.actionHelpers~dispatchCallback</a></span>
+
+
+
+            
+            </td>
+
+            
+
+            
+
+            <td class="description last">callback if authorized</td>
+        </tr>
+
+    
+
+        <tr>
+            
+                <td class="name"><code>nonAuthAction</code></td>
+            
+
+            <td class="type">
+            
+                
+<span class="param-type"><a href="client.actions.actionHelpers.html#~dispatchCallback">client.actions.actionHelpers~dispatchCallback</a></span>
+
+
+
+            
+            </td>
+
+            
+
+            
+
+            <td class="description last">callback if not authorized</td>
+        </tr>
+
+    
+    </tbody>
+</table>
+
+    
+
+    
+<dl class="details">
+    
+
+	
+
+	
+
+	
+
+    
+
+    
+
+    
+
+    
+
+	
+
+	
+
+	
+
+	
+
+	
+
+
+
+	
+
+	
+
+	
+
+	
+</dl>
+
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+    <h5>Returns:</h5>
+    
+            
+<div class="param-desc">
+    the results of either authAction or nonAuthAction
+</div>
+
+
+
+<dl>
+    <dt>
+        Type
+    </dt>
+    <dd>
+        
+<span class="param-type">Object</span>
+
+
+
+    </dd>
+</dl>
+
+
+        
+
+    
+</dd>
+
+        
+            
+<hr>
+<dt>
+    <h4 class="name" id=".simpleAuthCheckedRequest"><span class="type-signature">&lt;static> </span>simpleAuthCheckedRequest(url, method, action, actionParams)</h4>
+    
+    
+</dt>
+<dd>
+
+    
+    <div class="description">
+        If authorized, exectues a simple HTTP request and then dispatches a single action if successful.If not authorized, dispatches the action.
+    </div>
+    
+
+    
+
+    
+
+    
+    
+        <h5>Parameters:</h5>
+        
+
+<table class="params table table-striped">
+    <thead>
+    <tr>
+        
+        <th>Name</th>
+        
+
+        <th>Type</th>
+
+        
+
+        
+
+        <th class="last">Description</th>
+    </tr>
+    </thead>
+
+    <tbody>
+    
+
+        <tr>
+            
+                <td class="name"><code>url</code></td>
+            
+
+            <td class="type">
+            
+                
+<span class="param-type">String</span>
+
+
+
+            
+            </td>
+
+            
+
+            
+
+            <td class="description last">the URL of the HTTP request</td>
+        </tr>
+
+    
+
+        <tr>
+            
+                <td class="name"><code>method</code></td>
+            
+
+            <td class="type">
+            
+                
+<span class="param-type">String</span>
+
+
+
+            
+            </td>
+
+            
+
+            
+
+            <td class="description last">HTTP method in lower case</td>
+        </tr>
+
+    
+
+        <tr>
+            
+                <td class="name"><code>action</code></td>
+            
+
+            <td class="type">
+            
+                
+<span class="param-type">function</span>
+
+
+
+            
+            </td>
+
+            
+
+            
+
+            <td class="description last">function to build an action from the action params</td>
+        </tr>
+
+    
+
+        <tr>
+            
+                <td class="name"><code>actionParams</code></td>
+            
+
+            <td class="type">
+            
+                
+<span class="param-type">Array</span>
+
+
+
+            
+            </td>
+
+            
+
+            
+
+            <td class="description last">parameters of the action builder function</td>
+        </tr>
+
+    
+    </tbody>
+</table>
+
+    
+
+    
+<dl class="details">
+    
+
+	
+
+	
+
+	
+
+    
+
+    
+
+    
+
+    
+
+	
+
+	
+
+	
+
+	
+
+	
+
+
+
+	
+
+	
+
+	
+
+	
+</dl>
+
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+    <h5>Returns:</h5>
+    
+            
+
+
+<dl>
+    <dt>
+        Type
+    </dt>
+    <dd>
+        
+<span class="param-type"><a href="client.actions.html#.responseObject">client.actions.responseObject</a></span>
+
+
+
+    </dd>
+</dl>
+
+
+        
+
+    
+</dd>
+
         </dl>
     
 
     
+        <h3 class="subsection-title">Type Definitions</h3>
+
+        <dl>
+                
+<hr>
+<dt>
+    <h4 class="name" id="~dispatchCallback"><span class="type-signature"></span>dispatchCallback(dispatch)</h4>
+    
+    
+</dt>
+<dd>
 
     
 
@@ -166,6 +569,115 @@
 
     
 
+    
+    
+        <h5>Parameters:</h5>
+        
+
+<table class="params table table-striped">
+    <thead>
+    <tr>
+        
+        <th>Name</th>
+        
+
+        <th>Type</th>
+
+        
+
+        
+
+        <th class="last">Description</th>
+    </tr>
+    </thead>
+
+    <tbody>
+    
+
+        <tr>
+            
+                <td class="name"><code>dispatch</code></td>
+            
+
+            <td class="type">
+            
+                
+<span class="param-type">function</span>
+
+
+
+            
+            </td>
+
+            
+
+            
+
+            <td class="description last">the redux dispatch object</td>
+        </tr>
+
+    
+    </tbody>
+</table>
+
+    
+
+    
+<dl class="details">
+    
+
+	
+
+	
+
+	
+
+    
+
+    
+
+    
+
+    
+
+	
+
+	
+
+	
+
+	
+
+	
+
+
+
+	
+
+	
+
+	
+
+	
+</dl>
+
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+</dd>
+
+            </dl>
     
 
     

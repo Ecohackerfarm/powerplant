@@ -15,7 +15,7 @@ const CrudableListPage = ({actions, items, itemName, ItemListView, AddItemForm, 
       <Route exact path={match.url} render={() => (
         <Grid>
           <SetHeaderTitle title={itemName.charAt(0).toUpperCase() + itemName.slice(1) + "s"} />
-          <CrudableList match={match} items={items} ItemView={ItemListView} itemName={itemName} />
+          <CrudableList deleteAction={actions.delete} match={match} items={items} ItemView={ItemListView} itemName={itemName} />
           <LinkContainer to={`${match.url}/add`}>
             <Button bsStyle="floating">+</Button>
           </LinkContainer>

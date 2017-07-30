@@ -147,6 +147,7 @@ class AddLocationForm extends React.Component {
         }
       })
       .catch(err => {
+        console.log(err);
         this.setState({
           errors: { form: "Error saving location" }
         });

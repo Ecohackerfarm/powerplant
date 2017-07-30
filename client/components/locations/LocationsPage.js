@@ -4,7 +4,7 @@ import {Route, Switch} from 'react-router-dom';
 import SetHeaderTitle from '../shared/SetHeaderTitle';
 import CrudableListPage from '../shared/CrudableList';
 import LocationItem from './LocationItem';
-import {saveLocationRequest, editLocationRequest} from '/client/actions/locationActions';
+import {saveLocationRequest, editLocationRequest, deleteLocationRequest} from '/client/actions/locationActions';
 import AddLocationForm from './AddLocationForm';
 
 const LocationsPage = ({actions, locations, match}) => {
@@ -25,9 +25,7 @@ const dispatchToProps = dispatch => ({
   actions: {
     create: (location) => dispatch(saveLocationRequest(location)),
     edit: (id, newItem) => dispatch(editLocationRequest(id, newItem)),
-    delete: (id) => {
-
-    }
+    delete: (id) => dispatch(deleteLocationRequest(id))
   }
 })
 

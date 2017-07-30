@@ -7,10 +7,12 @@ import axios from 'axios';
 import {editLocation, addLocation, deleteLocation, setLocations} from '.';
 import {store} from '/client/index';
 import {randString} from '/client/utils';
+import {authCheckedRequest, simpleAuthCheckedRequest} from './actionHelpers';
 
 /**
  * Async sends a request to get all the user's locations
  * On response, dispatches a {@link client.actions.setLocationsAction setLocationsAction}
+ * Does nothing if not authenticated
  * @function
  * @param  {String} id id of user whose locations are being fetched
  * @return {Promise}    the network request
@@ -104,26 +106,9 @@ export const saveAllLocationsRequest = (locations) => {
  * @return {client.actions.responseObject}
  */
 export const editLocationRequest = (id, locChanges) => {
-  return dispatch => {
-    if (store.getState().auth.isAuthenticated) {
-      // insert code to edit location here
-      return axios.put('/api/locations/id/' + id, locChanges)
-      .then((res) => {
-        let success = true;
-        if (res.status === 200) {
-          dispatch(editLocation(id, res.data));
-        }
-        else {
-          success = false;
-        }
-        return {success};
-      })
-    }
-    else {
-      return new Promise((resolve) => {
-        dispatch(editLocation(id, locChanges));
-        resolve({success: true});
-      });
-    }
-  }
+  return simpleAuthCheckedRequest('/api/locations/id/' + id, 'put', editLocation, id, locChanges);
+}
+
+export const deleteLocationRequest = (id) => {
+  return simpleAuthCheckedRequest('/api/locations/id/' + id, 'delete', deleteLocation, id)
 }

@@ -62,14 +62,25 @@ import * as types from './types';
   /**
    * Build an {@link client.actions.editLocationAction editLocationAction}
    * @function
-   * @param  {server.models.Location} before [description]
-   * @param  {server.models.Location} after  [description]
+   * @param  {ObjectId|String} id id of location being modified
+   * @param  {server.models.Location} location  location changes to be made
    * @return {client.actions.editLocationAction}        [description]
    */
   export const editLocation = (id, location) => ({
     type: types.EDIT_LOCATION,
     id,
     location
+  });
+
+  /**
+   * Build an {@link client.actions.deleteLocationAction deleteLocationAction}
+   * @function
+   * @param  {ObjectId|String} id id of location being deleted
+   * @return {client.actions.deleteLocationAction}        [description]
+   */
+  export const deleteLocation = (id) => ({
+    type: types.DELETE_LOCATION,
+    id
   });
 
   /**

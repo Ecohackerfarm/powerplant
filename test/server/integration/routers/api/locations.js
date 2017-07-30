@@ -118,4 +118,11 @@ describe(rootUrl + "/id/:locId", () => {
       .expect(400)
     })
   })
+  describe("DELETE", () => {
+    it("should delete a location with authorization", () => {
+      return request.delete(rootUrl + "/id/" + locId)
+      .set('authorization', 'Bearer ' + token)
+      .expect(200);
+    })
+  })
 });
