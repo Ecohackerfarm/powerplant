@@ -146,6 +146,11 @@ class AddLocationForm extends React.Component {
           console.log("Error saving");
         }
       })
+      .catch(err => {
+        this.setState({
+          errors: { form: "Error saving location" }
+        });
+      });
     }
   }
 
@@ -153,6 +158,12 @@ class AddLocationForm extends React.Component {
     const {errors, isLoading, locationResults} = this.state;
     return (
       <form onSubmit={this.onSubmit}>
+
+        {this.state.errors.form &&
+        <FormGroup validationState="error">
+          <HelpBlock>{this.state.errors.form}</HelpBlock>
+        </FormGroup>}
+
         <TextFieldGroup
           id="name"
           onChange={this.onChange}

@@ -95,3 +95,28 @@ export const saveAllLocationsRequest = (locations) => {
     })
   }
 }
+
+export const editLocationRequest = (id, newLoc) => {
+  return dispatch => {
+    if (store.getState().auth.isAuthenticated) {
+      // insert code to edit location here
+      return axios.put('/api/locations/id/' + id, newLoc)
+      .then((res) => {
+        let success = true;
+        if (res.status === 200) {
+          dispatch(editLocation(id, res.data));
+        }
+        else {
+          success = false;
+        }
+        return {success};
+      })
+    }
+    else {
+      return new Promise((resolve) => {
+        dispatch(editLocation(id, newLoc));
+        resolve({success: true});
+      });
+    }
+  }
+}

@@ -1,14 +1,14 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 import {HelpBlock, Col, Row} from 'react-bootstrap';
-import {LinkContainer} from 'react-router-bootstrap';
+import {Link} from 'react-router-dom';
 
 const CrudableList = ({match, items, ItemView, itemName}) => (
   <Row>
     {items.length > 0 ?
-    items.map(item => <LinkContainer key={item._id} to={`${match.url}/${item._id}/edit`}>
+    items.map(item => <Link key={item._id} to={`${match.url}/${item._id}/edit`}>
       <ItemView item={item} />
-    </LinkContainer>)
+    </Link>)
     :
     <Col>
       <HelpBlock>No {itemName}s yet</HelpBlock>

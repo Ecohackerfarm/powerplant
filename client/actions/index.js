@@ -66,11 +66,11 @@ import * as types from './types';
    * @param  {server.models.Location} after  [description]
    * @return {client.actions.editLocationAction}        [description]
    */
-  export const editLocation = (before, after) => {
+  export const editLocation = (id, location) => ({
     type: types.EDIT_LOCATION,
-    before,
-    after
-  }
+    id,
+    location
+  });
 
   /**
    * Build a {@link client.actions.setLocationsAction setLocationsAction}

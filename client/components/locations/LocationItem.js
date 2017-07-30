@@ -4,7 +4,7 @@ import PropTypes from 'prop-types';
 
 const LocationItem = ({item, handleClick}) => (
   <Col sm={6} lg={3}>
-    <Panel onClick={handleClick} className="panel-custom" header={item.name}>{item.loc.coordinates}</Panel>
+    <Panel onClick={handleClick} className="panel-custom" header={item.name}>{item.loc.address}</Panel>
   </Col>
 )
 

@@ -30,7 +30,7 @@ router.route('/')
   })
 
 router.route('/id/:locId')
-  .get((req, res, next) => {
+  .all((req, res, next) => {
     if (!req.user) {
       next({status: 401, message: "Authentication required to access this location"})
     }
@@ -41,8 +41,8 @@ router.route('/id/:locId')
   },
   Helper.idValidator,
   // first, get the location
-  Helper.fetchLocations,
-  (req, res, next) => {
+  Helper.fetchLocations)
+  .get((req, res, next) => {
     const [location] = req.locations;
     if (typeof location !== 'undefined') {
       // then check agains req.user and see if they're owned by the same person
@@ -58,6 +58,6 @@ router.route('/id/:locId')
     else {
       next({status: 500, message: "Error fetching locations"});
     }
-  });
+  }); //TODO: PUT request for modifying a location
 
 export default router;
