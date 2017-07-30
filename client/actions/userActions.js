@@ -7,7 +7,8 @@ import axios from 'axios';
 import {setAuthorizationToken} from '/client/utils'
 import jwtDecode from 'jwt-decode';
 import {setCurrentUser, logoutUser} from '.';
-import {getLocationsRequest} from './locationActions';
+import {store} from '/client/index';
+import {getLocationsRequest, saveLocationRequest} from './locationActions';
 
 // creating a thunk action that dispatches SET_CURRENT_USER once the sign up request is successful
 // the desired functionality: a user creates an account, and all local data that they had previously
@@ -24,9 +25,18 @@ export function userSignupRequest(userData) {
   // TODO: get all local location data from userData.locations and from the redux store
   // I think that if we nest all the bed and crop data within locations and beds in userData, it will be added to the database
   // when the user is created on the server
+  const locations = store.getState().locations;
   return dispatch => axios.post('/api/users', userData)
     .then((res) => {
       return dispatch(userLoginRequest(userData))
+    })
+    .then(({success}) => {
+      // time to post all the locations!
+      const requests = locations.map(location => {
+        delete location._id; // cast off that old ID!
+        return dispatch(saveLocationRequest(location))
+      });
+      return {success: requests.every(req => req.success)}
     })
 }
 
