@@ -96,11 +96,18 @@ export const saveAllLocationsRequest = (locations) => {
   }
 }
 
-export const editLocationRequest = (id, newLoc) => {
+/**
+ * Async make a request to update a location. Dispatch an {@link client.actions.editLocationAction} on success
+ * @function
+ * @param  {ObjectId|String} id     id of the location to edit. Mongoose ObjectId if authenticated, string if not
+ * @param  {Object} locChanges changes to be made to the location
+ * @return {client.actions.responseObject}
+ */
+export const editLocationRequest = (id, locChanges) => {
   return dispatch => {
     if (store.getState().auth.isAuthenticated) {
       // insert code to edit location here
-      return axios.put('/api/locations/id/' + id, newLoc)
+      return axios.put('/api/locations/id/' + id, locChanges)
       .then((res) => {
         let success = true;
         if (res.status === 200) {
@@ -114,7 +121,7 @@ export const editLocationRequest = (id, newLoc) => {
     }
     else {
       return new Promise((resolve) => {
-        dispatch(editLocation(id, newLoc));
+        dispatch(editLocation(id, locChanges));
         resolve({success: true});
       });
     }

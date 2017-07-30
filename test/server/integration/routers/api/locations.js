@@ -100,9 +100,9 @@ describe(rootUrl + "/id/:locId", () => {
       .expect(404)
     });
   });
-  describe.only("PUT", () => {
+  describe("PUT", () => {
     it("should update the location with proper authorization", () => {
-      const changes = {name: randString()};
+      const changes = {name: randString(), loc: {address: randString, coordinates: [1, 1]}};
       return sendForm(request.put(rootUrl + "/id/" + locId), changes)
       .set('authorization', 'Bearer ' + token)
       .expect(200)

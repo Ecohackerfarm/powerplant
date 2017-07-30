@@ -18,7 +18,7 @@ const locationSchema = new Schema({
   user: {type: ObjectId, index: true, required: true},
   name: String,
   loc: {type: {type: String, default: "Point"},
-    coordinates: {type: [], default: [0, 0]},
+    coordinates: {type: [Number], default: [0, 0]},
     address: String
   }
 })
@@ -29,6 +29,14 @@ const locationSchema = new Schema({
 // this also allows for queries on distances
 locationSchema.index({
   loc: '2dsphere'
+});
+
+// need this pre-save hook here because the type is required for
+// a 2dsphere index but i don't want the user to have to bother
+locationSchema.pre('save', function(next) {
+  const location = this;
+  this.loc.type = "Point";
+  next();
 });
 
 export default mongoose.model('Location', locationSchema);

@@ -68,6 +68,8 @@ router.route('/id/:locId')
     Object.assign(location, req.body);
     location.save((err, newLoc) => {
       if (err) {
+        console.log("Got errors");
+        console.log(err);
         next({status: 400, errors: err.errors, message: err._message})
       }
       else {
