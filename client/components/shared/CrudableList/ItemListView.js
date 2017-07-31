@@ -1,7 +1,6 @@
 // note: this file is only here for documentation purposes
 // it represents a component that is passed in to crudablelist as a parameter
 
-
 /**
  * A react component which should render a single list item. For responsiveness, it should be inside of a Col, but for
  * adaptibility, this is left for you to implement within ItemListView, rather than automatically wrapper ItemListView in a Col.

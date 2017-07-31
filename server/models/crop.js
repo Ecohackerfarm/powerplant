@@ -16,12 +16,12 @@ const ObjectId = Schema.Types.ObjectId;
  * @param {}
  */
 const cropSchema = new Schema({
-  name: {type: String, index: true, required: true},
-  display_name: {type: String, required: true},
-  alternate_display: String,
-  companionships: [{type: ObjectId, ref: "Companionship"}],
-  preferred_soil: String,
-  preferred_climate: String
+	name: { type: String, index: true, required: true },
+	display_name: { type: String, required: true },
+	alternate_display: String,
+	companionships: [{ type: ObjectId, ref: 'Companionship' }],
+	preferred_soil: String,
+	preferred_climate: String
 });
 
 /**
@@ -38,9 +38,9 @@ const cropSchema = new Schema({
  * @return {Mongoose.Query}      [description]
  */
 cropSchema.query.byName = function(name) {
-  const regex = new RegExp(name, "i");
-  return this.find({name: regex});
-}
+	const regex = new RegExp(name, 'i');
+	return this.find({ name: regex });
+};
 
 const Crop = mongoose.model('Crop', cropSchema);
 export default Crop;

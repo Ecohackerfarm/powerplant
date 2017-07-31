@@ -3,7 +3,7 @@
  * @memberof client.actions
  */
 
-import {setTitle} from '.';
+import { setTitle } from '.';
 
 /**
  * Request a title change
@@ -11,5 +11,5 @@ import {setTitle} from '.';
  * @return {client.actions.setTitleAction}
  */
 export function setTitleRequest(title) {
-  return setTitle(title);
+	return setTitle(title);
 }

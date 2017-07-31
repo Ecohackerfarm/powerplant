@@ -3,7 +3,7 @@
  * @memberof client.actions
  */
 
-import {store} from '/client/index';
+import { store } from '/client/index';
 import axios from 'axios';
 
 /**
@@ -14,21 +14,19 @@ import axios from 'axios';
  * @return {Object}              the results of either authAction or nonAuthAction
  */
 export const authCheckedRequest = (authAction, nonAuthAction) => {
-  return dispatch => {
-    if (store.getState().auth.isAuthenticated) {
-      return authAction(dispatch);
-    }
-    else {
-      return nonAuthAction(dispatch);
-    }
-  }
-}
+	return dispatch => {
+		if (store.getState().auth.isAuthenticated) {
+			return authAction(dispatch);
+		} else {
+			return nonAuthAction(dispatch);
+		}
+	};
+};
 
 /**
 * @callback client.actions.actionHelpers~dispatchCallback
 * @param {Function} dispatch the redux dispatch object
 */
-
 
 /**
  * If authorized, exectues a simple HTTP request and then dispatches a single action if successful.
@@ -40,22 +38,27 @@ export const authCheckedRequest = (authAction, nonAuthAction) => {
  * @param  {Array} actionParams parameters of the action builder function
  * @return {client.actions.responseObject}
  */
-export const simpleAuthCheckedRequest = (url, method, action, ...actionParams) => {
-  return authCheckedRequest(
-    (dispatch) => axios[method](url)
-    .then((res) => {
-      let success = true;
-      if (res.status >= 200 && res.status < 300) {
-        dispatch(action(...actionParams));
-      }
-      else {
-        success = false;
-      }
-      return {success};
-    }),
-    (dispatch) => new Promise(resolve => {
-      dispatch(action(...actionParams));
-      resolve({success: true});
-    })
-  )
-}
+export const simpleAuthCheckedRequest = (
+	url,
+	method,
+	action,
+	...actionParams
+) => {
+	return authCheckedRequest(
+		dispatch =>
+			axios[method](url).then(res => {
+				let success = true;
+				if (res.status >= 200 && res.status < 300) {
+					dispatch(action(...actionParams));
+				} else {
+					success = false;
+				}
+				return { success };
+			}),
+		dispatch =>
+			new Promise(resolve => {
+				dispatch(action(...actionParams));
+				resolve({ success: true });
+			})
+	);
+};

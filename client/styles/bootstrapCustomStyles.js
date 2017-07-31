@@ -4,18 +4,18 @@
 // MAKE SURE the style actually exists in main.scss
 // so if you add Button: ['floating'] there MUST be a btn-floating style in main.scss
 
-import {bootstrapUtils} from 'react-bootstrap/lib/utils';
+import { bootstrapUtils } from 'react-bootstrap/lib/utils';
 import * as components from 'react-bootstrap';
 
 export const styles = {
-  Button: ['floating'],
-  Panel: ['custom']
-}
+	Button: ['floating'],
+	Panel: ['custom']
+};
 
 export const addAllStyles = () => {
-  for (let component in styles) {
-    styles[component].forEach((style) => {
-      bootstrapUtils.addStyle(components[component], style);
-    })
-  }
-}
+	for (let component in styles) {
+		styles[component].forEach(style => {
+			bootstrapUtils.addStyle(components[component], style);
+		});
+	}
+};

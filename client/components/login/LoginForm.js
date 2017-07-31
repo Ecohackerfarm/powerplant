@@ -2,90 +2,94 @@ import React from 'react';
 import PropTypes from 'prop-types';
 import TextFieldGroup from '../shared/TextFieldGroup';
 import validateLogin from '/shared/validation/loginValidation';
-import {Button, FormGroup, HelpBlock} from 'react-bootstrap';
+import { Button, FormGroup, HelpBlock } from 'react-bootstrap';
 
 export default class LoginForm extends React.Component {
+	static propTypes = {
+		userLoginRequest: PropTypes.func.isRequired
+	};
 
-  static propTypes = {
-    userLoginRequest: PropTypes.func.isRequired
-  }
+	state = {
+		username: '',
+		password: '',
+		errors: {},
+		isLoading: false
+	};
 
-  state = {
-    username: '',
-    password: '',
-    errors: {},
-    isLoading: false
-  }
+	// since we reference the id, we need to make the id of each field
+	// the same as its corresponding state key
+	onChange = evt => {
+		this.setState({
+			[evt.target.id]: evt.target.value
+		});
+	};
 
-  // since we reference the id, we need to make the id of each field
-  // the same as its corresponding state key
-  onChange = (evt) => {
-    this.setState({
-      [evt.target.id]: evt.target.value
-    });
-  }
+	onSubmit = evt => {
+		evt.preventDefault();
+		let { errors } = validateLogin(this.state);
+		const isValid = !errors.username && !errors.password;
+		if (isValid) {
+			// calling our redux action to log in
+			this.setState({
+				isLoading: true
+			});
+			this.props.userLoginRequest(this.state).catch(err => {
+				console.log('ERROR');
+				console.log(err);
+				const res = err.response;
+				// if (typeof res !== 'undefined') {
+				// if we get a response, use its errors
+				errors =
+					typeof res.data === 'undefined'
+						? { form: 'Unable to log in' }
+						: res.data.errors || {};
+				// }
+				this.setState({
+					errors,
+					isLoading: false
+				});
+			});
+		} else {
+			this.setState({ errors });
+		}
+	};
 
-  onSubmit = (evt) => {
-    evt.preventDefault();
-    let {errors} = validateLogin(this.state);
-    const isValid = !errors.username && !errors.password;
-    if (isValid) {
-      // calling our redux action to log in
-      this.setState({
-        isLoading: true
-      });
-      this.props.userLoginRequest(this.state)
-      .catch(err => {
-        console.log("ERROR");
-        console.log(err);
-        const res = err.response;
-        // if (typeof res !== 'undefined') {
-          // if we get a response, use its errors
-          errors = (typeof res.data === 'undefined') ?
-          {form: "Unable to log in"} : res.data.errors || {};
-        // }
-        this.setState({
-          errors,
-          isLoading: false
-        });
-      });
-    }
-    else {
-      this.setState({errors});
-    }
-  }
+	render() {
+		const { errors, isLoading } = this.state;
+		return (
+			<form onSubmit={this.onSubmit}>
+				{errors.form &&
+					<FormGroup validationState="error">
+						<HelpBlock>
+							{errors.form}
+						</HelpBlock>
+					</FormGroup>}
 
-  render() {
-    const {errors, isLoading} = this.state;
-    return (
-      <form onSubmit={this.onSubmit}>
-      {errors.form &&
-        <FormGroup validationState="error">
-          <HelpBlock>{errors.form}</HelpBlock>
-        </FormGroup>}
+				<TextFieldGroup
+					value={this.state.username}
+					onChange={this.onChange}
+					id="username"
+					error={errors.username}
+					placeholder="Username"
+				/>
 
-        <TextFieldGroup
-          value={this.state.username}
-          onChange={this.onChange}
-          id="username"
-          error={errors.username}
-          placeholder="Username" />
+				<TextFieldGroup
+					value={this.state.password}
+					onChange={this.onChange}
+					id="password"
+					error={errors.password}
+					placeholder="Password"
+					type="password"
+				/>
 
-        <TextFieldGroup
-          value={this.state.password}
-          onChange={this.onChange}
-          id="password"
-          error={errors.password}
-          placeholder="Password"
-          type="password" />
-
-        <Button
-          bsStyle="primary"
-          disabled={isLoading}
-          type={!isLoading ? "submit" : null}>
-          Login
-        </Button>
-      </form>
-    )
-  }
+				<Button
+					bsStyle="primary"
+					disabled={isLoading}
+					type={!isLoading ? 'submit' : null}
+				>
+					Login
+				</Button>
+			</form>
+		);
+	}
 }

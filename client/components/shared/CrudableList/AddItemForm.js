@@ -1,7 +1,6 @@
 // note: this file is only here for documentation purposes
 // it represents a component that is passed in to crudablelist as a parameter
 
-
 /**
  * A react component which should render a form to add an item to the list. It takes in two callbacks: onSubmit, which sends out a request
  * to dispatch a redux action to add the item, and onSuccess, which should be called after the result of onSubmit is checked and found to be successful.

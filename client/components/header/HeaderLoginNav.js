@@ -1,14 +1,13 @@
 import React from 'react';
-import {LinkContainer} from 'react-router-bootstrap';
-import {NavItem, Nav} from 'react-bootstrap';
+import { LinkContainer } from 'react-router-bootstrap';
+import { NavItem, Nav } from 'react-bootstrap';
 
-export default () => (
-  <Nav pullRight>
-    <LinkContainer exact to="/register">
-      <NavItem eventKey={2}>Sign up</NavItem>
-    </LinkContainer>
-    <LinkContainer exact to="/login">
-      <NavItem eventKey={3}>Log in</NavItem>
-    </LinkContainer>
-  </Nav>
-)
+export default () =>
+	<Nav pullRight>
+		<LinkContainer exact to="/register">
+			<NavItem eventKey={2}>Sign up</NavItem>
+		</LinkContainer>
+		<LinkContainer exact to="/login">
+			<NavItem eventKey={3}>Log in</NavItem>
+		</LinkContainer>
+	</Nav>;

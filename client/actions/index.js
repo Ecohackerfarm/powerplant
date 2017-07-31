@@ -8,32 +8,31 @@
 
 import * as types from './types';
 
- /**
+/**
   * Response when an action is requested which involves adding new data
   * @typedef {Object} responseObject
   * @memberof client.actions
   * @property {Boolean} success was the action request successful?
   */
 
-  //==================================
-  //======BEGIN TITLE ACTIONS=========
-  //==================================
+//==================================
+//======BEGIN TITLE ACTIONS=========
+//==================================
 
-  /**
+/**
    * Returns an action to make a title change
    * @param {String} title the new title which will be displayed
    * @return {client.actions.setTitleAction}
    */
-  export function setTitle(title) {
-    const action = {
-      type: types.SET_TITLE,
-      title: title
-    }
-    return action;
-  }
+export function setTitle(title) {
+	const action = {
+		type: types.SET_TITLE,
+		title: title
+	};
+	return action;
+}
 
-
-  /**
+/**
    * Pure action to set the title
    * @typedef {Object} setTitleAction
    * @memberof client.actions
@@ -41,64 +40,61 @@ import * as types from './types';
    * @property {String} title new title to be displayed
    */
 
+//==================================
+//====BEGIN LOCATION ACTIONS========
+//==================================
 
-  //==================================
-  //====BEGIN LOCATION ACTIONS========
-  //==================================
-
-  /**
+/**
    * Build an {@link client.actions.addLocationAction addLocationAction}
    * @function
    * @param {server.models.Location} location location to be added
    * @return {client.actions.addLocationAction}
    */
-  export const addLocation = (location) => {
-    return {
-      type: types.ADD_LOCATION,
-      location
-    }
-  }
+export const addLocation = location => {
+	return {
+		type: types.ADD_LOCATION,
+		location
+	};
+};
 
-  /**
+/**
    * Build an {@link client.actions.editLocationAction editLocationAction}
    * @function
    * @param  {ObjectId|String} id id of location being modified
    * @param  {server.models.Location} changes  location changes to be made
    * @return {client.actions.editLocationAction}        [description]
    */
-  export const editLocation = (id, changes) => ({
-    type: types.EDIT_LOCATION,
-    id,
-    changes
-  });
+export const editLocation = (id, changes) => ({
+	type: types.EDIT_LOCATION,
+	id,
+	changes
+});
 
-  /**
+/**
    * Build an {@link client.actions.deleteLocationAction deleteLocationAction}
    * @function
    * @param  {ObjectId|String} id id of location being deleted
    * @return {client.actions.deleteLocationAction}        [description]
    */
-  export const deleteLocation = (id) => ({
-    type: types.DELETE_LOCATION,
-    id
-  });
+export const deleteLocation = id => ({
+	type: types.DELETE_LOCATION,
+	id
+});
 
-  /**
+/**
    * Build a {@link client.actions.setLocationsAction setLocationsAction}
    * @function
    * @param {server.models.Location[]} locations
    * @return {client.actions.setLocationsAction}
    */
-  export const setLocations = (locations) => {
-    return {
-      type: types.SET_LOCATIONS,
-      locations
-    }
-  }
+export const setLocations = locations => {
+	return {
+		type: types.SET_LOCATIONS,
+		locations
+	};
+};
 
-
-
-  /**
+/**
    * Pure action to add a single location
    * @typedef {Object} addLocationAction
    * @memberof client.actions
@@ -106,7 +102,7 @@ import * as types from './types';
    * @property {server.models.Location} location location to be added
    */
 
-  /**
+/**
   * Pure action to set all locations in the redux store
   * Will remove all current locations and replace them will the specified array
   * @typedef {Object} setLocationsAction
@@ -115,7 +111,7 @@ import * as types from './types';
   * @property {server.models.Location[]} locations locations to replace the current locations in the store
   */
 
-  /**
+/**
    * Pure action to edit a location
    * @typedef {Object} editLocationAction
    * @memberof client.actions
@@ -128,39 +124,38 @@ import * as types from './types';
 //======BEGIN USER ACTIONS==========
 //==================================
 
-
-  /**
+/**
    * Build an action to logout the current user
    * @function
    * @return {client.actions.logoutUserAction}
    */
-  export function logoutUser() {
-    return {
-      type: types.LOGOUT
-    }
-  }
+export function logoutUser() {
+	return {
+		type: types.LOGOUT
+	};
+}
 
-  /**
+/**
    * Build an action to set the current authenticated user
    * @function
    * @param {server.models.User} user
    * @return {client.actions.setCurrentUserAction}
    */
-  export function setCurrentUser(user) {
-    return {
-      type: types.SET_CURRENT_USER,
-      user
-    }
-  }
+export function setCurrentUser(user) {
+	return {
+		type: types.SET_CURRENT_USER,
+		user
+	};
+}
 
-  /**
+/**
    * Pure action to logout a user
    * @typedef {Object} logoutUserAction
    * @memberof client.actions
    * @property {String} [type={@link client.actions.types.LOGOUT LOGOUT}]
    */
 
-   /**
+/**
     * Pure action to set the current user
     * @typedef {Object} setCurrentUserAction
     * @memberof client.actions

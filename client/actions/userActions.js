@@ -4,11 +4,11 @@
  */
 
 import axios from 'axios';
-import {setAuthorizationToken} from '/client/utils'
+import { setAuthorizationToken } from '/client/utils';
 import jwtDecode from 'jwt-decode';
-import {setCurrentUser, logoutUser} from '.';
-import {store} from '/client/index';
-import {getLocationsRequest, saveLocationRequest} from './locationActions';
+import { setCurrentUser, logoutUser } from '.';
+import { store } from '/client/index';
+import { getLocationsRequest, saveLocationRequest } from './locationActions';
 
 // creating a thunk action that dispatches SET_CURRENT_USER once the sign up request is successful
 // the desired functionality: a user creates an account, and all local data that they had previously
@@ -22,21 +22,23 @@ import {getLocationsRequest, saveLocationRequest} from './locationActions';
  * @return {Promise} which resolves to whatever the {@link client.actions.userActions.userLoginRequest userLoginRequest} would resolve to
  */
 export function userSignupRequest(userData) {
-  // TODO: once the back end is ready to handle it, should be able to just nest all data you want to save within the userData
-  // and post that, and have it all save to the back end with new ids automatically
-  const locations = store.getState().locations;
-  return dispatch => axios.post('/api/users', userData)
-    .then((res) => {
-      return dispatch(userLoginRequest(userData))
-    })
-    .then(({success}) => {
-      // time to post all the locations!
-      const requests = locations.map(location => {
-        delete location._id; // cast off that old ID!
-        return dispatch(saveLocationRequest(location))
-      });
-      return {success: requests.every(req => req.success)}
-    })
+	// TODO: once the back end is ready to handle it, should be able to just nest all data you want to save within the userData
+	// and post that, and have it all save to the back end with new ids automatically
+	const locations = store.getState().locations;
+	return dispatch =>
+		axios
+			.post('/api/users', userData)
+			.then(res => {
+				return dispatch(userLoginRequest(userData));
+			})
+			.then(({ success }) => {
+				// time to post all the locations!
+				const requests = locations.map(location => {
+					delete location._id; // cast off that old ID!
+					return dispatch(saveLocationRequest(location));
+				});
+				return { success: requests.every(req => req.success) };
+			});
 }
 
 // creating a thunk action that only dispatches a SET_CURRENT_USER request
@@ -49,16 +51,15 @@ export function userSignupRequest(userData) {
  * @return {Promise} the network request
  */
 export function userLoginRequest(loginData) {
-  return dispatch => {
-    return axios.post('/api/login', loginData)
-    .then(res => {
-      if (res.status === 200) {
-        dispatch(setUserFromToken(res.data.token));
-      }
-      console.log("Dispatched request, returning");
-      return res;
-    });
-  }
+	return dispatch => {
+		return axios.post('/api/login', loginData).then(res => {
+			if (res.status === 200) {
+				dispatch(setUserFromToken(res.data.token));
+			}
+			console.log('Dispatched request, returning');
+			return res;
+		});
+	};
 }
 
 /**
@@ -69,13 +70,13 @@ export function userLoginRequest(loginData) {
  * @return {None}
  */
 export function setUserFromToken(token) {
-  return dispatch => {
-    setAuthorizationToken(token);
-    localStorage.setItem('jwtToken', token);
-    const user = jwtDecode(token);
-    dispatch(setCurrentUser(user));
-    dispatch(getLocationsRequest(user.id));
-  }
+	return dispatch => {
+		setAuthorizationToken(token);
+		localStorage.setItem('jwtToken', token);
+		const user = jwtDecode(token);
+		dispatch(setCurrentUser(user));
+		dispatch(getLocationsRequest(user.id));
+	};
 }
 
 /**
@@ -83,9 +84,9 @@ export function setUserFromToken(token) {
  * @return {None}
  */
 export function userLogoutRequest() {
-  return dispatch => {
-    setAuthorizationToken(false);
-    localStorage.removeItem('jwtToken');
-    dispatch(logoutUser());
-  }
+	return dispatch => {
+		setAuthorizationToken(false);
+		localStorage.removeItem('jwtToken');
+		dispatch(logoutUser());
+	};
 }

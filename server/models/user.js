@@ -19,24 +19,28 @@ const saltRounds = 11;
  * @param {(ObjectId[]|server.models.Location[])} [locations] ids of all locations stored under the user
  */
 const userSchema = new Schema({
-  username: {type: String, index: {unique: true}, required: true},
-  email: {type: String, select: false, index: {unique: true}, required: true},
-  password: {type: String, select: false, required: true},
-  locations: [{type: ObjectId, select: false, ref: "Location"}]
+	username: { type: String, index: { unique: true }, required: true },
+	email: {
+		type: String,
+		select: false,
+		index: { unique: true },
+		required: true
+	},
+	password: { type: String, select: false, required: true },
+	locations: [{ type: ObjectId, select: false, ref: 'Location' }]
 });
 
 userSchema.pre('save', function(next) {
-  const user = this;
-  if (!user.isModified('password')) {
-    // if the password wasn't modified, hash doesn't need to be updated
-    next();
-  }
-  else {
-    bcrypt.hash(user.password, saltRounds, function(err, hash) {
-      user.password = hash;
-      next();
-    });
-  }
+	const user = this;
+	if (!user.isModified('password')) {
+		// if the password wasn't modified, hash doesn't need to be updated
+		next();
+	} else {
+		bcrypt.hash(user.password, saltRounds, function(err, hash) {
+			user.password = hash;
+			next();
+		});
+	}
 });
 
 /**
@@ -53,8 +57,8 @@ userSchema.pre('save', function(next) {
  * @return {Mongoose.Query}
  */
 userSchema.query.byUsername = function(username) {
-  return this.findOne({username});
-}
+	return this.findOne({ username });
+};
 
 /**
  * @alias checkPassword
@@ -64,8 +68,8 @@ userSchema.query.byUsername = function(username) {
  * @return {None}
  */
 userSchema.methods.checkPassword = function(password, callback) {
-  bcrypt.compare(password, this.password, callback);
-}
+	bcrypt.compare(password, this.password, callback);
+};
 
 /**
  * @callback server.models.User~passwordCheckCallback

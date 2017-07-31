@@ -1,2 +1,2 @@
-export {setAuthorizationToken} from './authUtils';
-export {randString} from './randString';
+export { setAuthorizationToken } from './authUtils';
+export { randString } from './randString';
