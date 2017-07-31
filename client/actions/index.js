@@ -63,13 +63,13 @@ import * as types from './types';
    * Build an {@link client.actions.editLocationAction editLocationAction}
    * @function
    * @param  {ObjectId|String} id id of location being modified
-   * @param  {server.models.Location} location  location changes to be made
+   * @param  {server.models.Location} changes  location changes to be made
    * @return {client.actions.editLocationAction}        [description]
    */
-  export const editLocation = (id, location) => ({
+  export const editLocation = (id, changes) => ({
     type: types.EDIT_LOCATION,
     id,
-    location
+    changes
   });
 
   /**

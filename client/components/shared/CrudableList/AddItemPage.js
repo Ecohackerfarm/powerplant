@@ -5,6 +5,10 @@ import {connect} from 'react-redux';
 import {Grid, Row, Col} from 'react-bootstrap';
 import SetHeaderTitle from '/client/components/shared/SetHeaderTitle';
 
+/**
+ * @namespace AddItemPage
+ * @memberof client.components.shared.CrudableList
+ */
 class AddItemPage extends React.Component {
   static propTypes = {
     onSubmit: PropTypes.func.isRequired,

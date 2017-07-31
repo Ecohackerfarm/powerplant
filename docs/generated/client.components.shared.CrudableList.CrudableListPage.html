@@ -4,7 +4,7 @@
 <head>
 	<meta charset="utf-8">
 	<meta name="viewport" content="width=device-width">
-	<title>powerplant Namespace: actionHelpers</title>
+	<title>powerplant Namespace: CrudableListPage</title>
 
 	<!--[if lt IE 9]>
 	<script src="//html5shiv.googlecode.com/svn/trunk/html5.js"></script>
@@ -72,15 +72,15 @@
 		<div id="main">
 			
 
-	<h1 class="page-title">Namespace: actionHelpers</h1>
+	<h1 class="page-title">Namespace: CrudableListPage</h1>
 <section>
 
 <header>
     
         <h2>
-            <span class="ancestors"><a href="client.html">client</a><a href="client.actions.html">.actions</a>.</span>
+            <span class="ancestors"><a href="client.html">client</a><a href="client.components.html">.components</a><a href="client.components.shared.html">.shared</a><a href="client.components.shared.CrudableList.html">.CrudableList</a>.</span>
         
-        actionHelpers
+        CrudableListPage
         </h2>
         
     
@@ -91,6 +91,8 @@
     <div class="container-overview">
     
         
+            <div class="description">React ComponentBuild a fully CRUDable list from a few template components and action functionsTypical usage is to have a redux-connected container component which builds the actions and passes all props in to the CrudableList</div>
+        
 
         
 <dl class="details">
@@ -145,38 +147,42 @@
     
 
     
+        <h3 class="subsection-title">Namespaces</h3>
 
+        <dl>
+            <dt><a href="namespaces.html#client.components.shared.CrudableList.CrudableListPage.AddItemForm"><a href="client.components.shared.CrudableList.CrudableListPage.AddItemForm.html">AddItemForm</a></a></dt>
+            <dd></dd>
+        
+            <dt><a href="namespaces.html#client.components.shared.CrudableList.CrudableListPage.ItemListView"><a href="client.components.shared.CrudableList.CrudableListPage.ItemListView.html">ItemListView</a></a></dt>
+            <dd></dd>
+        </dl>
     
 
     
-        <h3 class="subsection-title">Methods</h3>
+        <h3 class="subsection-title">Members</h3>
 
         <dl>
             
 <hr>
-<dt>
-    <h4 class="name" id=".authCheckedRequest"><span class="type-signature">&lt;static> </span>authCheckedRequest(authAction, nonAuthAction)</h4>
-    
+<dt class="name" id=".CrudableListPage.propTypes">
+    <h4 id=".CrudableListPage.propTypes"><span class="type-signature">&lt;static> </span>CrudableListPage.propTypes<span class="type-signature"></span></h4>
+
     
 </dt>
 <dd>
-
-    
-    <div class="description">
-        A convenience function which passes dispatch to authAction if authorized and passes it to nonAuthAction if not authorized
-    </div>
     
 
     
 
     
-
+<dl class="details">
     
-    
-        <h5>Parameters:</h5>
-        
 
-<table class="params table table-striped">
+    <h5 class="subsection-title">Properties:</h5>
+
+    <dl>
+
+<table class="props table table-striped">
     <thead>
     <tr>
         
@@ -198,161 +204,27 @@
 
         <tr>
             
-                <td class="name"><code>authAction</code></td>
+                <td class="name"><code>actions</code></td>
             
 
             <td class="type">
             
                 
-<span class="param-type"><a href="client.actions.actionHelpers.html#~dispatchCallback">client.actions.actionHelpers~dispatchCallback</a></span>
-
-
-
-            
-            </td>
-
-            
-
-            
-
-            <td class="description last">callback if authorized</td>
-        </tr>
-
-    
-
-        <tr>
-            
-                <td class="name"><code>nonAuthAction</code></td>
-            
-
-            <td class="type">
-            
-                
-<span class="param-type"><a href="client.actions.actionHelpers.html#~dispatchCallback">client.actions.actionHelpers~dispatchCallback</a></span>
-
-
-
-            
-            </td>
-
-            
-
-            
-
-            <td class="description last">callback if not authorized</td>
-        </tr>
-
-    
-    </tbody>
-</table>
-
-    
-
-    
-<dl class="details">
-    
-
-	
-
-	
-
-	
-
-    
-
-    
-
-    
-
-    
-
-	
-
-	
-
-	
-
-	
-
-	
-
-
-
-	
-
-	
-
-	
-
-	
-</dl>
-
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-    <h5>Returns:</h5>
-    
-            
-<div class="param-desc">
-    the results of either authAction or nonAuthAction
-</div>
-
-
-
-<dl>
-    <dt>
-        Type
-    </dt>
-    <dd>
-        
 <span class="param-type">Object</span>
 
 
 
-    </dd>
-</dl>
-
-
-        
-
-    
-</dd>
-
-        
             
-<hr>
-<dt>
-    <h4 class="name" id=".simpleAuthCheckedRequest"><span class="type-signature">&lt;static> </span>simpleAuthCheckedRequest(url, method, action, actionParams)</h4>
-    
-    
-</dt>
-<dd>
+            </td>
 
-    
-    <div class="description">
-        If authorized, exectues a simple HTTP request and then dispatches a single action if successful.If not authorized, dispatches the action.
-    </div>
-    
+            
 
-    
+            
 
-    
+            <td class="description last">redux actions which the list will call - note that they must ALREADY be wrapped in dispatch calls
+                <h6>Properties</h6>
 
-    
-    
-        <h5>Parameters:</h5>
-        
-
-<table class="params table table-striped">
+<table class="props table table-striped">
     <thead>
     <tr>
         
@@ -374,13 +246,13 @@
 
         <tr>
             
-                <td class="name"><code>url</code></td>
+                <td class="name"><code>create</code></td>
             
 
             <td class="type">
             
                 
-<span class="param-type">String</span>
+<span class="param-type"><a href="client.components.shared.CrudableList.CrudableListPage.html#~createCallback">client.components.shared.CrudableList.CrudableListPage~createCallback</a></span>
 
 
 
@@ -391,20 +263,20 @@
 
             
 
-            <td class="description last">the URL of the HTTP request</td>
+            <td class="description last">submit a request to save a new item</td>
         </tr>
 
     
 
         <tr>
             
-                <td class="name"><code>method</code></td>
+                <td class="name"><code>edit</code></td>
             
 
             <td class="type">
             
                 
-<span class="param-type">String</span>
+<span class="param-type"><a href="client.components.shared.CrudableList.CrudableListPage.html#~editCallback">client.components.shared.CrudableList.CrudableListPage~editCallback</a></span>
 
 
 
@@ -415,20 +287,20 @@
 
             
 
-            <td class="description last">HTTP method in lower case</td>
+            <td class="description last">submit a request to edit an existing item</td>
         </tr>
 
     
 
         <tr>
             
-                <td class="name"><code>action</code></td>
+                <td class="name"><code>delete</code></td>
             
 
             <td class="type">
             
                 
-<span class="param-type">function</span>
+<span class="param-type"><a href="client.components.shared.CrudableList.CrudableListPage.html#~deleteCallback">client.components.shared.CrudableList.CrudableListPage~deleteCallback</a></span>
 
 
 
@@ -439,115 +311,185 @@
 
             
 
-            <td class="description last">function to build an action from the action params</td>
-        </tr>
-
-    
-
-        <tr>
-            
-                <td class="name"><code>actionParams</code></td>
-            
-
-            <td class="type">
-            
-                
-<span class="param-type">Array</span>
-
-
-
-            
-            </td>
-
-            
-
-            
-
-            <td class="description last">parameters of the action builder function</td>
+            <td class="description last">submit a request to delete an existing item</td>
         </tr>
 
     
     </tbody>
 </table>
 
-    
-
-    
-<dl class="details">
-    
-
-	
-
-	
-
-	
+            </td>
+        </tr>
 
     
 
-    
-
-    
-
-    
-
-	
-
-	
-
-	
-
-	
-
-	
-
-
-
-	
-
-	
-
-	
-
-	
-</dl>
-
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-    <h5>Returns:</h5>
-    
+        <tr>
+            
+                <td class="name"><code>items</code></td>
             
 
-
-<dl>
-    <dt>
-        Type
-    </dt>
-    <dd>
-        
-<span class="param-type"><a href="client.actions.html#.responseObject">client.actions.responseObject</a></span>
+            <td class="type">
+            
+                
+<span class="param-type">Array.&lt;Object></span>
 
 
 
-    </dd>
+            
+            </td>
+
+            
+
+            
+
+            <td class="description last">the data to be displayed in the list</td>
+        </tr>
+
+    
+
+        <tr>
+            
+                <td class="name"><code>itemName</code></td>
+            
+
+            <td class="type">
+            
+                
+<span class="param-type">String</span>
+
+
+
+            
+            </td>
+
+            
+
+            
+
+            <td class="description last">lowercase singular name of the type being displayed</td>
+        </tr>
+
+    
+
+        <tr>
+            
+                <td class="name"><code>ItemListView</code></td>
+            
+
+            <td class="type">
+            
+                
+<span class="param-type"><a href="client.components.shared.CrudableList.CrudableListPage.ItemListView.html">client.components.shared.CrudableList.CrudableListPage.ItemListView</a></span>
+
+
+
+            
+            </td>
+
+            
+
+            
+
+            <td class="description last">A react component which displays a single list item</td>
+        </tr>
+
+    
+
+        <tr>
+            
+                <td class="name"><code>AddItemForm</code></td>
+            
+
+            <td class="type">
+            
+                
+<span class="param-type"><a href="client.components.shared.CrudableList.CrudableListPage.AddItemForm.html">client.components.shared.CrudableList.CrudableListPage.AddItemForm</a></span>
+
+
+
+            
+            </td>
+
+            
+
+            
+
+            <td class="description last">A react component which renders a form for adding a new item</td>
+        </tr>
+
+    
+
+        <tr>
+            
+                <td class="name"><code>match</code></td>
+            
+
+            <td class="type">
+            
+                
+<span class="param-type">Object</span>
+
+
+
+            
+            </td>
+
+            
+
+            
+
+            <td class="description last">react-router match parameter must be passed through</td>
+        </tr>
+
+    
+    </tbody>
+</table>
 </dl>
 
+    
 
-        
+	
+
+	
+
+	
+
+    
+
+    
+
+    
+
+    
+
+	
+
+	
+
+	
+
+	
+
+	
+
+
+
+	
+
+	
+
+	
+
+	
+</dl>
+
 
     
 </dd>
 
         </dl>
+    
+
     
 
     
@@ -557,7 +499,7 @@
                 
 <hr>
 <dt>
-    <h4 class="name" id="~dispatchCallback"><span class="type-signature"></span>dispatchCallback(dispatch)</h4>
+    <h4 class="name" id="~createCallback"><span class="type-signature"></span>createCallback(item)</h4>
     
     
 </dt>
@@ -596,13 +538,13 @@
 
         <tr>
             
-                <td class="name"><code>dispatch</code></td>
+                <td class="name"><code>item</code></td>
             
 
             <td class="type">
             
                 
-<span class="param-type">function</span>
+<span class="param-type">Object</span>
 
 
 
@@ -613,7 +555,285 @@
 
             
 
-            <td class="description last">the redux dispatch object</td>
+            <td class="description last">the data of the item to be created</td>
+        </tr>
+
+    
+    </tbody>
+</table>
+
+    
+
+    
+<dl class="details">
+    
+
+	
+
+	
+
+	
+
+    
+
+    
+
+    
+
+    
+
+	
+
+	
+
+	
+
+	
+
+	
+
+
+
+	
+
+	
+
+	
+
+	
+</dl>
+
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+</dd>
+
+            
+                
+<hr>
+<dt>
+    <h4 class="name" id="~deleteCallback"><span class="type-signature"></span>deleteCallback(id)</h4>
+    
+    
+</dt>
+<dd>
+
+    
+
+    
+
+    
+
+    
+    
+        <h5>Parameters:</h5>
+        
+
+<table class="params table table-striped">
+    <thead>
+    <tr>
+        
+        <th>Name</th>
+        
+
+        <th>Type</th>
+
+        
+
+        
+
+        <th class="last">Description</th>
+    </tr>
+    </thead>
+
+    <tbody>
+    
+
+        <tr>
+            
+                <td class="name"><code>id</code></td>
+            
+
+            <td class="type">
+            
+                
+<span class="param-type">ObjectId</span>
+|
+
+<span class="param-type">String</span>
+
+
+
+            
+            </td>
+
+            
+
+            
+
+            <td class="description last">the id of the item to be deleted</td>
+        </tr>
+
+    
+    </tbody>
+</table>
+
+    
+
+    
+<dl class="details">
+    
+
+	
+
+	
+
+	
+
+    
+
+    
+
+    
+
+    
+
+	
+
+	
+
+	
+
+	
+
+	
+
+
+
+	
+
+	
+
+	
+
+	
+</dl>
+
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+</dd>
+
+            
+                
+<hr>
+<dt>
+    <h4 class="name" id="~editCallback"><span class="type-signature"></span>editCallback(id, changes)</h4>
+    
+    
+</dt>
+<dd>
+
+    
+
+    
+
+    
+
+    
+    
+        <h5>Parameters:</h5>
+        
+
+<table class="params table table-striped">
+    <thead>
+    <tr>
+        
+        <th>Name</th>
+        
+
+        <th>Type</th>
+
+        
+
+        
+
+        <th class="last">Description</th>
+    </tr>
+    </thead>
+
+    <tbody>
+    
+
+        <tr>
+            
+                <td class="name"><code>id</code></td>
+            
+
+            <td class="type">
+            
+                
+<span class="param-type">ObjectId</span>
+|
+
+<span class="param-type">String</span>
+
+
+
+            
+            </td>
+
+            
+
+            
+
+            <td class="description last">the id of the item to be edited</td>
+        </tr>
+
+    
+
+        <tr>
+            
+                <td class="name"><code>changes</code></td>
+            
+
+            <td class="type">
+            
+                
+<span class="param-type">Object</span>
+
+
+
+            
+            </td>
+
+            
+
+            
+
+            <td class="description last">the changes to be made to the item</td>
         </tr>
 
     
@@ -725,7 +945,7 @@
 <span class="jsdoc-message">
 	Documentation generated by <a href="https://github.com/jsdoc3/jsdoc">JSDoc 3.5.3</a>
 	
-		on Monday, July 31st 2017, 6:07:16 pm
+		on Monday, July 31st 2017, 6:07:17 pm
 	
 	using the <a href="https://github.com/docstrap/docstrap">DocStrap template</a>.
 </span>

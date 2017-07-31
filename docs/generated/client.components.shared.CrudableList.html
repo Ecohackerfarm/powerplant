@@ -4,7 +4,7 @@
 <head>
 	<meta charset="utf-8">
 	<meta name="viewport" content="width=device-width">
-	<title>powerplant Namespace: actionHelpers</title>
+	<title>powerplant Namespace: CrudableList</title>
 
 	<!--[if lt IE 9]>
 	<script src="//html5shiv.googlecode.com/svn/trunk/html5.js"></script>
@@ -72,15 +72,15 @@
 		<div id="main">
 			
 
-	<h1 class="page-title">Namespace: actionHelpers</h1>
+	<h1 class="page-title">Namespace: CrudableList</h1>
 <section>
 
 <header>
     
         <h2>
-            <span class="ancestors"><a href="client.html">client</a><a href="client.actions.html">.actions</a>.</span>
+            <span class="ancestors"><a href="client.html">client</a><a href="client.components.html">.components</a><a href="client.components.shared.html">.shared</a>.</span>
         
-        actionHelpers
+        CrudableList
         </h2>
         
     
@@ -91,6 +91,8 @@
     <div class="container-overview">
     
         
+            <div class="description">The inCRUDable List! Just kidding. It is very much CRUDable.It can be used to generate lists of items that can be Created, Read, Updated, and DestroyedAnd it handles a lot of it for you! You still need to write a few things, and for them to workwith CrudableList, they have some specific requirements (parameters) that must be followed.See <a href="client.components.shared.CrudableList.CrudableListPage.html">client.components.shared.CrudableList.CrudableListPage</a></div>
+        
 
         
 <dl class="details">
@@ -145,539 +147,21 @@
     
 
     
-
-    
-
-    
-        <h3 class="subsection-title">Methods</h3>
+        <h3 class="subsection-title">Namespaces</h3>
 
         <dl>
-            
-<hr>
-<dt>
-    <h4 class="name" id=".authCheckedRequest"><span class="type-signature">&lt;static> </span>authCheckedRequest(authAction, nonAuthAction)</h4>
-    
-    
-</dt>
-<dd>
-
-    
-    <div class="description">
-        A convenience function which passes dispatch to authAction if authorized and passes it to nonAuthAction if not authorized
-    </div>
-    
-
-    
-
-    
-
-    
-    
-        <h5>Parameters:</h5>
+            <dt><a href="namespaces.html#client.components.shared.CrudableList.AddItemPage"><a href="client.components.shared.CrudableList.AddItemPage.html">AddItemPage</a></a></dt>
+            <dd></dd>
         
-
-<table class="params table table-striped">
-    <thead>
-    <tr>
-        
-        <th>Name</th>
-        
-
-        <th>Type</th>
-
-        
-
-        
-
-        <th class="last">Description</th>
-    </tr>
-    </thead>
-
-    <tbody>
-    
-
-        <tr>
-            
-                <td class="name"><code>authAction</code></td>
-            
-
-            <td class="type">
-            
-                
-<span class="param-type"><a href="client.actions.actionHelpers.html#~dispatchCallback">client.actions.actionHelpers~dispatchCallback</a></span>
-
-
-
-            
-            </td>
-
-            
-
-            
-
-            <td class="description last">callback if authorized</td>
-        </tr>
-
-    
-
-        <tr>
-            
-                <td class="name"><code>nonAuthAction</code></td>
-            
-
-            <td class="type">
-            
-                
-<span class="param-type"><a href="client.actions.actionHelpers.html#~dispatchCallback">client.actions.actionHelpers~dispatchCallback</a></span>
-
-
-
-            
-            </td>
-
-            
-
-            
-
-            <td class="description last">callback if not authorized</td>
-        </tr>
-
-    
-    </tbody>
-</table>
-
-    
-
-    
-<dl class="details">
-    
-
-	
-
-	
-
-	
-
-    
-
-    
-
-    
-
-    
-
-	
-
-	
-
-	
-
-	
-
-	
-
-
-
-	
-
-	
-
-	
-
-	
-</dl>
-
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-    <h5>Returns:</h5>
-    
-            
-<div class="param-desc">
-    the results of either authAction or nonAuthAction
-</div>
-
-
-
-<dl>
-    <dt>
-        Type
-    </dt>
-    <dd>
-        
-<span class="param-type">Object</span>
-
-
-
-    </dd>
-</dl>
-
-
-        
-
-    
-</dd>
-
-        
-            
-<hr>
-<dt>
-    <h4 class="name" id=".simpleAuthCheckedRequest"><span class="type-signature">&lt;static> </span>simpleAuthCheckedRequest(url, method, action, actionParams)</h4>
-    
-    
-</dt>
-<dd>
-
-    
-    <div class="description">
-        If authorized, exectues a simple HTTP request and then dispatches a single action if successful.If not authorized, dispatches the action.
-    </div>
-    
-
-    
-
-    
-
-    
-    
-        <h5>Parameters:</h5>
-        
-
-<table class="params table table-striped">
-    <thead>
-    <tr>
-        
-        <th>Name</th>
-        
-
-        <th>Type</th>
-
-        
-
-        
-
-        <th class="last">Description</th>
-    </tr>
-    </thead>
-
-    <tbody>
-    
-
-        <tr>
-            
-                <td class="name"><code>url</code></td>
-            
-
-            <td class="type">
-            
-                
-<span class="param-type">String</span>
-
-
-
-            
-            </td>
-
-            
-
-            
-
-            <td class="description last">the URL of the HTTP request</td>
-        </tr>
-
-    
-
-        <tr>
-            
-                <td class="name"><code>method</code></td>
-            
-
-            <td class="type">
-            
-                
-<span class="param-type">String</span>
-
-
-
-            
-            </td>
-
-            
-
-            
-
-            <td class="description last">HTTP method in lower case</td>
-        </tr>
-
-    
-
-        <tr>
-            
-                <td class="name"><code>action</code></td>
-            
-
-            <td class="type">
-            
-                
-<span class="param-type">function</span>
-
-
-
-            
-            </td>
-
-            
-
-            
-
-            <td class="description last">function to build an action from the action params</td>
-        </tr>
-
-    
-
-        <tr>
-            
-                <td class="name"><code>actionParams</code></td>
-            
-
-            <td class="type">
-            
-                
-<span class="param-type">Array</span>
-
-
-
-            
-            </td>
-
-            
-
-            
-
-            <td class="description last">parameters of the action builder function</td>
-        </tr>
-
-    
-    </tbody>
-</table>
-
-    
-
-    
-<dl class="details">
-    
-
-	
-
-	
-
-	
-
-    
-
-    
-
-    
-
-    
-
-	
-
-	
-
-	
-
-	
-
-	
-
-
-
-	
-
-	
-
-	
-
-	
-</dl>
-
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-    <h5>Returns:</h5>
-    
-            
-
-
-<dl>
-    <dt>
-        Type
-    </dt>
-    <dd>
-        
-<span class="param-type"><a href="client.actions.html#.responseObject">client.actions.responseObject</a></span>
-
-
-
-    </dd>
-</dl>
-
-
-        
-
-    
-</dd>
-
+            <dt><a href="namespaces.html#client.components.shared.CrudableList.CrudableListPage"><a href="client.components.shared.CrudableList.CrudableListPage.html">CrudableListPage</a></a></dt>
+            <dd></dd>
         </dl>
     
 
     
-        <h3 class="subsection-title">Type Definitions</h3>
-
-        <dl>
-                
-<hr>
-<dt>
-    <h4 class="name" id="~dispatchCallback"><span class="type-signature"></span>dispatchCallback(dispatch)</h4>
-    
-    
-</dt>
-<dd>
 
     
 
-    
-
-    
-
-    
-    
-        <h5>Parameters:</h5>
-        
-
-<table class="params table table-striped">
-    <thead>
-    <tr>
-        
-        <th>Name</th>
-        
-
-        <th>Type</th>
-
-        
-
-        
-
-        <th class="last">Description</th>
-    </tr>
-    </thead>
-
-    <tbody>
-    
-
-        <tr>
-            
-                <td class="name"><code>dispatch</code></td>
-            
-
-            <td class="type">
-            
-                
-<span class="param-type">function</span>
-
-
-
-            
-            </td>
-
-            
-
-            
-
-            <td class="description last">the redux dispatch object</td>
-        </tr>
-
-    
-    </tbody>
-</table>
-
-    
-
-    
-<dl class="details">
-    
-
-	
-
-	
-
-	
-
-    
-
-    
-
-    
-
-    
-
-	
-
-	
-
-	
-
-	
-
-	
-
-
-
-	
-
-	
-
-	
-
-	
-</dl>
-
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-</dd>
-
-            </dl>
     
 
     
@@ -725,7 +209,7 @@
 <span class="jsdoc-message">
 	Documentation generated by <a href="https://github.com/jsdoc3/jsdoc">JSDoc 3.5.3</a>
 	
-		on Monday, July 31st 2017, 6:07:16 pm
+		on Monday, July 31st 2017, 6:07:17 pm
 	
 	using the <a href="https://github.com/docstrap/docstrap">DocStrap template</a>.
 </span>

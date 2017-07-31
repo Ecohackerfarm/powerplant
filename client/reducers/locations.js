@@ -10,7 +10,7 @@ export const locations = (state=defaultState, action) => {
       return state.concat(action.location);
     case EDIT_LOCATION: {
       const index = state.findIndex(item => item._id === action.id)
-      const newLocation = Object.assign({}, state[index], action.location);
+      const newLocation = Object.assign({}, state[index], action.changes);
       return state.slice(0, index).concat(newLocation, state.slice(index + 1));
     }
     case DELETE_LOCATION: {

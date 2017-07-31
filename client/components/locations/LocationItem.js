@@ -16,7 +16,7 @@ LocationItem.propTypes = {
       coordinates: PropTypes.array,
     })
   }),
-  handleClick: PropTypes.func
+  header: PropTypes.object.isRequired
 }
 
 export default LocationItem;

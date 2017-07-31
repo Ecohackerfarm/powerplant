@@ -22,9 +22,8 @@ import {getLocationsRequest, saveLocationRequest} from './locationActions';
  * @return {Promise} which resolves to whatever the {@link client.actions.userActions.userLoginRequest userLoginRequest} would resolve to
  */
 export function userSignupRequest(userData) {
-  // TODO: get all local location data from userData.locations and from the redux store
-  // I think that if we nest all the bed and crop data within locations and beds in userData, it will be added to the database
-  // when the user is created on the server
+  // TODO: once the back end is ready to handle it, should be able to just nest all data you want to save within the userData
+  // and post that, and have it all save to the back end with new ids automatically
   const locations = store.getState().locations;
   return dispatch => axios.post('/api/users', userData)
     .then((res) => {
