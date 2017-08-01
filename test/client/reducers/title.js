@@ -1,7 +1,6 @@
 import { expect } from 'chai';
 import * as types from '/client/actions/types';
 import { title } from '/client/reducers';
-import { defaultState } from '/client/reducers/title';
 import { expectNoActionForAllBut as sanityCheck } from './Helper';
 
 describe('title reducer', () => {

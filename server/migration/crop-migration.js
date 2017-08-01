@@ -1,6 +1,4 @@
-import Companionship from '../models/companionship';
 import Crop from '../models/crop';
-import migrateCompanionships from './companionship-migration';
 import firebase from 'firebase';
 
 /**

@@ -14,7 +14,7 @@ router.route('/').post(
 		if (isValid) {
 			next();
 		} else {
-			next({ status: 400, message: 'Invalid user data' });
+			next({ status: 400, message: 'Invalid user data', errors });
 		}
 	},
 	(req, res, next) => {

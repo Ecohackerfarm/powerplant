@@ -1,6 +1,5 @@
 import React from 'react';
 import PropTypes from 'prop-types';
-import { Col } from 'react-bootstrap';
 import { connect } from 'react-redux';
 import { setTitleRequest } from '/client/actions/headerActions';
 

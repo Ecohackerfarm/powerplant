@@ -1,11 +1,8 @@
-const rootUrl = '/api';
-const jsonType = 'application/json; charset=utf-8';
-
-import { expect } from 'chai';
-import express from 'express';
 import app from '/server/app.js';
 import supertest from 'supertest';
 
+const rootUrl = '/api';
+const jsonType = 'application/json; charset=utf-8';
 const request = supertest(app);
 
 describe(rootUrl + '/*', () => {

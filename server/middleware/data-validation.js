@@ -68,7 +68,7 @@ export function getCompanionshipScores(companionshipTable, ids) {
 			if (pair.compatibility === -1) {
 				result[id] = -1;
 			} else if (pair.compatibility !== -1 && result.hasOwnProperty(id)) {
-				if (result[id] != -1) {
+				if (result[id] !== -1) {
 					result[id] += pair.compatibility / maxTotal;
 				}
 			} else {

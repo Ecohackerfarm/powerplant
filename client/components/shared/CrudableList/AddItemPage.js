@@ -1,9 +1,7 @@
 import React from 'react';
 import { Redirect } from 'react-router-dom';
 import PropTypes from 'prop-types';
-import { connect } from 'react-redux';
 import { Grid, Row, Col } from 'react-bootstrap';
-import SetHeaderTitle from '/client/components/shared/SetHeaderTitle';
 
 /**
  * @namespace AddItemPage

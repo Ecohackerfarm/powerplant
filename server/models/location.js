@@ -35,7 +35,6 @@ locationSchema.index({
 // need this pre-save hook here because the type is required for
 // a 2dsphere index but i don't want the user to have to bother
 locationSchema.pre('save', function(next) {
-	const location = this;
 	this.loc.type = 'Point';
 	next();
 });

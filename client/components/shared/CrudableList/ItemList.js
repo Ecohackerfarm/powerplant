@@ -1,7 +1,6 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 import { HelpBlock, Col, Row } from 'react-bootstrap';
-import { Link } from 'react-router-dom';
 import ItemHeader from './ItemHeader';
 
 const CrudableList = ({ deleteAction, match, items, ItemView, itemName }) =>

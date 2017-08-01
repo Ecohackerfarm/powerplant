@@ -2,7 +2,7 @@ import React from 'react';
 import { Switch, Route } from 'react-router-dom';
 import { LinkContainer } from 'react-router-bootstrap';
 import PropTypes from 'prop-types';
-import { Grid, Row, Col, HelpBlock, Button } from 'react-bootstrap';
+import { Grid, Button } from 'react-bootstrap';
 import ItemList from './ItemList';
 import AddItemPage from './AddItemPage';
 import EditItemPage from './EditItemPage';

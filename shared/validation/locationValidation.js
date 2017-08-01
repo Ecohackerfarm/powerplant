@@ -1,8 +1,6 @@
 import Validator from 'validator';
 import isEmpty from 'lodash.isempty';
 
-const props = ['name', 'coordinates'];
-
 export default function(location) {
 	let errors = {};
 

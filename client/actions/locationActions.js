@@ -6,8 +6,7 @@
 import axios from 'axios';
 import { editLocation, addLocation, deleteLocation, setLocations } from '.';
 import { store } from '/client/index';
-import { randString } from '/client/utils';
-import { authCheckedRequest, simpleAuthCheckedRequest } from './actionHelpers';
+import { simpleAuthCheckedRequest } from './actionHelpers';
 
 /**
  * Async sends a request to get all the user's locations

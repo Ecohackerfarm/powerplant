@@ -86,8 +86,8 @@ describe('data-validation', () => {
 			const max = 6;
 			expect(results[a]).to.equal(-1);
 			expect(results[b]).to.equal(-1);
-			expect(results[c]).to.equal(3 / 6);
-			expect(results[d]).to.equal(2 / 6);
+			expect(results[c]).to.equal(3 / max);
+			expect(results[d]).to.equal(2 / max);
 		});
 	});
 	describe('#fetchModel()', () => {

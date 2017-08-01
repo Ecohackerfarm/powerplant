@@ -1,8 +1,4 @@
-const rootUrl = '/api/companionships';
-const jsonType = 'application/json; charset=utf-8';
-
 import { expect } from 'chai';
-import path from 'path';
 import app from '/server/app';
 import supertest from 'supertest';
 import {
@@ -13,8 +9,10 @@ import {
 } from '../routerHelpers';
 import Companionship from '/server/models/companionship';
 import { Types } from 'mongoose';
-const { ObjectId } = Types;
 
+const { ObjectId } = Types;
+const rootUrl = '/api/companionships';
+const jsonType = 'application/json; charset=utf-8';
 const request = supertest(app);
 
 describe(rootUrl + '/', () => {
@@ -138,12 +136,10 @@ describe(rootUrl + '/:id', () => {
 	const url = rootUrl;
 	let validId;
 	let validCompatibility;
-	let valid;
 	before(done => {
 		createTestCompanionship(comp => {
 			validId = comp._id.toString();
 			validCompatibility = comp.compatibility;
-			valid = comp;
 			done();
 		});
 	});

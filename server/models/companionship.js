@@ -1,7 +1,7 @@
 import mongoose from 'mongoose';
 const Schema = mongoose.Schema;
 const ObjectId = Schema.Types.ObjectId;
-import explain from 'mongoose-explain';
+// import explain from 'mongoose-explain';
 // import idExists from 'mongoose-idexists';
 
 // TODO: Get code working to validate crops to make sure they exist

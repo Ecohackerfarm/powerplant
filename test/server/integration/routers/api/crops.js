@@ -1,6 +1,3 @@
-const rootUrl = '/api/crops';
-const jsonType = 'application/json; charset=utf-8';
-
 import { expect } from 'chai';
 import app from '/server/app';
 import {
@@ -14,15 +11,15 @@ import supertest from 'supertest';
 import Crop from '/server/models/crop';
 import { Types } from 'mongoose';
 
+const rootUrl = '/api/crops';
+const jsonType = 'application/json; charset=utf-8';
 const { ObjectId } = Types;
 const request = supertest(app);
 
-let createdCropId;
 describe(rootUrl + '/', () => {
 	let count;
 	before(done => {
 		createTestCrop(crop => {
-			createdCropId = crop._id;
 			Crop.count({}, (err, num) => {
 				count = num;
 				done();

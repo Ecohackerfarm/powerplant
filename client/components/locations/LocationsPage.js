@@ -1,7 +1,5 @@
 import React from 'react';
 import { connect } from 'react-redux';
-import { Route, Switch } from 'react-router-dom';
-import SetHeaderTitle from '../shared/SetHeaderTitle';
 import CrudableListPage from '../shared/CrudableList';
 import LocationItem from './LocationItem';
 import {

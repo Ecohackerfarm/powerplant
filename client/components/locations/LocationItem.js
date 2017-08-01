@@ -1,5 +1,5 @@
 import React from 'react';
-import { Col, Panel, ButtonGroup, Button, Glyphicon } from 'react-bootstrap';
+import { Col, Panel } from 'react-bootstrap';
 import PropTypes from 'prop-types';
 
 const LocationItem = ({ item, header }) =>

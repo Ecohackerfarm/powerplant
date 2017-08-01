@@ -13,7 +13,6 @@ router
 		// validate req
 		if (typeof req.query.name !== 'undefined') {
 			const cropName = Helper.escapeRegEx(req.query.name);
-			const regex = new RegExp(cropName, 'i');
 			Crop.find().byName(cropName).exec((err, crops) => {
 				if (err) {
 					next({ status: 500, message: 'Error fetching crops' });
@@ -26,7 +25,7 @@ router
 			next();
 		}
 	})
-	.get((req, res) => {
+	.get((req, res, next) => {
 		Crop.find({}, (err, crops) => {
 			if (err) {
 				next({ status: 500, message: 'Error fetching crops', err: err });

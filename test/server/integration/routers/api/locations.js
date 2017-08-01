@@ -1,24 +1,15 @@
-const rootUrl = '/api/locations';
-const jsonType = 'application/json; charset=utf-8';
-
 import { expect } from 'chai';
 import app from '/server/app';
-import {
-	sendForm,
-	randString,
-	allStrings,
-	createTestCrop,
-	createTestCompanionship
-} from '../routerHelpers';
+import { sendForm, randString } from '../routerHelpers';
 import supertest from 'supertest';
 import Location from '/server/models/location';
 import User from '/server/models/user';
-import { Types } from 'mongoose';
 import { user as testUser } from './users';
 import jwt from 'jsonwebtoken';
 import jwtSecret from '/jwt-secret';
 
-const { ObjectId } = Types;
+const rootUrl = '/api/locations';
+const jsonType = 'application/json; charset=utf-8';
 const request = supertest(app);
 
 let locId;

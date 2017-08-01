@@ -1,6 +1,5 @@
 import { Router } from 'express';
 import User from '/server/models/user';
-import Helper from '/server/middleware/data-validation';
 import validate from '/shared/validation/loginValidation';
 import jwt from 'jsonwebtoken';
 import jwtSecret from '/jwt-secret';

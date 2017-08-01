@@ -1,16 +1,13 @@
-const rootUrl = '/api/users';
-const jsonType = 'application/json; charset=utf-8';
-
 import { expect } from 'chai';
 import app from '/server/app';
 import { sendForm } from '../routerHelpers';
 import supertest from 'supertest';
 import User from '/server/models/user';
-import { Types } from 'mongoose';
 import jwt from 'jsonwebtoken';
 import jwtSecret from '/jwt-secret';
 
-const { ObjectId } = Types;
+const rootUrl = '/api/users';
+const jsonType = 'application/json; charset=utf-8';
 const request = supertest(app);
 
 let userId;

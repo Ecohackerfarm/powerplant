@@ -1,4 +1,4 @@
-import { SET_TITLE, LOGOUT } from '../actions/types';
+import { SET_TITLE } from '../actions/types';
 
 export const defaultState = 'powerplant';
 

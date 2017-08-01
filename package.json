@@ -6,10 +6,11 @@
   "scripts": {
     "start": "nodemon --watch server --exec babel-node -- server/server.js",
     "test": "mocha --compilers js:babel-register",
+    "lint": "eslint client server shared test",
     "migrate": "babel-node ./server/migration/full-migration.js",
     "mocha-spec": "mocha --compilers js:babel-register --reporter markdown > docs/spec.md",
     "mongo": "docker run -p 27017:27017 --name pp_main -d mongo",
-    "doc": "jsdoc -c ./conf.json -t ./node_modules/ink-docstrap/template -R ./docs/dev_docs.textile"
+    "doc": "jsdoc -c ./conf.json -t ./node_modules/ink-docstrap/template -R ./docs/dev_docs.markdown"
   },
   "repository": {
     "type": "git",
@@ -55,6 +56,7 @@
   },
   "devDependencies": {
     "babel-cli": "^6.24.1",
+    "babel-eslint": "^7.2.3",
     "babel-loader": "^7.1.1",
     "babel-plugin-transform-class-properties": "^6.24.1",
     "babel-plugin-transform-object-rest-spread": "^6.23.0",
@@ -64,6 +66,14 @@
     "babel-register": "^6.24.1",
     "babel-root-slash-import": "^1.1.0",
     "css-loader": "^0.28.4",
+    "eslint": "^3.19.0",
+    "eslint-config-react-app": "^1.0.5",
+    "eslint-plugin-chai-friendly": "^0.3.6",
+    "eslint-plugin-flowtype": "^2.33.0",
+    "eslint-plugin-import": "^2.2.0",
+    "eslint-plugin-jsx-a11y": "^5.0.1",
+    "eslint-plugin-mocha": "^4.11.0",
+    "eslint-plugin-react": "^7.0.1",
     "ink-docstrap": "^1.3.0",
     "jsdoc": "^3.5.3",
     "jsdoc-memberof-namespace": "^2.1.0",
