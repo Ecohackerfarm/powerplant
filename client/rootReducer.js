@@ -16,4 +16,7 @@ import * as reducers from './reducers';
 // 	cropRelationships: []
 // };
 
+/**
+ * @function default
+ */
 export default combineReducers({ ...reducers });

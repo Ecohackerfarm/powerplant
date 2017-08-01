@@ -136,10 +136,12 @@ class AddLocationForm extends React.Component {
 	setLocation(index) {
 		let loc = this.state.locationResults[index].loc;
 		let locationResults = [];
+		const errors = Object.assign({}, this.state.errors, { address: undefined });
 		this.setState({
 			loc,
 			locationResults,
-			selectedLocation: true
+			selectedLocation: true,
+			errors
 		});
 	}
 
