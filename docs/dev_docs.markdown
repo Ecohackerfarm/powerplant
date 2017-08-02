@@ -6,6 +6,8 @@ Last updated: Jul 28, 2017
 Introduction
 ============
 
+**Dev aside** Hi. I (Simon, my email's at the end of this section) wrote this document to outline some of the standards used in this software. It's very unfinished, and I apologize for that. The end of my time at the mill snuck up on me much quicker than I expected. If you continue working on this project, it would be awesome if you also continue working on the documentation. Thanks!
+
 powerplant is a full-stack JS web app utilizing several external
 services and many interlocking components. The aim of this doc is to
 help you, as a developer, get familiar with all the parts of the
