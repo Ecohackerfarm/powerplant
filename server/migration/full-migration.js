@@ -5,9 +5,10 @@ import firebase from 'firebase';
 import mongoose from 'mongoose';
 import migrateCrops from './crop-migration';
 import migrateCompanionships from './companionship-migration';
+import config from '/server/config';
 
 // initialize mongo
-mongoose.connect('mongodb://192.168.99.100/pp_main');
+mongoose.connect(config.databaseUrl);
 mongoose.Promise = global.Promise;
 
 // Initialize Firebase

@@ -1,9 +1,11 @@
 import mongoose from 'mongoose';
 import { buildApp } from '/server/app';
+import config from '/server/config';
 
 before(() => {
-	//TODO: Set up a test database! (pp_test)
-	mongoose.connect('mongodb://192.168.99.100:27017/pp_main', err => {
+  //TODO: Set up a test database! (pp_test)
+  console.log('config.databaseUrl', config.databaseUrl)
+  mongoose.connect(config.databaseUrl, err => {
 		if (err) {
 			console.log('ERROR connecting to database');
 		} else {
