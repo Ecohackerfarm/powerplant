@@ -8,6 +8,7 @@ import {
 	deleteLocationRequest
 } from '/client/actions/locationActions';
 import AddLocationForm from './AddLocationForm';
+import LocationPage from '../locations/LocationPage';
 
 const LocationsPage = ({ actions, locations, match }) => {
 	return (
@@ -18,7 +19,8 @@ const LocationsPage = ({ actions, locations, match }) => {
 			itemName="location"
 			ItemListView={LocationItem}
 			AddItemForm={AddLocationForm}
-		/>
+			DetailPage={LocationPage}
+			/>
 	);
 };
 

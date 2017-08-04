@@ -1,4 +1,5 @@
 import React from 'react';
+import { Link } from 'react-router-dom';
 import PropTypes from 'prop-types';
 import { HelpBlock, Col, Row } from 'react-bootstrap';
 import ItemHeader from './ItemHeader';
@@ -6,9 +7,11 @@ import ItemHeader from './ItemHeader';
 const CrudableList = ({ deleteAction, match, items, ItemView, itemName }) =>
 	<Row>
 		{items.length > 0
-			? items.map(item =>
-					<ItemView
-						key={item._id}
+		 ? items.map(item =>
+			 <Link
+					 to={`${match.url}/${item._id}`}
+					 key={item._id}>
+				 <ItemView
 						item={item}
 						header={
 							<ItemHeader
@@ -18,9 +21,10 @@ const CrudableList = ({ deleteAction, match, items, ItemView, itemName }) =>
 							/>
 						}
 					/>
-				)
-			: <Col>
-					<HelpBlock>
+			 </Link>
+		 )
+		 : <Col>
+				 <HelpBlock>
 						No {itemName}s yet
 					</HelpBlock>
 				</Col>}
