@@ -12,7 +12,7 @@ mongoose.connect(config.databaseUrl);
 mongoose.Promise = global.Promise;
 
 // Initialize Firebase
-const config = {
+const firebaseConfig = {
 	apiKey: 'AIzaSyCKLggXck_1fxtoSn0uvjQ00gEapjLJDbM',
 	authDomain: 'companion-planting-b56b5.firebaseapp.com',
 	databaseURL: 'https://companion-planting-b56b5.firebaseio.com',
@@ -20,7 +20,7 @@ const config = {
 	storageBucket: 'companion-planting-b56b5.appspot.com',
 	messagingSenderId: '158677284326'
 };
-firebase.initializeApp(config);
+firebase.initializeApp(firebaseConfig);
 
 console.log('Beginning migration');
 migrateCrops().then(migrateCompanionships).then(() => {
