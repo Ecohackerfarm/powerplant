@@ -17,6 +17,7 @@ const CrudableList = ({ deleteAction, match, items, ItemView, itemName }) =>
 							<ItemHeader
 								name={item.name}
 								editLink={`${match.url}/${item._id}/edit`}
+								refreshLink={match.url}
 								deleteAction={deleteAction.bind(this, item._id)} //binding to this id
 							/>
 						}
