@@ -1,16 +1,13 @@
 import { Router } from 'express';
 import Location from '/server/models/location';
 import Helper from '/server/middleware/data-validation';
+import { isAuthenticated } from '/server/middleware/authentication';
 
 const router = Router();
 
-router.route('/').post((req, res, next) => {
-	if (!req.user) {
-		next({
-			status: 401,
-			message: 'Authentication required to create a location'
-		});
-	} else {
+router.route('/').post(
+	isAuthenticated('Authentication required to create a location'),
+	(req, res, next) => {
 		const location = req.body;
 		location.user = req.user._id;
 		new Location(location)
@@ -30,22 +27,15 @@ router.route('/').post((req, res, next) => {
 					}
 				});
 			});
-	}
-});
+	});
 
 router
 	.route('/id/:locId')
 	.all(
+		isAuthenticated('Authentication required to access this location'),
 		(req, res, next) => {
-			if (!req.user) {
-				next({
-					status: 401,
-					message: 'Authentication required to access this location'
-				});
-			} else {
-				req.ids = [req.params.locId];
-				next();
-			}
+			req.ids = [req.params.locId];
+			next();
 		},
 		Helper.idValidator,
 		// first, get the location

@@ -2,6 +2,7 @@ import { Router } from 'express';
 import User from '/server/models/user';
 import Helper from '/server/middleware/data-validation';
 import validate from '/shared/validation/userValidation';
+import { isAuthenticated } from '/server/middleware/authentication';
 
 const router = Router();
 
@@ -48,29 +49,30 @@ router.route('/id/:userId').get((req, res, next) => {
 	}
 });
 
-router.route('/id/:userId/locations').get((req, res, next) => {
-	if (!req.user) {
-		next({ status: 401, message: 'Authentication required to view locations' });
-	} else {
+router.route('/id/:userId/locations').get(
+	isAuthenticated('Authentication required to view locations'),
+	(req, res, next) => {
 		req.ids = [req.params.userId];
 		next();
-	}
-}, Helper.idValidator, Helper.checkUsers, (req, res, next) => {
-	const [id] = req.ids;
-	if (typeof id !== 'undefined') {
-		if (req.user._id.equals(id)) {
-			User.findById(id).populate('locations').exec((err, match) => {
-				res.json(match.locations);
-			});
+	},
+	Helper.idValidator,
+	Helper.checkUsers,
+	(req, res, next) => {
+		const [id] = req.ids;
+		if (typeof id !== 'undefined') {
+			if (req.user._id.equals(id)) {
+				User.findById(id).populate('locations').exec((err, match) => {
+					res.json(match.locations);
+				});
+			} else {
+				next({
+					status: 403,
+					message: "You may not view another user's locations"
+				});
+			}
 		} else {
-			next({
-				status: 403,
-				message: "You may not view another user's locations"
-			});
+			next({ status: 404, message: 'User not found' });
 		}
-	} else {
-		next({ status: 404, message: 'User not found' });
-	}
-});
+	});
 
 export default router;

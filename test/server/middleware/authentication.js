@@ -2,7 +2,19 @@ import { expect } from 'chai';
 import jwt from 'jsonwebtoken';
 import jwtSecret from '/jwt-secret';
 import User from '/server/models/user';
-import { authenticate as auth } from '/server/middleware/authentication';
+import { authenticate as auth, isAuthenticated } from '/server/middleware/authentication';
+
+function assertIsAuthenticated(req, expectedAuthenticated) {
+	const res = {};
+	const next = (err => {
+		if (expectedAuthenticated) {
+			expect(err).to.be.undefined;
+		} else {
+			expect(err).to.have.property('status').and.to.equal(401);
+		}
+	});
+	isAuthenticated('Authentication required')(req, res, next);
+}
 
 describe('authentication middleware', () => {
 	describe('#authenticate()', () => {
@@ -83,6 +95,17 @@ describe('authentication middleware', () => {
 				};
 				auth(req, res, next);
 			});
+		});
+	});
+	describe('#isAuthenticated()', () => {
+		it('should 401 if not authenticated', done => {
+			assertIsAuthenticated({}, false);
+			assertIsAuthenticated({ user: null }, false);
+			done();
+		});
+		it('should pass if authenticated', done => {
+			assertIsAuthenticated({ user: { /* Empty object representing a valid user */ } }, true);
+			done();
 		});
 	});
 });
