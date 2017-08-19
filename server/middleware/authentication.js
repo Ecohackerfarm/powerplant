@@ -46,8 +46,8 @@ export const authenticate = (req, res, next) => {
  * Returns an Express middleware function that checks if the request has been
  * authenticated.
  *
- * @param {string} message Error message to go with HTTP 401.
- * @returns {function}
+ * @param {String} message Error message to go with HTTP 401.
+ * @returns {Function}
  */
 export function isAuthenticated(message) {
 	return ((req, res, next) => {
