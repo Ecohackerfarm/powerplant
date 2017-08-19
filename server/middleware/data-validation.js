@@ -205,6 +205,22 @@ export const fetchLocations = fetchModel(Location, 'locations');
 export const checkLocations = checkModel(Location);
 
 /**
+ * Find the corresponding document for each id in the given set.
+ *
+ * @param {Mongoose.Model} model
+ * @param {String[]} ids
+ * @param {String} path Fields that should be populated with other documents
+ * @param {Function} callback
+ */
+function findByIds(model, ids, path, callback) {
+	model.find({ '_id': { $in: ids } }).populate(path).exec((err, documents) => {
+		var foundIds = documents.map(document => { return document._id.toString(); });
+		var allFound = ids.every(id => { return foundIds.includes(id); });
+		callback(documents, allFound);
+	});
+}
+
+/**
  * A function factory to generate express middleware for fetching models. See {@link data-validation.fetchCrops} for specifications
  * of generated function
  * @param  {Mongoose.Model} model      Model type to be fetched
@@ -218,28 +234,17 @@ export function fetchModel(model, resultName, populate = '') {
 			next();
 			return;
 		}
-		req[resultName] = [];
-		req.ids.forEach(id => {
-			let query = model.findById(id);
-			if (populate !== '') {
-				query = query.populate(populate);
+		
+		findByIds(model, req.ids, populate, (documents, allFound) => {
+			if (allFound) {
+				req[resultName] = documents;
+				next();
+			} else {
+				const error = new Error();
+				error.status = 404;
+				error.message = 'No ' + resultName + ' with this ID found';
+				next(error);
 			}
-			query.exec((err, item) => {
-				if (item !== null) {
-					req[resultName].push(item);
-					if (req[resultName].length === req.ids.length) {
-						// finished fetching crops
-						next();
-						return;
-					}
-				} else {
-					const error = new Error();
-					error.status = 404;
-					error.message = 'No ' + resultName + ' with this ID found';
-					next(error);
-					return;
-				}
-			});
 		});
 	};
 }
@@ -256,19 +261,13 @@ export function checkModel(model) {
 			next();
 			return;
 		}
-		let counter = 0;
-		req.ids.forEach(id => {
-			model.count({ _id: id }, function(err, count) {
-				if (count > 0) {
-					counter += 1;
-					if (counter === req.ids.length) {
-						next();
-					}
-				} else {
-					next({ status: 404 });
-					return;
-				}
-			});
+		
+		findByIds(model, req.ids, '', (documents, allFound) => {
+			if (allFound) {
+				next();
+			} else {
+				next({ status: 404 });
+			}
 		});
 	};
 }

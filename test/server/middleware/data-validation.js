@@ -93,7 +93,7 @@ describe('data-validation', () => {
 	describe('#fetchModel()', () => {
 		it('should throw 404 on nonexistent id', () => {
 			return Crop.findOne({}).then(crop => {
-				validId = crop._id;
+				validId = crop._id.toString();
 				const ids = [ObjectId(), crop._id];
 				const req = { ids: ids };
 				const res = {};
@@ -107,7 +107,7 @@ describe('data-validation', () => {
 			const req = { ids: ids };
 			const res = {};
 			return fetchModelError(Crop, 'crops', req, res).then(err => {
-				expect(req.crops).to.have.length(2);
+				expect(req.crops).to.have.length(1);
 				expect(typeof err).to.equal('undefined');
 			});
 		});
