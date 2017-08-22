@@ -47,7 +47,7 @@ export const authenticate = (req, res, next) => {
  * authenticated.
  *
  * @param {String} message Error message to go with HTTP 401.
- * @returns {Function}
+ * @return {Function}
  */
 export function isAuthenticated(message) {
 	return ((req, res, next) => {
@@ -57,4 +57,23 @@ export function isAuthenticated(message) {
 			next();
 		}
 	});
+};
+
+/**
+ * Returns an Express middleware function that checks if the current user has
+ * access to the given documents.
+ *
+ * @param {String} documentsProperty
+ * @param {String} message Error message to go with HTTP 403
+ * @return {Function}
+ */
+export function checkAccess(documentsProperty, message) {
+	return (req, res, next) => {
+		var hasAccess = req[documentsProperty].every(document => req.user._id.equals(document.user));
+		if (hasAccess) {
+			next();
+		} else {
+			next({ status: 403, message: message });
+		}
+	};
 };

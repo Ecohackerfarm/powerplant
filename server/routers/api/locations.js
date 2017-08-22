@@ -85,4 +85,30 @@ router.route('/id/:locId')
 		}
 	);
 
+router.route('/id/:locId/beds')
+	.get(
+		isAuthenticated('Authentication required to view beds'),
+		setIds(req => [req.params.locId]),
+		Helper.idValidator,
+		Helper.fetchLocations,
+		(req, res, next) => {
+			const [location] = req.locations;
+			console.log(location);
+			if (typeof location !== 'undefined') {
+				if (req.user._id.equals(location.user)) {
+					Location.findById(location._id).populate('beds').exec((err, match) => {
+						res.json(match.beds);
+					});
+				} else {
+					next({
+						status: 403,
+						message: "You may not view another user's beds"
+					});
+				}
+			} else {
+				next({ status: 404, message: 'Location not found' });
+			}
+		}
+	);
+
 export default router;

@@ -13,6 +13,7 @@ const jsonType = 'application/json; charset=utf-8';
 const request = supertest(app);
 
 let locId;
+let neverRemovedLocationId;
 let userId;
 let token;
 
@@ -38,6 +39,12 @@ before(() => {
 				name: 'test location'
 			}).save((err, loc) => {
 				locId = loc._id.toString();
+				return new Location({
+					user: userId,
+					name: 'another test location'
+				}).save((err, loc) => {
+					neverRemovedLocationId = loc._id.toString();
+				});
 			});
 		});
 });
@@ -128,6 +135,29 @@ describe(rootUrl + '/id/:locId', () => {
 				.delete(rootUrl + '/id/' + locId)
 				.set('authorization', 'Bearer ' + token)
 				.expect(200);
+		});
+	});
+});
+
+describe(rootUrl + '/id/:locId/beds', () => {
+	describe('GET', () => {
+		it('should 401 if not authenticated', () => {
+			return request.get(rootUrl + '/id/' + neverRemovedLocationId + '/beds').expect(401);
+		});
+		it('should return beds if authenticated', () => {
+			return request
+				.get(rootUrl + '/id/' + neverRemovedLocationId + '/beds')
+				.set('authorization', 'Bearer ' + token)
+				.expect(200)
+				.then(res => {
+					console.log(res.body);
+				});
+		});
+		it('should not return beds if invalid authentication', () => {
+			return request
+				.get(rootUrl + '/id/' + neverRemovedLocationId + '/beds')
+				.set('authorization', 'Bearer ' + token + 'f)(#)')
+				.expect(401);
 		});
 	});
 });

@@ -21,7 +21,8 @@ const locationSchema = new Schema({
 		type: { type: String, default: 'Point' },
 		coordinates: { type: [Number], default: [0, 0] },
 		address: String
-	}
+	},
+	beds: [ { type: ObjectId, ref: 'Bed' } ]
 });
 
 // we can index gardens by location on a 2d sphere
