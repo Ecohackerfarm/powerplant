@@ -1,108 +1,92 @@
 import express from 'express';
-import Companionship from '../../models/companionship';
-import Crop from '../../models/crop';
-import Helper from '../../middleware/data-validation';
+import Companionship from '/server/models/companionship';
+import Crop from '/server/models/crop';
+import Helper from '/server/middleware/data-validation';
+import { setIds } from '/server/middleware';
 
 const router = express.Router();
 
 // All routes have the base route: /companionships
 
-router
-	.route('/')
-	.get((req, res) => {
-		// get all combinations - this is REALLY slow (over 2s) but it's also a huge request
-		// could consider pagination - return 50 results and a link to the next 50
-		Companionship.find({}, (err, result) => {
-			res.json(result);
-		});
-	})
-	.post(
-		(req, res, next) => {
-			req.ids = [req.body.crop1, req.body.crop2];
-			next();
-		},
+router.route('/')
+	.get(
+		(req, res) => {
+			// get all combinations - this is REALLY slow (over 2s) but it's also a huge request
+			// could consider pagination - return 50 results and a link to the next 50
+			Companionship.find({}, (err, result) => { res.json(result); });
+		}
+	).post(
+		setIds(req => [req.body.crop1, req.body.crop2]),
 		Helper.idValidator,
 		Helper.checkCrops,
 		(req, res, next) => {
 			// This should be the ONLY route to add a new combination
 			// first need to check if it exists already
-			Companionship.find()
-				.byCrop(req.ids[0], req.ids[1])
-				.exec((err, matches) => {
-					if (err) {
-						next({ status: 500, message: err.message });
+			Companionship.find().byCrop(req.ids[0], req.ids[1]).exec((err, matches) => {
+				if (err) {
+					next({ status: 500, message: err.message });
+				} else {
+					if (matches.length > 0) {
+						res
+							.status(303)
+							.location('/api/companionships/' + matches[0])
+							.json();
 					} else {
-						if (matches.length > 0) {
-							res
-								.status(303)
-								.location('/api/companionships/' + matches[0])
-								.json();
-						} else {
-							new Companionship(req.body).save((err, combo) => {
-								if (err) {
-									next({ status: 400, message: err.message });
-								} else {
-									Crop.findByIdAndUpdate(combo.crop1, {
+						new Companionship(req.body).save((err, combo) => {
+							if (err) {
+								next({ status: 400, message: err.message });
+							} else {
+								Crop.findByIdAndUpdate(combo.crop1, {
+									$push: { companionships: combo._id }
+								});
+								if (!combo.crop1.equals(combo.crop2)) {
+									Crop.findByIdAndUpdate(combo.crop2, {
 										$push: { companionships: combo._id }
 									});
-									if (!combo.crop1.equals(combo.crop2)) {
-										Crop.findByIdAndUpdate(combo.crop2, {
-											$push: { companionships: combo._id }
-										});
-									}
-									res.location('/api/companionships/' + combo._id);
-									res.status(201).json(combo);
 								}
-							});
-						}
+								res.location('/api/companionships/' + combo._id);
+								res.status(201).json(combo);
+							}
+						});
 					}
-				});
+				}
+			});
 		}
 	);
 
-router
-	.route('/scores')
+router.route('/scores')
 	.all(
-		(req, res, next) => {
-			req.ids = (req.query.id || '').split(',');
-			next();
-		},
+		setIds(req => ((req.query.id || '').split(','))),
 		Helper.idValidator,
 		Helper.fetchCropsWithCompanionships
-	)
-	.get((req, res, next) => {
-		const crops = req.crops;
-		const companionships = crops.map(crop => {
-			return crop.companionships;
-		});
-		const ids = req.ids;
-		const scores = Helper.getCompanionshipScores(companionships, ids);
-		res.json(scores);
-	});
-
-router
-	.route('/:id')
-	.all(
+	).get(
 		(req, res, next) => {
-			// storing the id in the request for idValidator
-			req.ids = [req.params.id];
-			next();
-		},
-		Helper.idValidator, // validate id (sends 400 if malformed id)
-		Helper.fetchCompanionships
-	) // fetch item (sends 404 if nonexistent)
-	.get((req, res, next) => {
-		// fetching a specific companionship
-		// will be stored in req.companionships by Helper.fetchCompanionships
-		const [companionship] = req.companionships;
-		if (typeof companionship !== 'undefined') {
-			res.status(200).json(companionship);
-		} else {
-			console.log('Something went wrong in fetchCompanionships');
-			next({ status: 500 }); // sending an http 500 code to the error handling middleware
+			const crops = req.crops;
+			const companionships = crops.map(crop => crop.companionships);
+			const ids = req.ids;
+			const scores = Helper.getCompanionshipScores(companionships, ids);
+			res.json(scores);
 		}
-	})
-	.put(
+	);
+
+router.route('/:id')
+	.all(
+		setIds(req => [req.params.id]),
+		Helper.idValidator, // validate id (sends 400 if malformed id)
+		Helper.fetchCompanionships // fetch item (sends 404 if nonexistent)
+	).get(
+		(req, res, next) => {
+			// fetching a specific companionship
+			// will be stored in req.companionships by Helper.fetchCompanionships
+			const [companionship] = req.companionships;
+			if (typeof companionship !== 'undefined') {
+				res.status(200).json(companionship);
+			} else {
+				console.log('Something went wrong in fetchCompanionships');
+				next({ status: 500 }); // sending an http 500 code to the error handling middleware
+			}
+		}
+	).put(
 		(req, res, next) => {
 			// TODO: validate crop1 and crop2
 			const c1Exists = req.body.hasOwnProperty('crop1');
@@ -142,23 +126,24 @@ router
 				next({ status: 500 });
 			}
 		}
-	)
-	.delete((req, res, next) => {
-		const [companionship] = req.companionships;
-		if (typeof companionship !== 'undefined') {
-			companionship.remove(err => {
-				if (err) {
-					// could be an authentication error, but that doesn't exist yet
-					err.status = 500;
-					next(err);
-				} else {
-					res.json();
-				}
-			});
-		} else {
-			console.log('Something went wrong in fetchCompanionships');
-			next({ status: 500 }); // sending an http 500 code to the error handling middleware
+	).delete(
+		(req, res, next) => {
+			const [companionship] = req.companionships;
+			if (typeof companionship !== 'undefined') {
+				companionship.remove(err => {
+					if (err) {
+						// could be an authentication error, but that doesn't exist yet
+						err.status = 500;
+						next(err);
+					} else {
+						res.json();
+					}
+				});
+			} else {
+				console.log('Something went wrong in fetchCompanionships');
+				next({ status: 500 }); // sending an http 500 code to the error handling middleware
+			}
 		}
-	});
+	);
 
 export default router;
