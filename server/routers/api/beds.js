@@ -1,6 +1,6 @@
 import { Router } from 'express';
 import Helper from '/server/middleware/data-validation';
-import { isAuthenticated, checkAccess } from '/server/middleware/authentication';
+import { isAuthenticated, checkAccess, resetToAuthorizedUser } from '/server/middleware/authentication';
 import { setIds } from '/server/middleware';
 import Bed from '/server/models/bed';
 
@@ -12,11 +12,10 @@ router.route('/').post(
 	Helper.idValidator,
 	Helper.fetchLocations,
 	checkAccess("locations", "You don't have access to this location"),
+	resetToAuthorizedUser,
 	(req, res, next) => {
-		const bed = req.body;
-		bed.user = req.user._id;
 		const [location] = req.locations;
-		new Bed(bed).save((err, bed) => {
+		new Bed(req.body).save((err, bed) => {
 			location.beds.push(bed);
 			return bed;
 		}).then(bed => {

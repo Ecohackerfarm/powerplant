@@ -77,3 +77,18 @@ export function checkAccess(documentsProperty, message) {
 		}
 	};
 };
+
+/**
+ * Resets the user property of the body object to the authorized user. Prevents
+ * the user from saving documents in the name of another user. The user must
+ * be authorized before calling this function.
+ *
+ * @function
+ * @param {Object} req Request object
+ * @param {Object} res Response object
+ * @param {Function} next
+ */
+export const resetToAuthorizedUser = (req, res, next) => {
+	req.body.user = req.user._id;
+	next();
+};

@@ -1,7 +1,7 @@
 import { Router } from 'express';
 import Location from '/server/models/location';
 import Helper from '/server/middleware/data-validation';
-import { isAuthenticated } from '/server/middleware/authentication';
+import { isAuthenticated, resetToAuthorizedUser } from '/server/middleware/authentication';
 import { setIds } from '/server/middleware';
 
 const router = Router();
@@ -9,10 +9,9 @@ const router = Router();
 router.route('/')
 	.post(
 		isAuthenticated('Authentication required to create a location'),
+		resetToAuthorizedUser,
 		(req, res, next) => {
-			const location = req.body;
-			location.user = req.user._id;
-			new Location(location).save((err, loc) => {
+			new Location(req.body).save((err, loc) => {
 				req.user.locations.push(loc);
 				return loc;
 			}).then(loc => {
