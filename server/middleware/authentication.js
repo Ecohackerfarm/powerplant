@@ -60,6 +60,36 @@ export function isAuthenticated(message) {
 };
 
 /**
+ * Given an array of user IDs, check if they match the current user.
+ *
+ * @param {Object} req
+ * @param {Function} next
+ * @param {String[]} userIds
+ * @param {String} message
+ */
+function checkAccessForUserIdsInternal(req, next, userIds, message) {
+	var hasAccess = userIds.every(id => req.user._id.equals(id));
+	if (hasAccess) {
+		next();
+	} else {
+		next({ status: 403, message: message });
+	}
+}
+
+/**
+ * Returns an Express middleware function that checks if the current user
+ * matches the user IDs in req.users.
+ *
+ * @param {String} message Error message to go with HTTP 403
+ * @return {Function}
+ */
+export function checkAccessForUserIds(message) {
+	return (req, res, next) => {
+		checkAccessForUserIdsInternal(req, next, req.ids, message);
+	};
+};
+
+/**
  * Returns an Express middleware function that checks if the current user has
  * access to the given documents.
  *
@@ -69,12 +99,8 @@ export function isAuthenticated(message) {
  */
 export function checkAccess(documentsProperty, message) {
 	return (req, res, next) => {
-		var hasAccess = req[documentsProperty].every(document => req.user._id.equals(document.user));
-		if (hasAccess) {
-			next();
-		} else {
-			next({ status: 403, message: message });
-		}
+		var userIds = req[documentsProperty].map(document => document.user);
+		checkAccessForUserIdsInternal(req, next, userIds, message);
 	};
 };
 

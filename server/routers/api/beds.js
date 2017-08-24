@@ -1,7 +1,7 @@
 import { Router } from 'express';
 import Helper from '/server/middleware/data-validation';
 import { isAuthenticated, checkAccess, resetToAuthorizedUser } from '/server/middleware/authentication';
-import { setIds } from '/server/middleware';
+import { setIds, assignSingleDocument } from '/server/middleware';
 import Bed from '/server/models/bed';
 
 const router = Router();
@@ -38,21 +38,8 @@ router.route('/id/:bedId')
 		// First, get the bed.
 		Helper.fetchBeds,
 		// Now there must be exactly one bed in req.beds array.
-		(req, res, next) => {
-			const [bed] = req.beds;
-			// then check against req.user and see if they're owned by the same person
-			if (req.user._id.equals(bed.user)) {
-				// if so, pass it on to the next handler
-				req.bed = bed;
-				next();
-			} else {
-				// otherwise return a 403 forbidden
-				next({
-					status: 403,
-					message: "You don't have access to this bed"
-				});
-			}
-		}
+		checkAccess("beds", "You don't have access to this bed"),
+		assignSingleDocument("bed", "beds"),
 	).get(
 		(req, res, next) => { res.json(req.bed); }
 	).put(

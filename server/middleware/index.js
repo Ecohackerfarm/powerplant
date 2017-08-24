@@ -19,3 +19,19 @@ export function setIds(getIds) {
 		next();
 	};
 }
+
+/**
+ * Returns an Express middleware function for assigning the single document
+ * from the given document array to the given property, to carry it to other
+ * middleware functions.
+ *
+ * @param {String} documentProperty
+ * @param {String} documentArrayProperty
+ * @return {Function}
+ */
+export function assignSingleDocument(documentProperty, documentArrayProperty) {
+	return (req, res, next) => {
+		req[documentProperty] = req[documentArrayProperty][0];
+		next();
+	};
+}

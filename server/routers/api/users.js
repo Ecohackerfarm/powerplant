@@ -2,7 +2,7 @@ import { Router } from 'express';
 import User from '/server/models/user';
 import Helper from '/server/middleware/data-validation';
 import validate from '/shared/validation/userValidation';
-import { isAuthenticated } from '/server/middleware/authentication';
+import { isAuthenticated, checkAccessForUserIds } from '/server/middleware/authentication';
 import { setIds } from '/server/middleware';
 
 const router = Router();
@@ -56,18 +56,12 @@ router.route('/id/:userId/locations')
 		setIds(req => [req.params.userId]),
 		Helper.idValidator,
 		Helper.checkUsers,
+		checkAccessForUserIds("You may not view another user's locations"),
 		(req, res, next) => {
 			const [id] = req.ids;
-			if (req.user._id.equals(id)) {
-				User.findById(id).populate('locations').exec((err, match) => {
-					res.json(match.locations);
-				});
-			} else {
-				next({
-					status: 403,
-					message: "You may not view another user's locations"
-				});
-			}
+			User.findById(id).populate('locations').exec((err, match) => {
+				res.json(match.locations);
+			});
 		}
 	);
 

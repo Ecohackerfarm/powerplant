@@ -1,8 +1,8 @@
 import { Router } from 'express';
 import Location from '/server/models/location';
 import Helper from '/server/middleware/data-validation';
-import { isAuthenticated, resetToAuthorizedUser } from '/server/middleware/authentication';
-import { setIds } from '/server/middleware';
+import { isAuthenticated, resetToAuthorizedUser, checkAccess } from '/server/middleware/authentication';
+import { setIds, assignSingleDocument } from '/server/middleware';
 
 const router = Router();
 
@@ -37,21 +37,8 @@ router.route('/id/:locId')
 		// First, get the location.
 		Helper.fetchLocations,
 		// Now there must be exactly one location in req.locations array.
-		(req, res, next) => {
-			const [location] = req.locations;
-			// then check against req.user and see if they're owned by the same person
-			if (req.user._id.equals(location.user)) {
-				// if so, pass it on to the next handler
-				req.location = location;
-				next();
-			} else {
-				// otherwise return a 403 forbidden
-				next({
-					status: 403,
-					message: "You don't have access to this locaiton"
-				});
-			}
-		}
+		checkAccess("locations", "You don't have access to this location"),
+		assignSingleDocument("location", "locations"),
 	).get(
 		(req, res, next) => { res.json(req.location); }
 	).put(
@@ -87,19 +74,13 @@ router.route('/id/:locId/beds')
 		setIds(req => [req.params.locId]),
 		Helper.idValidator,
 		Helper.fetchLocations,
+		checkAccess("locations", "You may not view another user's beds"),
 		(req, res, next) => {
 			const [location] = req.locations;
 			console.log(location);
-			if (req.user._id.equals(location.user)) {
-				Location.findById(location._id).populate('beds').exec((err, match) => {
-					res.json(match.beds);
-				});
-			} else {
-				next({
-					status: 403,
-					message: "You may not view another user's beds"
-				});
-			}
+			Location.findById(location._id).populate('beds').exec((err, match) => {
+				res.json(match.beds);
+			});
 		}
 	);
 
