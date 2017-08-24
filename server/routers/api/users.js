@@ -46,11 +46,7 @@ router.route('/id/:userId')
 		Helper.fetchUsers,
 		(req, res, next) => {
 			const [user] = req.users;
-			if (typeof user !== 'undefined') {
-				res.json(user);
-			} else {
-				next({ status: 404, message: 'User not found' });
-			}
+			res.json(user);
 		}
 	);
 
@@ -62,19 +58,15 @@ router.route('/id/:userId/locations')
 		Helper.checkUsers,
 		(req, res, next) => {
 			const [id] = req.ids;
-			if (typeof id !== 'undefined') {
-				if (req.user._id.equals(id)) {
-					User.findById(id).populate('locations').exec((err, match) => {
-						res.json(match.locations);
-					});
-				} else {
-					next({
-						status: 403,
-						message: "You may not view another user's locations"
-					});
-				}
+			if (req.user._id.equals(id)) {
+				User.findById(id).populate('locations').exec((err, match) => {
+					res.json(match.locations);
+				});
 			} else {
-				next({ status: 404, message: 'User not found' });
+				next({
+					status: 403,
+					message: "You may not view another user's locations"
+				});
 			}
 		}
 	);

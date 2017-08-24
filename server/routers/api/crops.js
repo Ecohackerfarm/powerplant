@@ -57,13 +57,8 @@ router.route('/:cropId')
 		Helper.fetchCrops
 	).get(
 		(req, res, next) => {
-			// helper function should have stored array of crops in req.crops
-			if (req.crops.length === 1) {
-				res.json(req.crops[0]);
-			} else {
-				console.log('Something went wrong in fetchCrops');
-				res.status(500).json();
-			}
+			// Helper function has stored the single crop in req.crops.
+			res.json(req.crops[0]);
 		}
 	).put(
 		(req, res, next) => {
@@ -104,14 +99,7 @@ router.route('/:cropId/companionships')
 		Helper.fetchCropsWithCompanionships
 	).get(
 		(req, res, next) => {
-			if (req.crops.length === 1) {
-				res.json(req.crops[0].companionships);
-			} else {
-				next({
-					status: 500,
-					message: 'Something went wrong with fetchCropsWithCompanionships'
-				});
-			}
+			res.json(req.crops[0].companionships);
 		}
 	);
 

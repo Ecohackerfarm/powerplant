@@ -79,12 +79,7 @@ router.route('/:id')
 			// fetching a specific companionship
 			// will be stored in req.companionships by Helper.fetchCompanionships
 			const [companionship] = req.companionships;
-			if (typeof companionship !== 'undefined') {
-				res.status(200).json(companionship);
-			} else {
-				console.log('Something went wrong in fetchCompanionships');
-				next({ status: 500 }); // sending an http 500 code to the error handling middleware
-			}
+			res.status(200).json(companionship);
 		}
 	).put(
 		(req, res, next) => {
@@ -110,39 +105,29 @@ router.route('/:id')
 			// but maybe we do. could potentially be useful in case someone makes companionship info with the wrong crops
 			// by accident. leaving for now.
 			const [companionship] = req.companionships;
-			if (typeof companionship !== 'undefined') {
-				Object.assign(companionship, req.body); // adding the properties specific in the request body to the companionship
-				companionship.save((err, result) => {
-					if (err) {
-						err.status = 400;
-						console.log('Error: ' + err.message);
-						next(err);
-					} else {
-						res.json(result);
-					}
-				});
-			} else {
-				console.log('Something went wrong in fetchCompanionships');
-				next({ status: 500 });
-			}
+			Object.assign(companionship, req.body); // adding the properties specific in the request body to the companionship
+			companionship.save((err, result) => {
+				if (err) {
+					err.status = 400;
+					console.log('Error: ' + err.message);
+					next(err);
+				} else {
+					res.json(result);
+				}
+			});
 		}
 	).delete(
 		(req, res, next) => {
 			const [companionship] = req.companionships;
-			if (typeof companionship !== 'undefined') {
-				companionship.remove(err => {
-					if (err) {
-						// could be an authentication error, but that doesn't exist yet
-						err.status = 500;
-						next(err);
-					} else {
-						res.json();
-					}
-				});
-			} else {
-				console.log('Something went wrong in fetchCompanionships');
-				next({ status: 500 }); // sending an http 500 code to the error handling middleware
-			}
+			companionship.remove(err => {
+				if (err) {
+					// could be an authentication error, but that doesn't exist yet
+					err.status = 500;
+					next(err);
+				} else {
+					res.json();
+				}
+			});
 		}
 	);
 

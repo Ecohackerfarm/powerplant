@@ -35,25 +35,22 @@ router.route('/id/:bedId')
 		isAuthenticated('Authentication required to access this bed'),
 		setIds(req => [req.params.bedId]),
 		Helper.idValidator,
-		// first, get the bed
+		// First, get the bed.
 		Helper.fetchBeds,
+		// Now there must be exactly one bed in req.beds array.
 		(req, res, next) => {
 			const [bed] = req.beds;
-			if (typeof bed !== 'undefined') {
-				// then check against req.user and see if they're owned by the same person
-				if (req.user._id.equals(bed.user)) {
-					// if so, pass it on to the next handler
-					req.bed = bed;
-					next();
-				} else {
-					// otherwise return a 403 forbidden
-					next({
-						status: 403,
-						message: "You don't have access to this bed"
-					});
-				}
+			// then check against req.user and see if they're owned by the same person
+			if (req.user._id.equals(bed.user)) {
+				// if so, pass it on to the next handler
+				req.bed = bed;
+				next();
 			} else {
-				next({ status: 500, message: 'Error fetching beds' });
+				// otherwise return a 403 forbidden
+				next({
+					status: 403,
+					message: "You don't have access to this bed"
+				});
 			}
 		}
 	).get(
