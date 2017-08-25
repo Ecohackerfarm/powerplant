@@ -64,6 +64,10 @@ NodeJS, Docker (with mongo db)
     website on `http://localhost:8080`
 10. Done!
 
+The project may not run properly after reboot because it fails to
+connect to the database. Running `docker restart pp_main` fixes the
+issue.
+
 Architecture
 ============
 
