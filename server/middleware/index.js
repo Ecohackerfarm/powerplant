@@ -35,3 +35,59 @@ export function assignSingleDocument(documentProperty, documentArrayProperty) {
 		next();
 	};
 }
+
+/**
+ * Returns an Express middleware function that updates the given document
+ * to the database.
+ *
+ * @param {String} documentProperty
+ * @return {Function}
+ */
+export function updateDocument(documentProperty) {
+	return (req, res, next) => {
+		const document = req[documentProperty];
+		Object.assign(document, req.body);
+		document.save((err, newDocument) => {
+			if (err) {
+				console.log('Got errors');
+				console.log(err);
+				next({ status: 400, errors: err.errors, message: err._message });
+			} else {
+				res.json(newDocument);
+			}
+		});
+	};
+}
+
+/**
+ * Returns an Express middleware function that deletes the given document
+ * from the database.
+ *
+ * @param {String} documentProperty
+ * @param {Function}
+ */
+export function deleteDocument(documentProperty) {
+	return (req, res, next) => {
+		const document = req[documentProperty];
+		document.remove(err => {
+			if (err) {
+				next({ status: 400, errors: err.errors, message: err._message });
+			} else {
+				res.status(200).json();
+			}
+		});
+	};
+}
+
+/**
+ * Returns an Express middleware function that renders the result object when
+ * given the document to be rendered.
+ *
+ * @param {String} documentProperty
+ * @return {Function}
+ */
+export function renderResult(documentProperty) {
+	return (req, res, next) => {
+		res.status(200).json(req[documentProperty]);
+	};
+}

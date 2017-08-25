@@ -2,7 +2,7 @@ import { Router } from 'express';
 import Location from '/server/models/location';
 import Helper from '/server/middleware/data-validation';
 import { isAuthenticated, resetToAuthorizedUser, checkAccess } from '/server/middleware/authentication';
-import { setIds, assignSingleDocument } from '/server/middleware';
+import { setIds, assignSingleDocument, updateDocument, deleteDocument } from '/server/middleware';
 
 const router = Router();
 
@@ -42,30 +42,9 @@ router.route('/id/:locId')
 	).get(
 		(req, res, next) => { res.json(req.location); }
 	).put(
-		(req, res, next) => {
-			const location = req.location;
-			Object.assign(location, req.body);
-			location.save((err, newLoc) => {
-				if (err) {
-					console.log('Got errors');
-					console.log(err);
-					next({ status: 400, errors: err.errors, message: err._message });
-				} else {
-					res.json(newLoc);
-				}
-			});
-		}
+		updateDocument('location')
 	).delete(
-		(req, res, next) => {
-			const location = req.location;
-			location.remove(err => {
-				if (err) {
-					next({ status: 400, errors: err.errors, message: err._message });
-				} else {
-					res.status(200).json();
-				}
-			});
-		}
+		deleteDocument('location')
 	);
 
 router.route('/id/:locId/beds')

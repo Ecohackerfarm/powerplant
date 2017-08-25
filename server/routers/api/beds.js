@@ -1,7 +1,7 @@
 import { Router } from 'express';
 import Helper from '/server/middleware/data-validation';
 import { isAuthenticated, checkAccess, resetToAuthorizedUser } from '/server/middleware/authentication';
-import { setIds, assignSingleDocument } from '/server/middleware';
+import { setIds, assignSingleDocument, updateDocument, deleteDocument, renderResult } from '/server/middleware';
 import Bed from '/server/models/bed';
 
 const router = Router();
@@ -11,7 +11,7 @@ router.route('/').post(
 	setIds(req => [req.body.location]),
 	Helper.idValidator,
 	Helper.fetchLocations,
-	checkAccess("locations", "You don't have access to this location"),
+	checkAccess('locations', "You don't have access to this location"),
 	resetToAuthorizedUser,
 	(req, res, next) => {
 		const [location] = req.locations;
@@ -38,35 +38,14 @@ router.route('/id/:bedId')
 		// First, get the bed.
 		Helper.fetchBeds,
 		// Now there must be exactly one bed in req.beds array.
-		checkAccess("beds", "You don't have access to this bed"),
-		assignSingleDocument("bed", "beds"),
+		checkAccess('beds', "You don't have access to this bed"),
+		assignSingleDocument('bed', 'beds'),
 	).get(
-		(req, res, next) => { res.json(req.bed); }
+		renderResult('bed')
 	).put(
-		(req, res, next) => {
-			const bed = req.bed;
-			Object.assign(bed, req.body);
-			bed.save((err, newBed) => {
-				if (err) {
-					console.log('Got errors');
-					console.log(err);
-					next({ status: 400, errors: err.errors, message: err._message });
-				} else {
-					res.json(newBed);
-				}
-			});
-		}
+		updateDocument('bed')
 	).delete(
-		(req, res, next) => {
-			const bed = req.bed;
-			bed.remove(err => {
-				if (err) {
-					next({ status: 400, errors: err.errors, message: err._message });
-				} else {
-					res.status(200).json();
-				}
-			});
-		}
+		deleteDocument('bed')
 	);
 
 export default router;

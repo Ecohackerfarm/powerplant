@@ -3,7 +3,7 @@ import User from '/server/models/user';
 import Helper from '/server/middleware/data-validation';
 import validate from '/shared/validation/userValidation';
 import { isAuthenticated, checkAccessForUserIds } from '/server/middleware/authentication';
-import { setIds } from '/server/middleware';
+import { setIds, assignSingleDocument, renderResult } from '/server/middleware';
 
 const router = Router();
 
@@ -44,10 +44,8 @@ router.route('/id/:userId')
 		setIds(req => [req.params.userId]),
 		Helper.idValidator,
 		Helper.fetchUsers,
-		(req, res, next) => {
-			const [user] = req.users;
-			res.json(user);
-		}
+		assignSingleDocument('user', 'users'),
+		renderResult('user')
 	);
 
 router.route('/id/:userId/locations')

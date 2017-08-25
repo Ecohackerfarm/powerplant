@@ -2,7 +2,7 @@ import express from 'express';
 import Companionship from '/server/models/companionship';
 import Crop from '/server/models/crop';
 import Helper from '/server/middleware/data-validation';
-import { setIds } from '/server/middleware';
+import { setIds, assignSingleDocument, updateDocument, deleteDocument, renderResult } from '/server/middleware';
 
 const router = express.Router();
 
@@ -73,14 +73,10 @@ router.route('/:id')
 	.all(
 		setIds(req => [req.params.id]),
 		Helper.idValidator, // validate id (sends 400 if malformed id)
-		Helper.fetchCompanionships // fetch item (sends 404 if nonexistent)
+		Helper.fetchCompanionships, // fetch item (sends 404 if nonexistent)
+		assignSingleDocument('companionship', 'companionships')
 	).get(
-		(req, res, next) => {
-			// fetching a specific companionship
-			// will be stored in req.companionships by Helper.fetchCompanionships
-			const [companionship] = req.companionships;
-			res.status(200).json(companionship);
-		}
+		renderResult('companionship')
 	).put(
 		(req, res, next) => {
 			// TODO: validate crop1 and crop2
@@ -100,35 +96,9 @@ router.route('/:id')
 		},
 		Helper.idValidator,
 		Helper.checkCrops,
-		(req, res, next) => {
-			// keep in mind we probably don't want anyone changing the crops this refers to
-			// but maybe we do. could potentially be useful in case someone makes companionship info with the wrong crops
-			// by accident. leaving for now.
-			const [companionship] = req.companionships;
-			Object.assign(companionship, req.body); // adding the properties specific in the request body to the companionship
-			companionship.save((err, result) => {
-				if (err) {
-					err.status = 400;
-					console.log('Error: ' + err.message);
-					next(err);
-				} else {
-					res.json(result);
-				}
-			});
-		}
+		updateDocument('companionship')
 	).delete(
-		(req, res, next) => {
-			const [companionship] = req.companionships;
-			companionship.remove(err => {
-				if (err) {
-					// could be an authentication error, but that doesn't exist yet
-					err.status = 500;
-					next(err);
-				} else {
-					res.json();
-				}
-			});
-		}
+		deleteDocument('companionship')
 	);
 
 export default router;

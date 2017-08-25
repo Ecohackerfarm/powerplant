@@ -2,7 +2,7 @@ import express from 'express';
 import Crop from '/server/models/crop.js';
 import Companionship from '/server/models/companionship.js';
 import Helper from '/server/middleware/data-validation';
-import { setIds } from '/server/middleware';
+import { setIds, assignSingleDocument, renderResult } from '/server/middleware';
 
 const router = express.Router();
 
@@ -54,12 +54,10 @@ router.route('/:cropId')
 		// first validate the id by extracting and using helper function
 		setIds(req => [req.params.cropId]),
 		Helper.idValidator,
-		Helper.fetchCrops
+		Helper.fetchCrops,
+		assignSingleDocument('crop', 'crops')
 	).get(
-		(req, res, next) => {
-			// Helper function has stored the single crop in req.crops.
-			res.json(req.crops[0]);
-		}
+		renderResult('crop')
 	).put(
 		(req, res, next) => {
 			// since object ids are generated internally, this can never be used to create a new crop
