@@ -6,60 +6,71 @@ import { randString } from '/client/utils';
 import { expectNoActionForAllBut as sanityCheck } from './Helper';
 
 describe('locations reducer', () => {
-	const actions = [];
+	const testedActions = [];
+	const id = '0';
+	const myloc = [{ _id: id, name: 'myloc' }];
 	describe('SET_LOCATIONS', () => {
-		const type = types.SET_LOCATIONS;
-		actions.push(type);
+		before(()=>{
+			const type = types.SET_LOCATIONS;
+			testedActions.push(type);
+		});
+		it('TODO');
 	});
 	describe('ADD_LOCATION', () => {
-		const type = types.ADD_LOCATION;
-		actions.push(type);
+		before(()=>{
+			const type = types.ADD_LOCATION;
+			testedActions.push(type);
+		});
+		it('TODO');
 	});
 	describe('EDIT_LOCATION', () => {
-		const type = types.EDIT_LOCATION;
-		actions.push(type);
-		it('should modify the location properties', () => {
-			const state = [{ _id: '0', name: 'myloc' }];
-			const id = '0';
-			const changes = { name: randString() };
+		let changes, newState;
+		before(()=>{
+			const type = types.EDIT_LOCATION;
+			testedActions.push(type);
+			changes = { name: randString() };
 			const action = { type, id, changes };
-			const newState = locations(state, action);
+			newState = locations(myloc, action);
+		});
+		it('should modify the location properties', () => {
 			expect(newState).to.have.length(1);
-			expect(newState[0]).to.have.all.keys({ _id: '0', name: changes.name });
-			expect(newState[0]).not.to.equal(state);
+			expect(newState[0]).to.have.all.keys({ _id: id, name: changes.name });
+			expect(newState[0]).not.to.equal(myloc);
 		});
 	});
 	describe('DELETE_LOCATION', () => {
-		const type = types.DELETE_LOCATION;
-		actions.push(type);
-		it('should clear the location when it exists', () => {
-			const state = [{ _id: '0', name: 'myloc' }];
-			const id = '0';
+		let newState;
+		before(()=>{
+			const type = types.DELETE_LOCATION;
+			testedActions.push(type);
 			const action = { type, id };
-			const newState = locations(state, action);
+			newState = locations(myloc, action);
+		});
+		it('should clear the location when it exists', () => {
 			expect(newState).to.have.length(0);
-			expect(newState).not.to.equal(state);
+			expect(newState).not.to.equal(myloc);
 		});
 	});
 	describe('LOGOUT', () => {
-		const type = types.LOGOUT;
-		actions.push(type);
-		it('should clear all data', () => {
-			const state = [{ _id: '0', name: 'myLoc' }];
+		let newState;
+		before(()=>{
+			const type = types.LOGOUT;
+			testedActions.push(type);
 			const action = { type };
-			const newState = locations(state, action);
+			newState = locations(myloc, action);
+		});
+		it('should clear all data', () => {
 			expect(newState).to.equal(defaultState);
-			expect(newState).not.to.equal(state);
+			expect(newState).not.to.equal(myloc);
 		});
 	});
 	describe('everything else', () => {
 		it('should do nothing', () => {
-			const state = [{ _id: '0', name: 'myloc' }];
 			const action = {
-				id: '0',
+				id: id,
 				changes: { name: randString() }
 			};
-			sanityCheck(locations, actions, state, action);
+			sanityCheck(locations, testedActions, myloc, action);
 		});
 	});
 });

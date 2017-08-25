@@ -1,45 +1,68 @@
 import { expect } from 'chai';
 import * as types from '/client/actions/types';
 import { auth } from '/client/reducers';
+import { expectNoActionForAllBut as sanityCheck } from './Helper';
 
 describe('auth reducer', () => {
+	const testedActions = [];
 	describe('SET_CURRENT_USER', () => {
-		const type = types.SET_CURRENT_USER;
-		const user = 'user';
-		const action = { type, user };
+		let user, state, newState;
+		before(()=>{
+			const type = types.SET_CURRENT_USER;
+			testedActions.push(type);
+			user = 'user';
+			const action = { type, user };
+			state = { isAuthenticated: false };
+			newState = auth(state, action);
+		})
 		it('should set authenticated to true', () => {
-			let state = { isAuthenticated: false };
-			const newState = auth(state, action);
 			expect(newState).to.have.property('isAuthenticated').and.be.true;
 			expect(newState).not.to.equal(state);
 		});
 		it('should set currentUser', () => {
-			let state = { isAuthenticated: false };
-			const newState = auth(state, action);
 			expect(newState).to.have.property('currentUser').and.to.equal(user);
 			expect(newState).not.to.equal(state);
 		});
 	});
 	describe('CREATE_USER', () => {
+		before(()=>{
+			const type = types.SET_CURRENT_USER;
+			testedActions.push(type);
+		});
 		it('TODO, not sure what this will do yet');
 	});
 	describe('LOGOUT', () => {
-		const type = types.LOGOUT;
-		const action = { type };
+		let state, newState;
+		before(()=>{
+			const type = types.LOGOUT;
+			testedActions.push(type);
+			const action = { type };
+			state = {
+				isAuthenticated: true,
+				currentUser: 'user'
+			};
+			newState = auth(state, action);
+		})
 		it('should set isAuthenticated to false', () => {
-			let state = { isAuthenticated: true };
-			const newState = auth(state, action);
 			expect(newState).to.have.property('isAuthenticated').and.be.false;
 			expect(newState).not.to.equal(state);
 		});
 		it('should remove currentUser', () => {
-			let state = {
+			expect(newState).not.to.have.property('currentUser');
+			expect(newState).not.to.equal(state);
+		});
+	});
+	describe('everything else', () => {
+		let state, action;
+		before(()=>{
+			state = {
 				isAuthenticated: true,
 				currentUser: 'user'
 			};
-			const newState = auth(state, action);
-			expect(newState).not.to.have.property('currentUser');
-			expect(newState).not.to.equal(state);
+			action = { };
+		})
+		it('should do nothing', () => {
+			sanityCheck(auth, testedActions, state, action);
 		});
 	});
 });

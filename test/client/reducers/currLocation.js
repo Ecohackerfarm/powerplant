@@ -5,36 +5,45 @@ import { defaultState } from '/client/reducers/currLocation';
 import { expectNoActionForAllBut as sanityCheck } from './Helper';
 
 describe('currLocation reducer', () => {
-	const actions = [];
+	const testedActions = [];
 	describe('SET_CURRENT_LOCATION', () => {
-		const type = types.SET_CURRENT_LOCATION;
-		actions.push(type);
-		const location = 'right here';
-		it('should set the Location', () => {
+		let location, state, newState;
+		before(()=>{
+			const type = types.SET_CURRENT_LOCATION;
+			testedActions.push(type);
+			location = 'right here';
 			const action = { type, location };
-			const state = 'Before location';
-			const newState = currLocation(state, action);
+			state = 'Before location';
+			newState = currLocation(state, action);
+		});
+		it('should set the Location', () => {
 			expect(newState).to.equal(location);
 			expect(newState).not.to.equal(state);
 		});
 	});
 	describe('LOGOUT', () => {
-		const type = types.LOGOUT;
-		actions.push(type);
-		it('should clear on LOGOUT', () => {
+		let state, newState;
+		before(()=>{
+			const type = types.LOGOUT;
+			testedActions.push(type);
 			const action = { type };
-			const state = 'Before location';
-			const newState = currLocation(state, action);
+			state = 'Before location';
+			newState = currLocation(state, action);
+		});
+		it('should clear on LOGOUT', () => {
 			expect(newState).to.equal(defaultState);
 			expect(newState).not.to.equal(state);
 		});
 	});
 	describe('everything else', () => {
-		const location = 'a location goes here';
+		let location, state, action;
+		before(()=>{
+			location = 'a location goes here';
+			state = 'before location';
+			action = { location };
+		})
 		it('should do nothing', () => {
-			const state = 'before location';
-			const action = { location };
-			sanityCheck(currLocation, actions, state, action);
+			sanityCheck(currLocation, testedActions, state, action);
 		});
 	});
 });
