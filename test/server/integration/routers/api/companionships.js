@@ -187,7 +187,7 @@ describe(rootUrl + '/:id', () => {
 	});
 	describe('DELETE', () => {
 		it('should delete a valid companionship', () => {
-			return request.delete(url + '/' + validId).expect(200).then(res => {
+			return request.delete(url + '/' + validId).expect(204).then(res => {
 				return Companionship.findById(validId, (err, comp) => {
 					expect(comp).to.be.null;
 				});

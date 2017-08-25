@@ -2,7 +2,7 @@ import express from 'express';
 import Crop from '/server/models/crop.js';
 import Companionship from '/server/models/companionship.js';
 import Helper from '/server/middleware/data-validation';
-import { setIds, assignSingleDocument, renderResult } from '/server/middleware';
+import { setIds, assignSingleDocument, renderResult, updateDocument, deleteDocument } from '/server/middleware';
 
 const router = express.Router();
 
@@ -59,34 +59,18 @@ router.route('/:cropId')
 	).get(
 		renderResult('crop')
 	).put(
-		(req, res, next) => {
-			// since object ids are generated internally, this can never be used to create a new crop
-			// thus the user is trying to update a crop
-			Crop.findByIdAndUpdate(req.params.cropId, req.body, { new: true }, (err, crop) => {
-				if (err) {
-					// we already know the crop exists, so it must be bad data
-					next({ status: 400, message: err.message });
-				} else {
-					res.json(crop);
-				}
-			});
-		}
+		updateDocument('crop')
 	).delete(
 		(req, res, next) => {
 			Companionship.find().byCrop(req.params.cropId).remove().exec(err => {
 				if (err) {
 					next({ status: 500, message: err.message });
 				} else {
-					Crop.findByIdAndRemove(req.params.cropId, err => {
-						if (err) {
-							next({ status: 500, message: err.message });
-						} else {
-							res.status(204).json();
-						}
-					});
+					next();
 				}
 			});
-		}
+		},
+		deleteDocument('crop')
 	);
 
 // all associated companionship objects of the given cropid

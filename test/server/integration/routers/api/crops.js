@@ -157,8 +157,18 @@ describe(rootUrl + '/:cropId', () => {
 					expect(res.body).to.not.have.property('blahblah');
 				});
 		});
-		it('should not allow ID changes', () => {
+		it('should not effect ID changes', () => {
 			const changes = { _id: ObjectId().toString() };
+			console.log(changes);
+			return sendForm(request.put(rootUrl + '/' + testId), changes)
+				.expect(200)
+				.expect('Content-Type', jsonType)
+				.then(res => {
+					expect(res.body).to.have.property('_id').and.to.equal(testId);
+				});
+		});
+		it('should not allow invalid data changes', () => {
+			const changes = { display_name: { firstname: 'firstname', lastname: 'lastname' } };
 			return sendForm(request.put(rootUrl + '/' + testId), changes).expect(400);
 		});
 	});

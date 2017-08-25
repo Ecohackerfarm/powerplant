@@ -155,7 +155,7 @@ describe(rootUrl + '/id/:bedId', () => {
 			return request
 				.delete(rootUrl + '/id/' + bedId)
 				.set('authorization', 'Bearer ' + token)
-				.expect(200);
+				.expect(204);
 		});
 	});
 });

@@ -134,7 +134,7 @@ describe(rootUrl + '/id/:locId', () => {
 			return request
 				.delete(rootUrl + '/id/' + locId)
 				.set('authorization', 'Bearer ' + token)
-				.expect(200);
+				.expect(204);
 		});
 	});
 });
