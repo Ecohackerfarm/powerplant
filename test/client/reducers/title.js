@@ -8,7 +8,7 @@ describe('title reducer', () => {
 	const testedActions = [];
 	describe('SET_TITLE', () => {
 		let newTitle, oldTitle, myTitle;
-		before(()=>{
+		before(() => {
 			const type = SET_TITLE;
 			testedActions.push(type);
 			myTitle = 'test title goes here';

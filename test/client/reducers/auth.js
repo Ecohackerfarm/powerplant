@@ -7,14 +7,14 @@ describe('auth reducer', () => {
 	const testedActions = [];
 	describe('SET_CURRENT_USER', () => {
 		let user, state, newState;
-		before(()=>{
+		before(() => {
 			const type = types.SET_CURRENT_USER;
 			testedActions.push(type);
 			user = 'user';
 			const action = { type, user };
 			state = { isAuthenticated: false };
 			newState = auth(state, action);
-		})
+		});
 		it('should set authenticated to true', () => {
 			expect(newState).to.have.property('isAuthenticated').and.be.true;
 			expect(newState).not.to.equal(state);
@@ -25,7 +25,7 @@ describe('auth reducer', () => {
 		});
 	});
 	describe('CREATE_USER', () => {
-		before(()=>{
+		before(() => {
 			const type = types.SET_CURRENT_USER;
 			testedActions.push(type);
 		});
@@ -33,7 +33,7 @@ describe('auth reducer', () => {
 	});
 	describe('LOGOUT', () => {
 		let state, newState;
-		before(()=>{
+		before(() => {
 			const type = types.LOGOUT;
 			testedActions.push(type);
 			const action = { type };
@@ -42,7 +42,7 @@ describe('auth reducer', () => {
 				currentUser: 'user'
 			};
 			newState = auth(state, action);
-		})
+		});
 		it('should set isAuthenticated to false', () => {
 			expect(newState).to.have.property('isAuthenticated').and.be.false;
 			expect(newState).not.to.equal(state);
@@ -54,13 +54,13 @@ describe('auth reducer', () => {
 	});
 	describe('everything else', () => {
 		let state, action;
-		before(()=>{
+		before(() => {
 			state = {
 				isAuthenticated: true,
 				currentUser: 'user'
 			};
 			action = { };
-		})
+		});
 		it('should do nothing', () => {
 			sanityCheck(auth, testedActions, state, action);
 		});

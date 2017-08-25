@@ -10,14 +10,14 @@ describe('locations reducer', () => {
 	const id = '0';
 	const myloc = [{ _id: id, name: 'myloc' }];
 	describe('SET_LOCATIONS', () => {
-		before(()=>{
+		before(() => {
 			const type = types.SET_LOCATIONS;
 			testedActions.push(type);
 		});
 		it('TODO');
 	});
 	describe('ADD_LOCATION', () => {
-		before(()=>{
+		before(() => {
 			const type = types.ADD_LOCATION;
 			testedActions.push(type);
 		});
@@ -25,7 +25,7 @@ describe('locations reducer', () => {
 	});
 	describe('EDIT_LOCATION', () => {
 		let changes, newState;
-		before(()=>{
+		before(() => {
 			const type = types.EDIT_LOCATION;
 			testedActions.push(type);
 			changes = { name: randString() };
@@ -40,7 +40,7 @@ describe('locations reducer', () => {
 	});
 	describe('DELETE_LOCATION', () => {
 		let newState;
-		before(()=>{
+		before(() => {
 			const type = types.DELETE_LOCATION;
 			testedActions.push(type);
 			const action = { type, id };
@@ -53,7 +53,7 @@ describe('locations reducer', () => {
 	});
 	describe('LOGOUT', () => {
 		let newState;
-		before(()=>{
+		before(() => {
 			const type = types.LOGOUT;
 			testedActions.push(type);
 			const action = { type };

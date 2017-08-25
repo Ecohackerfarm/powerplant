@@ -8,7 +8,7 @@ describe('currLocation reducer', () => {
 	const testedActions = [];
 	describe('SET_CURRENT_LOCATION', () => {
 		let location, state, newState;
-		before(()=>{
+		before(() => {
 			const type = types.SET_CURRENT_LOCATION;
 			testedActions.push(type);
 			location = 'right here';
@@ -23,7 +23,7 @@ describe('currLocation reducer', () => {
 	});
 	describe('LOGOUT', () => {
 		let state, newState;
-		before(()=>{
+		before(() => {
 			const type = types.LOGOUT;
 			testedActions.push(type);
 			const action = { type };
@@ -37,11 +37,11 @@ describe('currLocation reducer', () => {
 	});
 	describe('everything else', () => {
 		let location, state, action;
-		before(()=>{
+		before(() => {
 			location = 'a location goes here';
 			state = 'before location';
 			action = { location };
-		})
+		});
 		it('should do nothing', () => {
 			sanityCheck(currLocation, testedActions, state, action);
 		});
