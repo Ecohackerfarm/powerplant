@@ -39,7 +39,7 @@ router.route('/')
 		}
 	);
 
-router.route('/id/:userId')
+router.route('/:userId')
 	.get(
 		setIds(req => [req.params.userId]),
 		Helper.idValidator,
@@ -48,7 +48,7 @@ router.route('/id/:userId')
 		renderResult('user')
 	);
 
-router.route('/id/:userId/locations')
+router.route('/:userId/locations')
 	.get(
 		isAuthenticated('Authentication required to view locations'),
 		setIds(req => [req.params.userId]),

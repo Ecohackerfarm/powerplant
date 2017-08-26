@@ -85,7 +85,7 @@ describe(rootUrl + '/', () => {
 		});
 		it('should update the beds array of the location', () => {
 			return request
-				.get("/api/locations" + '/id/' + locId)
+				.get('/api/locations/' + locId)
 				.set('authorization', 'Bearer ' + token)
 				.expect(200)
 				.expect('Content-Type', jsonType)
@@ -96,17 +96,17 @@ describe(rootUrl + '/', () => {
 	});
 });
 
-describe(rootUrl + '/id/:bedId', () => {
+describe(rootUrl + '/:bedId', () => {
 	describe('GET', () => {
 		it('should 401 without authorization', function() {
 			this.timeout(15000);
-			const url = rootUrl + '/id/' + bedId;
+			const url = rootUrl + '/' + bedId;
 			console.log(url);
 			return request.get(url).expect(401);
 		});
 		it('should return bed with authorization', () => {
 			return request
-				.get(rootUrl + '/id/' + bedId)
+				.get(rootUrl + '/' + bedId)
 				.set('authorization', 'Bearer ' + token)
 				.expect(200)
 				.expect('Content-Type', jsonType)
@@ -125,7 +125,7 @@ describe(rootUrl + '/id/:bedId', () => {
 				jwtSecret
 			);
 			return request
-				.get(rootUrl + '/id/' + bedId)
+				.get(rootUrl + '/' + bedId)
 				.set('authorization', 'Bearer ' + token)
 				.expect(404);
 		});
@@ -135,7 +135,7 @@ describe(rootUrl + '/id/:bedId', () => {
 			const changes = {
 				soil_type: 1
 			};
-			return sendForm(request.put(rootUrl + '/id/' + bedId), changes)
+			return sendForm(request.put(rootUrl + '/' + bedId), changes)
 				.set('authorization', 'Bearer ' + token)
 				.expect(200)
 				.expect('Content-Type', jsonType)
@@ -145,7 +145,7 @@ describe(rootUrl + '/id/:bedId', () => {
 		});
 		it('should not update with invalid data', () => {
 			const changes = { soil_type: 100 };
-			return sendForm(request.put(rootUrl + '/id/' + bedId), changes)
+			return sendForm(request.put(rootUrl + '/' + bedId), changes)
 				.set('authorization', 'Bearer ' + token)
 				.expect(400);
 		});
@@ -153,7 +153,7 @@ describe(rootUrl + '/id/:bedId', () => {
 	describe('DELETE', () => {
 		it('should delete a bed with authorization', () => {
 			return request
-				.delete(rootUrl + '/id/' + bedId)
+				.delete(rootUrl + '/' + bedId)
 				.set('authorization', 'Bearer ' + token)
 				.expect(204);
 		});

@@ -29,7 +29,7 @@ router.route('/')
 		}
 	);
 
-router.route('/id/:locId')
+router.route('/:locId')
 	.all(
 		isAuthenticated('Authentication required to access this location'),
 		setIds(req => [req.params.locId]),
@@ -47,7 +47,7 @@ router.route('/id/:locId')
 		deleteDocument('location')
 	);
 
-router.route('/id/:locId/beds')
+router.route('/:locId/beds')
 	.get(
 		isAuthenticated('Authentication required to view beds'),
 		setIds(req => [req.params.locId]),

@@ -88,11 +88,11 @@ describe(rootUrl + '/', () => {
 	});
 });
 
-describe(rootUrl + '/id/:userId', () => {
+describe(rootUrl + '/:userId', () => {
 	describe('GET', () => {
 		it('should return correct user for valid id', function() {
 			return request
-				.get(rootUrl + '/id/' + userId)
+				.get(rootUrl + '/' + userId)
 				.expect(200)
 				.expect('Content-Type', jsonType)
 				.then(res => {
@@ -104,7 +104,7 @@ describe(rootUrl + '/id/:userId', () => {
 		});
 		it('should not return password or email', () => {
 			return request
-				.get(rootUrl + '/id/' + userId)
+				.get(rootUrl + '/' + userId)
 				.expect(200)
 				.expect('Content-Type', jsonType)
 				.then(res => {
@@ -115,14 +115,14 @@ describe(rootUrl + '/id/:userId', () => {
 	});
 });
 
-describe(rootUrl + '/id/:userId/locations', () => {
+describe(rootUrl + '/:userId/locations', () => {
 	describe('GET', () => {
 		it('should 401 if not authenticated', () => {
-			return request.get(rootUrl + '/id/' + userId + '/locations').expect(401);
+			return request.get(rootUrl + '/' + userId + '/locations').expect(401);
 		});
 		it('should return locations if authenticated', () => {
 			return request
-				.get(rootUrl + '/id/' + userId + '/locations')
+				.get(rootUrl + '/' + userId + '/locations')
 				.set('authorization', 'Bearer ' + token)
 				.expect(200)
 				.then(res => {
@@ -131,7 +131,7 @@ describe(rootUrl + '/id/:userId/locations', () => {
 		});
 		it('should not return locations if invalid authentication', () => {
 			return request
-				.get(rootUrl + '/id/' + userId + '/locations')
+				.get(rootUrl + '/' + userId + '/locations')
 				.set('authorization', 'Bearer ' + token + 'f)(#)')
 				.expect(401);
 		});

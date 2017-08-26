@@ -18,7 +18,7 @@ import { simpleAuthCheckedRequest } from './actionHelpers';
  */
 export const getLocationsRequest = id => {
 	return dispatch =>
-		axios.get('/api/users/id/' + id + '/locations').then(res => {
+		axios.get('/api/users/' + id + '/locations').then(res => {
 			if (res.status === 200) {
 				dispatch(setLocations(res.data));
 			}
@@ -101,7 +101,7 @@ export const saveAllLocationsRequest = locations => {
  */
 export const editLocationRequest = (id, locChanges) => {
 	return simpleAuthCheckedRequest(
-		'/api/locations/id/' + id,
+		'/api/locations/' + id,
 		'put',
 		editLocation,
 		id,
@@ -111,7 +111,7 @@ export const editLocationRequest = (id, locChanges) => {
 
 export const deleteLocationRequest = id => {
 	return simpleAuthCheckedRequest(
-		'/api/locations/id/' + id,
+		'/api/locations/' + id,
 		'delete',
 		deleteLocation,
 		id

@@ -75,17 +75,17 @@ describe(rootUrl + '/', () => {
 	});
 });
 
-describe(rootUrl + '/id/:locId', () => {
+describe(rootUrl + '/:locId', () => {
 	describe('GET', () => {
 		it('should 401 without authorization', function() {
 			this.timeout(15000);
-			const url = rootUrl + '/id/' + locId;
+			const url = rootUrl + '/' + locId;
 			console.log(url);
 			return request.get(url).expect(401);
 		});
 		it('should return location with authorization', () => {
 			return request
-				.get(rootUrl + '/id/' + locId)
+				.get(rootUrl + '/' + locId)
 				.set('authorization', 'Bearer ' + token)
 				.expect(200)
 				.expect('Content-Type', jsonType)
@@ -103,7 +103,7 @@ describe(rootUrl + '/id/:locId', () => {
 				jwtSecret
 			);
 			return request
-				.get(rootUrl + '/id/' + locId)
+				.get(rootUrl + '/' + locId)
 				.set('authorization', 'Bearer ' + token)
 				.expect(404);
 		});
@@ -114,7 +114,7 @@ describe(rootUrl + '/id/:locId', () => {
 				name: randString(),
 				loc: { address: randString, coordinates: [1, 1] }
 			};
-			return sendForm(request.put(rootUrl + '/id/' + locId), changes)
+			return sendForm(request.put(rootUrl + '/' + locId), changes)
 				.set('authorization', 'Bearer ' + token)
 				.expect(200)
 				.expect('Content-Type', jsonType)
@@ -124,7 +124,7 @@ describe(rootUrl + '/id/:locId', () => {
 		});
 		it('should not update with invalid data', () => {
 			const changes = { name: { a: 1 } };
-			return sendForm(request.put(rootUrl + '/id/' + locId), changes)
+			return sendForm(request.put(rootUrl + '/' + locId), changes)
 				.set('authorization', 'Bearer ' + token)
 				.expect(400);
 		});
@@ -132,21 +132,21 @@ describe(rootUrl + '/id/:locId', () => {
 	describe('DELETE', () => {
 		it('should delete a location with authorization', () => {
 			return request
-				.delete(rootUrl + '/id/' + locId)
+				.delete(rootUrl + '/' + locId)
 				.set('authorization', 'Bearer ' + token)
 				.expect(204);
 		});
 	});
 });
 
-describe(rootUrl + '/id/:locId/beds', () => {
+describe(rootUrl + '/:locId/beds', () => {
 	describe('GET', () => {
 		it('should 401 if not authenticated', () => {
-			return request.get(rootUrl + '/id/' + neverRemovedLocationId + '/beds').expect(401);
+			return request.get(rootUrl + '/' + neverRemovedLocationId + '/beds').expect(401);
 		});
 		it('should return beds if authenticated', () => {
 			return request
-				.get(rootUrl + '/id/' + neverRemovedLocationId + '/beds')
+				.get(rootUrl + '/' + neverRemovedLocationId + '/beds')
 				.set('authorization', 'Bearer ' + token)
 				.expect(200)
 				.then(res => {
@@ -155,7 +155,7 @@ describe(rootUrl + '/id/:locId/beds', () => {
 		});
 		it('should not return beds if invalid authentication', () => {
 			return request
-				.get(rootUrl + '/id/' + neverRemovedLocationId + '/beds')
+				.get(rootUrl + '/' + neverRemovedLocationId + '/beds')
 				.set('authorization', 'Bearer ' + token + 'f)(#)')
 				.expect(401);
 		});

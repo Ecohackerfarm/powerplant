@@ -30,7 +30,7 @@ router.route('/').post(
 	}
 );
 
-router.route('/id/:bedId')
+router.route('/:bedId')
 	.all(
 		isAuthenticated('Authentication required to access this bed'),
 		setIds(req => [req.params.bedId]),
