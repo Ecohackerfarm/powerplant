@@ -7,12 +7,24 @@ import { expectNoActionForAllBut as sanityCheck } from './Helper';
 
 describe('locations reducer', () => {
 	const testedActions = [];
-	const myloc = [{ _id: '5', name: 'myloc', loc: [+30.30642, -120.61458]}];
+	// Some test location data taken from the running app
+	const myloc = [
+		{name:"Machu Picchu",
+			loc:{address:"Aguas Calientes, Peru",coordinates:[-72.5254412,-13.1547062]},
+			_id:"6"}];
 	const sampleLocationList = [
-		{ _id:'0' ,name: 'location 0', loc: [+30.30642, -120.61458]},
-		{ _id:'1' ,name: 'location 1', loc: [+31.30642, -121.61458]},
-		{ _id:'2' ,name: 'location 2', loc: [+33.30642, -123.61458]},
-		{ _id:'3' ,name: 'location 3', loc: [+32.30642, -122.61458]}
+		{name:"Le Moulin Rouge",
+			loc:{address:"82 Boulevard de Clichy, 75018 Paris, France",coordinates:[2.3322519,48.8841232]},
+			_id:"0"},
+		{name:"Statue of liberty",
+			loc:{address:"Statue of Liberty, New York, NY 10004, USA",coordinates:[-74.0445004,40.6892494]},
+			_id:"1"},
+		{name:"Taj Mahal",
+			loc:{address:"Dharmapuri,  Uttar Pradesh 282001, India",coordinates:[78.0421552,27.1750151]},
+			_id:"2"},
+		{name:"The Potala Palace",
+			loc:{address:"35 Beijing Middle Rd, China, 850000",coordinates:[91.1185792,29.6554942]},
+			_id:"3"}
 	];
 	describe('SET_LOCATIONS', () => {
 		let state, newLocations, newState;
@@ -22,9 +34,15 @@ describe('locations reducer', () => {
 			testedActions.push(type);
 			state = sampleLocationList;
 			newLocations = [
-				{ _id:'0' ,name: 'location 0b', loc: [+39.30642, -129.61458]},
-				{ _id:'1' ,name: 'location 1' , loc: [+31.30642, -121.61458]},
-				{ _id:'2' ,name: 'location 2b', loc: [+38.30642, -128.61458]}
+				{name:"Kilimanjaro",
+					loc:{address:"Mt Kilimanjaro, Tanzania",coordinates:[37.3556273,-3.0674247]},
+					_id:"0"},
+				{name:"Neuschwanstein Castle",
+					loc:{address:"Neuschwansteinstraße 20, 87645 Schwangau, Germany",coordinates:[10.7498004,47.557574]},
+					_id:"1"},
+				{name:"Statue of liberty",
+					loc:{address:"Statue of Liberty National Monument, New York, NY 10004, USA",coordinates:[-74.0445004,40.6892494]},
+					_id:"2"}
 			];
 			const action = {type, locations:newLocations};
 			newState = locations(state, action);
