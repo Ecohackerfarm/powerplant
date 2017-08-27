@@ -61,6 +61,7 @@ You will need actions to:
 * Save a bed
 * Edit a bed
 * Delete a bed
+
 For each of these, you will need
 * An action request (the thing that gets wrapped in a dispatch call and passed to CrudableListPage) in `/client/actions/bedActions.js`
 * A pure action creator in `/client/actions/index.js`
