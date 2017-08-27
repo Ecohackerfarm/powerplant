@@ -287,6 +287,8 @@ Mongoose is an ODM (object-document-model) library for Mongo DB. It
 abstracts some of the lower level features of mongo and makes it easy to
 create models and control them.
 
+#### Database structure
+
 The database structure follows a relatively straightforward hierarchy:
 
 ```
@@ -344,6 +346,133 @@ The database structure follows a relatively straightforward hierarchy:
     |  predicted_transplant:Date              |
     |  predicted_harVest:Date                 |
     +-----------------------------------------+
+```
+
+#### Database structure completion/redesign proposal
+
+Database structure is not complete yet and might need redesign. Once the new
+structure has been agreed upon and adopted, move it to the "Database structure"
+section above.
+
+- In the User document, having references to Location documents makes the
+  creation of a new location non-atomic because both the User and the Location
+  document have to be saved to the database. If one of these two operations
+  fail then the database would be left to an inconsistent state. Mongoose
+  doesn't have "transactions" so non-atomic updates should be handled manually.
+  Alternative to storing references would be to query Location documents by the
+  property Location.user_id.
+- It is plausible that multiple users will work on the same location, thus the
+  Location documents cannot be embedded to the User document.
+- Should the Location document embed the whole Location -> Garden -> Bed ->
+  CropInstance structure?
+  - Location document models the physical state of the location with gardens,
+    beds and crop instances. An instance of a crop can only be in one bed at
+    one time.
+  - In most use cases the client needs all of the Location -> Garden -> Bed ->
+    CropInstance data. Also for the offline functionality it makes sense to
+    fetch all of this data at once.
+  - Embedding (vs. storing references) would make updating atomic.
+  - When embedding there is no need to make queries based on the parent ID.
+  - Embedding loses the flexibility of accessing Garden, Bed and CropInstance
+    documents directly by an ID. It is plausible that direct access will be
+    needed, for example for sharing purposes. This can be solved by manually
+    generating a globally valid ID for the embedded documents.
+  - When embedding there is no need to store a reference to the parent document,
+    so there are no properties like Garden.location_id. If the parent reference
+    is later needed for example when directly accessing a Garden through the
+    HTTP API, the parent reference could be manually added to the returned
+    document.
+- The companionship model could be made more specific and scientific. Two plants
+  may have multiple ways or mechanisms in which they benefit from or are harmful
+  to each other. These mechanisms could be categorised. The Companionship
+  document would model this by having a list of companionship mechanisms and
+  each CompanionshipMechanism would have a type that puts the mechanism in a
+  generic category.
+  - A plant may attract or repel pests that are harmful to the other plant, it
+    may provide support, shade or windbreak, it may attract insects that help
+    with pollination, etc.
+  - The Crop document could have property "products" that tells what they
+    provide for human consumption. "Trap crops" that don't provide anything for
+    human consumption may be planted just to attract pests away from the other
+    crops.
+  - Allows the program to make more intelligent suggestions for the user.
+  - Increases the educational value.
+  - Does not necessarily mean that the UI has to be more complicated than with
+    a simpler model.
+  - Having the "compatibility" (Number, for example -1...3) property in
+    addition with "type" (Enum) allows the program to order companionship
+    mechanisms that have the same type.
+  - Each CompanionshipMechanism should have a human-readable description that is
+    specific to the given plant pair and may provide additional information.
+  - TODO: Companionship/CompanionshipMechanism could have references to
+    scientific research articles, informational websites, etc.
+  - The database has to be built by hand. We can of course start with incomplete
+    data.
+  - TODO: CropInstance: Properties predicted_transplant and predicted_harvest
+    could be moved (maybe with some transformation) to the generic Crop
+    document?
+
+```
+const userSchema = new Schema({
+	username: { type: String },
+	email: { type: String },
+	password: { type: String },
+});
+
+const cropInstanceSchema = new Schema({
+	id: { type: ObjectId },
+	crop_id: { type: ObjectId, ref: 'Crop' },
+	planted_indoors: { type: Date },
+	planted_in_bed: { type: Date },
+	predicted_transplant: { type: Date },
+	predicted_harvest: { type: Date },
+});
+
+const bedSchema = new Schema({
+	id: { type: ObjectId },
+	name: { type: String },
+	active_crops: [cropInstanceSchema],
+	past_crops: [cropInstanceSchema],
+	soil_type: { type: Enum },
+});
+
+const gardenSchema = new Schema({
+	id: { type: ObjectId },
+	name: { type: String },
+	beds: [bedSchema],
+});
+
+const locationSchema = new Schema({
+	user_id: { type: ObjectId, ref: 'User' },
+	name: { type: String },
+	loc: {
+		type: { type: String },
+		coordinates: { type: [Number] },
+		address: { type: String }
+	},
+	gardens: [gardenSchema],
+});
+
+const cropSchema = new Schema({
+	name: { type: String },
+	display_name: { type: String },
+	alternate_display: { type: String },
+	products: { type: [String] },
+	preferred_soil: { type: String },
+	preferred_climate: { type: String },
+});
+
+const companionshipMechanismSchema = new Schema({
+	description: { type: String },
+	type: { type: Enum },
+	compatibility: { type: Number },
+});
+
+const companionshipSchema = new Schema({
+	crop1: { type: ObjectId, ref: 'Crop' },
+	crop2: { type: ObjectId, ref: 'Crop' },
+	companionship_mechanisms: [companionshipMechanismSchema]
+});
 ```
 
 Common tasks
