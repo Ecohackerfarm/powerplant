@@ -2,6 +2,14 @@
 
 Optimize your garden plan, and learn about permaculture in the process! powerplant provides intelligent planting suggestions which maximize positive crop interaction for the mutual benefit of all your crops. It also helps you track the progress of your garden with planting schedules and customizable tasks.
 
+Status
+======
+
+Currently in very early stage. A good amount of research and specification work
+has been done but basic functionalities have not been implemented yet.
+
+[Read more about it.](https://wiki.ecohackerfarm.org/companion_planting)
+
 Setup
 =====
 
