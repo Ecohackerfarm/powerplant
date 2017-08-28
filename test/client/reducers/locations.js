@@ -92,7 +92,6 @@ describe('locations reducer', () => {
 			expect(changedLoc[0]).to.have.all.keys({ _id: myloc[0]._id, name: state.name, loc:locChange.loc});
 			expect(changedLoc[0]).not.to.equal(myloc);
 		});
-		it('TODO : behaviour if location id can not be found');
 	});
 	describe('DELETE_LOCATION', () => {
 		let newState;
@@ -106,7 +105,6 @@ describe('locations reducer', () => {
 			expect(newState).to.have.length(0);
 			expect(newState).not.to.equal(myloc);
 		});
-		it('TODO : behaviour if location id can not be found');
 	});
 	describe('LOGOUT', () => {
 		let newState;

@@ -15,13 +15,10 @@ export const locations = (state = defaultState, action) => {
 		case ADD_LOCATION:
 			return state.concat(action.location);
 		case EDIT_LOCATION: {
-			const index = state.findIndex(item => item._id === action.id);
-			const newLocation = Object.assign({}, state[index], action.changes);
-			return state.slice(0, index).concat(newLocation, state.slice(index + 1));
+			return state.map(loc => ((loc._id === action.id) ? Object.assign({}, loc, action.changes) : loc));
 		}
 		case DELETE_LOCATION: {
-			const index = state.findIndex(item => item._id === action.id);
-			return state.slice(0, index).concat(state.slice(index + 1));
+			return state.filter(loc => (loc._id !== action.id));
 		}
 		case LOGOUT:
 			return defaultState;
