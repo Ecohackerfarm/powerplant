@@ -354,64 +354,70 @@ Database structure is not complete yet and might need redesign. Once the new
 structure has been agreed upon and adopted, move it to the "Database structure"
 section above.
 
-- In the User document, having references to Location documents makes the
-  creation of a new location non-atomic because both the User and the Location
-  document have to be saved to the database. If one of these two operations
-  fail then the database would be left to an inconsistent state. Mongoose
-  doesn't have "transactions" so non-atomic updates should be handled manually.
-  Alternative to storing references would be to query Location documents by the
-  property Location.user_id.
-- It is plausible that multiple users will work on the same location, thus the
-  Location documents cannot be embedded to the User document.
-- Should the Location document embed the whole Location -> Garden -> Bed ->
-  CropInstance structure?
-  - Location document models the physical state of the location with gardens,
-    beds and crop instances. An instance of a crop can only be in one bed at
-    one time.
-  - In most use cases the client needs all of the Location -> Garden -> Bed ->
-    CropInstance data. Also for the offline functionality it makes sense to
-    fetch all of this data at once.
-  - Embedding (vs. storing references) would make updating atomic.
-  - When embedding there is no need to make queries based on the parent ID.
-  - Embedding loses the flexibility of accessing Garden, Bed and CropInstance
-    documents directly by an ID. It is plausible that direct access will be
-    needed, for example for sharing purposes. This can be solved by manually
-    generating a globally valid ID for the embedded documents.
-  - When embedding there is no need to store a reference to the parent document,
-    so there are no properties like Garden.location_id. If the parent reference
-    is later needed for example when directly accessing a Garden through the
-    HTTP API, the parent reference could be manually added to the returned
-    document.
-- The companionship model could be made more specific and scientific. Two plants
-  may have multiple ways or mechanisms in which they benefit from or are harmful
-  to each other. These mechanisms could be categorised. The Companionship
-  document would model this by having a list of companionship mechanisms and
-  each CompanionshipMechanism would have a type that puts the mechanism in a
-  generic category.
-  - A plant may attract or repel pests that are harmful to the other plant, it
-    may provide support, shade or windbreak, it may attract insects that help
-    with pollination, etc.
-  - The Crop document could have property "products" that tells what they
-    provide for human consumption. "Trap crops" that don't provide anything for
-    human consumption may be planted just to attract pests away from the other
-    crops.
-  - Allows the program to make more intelligent suggestions for the user.
-  - Increases the educational value.
-  - Does not necessarily mean that the UI has to be more complicated than with
-    a simpler model.
-  - Having the "compatibility" (Number, for example -1...3) property in
-    addition with "type" (Enum) allows the program to order companionship
-    mechanisms that have the same type.
-  - Each CompanionshipMechanism should have a human-readable description that is
-    specific to the given plant pair and may provide additional information.
-  - TODO: Companionship/CompanionshipMechanism could have references to
-    scientific research articles, informational websites, etc.
-  - The database has to be built by hand. We can of course start with incomplete
-    data.
-  - TODO: CropInstance: Properties predicted_transplant and predicted_harvest
-    could be moved (maybe with some transformation) to the generic Crop
-    document?
-
+- Having both User.locations (array of references to Location documents) and
+  Location.user_id makes the operation of creating a new location non-atomic
+  because both the User and the Location document have to be saved to the
+  database. If one of these two operations fail then the database would be left
+  to an inconsistent state. Mongoose doesn't have transactions so non-atomic
+  updates must be handled manually. This may be solved either by having only
+  the reference to the parent document (Location.user_id) or by embedding the
+  Location documents to the User document. If we have only Location.user_id
+  then the Location documents of a User can be found by
+  LocationModel.find({ user_id: User._id });
+  - Location should have a parent reference to User because multiple users may
+    work on the same location.
+  - Location should embed Garden and Garden should embed Bed documents because
+    their physical location is static.
+  - CropInstance documents should not be embedded to Bed because crops may be
+    transplanted.
+  - CropObservation documents should be embedded to CropInstance because they
+    are specific to one physical instance of a crop.
+- Embedding loses the flexibility of accessing a document directly by its ID.
+  Direct access may be needed for example for Garden documents for sharing
+  purposes. This may be solved by manually generating a globally valid ID for
+  the embedded documents.
+- CropObservation document is used to log state changes of a crop instance.
+  Each CropObservation document contains a date and properties that specify
+  the state change of the crop.
+  - The property bed_id can be used when the crop has been transplanted from
+    greenhouse to garden.
+  - The property growth_stage can be used to log phenological events and it
+    should be compatible with the BBCH scale. The event "crop is harvested"
+    maps to the phenological event of "fruits are ready".
+- WeatherObservation document is used for temperature and precipitation
+  observations. Each WeatherObservation document contains a date and a
+  location.
+  - Probably there are web services that provide both current and historical
+    weather data. Information could be combined from multiple services.
+- Combination of CropObservation and WeatherObservation data can be used to
+  predict growing seasons and harvest dates. Growing degree days (GDD) can be
+  used to predict harvest dates for a crop in different locations.
+  - All garden data should be open in the sense that it may be used to compute
+    impersonal results such as the global average of how many GDDs it takes to
+    grow a crop.
+- Companionship document is used to store information about how two plants may
+  benefit from or be harmful to each other. It contains a list of
+  CompanionshipMechanism documents and each of them specifies a particular
+  mechanism by which the plants work together.
+  - CompanionshipMechanism.type is the type of the mechanism. A plant may
+    attract or repel pests that are harmful to the other plant, it may provide
+    support, shade or windbreak, it may attract insects that help with
+    pollination, etc.
+  - CompanionshipMechanism.compatibility is a number that is used to specify
+    how well this mechanism works for the two plants.
+  - Combination of type and compatibility allows the program to make intelligent
+    suggestions especially when there are more than two plants in a bed.
+  - CompanionshipMechanism.description is a human-readable description of the
+    companionship mechanism that is specific to the given plant pair.
+  - TODO: Companionship/CompanionshipMechanism could have a property for
+    storing references to scientific publications, informational websites, etc.
+- Bed.environment_type can be used to specify if the bed is in greenhouse or
+  if it is outside in the garden.
+- Crop.products is used to specify what the crop produces for human
+  consumption. This can be used to detect "trap crops" that may not provide
+  anything for human consumption but are planted only to attract pests away
+  from the other crops. TODO: Rename to "function" or something else?
+  - TODO: Crop is not finished yet.
 ```
 const userSchema = new Schema({
 	username: { type: String },
@@ -419,25 +425,24 @@ const userSchema = new Schema({
 	password: { type: String },
 });
 
+const cropObservationSchema = new Schema({
+	date: { type: Date },
+	bed_id: { type: ObjectId, ref: 'Bed' },
+	growth_stage: { type: Enum },
+});
+
 const cropInstanceSchema = new Schema({
-	id: { type: ObjectId },
 	crop_id: { type: ObjectId, ref: 'Crop' },
-	planted_indoors: { type: Date },
-	planted_in_bed: { type: Date },
-	predicted_transplant: { type: Date },
-	predicted_harvest: { type: Date },
+	observations: [cropObservationSchema],
 });
 
 const bedSchema = new Schema({
-	id: { type: ObjectId },
 	name: { type: String },
-	active_crops: [cropInstanceSchema],
-	past_crops: [cropInstanceSchema],
+	environment_type: { type: Enum },
 	soil_type: { type: Enum },
 });
 
 const gardenSchema = new Schema({
-	id: { type: ObjectId },
 	name: { type: String },
 	beds: [bedSchema],
 });
@@ -469,9 +474,17 @@ const companionshipMechanismSchema = new Schema({
 });
 
 const companionshipSchema = new Schema({
-	crop1: { type: ObjectId, ref: 'Crop' },
-	crop2: { type: ObjectId, ref: 'Crop' },
+	crop1_id: { type: ObjectId, ref: 'Crop' },
+	crop2_id: { type: ObjectId, ref: 'Crop' },
 	companionship_mechanisms: [companionshipMechanismSchema]
+});
+
+const weatherObservationSchema = new Schema({
+	location_id: { type: ObjectId, ref: 'Location' },
+	date: { type: Date },
+	maximum_temperature: { type: Number },
+	minimum_temperature: { type: Number },
+	precipitation: { type: Number },
 });
 ```
 
