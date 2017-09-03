@@ -379,14 +379,22 @@ section above.
 - CropObservation document is used to log state changes of a crop instance.
   Each CropObservation document contains a date and properties that specify
   the state change of the crop.
-  - The property bed_id can be used when the crop has been transplanted from
+  - The property "bed_id" can be used when the crop has been transplanted from
     greenhouse to garden.
-  - The property growth_stage can be used to log phenological events and it
+  - The property "growth_stage" can be used to log phenological events and it
     should be compatible with the BBCH scale. The event "crop is harvested"
     maps to the phenological event of "fruits are ready".
+  - The property "damage" is a list of tags that specify a particular damage
+    that has occurred to the plant. Damage can be a nutritional deficiency,
+    a bacterial disease, a physical damage done by insects or animals, etc.
+  - The property "description" can be used to log unstructured textual
+    information.
+  - TODO: It should be possible to provide photos. For example when the user
+    doesn't know the reason/name for a disease, they could somehow share the
+    observation and get help from other users.
 - WeatherObservation document is used for temperature and precipitation
-  observations. Each WeatherObservation document contains a date and a
-  location.
+  observations. Each WeatherObservation document contains a date and geographic
+  coordinates.
   - Probably there are web services that provide both current and historical
     weather data. Information could be combined from multiple services.
 - Combination of CropObservation and WeatherObservation data can be used to
@@ -411,13 +419,30 @@ section above.
     companionship mechanism that is specific to the given plant pair.
   - TODO: Companionship/CompanionshipMechanism could have a property for
     storing references to scientific publications, informational websites, etc.
+  - TODO: Can the list of CompanionshipMechanism documents be replaced by a list
+    of tags, like in Crop.functions?
 - Bed.environment_type can be used to specify if the bed is in greenhouse or
   if it is outside in the garden.
-- Crop.products is used to specify what the crop produces for human
-  consumption. This can be used to detect "trap crops" that may not provide
-  anything for human consumption but are planted only to attract pests away
-  from the other crops. TODO: Rename to "function" or something else?
-  - TODO: Crop is not finished yet.
+- Crop document is used to specify the innate properties of a crop, in contrast
+  to the CropObservation document that is used to log events that are specific
+  to a particular environment.
+  - Crop.functions is a list of tags that specify the functional properties of
+    a crop. Functional properties specify how the plant directly interacts with
+    its environment, what the plant consumes from the soil, what it produces
+    (food and medicine for human and animal consumption, material for
+    composting), how it interacts with bacteria and insects. Permaculture is
+    more concerned about the functional properties than for example the
+    morphological properties of plants. For example the pea would have tags
+    "legume", "nitrogen fixation", "nitrogen fixation by Rhizobia". Alder is
+    also fixing nitrogen but it has a symbiotic relationship with another
+    bacteria: "nitrogen fixation", "nitrogen fixation by Frankia".
+    - There should be a predefined list of tags. Tags should not be invented by
+      users, at least not directly.
+  - The property "preferred_climate" can be calculated from CropObservation and
+    WeatherObservation data, so it can be left out.
+  - The property "preferred_soil" overlaps with Crop.functions.
+- TODO: Build initial lists for all the enums and tag collections.
+
 ```
 const userSchema = new Schema({
 	username: { type: String },
@@ -429,6 +454,8 @@ const cropObservationSchema = new Schema({
 	date: { type: Date },
 	bed_id: { type: ObjectId, ref: 'Bed' },
 	growth_stage: { type: Enum },
+	damage: { type: [Enum] },
+	description: { type: String },
 });
 
 const cropInstanceSchema = new Schema({
@@ -447,24 +474,23 @@ const gardenSchema = new Schema({
 	beds: [bedSchema],
 });
 
+const geoJsonPointSchema = new Schema({
+	type: { type: String, default: 'Point' },
+	coordinates: { type: [Number] }
+});
+
 const locationSchema = new Schema({
 	user_id: { type: ObjectId, ref: 'User' },
 	name: { type: String },
-	loc: {
-		type: { type: String },
-		coordinates: { type: [Number] },
-		address: { type: String }
-	},
+	address: { type: String },
+	coordinates: geoJsonPointSchema,
 	gardens: [gardenSchema],
 });
 
 const cropSchema = new Schema({
 	name: { type: String },
-	display_name: { type: String },
-	alternate_display: { type: String },
-	products: { type: [String] },
-	preferred_soil: { type: String },
-	preferred_climate: { type: String },
+	binomial_name: { type: String },
+	functions: { type: [Enum] },
 });
 
 const companionshipMechanismSchema = new Schema({
@@ -480,7 +506,7 @@ const companionshipSchema = new Schema({
 });
 
 const weatherObservationSchema = new Schema({
-	location_id: { type: ObjectId, ref: 'Location' },
+	coordinates: geoJsonPointSchema,
 	date: { type: Date },
 	maximum_temperature: { type: Number },
 	minimum_temperature: { type: Number },
