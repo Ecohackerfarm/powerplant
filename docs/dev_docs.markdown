@@ -372,10 +372,8 @@ section above.
     transplanted.
   - CropObservation documents should be embedded to CropInstance because they
     are specific to one physical instance of a crop.
-- Embedding loses the flexibility of accessing a document directly by its ID.
-  Direct access may be needed for example for Garden documents for sharing
-  purposes. This may be solved by manually generating a globally valid ID for
-  the embedded documents.
+  - Mongoose generates IDs also for embedded documents (subdocuments). Good for
+    accessing them directly.
 - CropObservation document is used to log state changes of a crop instance.
   Each CropObservation document contains a date and properties that specify
   the state change of the crop.
@@ -384,14 +382,14 @@ section above.
   - The property "growth_stage" can be used to log phenological events and it
     should be compatible with the BBCH scale. The event "crop is harvested"
     maps to the phenological event of "fruits are ready".
-  - The property "damage" is a list of tags that specify a particular damage
-    that has occurred to the plant. Damage can be a nutritional deficiency,
-    a bacterial disease, a physical damage done by insects or animals, etc.
+  - The property "damage_type" is the type of the damage that has occurred to
+    the plant. Damage can be a nutritional deficiency, a bacterial disease,
+    a physical damage done by insects or animals, etc.
   - The property "description" can be used to log unstructured textual
     information.
-  - TODO: It should be possible to provide photos. For example when the user
-    doesn't know the reason/name for a disease, they could somehow share the
-    observation and get help from other users.
+  - FUTURE-TODO: It should be possible to provide photos. For example when the
+    user doesn't know the reason/name for a disease, they could somehow share
+    the observation and get help from other users.
 - WeatherObservation document is used for temperature and precipitation
   observations. Each WeatherObservation document contains a date and geographic
   coordinates.
@@ -416,11 +414,11 @@ section above.
   - Combination of type and compatibility allows the program to make intelligent
     suggestions especially when there are more than two plants in a bed.
   - CompanionshipMechanism.description is a human-readable description of the
-    companionship mechanism that is specific to the given plant pair.
-  - TODO: Companionship/CompanionshipMechanism could have a property for
-    storing references to scientific publications, informational websites, etc.
-  - TODO: Can the list of CompanionshipMechanism documents be replaced by a list
-    of tags, like in Crop.functions?
+    companionship mechanism that is specific to the given plant pair. TODO: Fix
+    some conventions for this, should there be something special in the format,
+    to use or not to use binomial names, etc.
+  - TODO: Fix the format for references. Should be easy to get the PDF from
+    Sci-Hub.
 - Bed.environment_type can be used to specify if the bed is in greenhouse or
   if it is outside in the garden.
 - Crop document is used to specify the innate properties of a crop, in contrast
@@ -430,18 +428,26 @@ section above.
     a crop. Functional properties specify how the plant directly interacts with
     its environment, what the plant consumes from the soil, what it produces
     (food and medicine for human and animal consumption, material for
-    composting), how it interacts with bacteria and insects. Permaculture is
-    more concerned about the functional properties than for example the
-    morphological properties of plants. For example the pea would have tags
-    "legume", "nitrogen fixation", "nitrogen fixation by Rhizobia". Alder is
-    also fixing nitrogen but it has a symbiotic relationship with another
-    bacteria: "nitrogen fixation", "nitrogen fixation by Frankia".
-    - There should be a predefined list of tags. Tags should not be invented by
-      users, at least not directly.
+    composting), how it interacts with bacteria and insects. Internally the
+    program has a tree structure and each tag corresponds to a node in this
+    tree, allowing the program to select plants from a more specific/generic
+    functional group. In the database only the most specific tag (leaf nodes)
+    of each functional group is needed.
+    - Tag "mycorrhizal" specify that the plant is able to form mycorrhizal
+      associations. Most plants are mycorrhizal, and all mycorrhizal plants
+      are also companion plants because the fungi can connect with multiple
+      plants. The Companionship document is still needed to specify how
+      "compatible" the two plants are for forming a mycorrhizal network.
+      - The program could suggest how to treat beds without digging, to plant
+        some trees, and how to do mycorrhizal inoculation.
   - The property "preferred_climate" can be calculated from CropObservation and
     WeatherObservation data, so it can be left out.
   - The property "preferred_soil" overlaps with Crop.functions.
-- TODO: Build initial lists for all the enums and tag collections.
+- TODO: To be able to select good companion plants the program should know
+  which pests are living in the environment. Location/GardenObservation
+  document that is used to log which insects/pests live in the garden. For now
+  the data could be hard-coded for a few different climates/environments.
+- TODO: Build a sketch database with all the needed features.
 
 ```
 const userSchema = new Schema({
@@ -454,7 +460,7 @@ const cropObservationSchema = new Schema({
 	date: { type: Date },
 	bed_id: { type: ObjectId, ref: 'Bed' },
 	growth_stage: { type: Enum },
-	damage: { type: [Enum] },
+	damage_type: { type: Enum },
 	description: { type: String },
 });
 
@@ -497,6 +503,7 @@ const companionshipMechanismSchema = new Schema({
 	description: { type: String },
 	type: { type: Enum },
 	compatibility: { type: Number },
+	references: { type: [String] }
 });
 
 const companionshipSchema = new Schema({
@@ -512,6 +519,162 @@ const weatherObservationSchema = new Schema({
 	minimum_temperature: { type: Number },
 	precipitation: { type: Number },
 });
+```
+
+```
+corn = {
+  name: "Corn",
+  binomial_name: "Zea mays",
+  functions: ["mycorrhizal"]
+};
+
+tomato = {
+  name: "Tomato",
+  binomial_name: "Solanum lycopersicum",
+  functions: ["glandular hair", "mycorrhizal"]
+};
+
+ornamentalTobacco = {
+  name: "Ornamental tobacco",
+  binomial_name: "Nicotiana alata",
+  functions: ["glandular hair", "mycorrhizal"]
+};
+
+alfalfa = {
+  name: "Alfalfa",
+  binomial_name: "Medicago sativa",
+  functions: ["mycorrhizal"]
+};
+
+dandelion = {
+  name: "Dandelion",
+  binomial_name: "Taraxacum officinale",
+  functions: ["mycorrhizal"]
+};
+
+onion = {
+  name: "Onion",
+  binomial_name: "",
+  functions: ["mycorrhizal"]
+};
+
+buckwheat = {
+  name: "Buckwheat",
+  binomial_name: "Fagopyrum esculentum",
+  functions: ["nectar"]
+};
+
+cornflower = {
+  name: "Cornflower",
+  binomial_name: "Centaurea cyanus",
+  functions: ["nectar", "mycorrhizal"]
+};
+
+vetch = {
+  name: "Vetch",
+  binomial_name: "Vicia sativa",
+  functions: ["nectar", "nitrogen fixation", "nitrogen fixation by Rhizobia", "mycorrhizal"]
+};
+
+cabbage = {
+  name: "Cabbage",
+  binomial_name: "Brassica oleracea",
+  functions: []
+};
+
+pea = {
+  name: "Pea",
+  binomial_name: "Pisum sativum",
+  functions: ["nitrogen fixation", "nitrogen fixation by Rhizobia", "mycorrhizal"]
+};
+
+alder = {
+  name: "Alder",
+  binomial_name: "Alnus glutinosa",
+  functions: ["nitrogen fixation", "nitrogen fixation by Frankia", "mycorrhizal"]
+};
+
+cornAndTomato = {
+  crop1_id: corn,
+  crop2_id: tomato,
+  companionship_mechanism: [
+    {
+      description: "Tomato attracts Coleomegilla maculata which feeds on Helicoverpa zea" 
+                 + " and therefore prevents H. zea to feed on corn. C. maculata prefers" 
+                 + " to lay eggs in general on plants that have glandular hair and in" 
+                 + " particular on tomato.",
+      type: "attract pest predator",
+      compatibility: 2,
+      references: [
+        "Selection and Evaluation of a Companion Plant to Indirectly Augment Densities of Coleomegilla maculata (Coleoptera: Coccinellidae) in Sweet Corn",
+      ]
+    }
+  ]
+};
+
+cornAndOrnamentalTobacco = {
+  crop1_id: corn,
+  crop2_id: ornamentalTobacco
+  companionship_mechanism: [
+    {
+      description: "Ornamental tobacco attracts Coleomegilla maculata which feeds on" 
+                 + " Helicoverpa zea and therefore prevents H. zea to feed on corn." 
+                 + " C. maculata prefers to lay eggs in general on plants that have" 
+                 + " glandular hair and in particular on ornamental tobacco.",
+      type: "attract pest predator",
+      compatibility: 3,
+      references: [
+        "Selection and Evaluation of a Companion Plant to Indirectly Augment Densities of Coleomegilla maculata (Coleoptera: Coccinellidae) in Sweet Corn",
+      ]
+    },
+    {
+      description: "Corn and ornamental tobacco are both mycorrhizal.",
+      type: "mycorrhizal",
+      compatibility: 3,
+      references: []
+    }
+  ]
+};
+
+alfalfaAndDandelion = {
+  crop1_id: alfalfa,
+  crop2_id: dandelion,
+  companionship_mechanism: [
+    {
+      description: "Dandelion attracts Coleomegilla maculata which feeds on Acyrthosiphon" 
+                 + " pisum and therefore prevents A. pisum to feed on alfalfa. C. maculata" 
+                 + " might be attracted to the pollen of dandelion.",
+      type: "attract pest predator",
+      compatibility: 3,
+      references: [
+        "Coleomegilla maculata (Coleoptera: Coccinellidae) predation on pea aphids promoted by proximity to dandelions"
+      ]
+    },
+    {
+      description: "Alfalfa and dandelion are both mycorrhizal.",
+      type: "mycorrhizal",
+      compatibility: 3,
+      references: []
+    },
+  ]
+};
+
+cabbageAndBuckwheat = {
+  crop1_id: cabbage,
+  crop2_id: buckwheat,
+  companionship_mechanism: [
+    {
+      description: "Buckwheat, especially its nectar, attracts Microplitis mediator"
+                 + " which also feeds on Mamestra brassicae and therefore prevents"
+                 + " M. brassicae to feed on cabbage.",
+      type: "attract pest predator",
+      compatibility: 3,
+      references: [
+        "Biodiversity enhancement and utilization – Pest control in brassicas"
+      ]
+    }
+  ]
+};
 ```
 
 Common tasks
