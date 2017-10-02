@@ -2,65 +2,68 @@ import { Router } from 'express';
 import User from '/server/models/user';
 import Helper from '/server/middleware/data-validation';
 import validate from '/shared/validation/userValidation';
-import { isAuthenticated, checkAccessForUserIds } from '/server/middleware/authentication';
-import { setIds, assignSingleDocument, renderResult } from '/server/middleware';
+import { doGet, doPut, doDelete } from '/server/middleware';
+import { scheduler } from '/server';
+import { ReadWriteTask } from 'async-task-schedulers';
+import { fetchDocumentById, getDocumentById } from '/server/middleware/data-validation';
 
 const router = Router();
 
 // all routes have the base url /api/users
 
 router.route('/')
-	.post(
-		// first, make sure data is valid (not checking for conflicts)
-		(req, res, next) => {
+	.post((req, res, next) => {
+		const asyncFunction = async function(req, res, next) {
 			const { errors, isValid } = validate(req.body);
-			if (isValid) {
-				next();
-			} else {
-				next({ status: 400, message: 'Invalid user data', errors });
+			if (!isValid) {
+				return next({ status: 400, message: 'Invalid user data', errors });
 			}
-		},
-		(req, res, next) => {
-			new User(req.body).save((err, user) => {
-				if (!err) {
-					res.status(201).json({ id: user._id });
-				} else {
-					if (err.name === 'ValidationError') {
-						const errors = {};
-						for (let field in err.errors) {
-							errors[field] = 'This ' + field + ' is taken';
-						}
-						next({ status: 409, errors }); //ooh baby that object spread
-					} else {
-						next({ status: 400, message: err.message });
+			
+			let user;
+			try {
+				user = await new User(req.body).save();
+			} catch (err) {
+				if (err.name === 'ValidationError') {
+					const errors = {};
+					for (let field in err.errors) {
+						errors[field] = 'This ' + field + ' is taken';
 					}
+					next({ status: 409, errors }); //ooh baby that object spread
+				} else {
+					next({ status: 400, message: err.message });
 				}
-			});
-		}
-	);
+				return;
+			}
+			
+			res.status(201).json({ id: user._id });
+		};
+		scheduler.push(new ReadWriteTask(asyncFunction, [req, res, next], true));
+	});
 
 router.route('/:userId')
-	.get(
-		setIds(req => [req.params.userId]),
-		Helper.idValidator,
-		Helper.fetchUsers,
-		assignSingleDocument('user', 'users'),
-		renderResult('user')
-	);
+	.get((req, res, next) => {
+		const asyncFunction = async function(req, res, next) {
+			let user;
+			if (!(user = await fetchDocumentById(User, req.params.userId, '', next))) {
+				return;
+			}
+			
+			res.status(200).json(user);
+		};
+		scheduler.push(new ReadWriteTask(asyncFunction, [req, res, next], false));
+	});
 
 router.route('/:userId/locations')
-	.get(
-		isAuthenticated('Authentication required to view locations'),
-		setIds(req => [req.params.userId]),
-		Helper.idValidator,
-		Helper.checkUsers,
-		checkAccessForUserIds("You may not view another user's locations"),
-		(req, res, next) => {
-			const [id] = req.ids;
-			User.findById(id).populate('locations').exec((err, match) => {
-				res.json(match.locations);
-			});
-		}
-	);
+	.get((req, res, next) => {
+		const asyncFunction = async function(req, res, next) {
+			let user;
+			if (!(user = await getDocumentById(req, User, req.params.userId, 'locations', next))) {
+				return;
+			}
+			
+			res.status(200).json(user.locations);
+		};
+		scheduler.push(new ReadWriteTask(asyncFunction, [req, res, next], false));
+	});
 
 export default router;

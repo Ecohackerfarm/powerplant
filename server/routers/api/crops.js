@@ -2,113 +2,113 @@ import express from 'express';
 import Crop from '/server/models/crop.js';
 import Companionship from '/server/models/companionship.js';
 import Helper from '/server/middleware/data-validation';
-import { setIds, assignSingleDocument, renderResult, updateDocument, deleteDocument } from '/server/middleware';
+import { doGet, doPut, doDelete } from '/server/middleware';
+import { scheduler } from '/server';
+import { ReadWriteTask } from 'async-task-schedulers';
+import { fetchDocumentsById, fetchDocumentById, getDocumentById } from '/server/middleware/data-validation';
 
 const router = express.Router();
 
 // All routes have the base route /crops
 
 router.route('/')
-	.get(
-		(req, res, next) => {
-			// validate req
+	.get((req, res, next) => {
+		const asyncFunction = async function(req, res, next) {
+			let crops;
 			if (typeof req.query.name !== 'undefined') {
 				const cropName = Helper.escapeRegEx(req.query.name);
-				Crop.find().byName(cropName).exec((err, crops) => {
-					if (err) {
-						next({ status: 500, message: 'Error fetching crops' });
-					} else {
-						res.json(crops);
-					}
-				});
+				try {
+					crops = await Crop.find().byName(cropName).exec();
+				} catch (exception) {
+					return next({ status: 500, message: 'Error fetching crops' });
+				}
 			} else {
-				// if no search query, go to next
-				next();
+				try {
+					crops = await Crop.find({}).exec();
+				} catch (exception) {
+					return next({ status: 500, message: 'Error fetching crops' });
+				}
 			}
-		}
-	).get(
-		(req, res, next) => {
-			Crop.find({}, (err, crops) => {
-				if (err) {
-					next({ status: 500, message: 'Error fetching crops', err: err });
-				} else {
-					res.json(crops);
-				}
-			});
-		}
-	).post(
-		(req, res, next) => {
-			new Crop(req.body).save((err, crop) => {
-				if (err) {
-					next({ status: 400, message: err.message });
-				} else {
-					res.location('/api/crops/' + crop._id);
-					res.status(201).json(crop);
-				}
-			});
-		}
-	);
+			res.json(crops);
+		};
+		scheduler.push(new ReadWriteTask(asyncFunction, [req, res, next], false));
+	}).post((req, res, next) => {
+		const asyncFunction = async function(req, res, next) {
+			let crop;
+			try {
+				crop = await new Crop(req.body).save();
+			} catch (exception) {
+				return next({ status: 400, message: 'Error saving crop' });
+			}
+			
+			res.location('/api/crops/' + crop._id);
+			res.status(201).json(crop);
+		};
+		scheduler.push(new ReadWriteTask(asyncFunction, [req, res, next], true));
+	});
 
 router.route('/:cropId')
-	.all(
-		// first validate the id by extracting and using helper function
-		setIds(req => [req.params.cropId]),
-		Helper.idValidator,
-		Helper.fetchCrops,
-		assignSingleDocument('crop', 'crops')
-	).get(
-		renderResult('crop')
-	).put(
-		updateDocument('crop')
-	).delete(
-		(req, res, next) => {
-			Companionship.find().byCrop(req.params.cropId).remove().exec(err => {
-				if (err) {
-					next({ status: 500, message: err.message });
-				} else {
-					next();
-				}
-			});
-		},
-		deleteDocument('crop')
-	);
+	.get((req, res, next) => {
+		scheduler.push(new ReadWriteTask(doGet, [req, res, next, Crop, req.params.cropId], false));
+	}).put((req, res, next) => {
+		scheduler.push(new ReadWriteTask(doPut, [req, res, next, Crop, req.params.cropId], true));
+	}).delete((req, res, next) => {
+		scheduler.push(new ReadWriteTask(doDelete, [req, res, next, Crop, req.params.cropId], true));
+	});
 
 // all associated companionship objects of the given cropid
 router.route('/:cropId/companionships')
-	.all(
-		setIds(req => [req.params.cropId]),
-		Helper.idValidator,
-		Helper.fetchCropsWithCompanionships
-	).get(
-		(req, res, next) => {
-			res.json(req.crops[0].companionships);
-		}
-	);
+	.get((req, res, next) => {
+		const asyncFunction = async function(req, res, next) {
+			let cropId = req.params.cropId;
+			if (!Helper.idValidator([cropId], next)) {
+				return;
+			}
+			
+			let crop;
+			try {
+				crop = await fetchDocumentById(Crop, cropId, 'companionships', next);
+			} catch (exception) {
+				return next({ status: 404, message: 'Error' });
+			}
+			
+			res.json(crop.companionships);
+		};
+		scheduler.push(new ReadWriteTask(asyncFunction, [req, res, next], false));
+	});
 
 // fetching a Companionship object given crop ids
 // TODO: think about renaming this to make more sense
 router.route('/:cropId1/companionships/:cropId2')
-	.all(
-		setIds(req => [req.params.cropId1, req.params.cropId2]),
-		Helper.idValidator,
-		Helper.checkCrops
-	).get(
-		(req, res, next) => {
-			Companionship.find().byCrop(req.ids[0], req.ids[1]).exec((err, matches) => {
-				if (err) {
-					next({ status: 500, message: err.message });
-				} else if (matches.length === 0) {
-					// both crops exist, they are just neutral about each other
-					res.status(204).json(); // 204 = intentionally not sending a response
-				} else {
-					res
-						.status(303)
-						.location('/api/companionships/' + matches[0]._id)
-						.send(); // see other
-					// in a browser, this will result in a redirect
-				}
-			});
-		}
-	);
+	.get((req, res, next) => {
+		const asyncFunction = async function(req, res, next) {
+			let ids = [req.params.cropId1, req.params.cropId2];
+			if (!Helper.idValidator(ids, next)) {
+				return;
+			}
+			
+			let crops;
+			try {
+				crops = await fetchDocumentsById(Crop, ids, 'companionships', next);
+			} catch (exception) {
+				return next({ status: 404, message: 'Error' });
+			}
+			
+			let companionships;
+			try {
+				companionships = await Companionship.find().byCrop(ids[0], ids[1]).exec();
+			} catch (exception) {
+				return next({ status: 500, message: 'Error' });
+			}
+			
+			if (companionships.length === 0) {
+				// both crops exist, they are just neutral about each other
+				res.status(204).json(); // 204 = intentionally not sending a response
+			} else {
+				res.status(303).location('/api/companionships/' + companionships[0]._id).send();
+			}
+		};
+		scheduler.push(new ReadWriteTask(asyncFunction, [req, res, next], false));
+	});
 
 export default router;

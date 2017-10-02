@@ -2,103 +2,116 @@ import express from 'express';
 import Companionship from '/server/models/companionship';
 import Crop from '/server/models/crop';
 import Helper from '/server/middleware/data-validation';
-import { setIds, assignSingleDocument, updateDocument, deleteDocument, renderResult } from '/server/middleware';
+import { doGet, doPut, doDelete } from '/server/middleware';
+import { scheduler } from '/server';
+import { ReadWriteTask } from 'async-task-schedulers';
+import { fetchDocumentsById } from '/server/middleware/data-validation';
 
 const router = express.Router();
 
 // All routes have the base route: /companionships
 
 router.route('/')
-	.get(
-		(req, res) => {
-			// get all combinations - this is REALLY slow (over 2s) but it's also a huge request
-			// could consider pagination - return 50 results and a link to the next 50
-			Companionship.find({}, (err, result) => { res.json(result); });
-		}
-	).post(
-		setIds(req => [req.body.crop1, req.body.crop2]),
-		Helper.idValidator,
-		Helper.checkCrops,
-		(req, res, next) => {
-			// This should be the ONLY route to add a new combination
-			// first need to check if it exists already
-			Companionship.find().byCrop(req.ids[0], req.ids[1]).exec((err, matches) => {
-				if (err) {
-					next({ status: 500, message: err.message });
-				} else {
-					if (matches.length > 0) {
-						res
-							.status(303)
-							.location('/api/companionships/' + matches[0])
-							.json();
-					} else {
-						new Companionship(req.body).save((err, combo) => {
-							if (err) {
-								next({ status: 400, message: err.message });
-							} else {
-								Crop.findByIdAndUpdate(combo.crop1, {
-									$push: { companionships: combo._id }
-								});
-								if (!combo.crop1.equals(combo.crop2)) {
-									Crop.findByIdAndUpdate(combo.crop2, {
-										$push: { companionships: combo._id }
-									});
-								}
-								res.location('/api/companionships/' + combo._id);
-								res.status(201).json(combo);
-							}
-						});
-					}
+	.get((req, res) => {
+		const asyncFunction = async function(req, res) {
+			let result;
+			try {
+				// get all combinations - this is REALLY slow (over 2s) but it's also a huge request
+				// could consider pagination - return 50 results and a link to the next 50
+				result = await Companionship.find({}).exec();
+			} catch (exception) {
+			}
+			
+			res.json(result);
+		};
+		scheduler.push(new ReadWriteTask(asyncFunction, [req, res], false));
+	}).post((req, res, next) => {
+		const asyncFunction = async function(req, res, next) {
+			let cropIds = [req.body.crop1, req.body.crop2];
+			if (!Helper.idValidator(cropIds, next)) {
+				return;
+			}
+			
+			let crops;
+			try {
+				crops = await fetchDocumentsById(Crop, cropIds, '', next);
+				let foundIds = crops.map((crop) => (crop._id.toString()));
+				console.log(foundIds);
+				console.log(cropIds);
+				let allFound = cropIds.every((id) => foundIds.includes(id));
+				if (!allFound) {
+					throw "error";
 				}
-			});
-		}
-	);
+			} catch(exception) {
+				return next({ status: 404, message: 'Document was not found' });
+			}
+			
+			let companionships;
+			try {
+				companionships = await Companionship.find().byCrop(cropIds).exec();
+			} catch (exception) {
+				return next({ status: 500, message: 'Error' });
+			}
+			
+			if (companionships.length > 0) {
+				return res.status(303).location('/api/companionships/' + companionships[0]).json();
+			}
+			
+			let companionship;
+			try {
+				companionship = await new Companionship(req.body).save();
+			} catch (exception) {
+				return next({ status: 400, message: 'Error' });
+			}
+			
+			try {
+				await Crop.findByIdAndUpdate(companionship.crop1, { $push: { companionships: companionship._id } });
+				if (!companionship.crop1.equals(companionship.crop2)) {
+					await Crop.findByIdAndUpdate(companionship.crop2, { $push: { companionships: companionship._id } });
+				}
+			} catch (exception) {
+				return next({ status: 500, message: 'Error' });
+			}
+			
+			res.location('/api/companionships/' + companionship._id);
+			res.status(201).json(companionship);
+		};
+		scheduler.push(new ReadWriteTask(asyncFunction, [req, res, next], true));
+	});
 
 router.route('/scores')
-	.all(
-		setIds(req => ((req.query.id || '').split(','))),
-		Helper.idValidator,
-		Helper.fetchCropsWithCompanionships
-	).get(
-		(req, res, next) => {
-			const crops = req.crops;
-			const companionships = crops.map(crop => crop.companionships);
-			const ids = req.ids;
-			const scores = Helper.getCompanionshipScores(companionships, ids);
-			res.json(scores);
-		}
-	);
+	.get((req, res, next) => {
+		const asyncFunction = async function(req, res, next) {
+			let ids = (req.query.id || '').split(',');
+			if (!Helper.idValidator(ids, next)) {
+				return;
+			}
+			
+			let crops;
+			try {
+				crops = await fetchDocumentsById(Crop, ids, 'companionships', next);
+				let foundIds = crops.map((crop) => (crop._id.toString()));
+				let allFound = ids.every((id) => foundIds.includes(id));
+				if (!allFound) {
+					throw "error";
+				}
+			} catch (exception) {
+				return next({ status: 404, message: 'Document was not found' });
+			}
+			
+			let companionships = crops.map(crop => crop.companionships);
+			res.json(Helper.getCompanionshipScores(companionships, ids));
+		};
+		scheduler.push(new ReadWriteTask(asyncFunction, [req, res, next], false));
+	});
 
 router.route('/:id')
-	.all(
-		setIds(req => [req.params.id]),
-		Helper.idValidator, // validate id (sends 400 if malformed id)
-		Helper.fetchCompanionships, // fetch item (sends 404 if nonexistent)
-		assignSingleDocument('companionship', 'companionships')
-	).get(
-		renderResult('companionship')
-	).put(
-		(req, res, next) => {
-			// TODO: validate crop1 and crop2
-			const c1Exists = req.body.hasOwnProperty('crop1');
-			const c2Exists = req.body.hasOwnProperty('crop2');
-			req.ids = [];
-			if (c1Exists) {
-				req.ids.push(req.body.crop1);
-			}
-			if (c2Exists) {
-				req.ids.push(req.body.crop2);
-			}
-			if (!c1Exists && !c2Exists) {
-				delete req.ids;
-			}
-			next();
-		},
-		Helper.idValidator,
-		Helper.checkCrops,
-		updateDocument('companionship')
-	).delete(
-		deleteDocument('companionship')
-	);
+	.get((req, res, next) => {
+		scheduler.push(new ReadWriteTask(doGet, [req, res, next, Companionship, req.params.id], false));
+	}).put((req, res, next) => {
+		scheduler.push(new ReadWriteTask(doPut, [req, res, next, Companionship, req.params.id], true));
+	}).delete((req, res, next) => {
+		scheduler.push(new ReadWriteTask(doDelete, [req, res, next, Companionship, req.params.id], true));
+	});
 
 export default router;

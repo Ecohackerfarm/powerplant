@@ -43,78 +43,48 @@ export const authenticate = (req, res, next) => {
 };
 
 /**
- * Returns an Express middleware function that checks if the request has been
- * authenticated.
+ * Check if the request has been authenticated.
  *
- * @param {String} message Error message to go with HTTP 401.
- * @return {Function}
- */
-export function isAuthenticated(message) {
-	return ((req, res, next) => {
-		if (!req.user) {
-			next({ status: 401, message: message });
-		} else {
-			next();
-		}
-	});
-};
-
-/**
- * Given an array of user IDs, check if they match the current user.
- *
- * @param {Object} req
- * @param {Function} next
- * @param {String[]} userIds
- * @param {String} message
- */
-function checkAccessForUserIdsInternal(req, next, userIds, message) {
-	var hasAccess = userIds.every(id => req.user._id.equals(id));
-	if (hasAccess) {
-		next();
-	} else {
-		next({ status: 403, message: message });
-	}
-}
-
-/**
- * Returns an Express middleware function that checks if the current user
- * matches the user IDs in req.users.
- *
- * @param {String} message Error message to go with HTTP 403
- * @return {Function}
- */
-export function checkAccessForUserIds(message) {
-	return (req, res, next) => {
-		checkAccessForUserIdsInternal(req, next, req.ids, message);
-	};
-};
-
-/**
- * Returns an Express middleware function that checks if the current user has
- * access to the given documents.
- *
- * @param {String} documentsProperty
- * @param {String} message Error message to go with HTTP 403
- * @return {Function}
- */
-export function checkAccess(documentsProperty, message) {
-	return (req, res, next) => {
-		var userIds = req[documentsProperty].map(document => document.user);
-		checkAccessForUserIdsInternal(req, next, userIds, message);
-	};
-};
-
-/**
- * Resets the user property of the body object to the authorized user. Prevents
- * the user from saving documents in the name of another user. The user must
- * be authorized before calling this function.
- *
- * @function
  * @param {Object} req Request object
- * @param {Object} res Response object
- * @param {Function} next
+ * @param {String} message Error message to go with HTTP 401.
+ * @return {boolean} True if authenticated
  */
-export const resetToAuthorizedUser = (req, res, next) => {
-	req.body.user = req.user._id;
-	next();
+export function isAuthenticated(req, next) {
+	if (!req.user) {
+		next({ status: 401, message: 'Authentication required' });
+		return false;
+	}
+	
+	return true;
+};
+
+/**
+ * Check if the current user matches the given user IDs.
+ *
+ * @param {String} userId ID of current user
+ * @param {String[]} User IDs
+ * @param {String} message Error message to go with HTTP 403
+ * @return {boolean} True if matches with all given IDs
+ */
+export function checkAccessForUserIds(userId, userIds, next) {
+	let hasAccess = userIds.every(id => userId.equals(id));
+	if (!hasAccess) {
+		next({ status: 403, message: 'No permission to access document' });
+		return false;
+	}
+	
+	return true;
+};
+
+/**
+ * Check if the current user has access to the given documents.
+ *
+ * @param {String} userId
+ * @param {String[]} documents
+ * @param {Function} next
+ * @return {boolean} True if user has access
+ */
+export function checkAccess(userId, documents, next) {
+	let userIds = documents.map(document => document.user);
+	return checkAccessForUserIds(userId, userIds, next);
 };

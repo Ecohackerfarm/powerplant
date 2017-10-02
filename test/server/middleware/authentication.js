@@ -13,7 +13,7 @@ function assertIsAuthenticated(req, expectedAuthenticated) {
 			expect(err).to.have.property('status').and.to.equal(401);
 		}
 	});
-	isAuthenticated('Authentication required')(req, res, next);
+	isAuthenticated(req, next);
 }
 
 describe('authentication middleware', () => {

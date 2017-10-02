@@ -4,100 +4,88 @@
  * @memberof server
  */
 
+import { getDocumentById } from './data-validation.js';
+import Crop from '/server/models/crop';
+import Companionship from '/server/models/companionship';
+
 /**
- * Returns an Express middleware function for setting the req.ids property that
- * is used to carry document IDs to other middleware functions.
+ * Does the GET operation of fetching a document by it's ID.
  *
- * @see data-validation.idValidator
- *
- * @param {Function} getIds Forms the ID array given the req object
- * @return {Function}
+ * @param {Object} req Request object
+ * @param {Object} res Response object
+ * @param {Function} next
+ * @param {Model} model
+ * @param {String} id
  */
-export function setIds(getIds) {
-	return (req, res, next) => {
-		req.ids = getIds(req);
-		next();
-	};
+export async function doGet(req, res, next, model, id) {
+	let path = (model === Companionship) ? 'crop1 crop2' : '';
+	
+	let document;
+	if (!(document = await getDocumentById(req, model, id, path, next))) {
+		return;
+	}
+	
+	res.status(200).json(document);
 }
 
 /**
- * Returns an Express middleware function for assigning the single document
- * from the given document array to the given property, to carry it to other
- * middleware functions.
+ * Does the PUT operation of updating a document.
  *
- * @param {String} documentProperty
- * @param {String} documentArrayProperty
- * @return {Function}
+ * @param {Object} req Request object
+ * @param {Object} res Response object
+ * @param {Function} next
+ * @param {Model} model
+ * @param {String} id
  */
-export function assignSingleDocument(documentProperty, documentArrayProperty) {
-	return (req, res, next) => {
-		req[documentProperty] = req[documentArrayProperty][0];
-		next();
-	};
+export async function doPut(req, res, next, model, id) {
+	let document;
+	if (!(document = await getDocumentById(req, model, id, '', next))) {
+		return;
+	}
+	
+	delete req.body._id; // Don't try to update ID
+	Object.assign(document, req.body);
+	try {
+		document = await document.save();
+	} catch (exception) {
+		return next({ status: 400, message: 'Could not update document' });
+	}
+	
+	res.status(200).json(document);
 }
 
 /**
- * Returns an Express middleware function that updates the given document
- * to the database. The document must already exist before calling this
- * function.
+ * Does the DELETE operation of deleting a document.
  *
- * @param {String} documentProperty
- * @return {Function}
+ * @param {Object} req Request object
+ * @param {Object} res Response object
+ * @param {Function} next
+ * @param {Model} model
+ * @param {String} id
  */
-export function updateDocument(documentProperty) {
-	return (req, res, next) => {
-		const document = req[documentProperty];
-		delete req.body._id; // Don't try to update ID
-		Object.assign(document, req.body);
-		/*
-		 * TODO Create more tests to specify the functioning. Another way to update
-		 * a document: Model.findByIdAndUpdate(id, update, options, callback).
-		 */
-		document.save((err, newDocument) => {
-			if (err) {
-				console.log('Got errors');
-				console.log(err);
-				next({ status: 400, errors: err.errors, message: err._message });
-			} else {
-				res.status(200).json(newDocument);
-			}
-		});
-	};
-}
-
-/**
- * Returns an Express middleware function that deletes the given document
- * from the database.
- *
- * @param {String} documentProperty
- * @param {Function}
- */
-export function deleteDocument(documentProperty) {
-	return (req, res, next) => {
-		const document = req[documentProperty];
-		document.remove(err => {
-			if (err) {
-				next({ status: 400, errors: err.errors, message: err._message });
-			} else {
-				/*
-				 * RFC 2616: A successful response SHOULD be 204 (No Content) if the
-				 * action has been enacted but the response does not include an entity.
-				 */
-				res.status(204).json();
-			}
-		});
-	};
-}
-
-/**
- * Returns an Express middleware function that renders the result object when
- * given the document to be rendered.
- *
- * @param {String} documentProperty
- * @return {Function}
- */
-export function renderResult(documentProperty) {
-	return (req, res, next) => {
-		res.status(200).json(req[documentProperty]);
-	};
+export async function doDelete(req, res, next, model, id) {
+	let document;
+	if (!(document = await getDocumentById(req, model, id, '', next))) {
+		return;
+	}
+	
+	if (model === Crop) {
+		try {
+			await Companionship.find().byCrop(id).remove();
+		} catch (exception) {
+			return next({ status: 500, message: 'Error' });
+		}
+	}
+	
+	try {
+		await document.remove();
+	} catch (exception) {
+		return next({ status: 400, message: 'Could not delete document' });
+	}
+	
+	/*
+	 * RFC 2616: A successful response SHOULD be 204 (No Content) if the
+	 * action has been enacted but the response does not include an entity.
+	 */
+	res.status(204).json();
 }
