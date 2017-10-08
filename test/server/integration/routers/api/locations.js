@@ -93,7 +93,7 @@ describe(rootUrl + '/:locId', () => {
 					expect(res.body).to.have.property('_id').and.to.equal(locId);
 				});
 		});
-		it('should 404 with nonexistent', () => {
+		it('should 400 with invalid id', () => {
 			const token = jwt.sign(
 				{
 					id: 'this is a made up user id',
@@ -105,7 +105,7 @@ describe(rootUrl + '/:locId', () => {
 			return request
 				.get(rootUrl + '/' + locId)
 				.set('authorization', 'Bearer ' + token)
-				.expect(404);
+				.expect(400);
 		});
 	});
 	describe('PUT', () => {

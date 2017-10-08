@@ -1,11 +1,10 @@
 import express from 'express';
 import Companionship from '/server/models/companionship';
 import Crop from '/server/models/crop';
-import Helper from '/server/middleware/data-validation';
-import { doGet, doPut, doDelete } from '/server/middleware';
+import { idValidator, getCompanionshipScores } from '/server/middleware/data-validation';
+import { getDocuments, doGet, doPut, doDelete } from '/server/middleware';
 import { scheduler } from '/server';
 import { ReadWriteTask } from 'async-task-schedulers';
-import { fetchDocumentsById } from '/server/middleware/data-validation';
 
 const router = express.Router();
 
@@ -28,19 +27,17 @@ router.route('/')
 	}).post((req, res, next) => {
 		const asyncFunction = async function(req, res, next) {
 			let cropIds = [req.body.crop1, req.body.crop2];
-			if (!Helper.idValidator(cropIds, next)) {
+			if (!idValidator(cropIds, next)) {
 				return;
 			}
 			
 			let crops;
 			try {
-				crops = await fetchDocumentsById(Crop, cropIds, '', next);
+				crops = await getDocuments(Crop, cropIds, '', next);
 				let foundIds = crops.map((crop) => (crop._id.toString()));
-				console.log(foundIds);
-				console.log(cropIds);
 				let allFound = cropIds.every((id) => foundIds.includes(id));
 				if (!allFound) {
-					throw "error";
+					throw new Error("Error");
 				}
 			} catch(exception) {
 				return next({ status: 404, message: 'Document was not found' });
@@ -83,24 +80,24 @@ router.route('/scores')
 	.get((req, res, next) => {
 		const asyncFunction = async function(req, res, next) {
 			let ids = (req.query.id || '').split(',');
-			if (!Helper.idValidator(ids, next)) {
+			if (!idValidator(ids, next)) {
 				return;
 			}
 			
 			let crops;
 			try {
-				crops = await fetchDocumentsById(Crop, ids, 'companionships', next);
+				crops = await getDocuments(Crop, ids, 'companionships', next);
 				let foundIds = crops.map((crop) => (crop._id.toString()));
 				let allFound = ids.every((id) => foundIds.includes(id));
 				if (!allFound) {
-					throw "error";
+					throw new Error("Error");
 				}
 			} catch (exception) {
 				return next({ status: 404, message: 'Document was not found' });
 			}
 			
 			let companionships = crops.map(crop => crop.companionships);
-			res.json(Helper.getCompanionshipScores(companionships, ids));
+			res.json(getCompanionshipScores(companionships, ids));
 		};
 		scheduler.push(new ReadWriteTask(asyncFunction, [req, res, next], false));
 	});

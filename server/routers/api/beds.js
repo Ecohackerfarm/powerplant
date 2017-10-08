@@ -1,22 +1,20 @@
 import { Router } from 'express';
-import Helper from '/server/middleware/data-validation';
-import { doGet, doPut, doDelete } from '/server/middleware';
+import { getAuthorizedDocument, doAuthorizedGet, doAuthorizedPut, doAuthorizedDelete } from '/server/middleware';
 import Bed from '/server/models/bed';
 import Location from '/server/models/location';
 import { scheduler } from '/server';
 import { ReadWriteTask } from 'async-task-schedulers';
-import { getDocumentById } from '/server/middleware/data-validation';
 
 const router = Router();
 
 router.route('/').post((req, res, next) => {
 	const asyncFunction = async function(req, res, next) {
-		let location;
-		if (!(location = await getDocumentById(req, Location, req.body.location, 'beds', next))) {
+		let location = await getAuthorizedDocument(req, Location, req.body.location, 'beds', next);
+		if (!location) {
 			return;
 		}
 		
-		req.body.user = req.user._id;
+		req.body.user = location.user;
 		
 		let bed;
 		try {
@@ -39,11 +37,11 @@ router.route('/').post((req, res, next) => {
 
 router.route('/:bedId')
 	.get((req, res, next) => {
-		scheduler.push(new ReadWriteTask(doGet, [req, res, next, Bed, req.params.bedId], false));
+		scheduler.push(new ReadWriteTask(doAuthorizedGet, [req, res, next, Bed, req.params.bedId], false));
 	}).put((req, res, next) => {
-		scheduler.push(new ReadWriteTask(doPut, [req, res, next, Bed, req.params.bedId], true));
+		scheduler.push(new ReadWriteTask(doAuthorizedPut, [req, res, next, Bed, req.params.bedId], true));
 	}).delete((req, res, next) => {
-		scheduler.push(new ReadWriteTask(doDelete, [req, res, next, Bed, req.params.bedId], true));
+		scheduler.push(new ReadWriteTask(doAuthorizedDelete, [req, res, next, Bed, req.params.bedId], true));
 	});
 
 export default router;

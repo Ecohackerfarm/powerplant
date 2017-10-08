@@ -1,5 +1,5 @@
 import { expect } from 'chai';
-import validation from '/server/middleware/data-validation';
+import { idValidator, getCompanionshipScores } from '/server/middleware/data-validation';
 import Crop from '/server/models/crop';
 import { Types } from 'mongoose';
 const { ObjectId } = Types;
@@ -13,7 +13,7 @@ describe('data-validation', () => {
 			const next = err => {
 				error = err;
 			};
-			validation.idValidator(ids, next);
+			idValidator(ids, next);
 			expect(error.status).to.equal(400);
 		});
 		it('should accept valid ids', () => {
@@ -22,7 +22,7 @@ describe('data-validation', () => {
 			const next = err => {
 				error = err;
 			};
-			validation.idValidator(ids, next);
+			idValidator(ids, next);
 			expect(typeof error).to.equal('undefined');
 		});
 	});
@@ -51,7 +51,7 @@ describe('data-validation', () => {
 			]
 		];
 		it('should return 1 or -1 for correct crops', () => {
-			const results = validation.getCompanionshipScores(sample, ids);
+			const results = getCompanionshipScores(sample, ids);
 			expect(results[a]).to.equal(1);
 			expect(results[b]).to.equal(-1);
 			expect(results[c]).to.equal(1);
@@ -77,7 +77,7 @@ describe('data-validation', () => {
 				}
 			];
 			sample.push(newData);
-			const results = validation.getCompanionshipScores(sample, ids);
+			const results = getCompanionshipScores(sample, ids);
 			const max = 6;
 			expect(results[a]).to.equal(-1);
 			expect(results[b]).to.equal(-1);

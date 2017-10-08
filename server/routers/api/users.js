@@ -1,11 +1,9 @@
 import { Router } from 'express';
 import User from '/server/models/user';
-import Helper from '/server/middleware/data-validation';
 import validate from '/shared/validation/userValidation';
-import { doGet, doPut, doDelete } from '/server/middleware';
 import { scheduler } from '/server';
 import { ReadWriteTask } from 'async-task-schedulers';
-import { fetchDocumentById, getDocumentById } from '/server/middleware/data-validation';
+import { getDocument, getAuthorizedDocument } from '/server/middleware';
 
 const router = Router();
 
@@ -43,8 +41,8 @@ router.route('/')
 router.route('/:userId')
 	.get((req, res, next) => {
 		const asyncFunction = async function(req, res, next) {
-			let user;
-			if (!(user = await fetchDocumentById(User, req.params.userId, '', next))) {
+			let user = await getDocument(req, User, req.params.userId, '', next);
+			if (!user) {
 				return;
 			}
 			
@@ -56,8 +54,8 @@ router.route('/:userId')
 router.route('/:userId/locations')
 	.get((req, res, next) => {
 		const asyncFunction = async function(req, res, next) {
-			let user;
-			if (!(user = await getDocumentById(req, User, req.params.userId, 'locations', next))) {
+			let user = await getAuthorizedDocument(req, User, req.params.userId, 'locations', next);
+			if (!user) {
 				return;
 			}
 			

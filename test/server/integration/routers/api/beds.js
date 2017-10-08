@@ -115,7 +115,7 @@ describe(rootUrl + '/:bedId', () => {
 					expect(res.body).to.have.property('soil_type').and.to.equal(0);
 				});
 		});
-		it('should 404 with nonexistent', () => {
+		it('should 400 with invalid user ID', () => {
 			const token = jwt.sign(
 				{
 					id: 'this is a made up user id',
@@ -127,7 +127,7 @@ describe(rootUrl + '/:bedId', () => {
 			return request
 				.get(rootUrl + '/' + bedId)
 				.set('authorization', 'Bearer ' + token)
-				.expect(404);
+				.expect(400);
 		});
 	});
 	describe('PUT', () => {

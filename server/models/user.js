@@ -67,8 +67,8 @@ userSchema.query.byUsername = function(username) {
  * @param  {server.models.User~passwordCheckCallback} callback callback function when done checking
  * @return {None}
  */
-userSchema.methods.checkPassword = function(password, callback) {
-	bcrypt.compare(password, this.password, callback);
+userSchema.methods.checkPassword = function(password) {
+	return bcrypt.compare(password, this.password);
 };
 
 /**

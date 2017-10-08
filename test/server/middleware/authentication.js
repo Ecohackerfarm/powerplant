@@ -2,23 +2,11 @@ import { expect } from 'chai';
 import jwt from 'jsonwebtoken';
 import jwtSecret from '/jwt-secret';
 import User from '/server/models/user';
-import { authenticate as auth, isAuthenticated } from '/server/middleware/authentication';
-
-function assertIsAuthenticated(req, expectedAuthenticated) {
-	const res = {};
-	const next = (err => {
-		if (expectedAuthenticated) {
-			expect(err).to.be.undefined;
-		} else {
-			expect(err).to.have.property('status').and.to.equal(401);
-		}
-	});
-	isAuthenticated(req, next);
-}
+import { getAuthenticatedUser as auth } from '/server/middleware/authentication';
 
 describe('authentication middleware', () => {
-	describe('#authenticate()', () => {
-		it('should do nothing with no authentication header', done => {
+	describe('#getAuthenticatedUser()', () => {
+		it('should 401 with no authentication header', done => {
 			const req = {
 				headers: {}
 			};
@@ -26,12 +14,10 @@ describe('authentication middleware', () => {
 			const reqCopy = Object.assign({}, req);
 			const resCopy = Object.assign({}, res);
 			const next = err => {
-				expect(err).to.be.undefined;
-				expect(req).to.eql(reqCopy); // deep equals check
-				expect(res).to.eql(resCopy);
+				expect(err).to.have.property('status').and.to.equal(401);
 				done();
 			};
-			auth(req, res, next);
+			auth(req, next);
 		});
 		it('should 401 with invalid authentication header', done => {
 			const req = {
@@ -44,9 +30,9 @@ describe('authentication middleware', () => {
 				expect(err).to.have.property('status').and.to.equal(401);
 				done();
 			};
-			auth(req, res, next);
+			auth(req, next);
 		});
-		it('should 404 with nonexistent user', done => {
+		it('should 400 with invalid user id', done => {
 			const badToken = jwt.sign(
 				{
 					id: 'blasjldfkas',
@@ -62,12 +48,12 @@ describe('authentication middleware', () => {
 			};
 			const res = {};
 			const next = err => {
-				expect(err).to.have.property('status').and.to.equal(404);
+				expect(err).to.have.property('status').and.to.equal(400);
 				done();
 			};
-			auth(req, res, next);
+			auth(req, next);
 		});
-		it('should set req.user with valid user', done => {
+		it('should return User document with valid user', done => {
 			User.findOne({}, (err, user) => {
 				expect(err).to.be.null;
 				return user;
@@ -87,25 +73,17 @@ describe('authentication middleware', () => {
 				};
 				const res = {};
 				const next = err => {
-					expect(err).to.be.undefined;
-					expect(req).to.have.property('user');
-					expect(req.user).to.have.property('_id');
-					expect(req.user._id.toString()).to.equal(user.id);
 					done();
 				};
-				auth(req, res, next);
+				console.log('auth');
+				auth(req, next).then(actualUser => {
+					console.log('then');
+					console.log(actualUser);
+					expect(actualUser).to.have.property('_id');
+					expect(actualUser._id.toString()).to.equal(user._id.toString());
+					done();
+				});
 			});
-		});
-	});
-	describe('#isAuthenticated()', () => {
-		it('should 401 if not authenticated', done => {
-			assertIsAuthenticated({}, false);
-			assertIsAuthenticated({ user: null }, false);
-			done();
-		});
-		it('should pass if authenticated', done => {
-			assertIsAuthenticated({ user: { /* Empty object representing a valid user */ } }, true);
-			done();
 		});
 	});
 });

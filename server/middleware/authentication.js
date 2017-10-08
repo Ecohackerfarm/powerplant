@@ -7,84 +7,60 @@
 import jwt from 'jsonwebtoken';
 import jwtSecret from '/jwt-secret';
 import User from '/server/models/user';
-
-/**
- * Express middleware to check if a request has authentication.
- * If an authorization header exists, it will either save the user in req.user (if authenticated), or send a 401/404
- * depending if it's an invalid token or if the user doesn't exist
- * If it doesn't exist, this function does nothing and calls next()
- * @function
- * @param  {Object}   req  request object
- * @param  {Object}   res  response object
- * @param  {Function} next
- * @return {None}
- */
-export const authenticate = (req, res, next) => {
-	const authHeader = req.headers['authorization'];
-	if (authHeader) {
-		const [, token] = authHeader.split(' ');
-		jwt.verify(token, jwtSecret, (err, user) => {
-			if (err) {
-				next({ status: 401, message: 'Invalid authentication' });
-			} else {
-				User.findById(user.id, (err, userMatch) => {
-					if (userMatch) {
-						req.user = userMatch;
-						next();
-					} else {
-						next({ status: 404, message: 'User does not exist' });
-					}
-				});
-			}
-		});
-	} else {
-		next();
-	}
-};
+import { getDocument } from '/server/middleware';
 
 /**
  * Check if the request has been authenticated.
  *
  * @param {Object} req Request object
- * @param {String} message Error message to go with HTTP 401.
- * @return {boolean} True if authenticated
+ * @param {Functino} next
+ * @return {Document} User document, or null if authentication failed
  */
-export function isAuthenticated(req, next) {
-	if (!req.user) {
+export async function getAuthenticatedUser(req, next) {
+	const header = req.headers['authorization'];
+	
+	if (!header) {
 		next({ status: 401, message: 'Authentication required' });
-		return false;
+		return null;
 	}
 	
-	return true;
-};
+	const [, token] = header.split(' ');
+	
+	let userInfo;
+	try {
+		userInfo = jwt.verify(token, jwtSecret);
+	} catch (exception) {
+		next({ status: 401, message: 'Authentication failed' });
+		return null;
+	}
+	
+	return await getDocument(req, User, userInfo.id, '', next);
+}
 
 /**
- * Check if the current user matches the given user IDs.
+ * Check if the authenticated user is authorized to access the given documents.
  *
- * @param {String} userId ID of current user
- * @param {String[]} User IDs
- * @param {String} message Error message to go with HTTP 403
- * @return {boolean} True if matches with all given IDs
+ * @param {Object} user Authenticated user
+ * @param {Object[]} documents
+ * @return {boolean}
  */
-export function checkAccessForUserIds(userId, userIds, next) {
-	let hasAccess = userIds.every(id => userId.equals(id));
+export function isAuthorized(user, documents, next) {
+	/*
+	 * All documents that need authorization, except User documents, have the
+	 * 'user' property.
+	 */
+	let userIds;
+	if (documents[0].user) {
+		userIds = documents.map(document => document.user);
+	} else {
+		userIds = documents.map(document => document._id);
+	}
+	
+	const hasAccess = userIds.every(id => user._id.equals(id));
 	if (!hasAccess) {
-		next({ status: 403, message: 'No permission to access document' });
+		next({ status: 403, message: 'Not authorized' });
 		return false;
 	}
 	
 	return true;
-};
-
-/**
- * Check if the current user has access to the given documents.
- *
- * @param {String} userId
- * @param {String[]} documents
- * @param {Function} next
- * @return {boolean} True if user has access
- */
-export function checkAccess(userId, documents, next) {
-	let userIds = documents.map(document => document.user);
-	return checkAccessForUserIds(userId, userIds, next);
-};
+}

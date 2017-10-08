@@ -1,11 +1,10 @@
 import express from 'express';
 import Crop from '/server/models/crop.js';
 import Companionship from '/server/models/companionship.js';
-import Helper from '/server/middleware/data-validation';
-import { doGet, doPut, doDelete } from '/server/middleware';
+import { idValidator, escapeRegEx } from '/server/middleware/data-validation';
+import { getDocuments, getDocument, doGet, doPut, doDelete } from '/server/middleware';
 import { scheduler } from '/server';
 import { ReadWriteTask } from 'async-task-schedulers';
-import { fetchDocumentsById, fetchDocumentById, getDocumentById } from '/server/middleware/data-validation';
 
 const router = express.Router();
 
@@ -16,7 +15,7 @@ router.route('/')
 		const asyncFunction = async function(req, res, next) {
 			let crops;
 			if (typeof req.query.name !== 'undefined') {
-				const cropName = Helper.escapeRegEx(req.query.name);
+				const cropName = escapeRegEx(req.query.name);
 				try {
 					crops = await Crop.find().byName(cropName).exec();
 				} catch (exception) {
@@ -61,13 +60,13 @@ router.route('/:cropId/companionships')
 	.get((req, res, next) => {
 		const asyncFunction = async function(req, res, next) {
 			let cropId = req.params.cropId;
-			if (!Helper.idValidator([cropId], next)) {
+			if (!idValidator([cropId], next)) {
 				return;
 			}
 			
 			let crop;
 			try {
-				crop = await fetchDocumentById(Crop, cropId, 'companionships', next);
+				crop = await getDocument(req, Crop, cropId, 'companionships', next);
 			} catch (exception) {
 				return next({ status: 404, message: 'Error' });
 			}
@@ -83,13 +82,13 @@ router.route('/:cropId1/companionships/:cropId2')
 	.get((req, res, next) => {
 		const asyncFunction = async function(req, res, next) {
 			let ids = [req.params.cropId1, req.params.cropId2];
-			if (!Helper.idValidator(ids, next)) {
+			if (!idValidator(ids, next)) {
 				return;
 			}
 			
 			let crops;
 			try {
-				crops = await fetchDocumentsById(Crop, ids, 'companionships', next);
+				crops = await getDocuments(Crop, ids, 'companionships', next);
 			} catch (exception) {
 				return next({ status: 404, message: 'Error' });
 			}
