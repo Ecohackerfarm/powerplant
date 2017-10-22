@@ -1,5 +1,5 @@
 import { expect } from 'chai';
-import Crop from '/server/models/crop';
+import Organism from '/server/models/organism';
 import Companionship from '/server/models/companionship';
 
 import * as myself from './routerHelpers'; // import myself (it's ok es6 supports cyclic imports)
@@ -31,9 +31,9 @@ export function checkCompanionship(item) {
 const sessionString = 'test' + module.exports.randString();
 
 export function createTestCrop(cb) {
-	new Crop({
-		name: sessionString,
-		display_name: sessionString
+	new Organism({
+		commonName: sessionString,
+		binomialName: sessionString
 	}).save((err, crop) => {
 		cb(crop);
 	});
@@ -47,13 +47,7 @@ export function createTestCompanionship(cb) {
 				crop2: crop2,
 				compatibility: 3
 			}).save((err, comp) => {
-				crop1.companionships.push(comp._id);
-				crop1.save(() => {
-					crop2.companionships.push(comp._id);
-					crop2.save(() => {
-						cb(comp);
-					});
-				});
+				cb(comp);
 			});
 		});
 	});
@@ -61,8 +55,8 @@ export function createTestCompanionship(cb) {
 
 // remove all companionships with things with the word
 export function cleanDb(cb) {
-	Crop.find().byName(sessionString).exec((err, list) => {
-		console.log('Found ' + list.length + ' test crop instances');
+	Organism.find().byName(sessionString).exec((err, list) => {
+		console.log('Found ' + list.length + ' test organism instances');
 		list.forEach(crop => {
 			Companionship.find().byCrop(crop).exec((err, comps) => {
 				console.log('Found ' + comps.length + ' test companionship instances');

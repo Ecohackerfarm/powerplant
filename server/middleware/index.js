@@ -6,7 +6,7 @@
 
 import { getAuthenticatedUser, isAuthorized } from '/server/middleware/authentication';
 import { idValidator } from './data-validation';
-import Crop from '/server/models/crop';
+import Organism from '/server/models/organism';
 import Companionship from '/server/models/companionship';
 
 /**
@@ -150,7 +150,7 @@ function newDoDelete(getDocumentFunction) {
 			return;
 		}
 		
-		if (model === Crop) {
+		if (model === Organism) {
 			try {
 				await Companionship.find().byCrop(id).remove();
 			} catch (exception) {

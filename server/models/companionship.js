@@ -15,8 +15,8 @@ const ObjectId = Schema.Types.ObjectId;
  * @param {Number} companionship.compatibility compatibility score for the companionship
  */
 const companionshipSchema = new Schema({
-	crop1: { type: ObjectId, ref: 'Crop', index: true, required: true },
-	crop2: { type: ObjectId, ref: 'Crop', index: true, required: true },
+	crop1: { type: ObjectId, ref: 'Organism', index: true, required: true },
+	crop2: { type: ObjectId, ref: 'Organism', index: true, required: true },
 	description: String,
 	compatibility: { type: Number, required: true, min: -1, max: 3 }
 });

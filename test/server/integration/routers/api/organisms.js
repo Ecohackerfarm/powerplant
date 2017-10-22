@@ -8,10 +8,10 @@ import {
 	createTestCompanionship
 } from '../routerHelpers';
 import supertest from 'supertest';
-import Crop from '/server/models/crop';
+import Organism from '/server/models/organism';
 import { Types } from 'mongoose';
 
-const rootUrl = '/api/crops';
+const rootUrl = '/api/organisms';
 const jsonType = 'application/json; charset=utf-8';
 const { ObjectId } = Types;
 const request = supertest(app);
@@ -20,14 +20,14 @@ describe(rootUrl + '/', () => {
 	let count;
 	before(done => {
 		createTestCrop(crop => {
-			Crop.count({}, (err, num) => {
+			Organism.count({}, (err, num) => {
 				count = num;
 				done();
 			});
 		});
 	});
 	describe('GET', () => {
-		it('should return all crops with no arguments', () => {
+		it('should return all organisms with no arguments', () => {
 			return request
 				.get(rootUrl)
 				.expect(200)
@@ -36,7 +36,7 @@ describe(rootUrl + '/', () => {
 					expect(res.body).to.have.length(count);
 				});
 		});
-		it('should return crops matching a query string', () => {
+		it('should return organisms matching a query string', () => {
 			return request
 				.get(rootUrl + '?name=test')
 				.expect(200)
@@ -44,39 +44,26 @@ describe(rootUrl + '/', () => {
 				.then(res => {
 					expect(res.body).to.have.length.above(0);
 					res.body.forEach(apple => {
-						expect(apple.name).to.include('test');
+						expect(apple.commonName + apple.binomialName).to.include('test');
 					});
 				});
 		});
-		it('should return no crops for gibberish query string', () => {
+		it('should return no organisms for gibberish query string', () => {
 			return request
 				.get(rootUrl + '?name=jf93 FJ(Fiojs')
 				.expect(200)
 				.expect('Content-Type', jsonType)
 				.expect([]);
 		});
-		it('should not populate the list of companionships', () => {
-			return request.get(rootUrl + '?name=apple').then(res => {
-				res.body.forEach(apple => {
-					expect(apple).to.have
-						.property('companionships')
-						.and.to.satisfy(allStrings);
-				});
-			});
-		});
 	});
 	describe('POST', () => {
 		const crop = {
-			name: 'my test crop',
-			display_name: "Simon's crop for testing"
+			binomialName: "Simon's crop for testing"
 		};
-		it('should create new crop from just name and display name', () => {
+		it('should create new crop from just binomial name', () => {
 			return sendForm(request.post(rootUrl), crop).expect(201).then(res => {
 				expect(res.body).to.have.property('_id');
-				expect(res.body).to.have.property('name').and.to.equal(crop.name);
-				expect(res.body).to.have
-					.property('display_name')
-					.and.to.equal(crop.display_name);
+				expect(res.body).to.have.property('binomialName').and.to.equal(crop.binomialName);
 			});
 		});
 		it('should provide the location of the new resource', () => {
@@ -85,13 +72,13 @@ describe(rootUrl + '/', () => {
 			});
 		});
 		it('should 400 missing name or display', () => {
-			delete crop.name;
+			delete crop.binomialName;
 			return sendForm(request.post(rootUrl), crop).expect(400);
 		});
 	});
 });
 
-describe(rootUrl + '/:cropId', () => {
+describe(rootUrl + '/:organismId', () => {
 	let testId;
 	let compId;
 	before(done => {
@@ -108,32 +95,23 @@ describe(rootUrl + '/:cropId', () => {
 				.expect(400)
 				.expect('Content-Type', jsonType);
 		});
-		it('should 404 a valid but nonexistent crop id', () => {
+		it('should 404 a valid but nonexistent organism id', () => {
 			return request
 				.get(rootUrl + '/' + ObjectId().toString())
 				.expect(404)
 				.expect('Content-Type', jsonType);
 		});
-		it('should return the specified crop', () => {
+		it('should return the specified organism', () => {
 			return request.get(rootUrl + '/' + testId).expect(200).then(res => {
 				const test = res.body;
-				expect(test).to.have.property('name').and.to.match(RegExp('test', 'i'));
-			});
-		});
-		it('should not populate companionship list', () => {
-			return request.get(rootUrl + '/' + testId).expect(200).then(res => {
-				const test = res.body;
-				expect(test).to.have
-					.property('companionships')
-					.and.to.satisfy(allStrings);
+				expect(test).to.have.property('commonName').and.to.match(RegExp('test', 'i'));
 			});
 		});
 	});
 	describe('PUT', () => {
 		it('should make the specified valid changes', () => {
 			const changes = {
-				display_name: randString(),
-				alternate_display: randString()
+				commonName: randString(),
 			};
 			return sendForm(request.put(rootUrl + '/' + testId), changes)
 				.expect(200)
@@ -141,11 +119,8 @@ describe(rootUrl + '/:cropId', () => {
 				.then(res => {
 					const newTest = res.body;
 					expect(newTest).to.have
-						.property('display_name')
-						.and.to.equal(changes.display_name);
-					expect(newTest).to.have
-						.property('alternate_display')
-						.and.to.equal(changes.alternate_display);
+						.property('commonName')
+						.and.to.equal(changes.commonName);
 				});
 		});
 		it('should not effect invalid field changes', () => {
@@ -159,7 +134,6 @@ describe(rootUrl + '/:cropId', () => {
 		});
 		it('should not effect ID changes', () => {
 			const changes = { _id: ObjectId().toString() };
-			console.log(changes);
 			return sendForm(request.put(rootUrl + '/' + testId), changes)
 				.expect(200)
 				.expect('Content-Type', jsonType)
@@ -168,7 +142,7 @@ describe(rootUrl + '/:cropId', () => {
 				});
 		});
 		it('should not allow invalid data changes', () => {
-			const changes = { display_name: { firstname: 'firstname', lastname: 'lastname' } };
+			const changes = { commonName: { firstname: 'firstname', lastname: 'lastname' } };
 			return sendForm(request.put(rootUrl + '/' + testId), changes).expect(400);
 		});
 	});

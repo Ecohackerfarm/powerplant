@@ -1,5 +1,5 @@
 import express from 'express';
-import cropRouter from './api/crops';
+import organismRouter from './api/organisms';
 import companionshipRouter from './api/companionships';
 import userRouter from './api/users';
 import loginRouter from './api/login';
@@ -22,7 +22,7 @@ router.all('*', (req, res, next) => {
 });
 
 // assume a base url of '/api'
-router.use('/crops', cropRouter);
+router.use('/organisms', organismRouter);
 router.use('/companionships', companionshipRouter);
 router.use('/users', userRouter);
 router.use('/login', loginRouter);

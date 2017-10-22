@@ -1,6 +1,6 @@
 import express from 'express';
 import Companionship from '/server/models/companionship';
-import Crop from '/server/models/crop';
+import Organism from '/server/models/organism';
 import { idValidator, getCompanionshipScores } from '/server/middleware/data-validation';
 import { getDocuments, doGet, doPut, doDelete } from '/server/middleware';
 import { scheduler } from '/server';
@@ -33,12 +33,7 @@ router.route('/')
 			
 			let crops;
 			try {
-				crops = await getDocuments(Crop, cropIds, '', next);
-				let foundIds = crops.map((crop) => (crop._id.toString()));
-				let allFound = cropIds.every((id) => foundIds.includes(id));
-				if (!allFound) {
-					throw new Error("Error");
-				}
+				crops = await getDocuments(Organism, cropIds, '', next);
 			} catch(exception) {
 				return next({ status: 404, message: 'Document was not found' });
 			}
@@ -61,15 +56,6 @@ router.route('/')
 				return next({ status: 400, message: 'Error' });
 			}
 			
-			try {
-				await Crop.findByIdAndUpdate(companionship.crop1, { $push: { companionships: companionship._id } });
-				if (!companionship.crop1.equals(companionship.crop2)) {
-					await Crop.findByIdAndUpdate(companionship.crop2, { $push: { companionships: companionship._id } });
-				}
-			} catch (exception) {
-				return next({ status: 500, message: 'Error' });
-			}
-			
 			res.location('/api/companionships/' + companionship._id);
 			res.status(201).json(companionship);
 		};
@@ -84,20 +70,24 @@ router.route('/scores')
 				return;
 			}
 			
-			let crops;
 			try {
-				crops = await getDocuments(Crop, ids, 'companionships', next);
-				let foundIds = crops.map((crop) => (crop._id.toString()));
-				let allFound = ids.every((id) => foundIds.includes(id));
-				if (!allFound) {
-					throw new Error("Error");
-				}
-			} catch (exception) {
+				await getDocuments(Organism, ids, '', next);
+			} catch(exception) {
 				return next({ status: 404, message: 'Document was not found' });
 			}
 			
-			let companionships = crops.map(crop => crop.companionships);
-			res.json(getCompanionshipScores(companionships, ids));
+			let companionships = [];
+			for (let index = 0; index < ids.length; index++) {
+				const id = ids[index];
+				try {
+					const cropCompanionships = await Companionship.find().byCrop(id).exec();
+					companionships.push(cropCompanionships);
+				} catch (exception) {
+				}
+			}
+			
+			let scores = getCompanionshipScores(companionships, ids);
+			res.json(scores);
 		};
 		scheduler.push(new ReadWriteTask(asyncFunction, [req, res, next], false));
 	});

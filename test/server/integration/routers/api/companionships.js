@@ -33,13 +33,13 @@ describe(rootUrl + '/', () => {
 	describe('POST', () => {
 		let crop1, crop2;
 		before(() => {
-			const cropData = {
-				name: randString(),
-				display_name: 'Snozzberry'
+			const organismData = {
+				commonName: randString(),
+				binomialName: 'Snozzberry'
 			};
-			return sendForm(request.post('/api/crops'), cropData).then(res => {
+			return sendForm(request.post('/api/organisms'), organismData).then(res => {
 				crop1 = res.body._id.toString();
-				return sendForm(request.post('/api/crops'), cropData).then(res => {
+				return sendForm(request.post('/api/organisms'), organismData).then(res => {
 					crop2 = res.body._id.toString();
 				});
 			});
@@ -93,7 +93,7 @@ describe(rootUrl + '/scores', () => {
 		let appleId, potatoId, beanId;
 		before(() => {
 			// fetching 3 crops
-			const cropUrl = '/api/crops?name=';
+			const cropUrl = '/api/organisms?name=';
 			return request.get(cropUrl + 'apple').then(appleRes => {
 				appleId = appleRes.body[0]._id;
 				return request.get(cropUrl + 'potato').then(potatoRes => {
@@ -107,7 +107,7 @@ describe(rootUrl + '/scores', () => {
 		it('should 400 with no query', () => {
 			return request.get(url).expect(400);
 		});
-		it('should return numerical scores with all valid crop ids', () => {
+		it('should return numerical scores with all valid organism ids', () => {
 			return request
 				.get(url + '?id=' + appleId + ',' + potatoId + ',' + beanId)
 				.expect(200)
@@ -119,12 +119,12 @@ describe(rootUrl + '/scores', () => {
 					}
 				});
 		});
-		it('should 400 if there is a malformed crop id', () => {
+		it('should 400 if there is a malformed organism id', () => {
 			return request
 				.get(url + '?id=' + appleId + ',fa3j9w0f a0f9jwf')
 				.expect(400);
 		});
-		it('should 404 if there is a nonexistent crop id', () => {
+		it('should 404 if there is a nonexistent organism id', () => {
 			return request
 				.get(url + '?id=' + appleId + ',' + ObjectId().toString())
 				.expect(404);

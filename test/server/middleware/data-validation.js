@@ -1,6 +1,5 @@
 import { expect } from 'chai';
 import { idValidator, getCompanionshipScores } from '/server/middleware/data-validation';
-import Crop from '/server/models/crop';
 import { Types } from 'mongoose';
 const { ObjectId } = Types;
 

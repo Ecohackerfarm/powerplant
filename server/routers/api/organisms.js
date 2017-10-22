@@ -1,5 +1,5 @@
 import express from 'express';
-import Crop from '/server/models/crop.js';
+import Organism from '/server/models/organism.js';
 import Companionship from '/server/models/companionship.js';
 import { idValidator, escapeRegEx } from '/server/middleware/data-validation';
 import { getDocuments, getDocument, doGet, doPut, doDelete } from '/server/middleware';
@@ -8,51 +8,48 @@ import { ReadWriteTask } from 'async-task-schedulers';
 
 const router = express.Router();
 
-// All routes have the base route /crops
-
 router.route('/')
 	.get((req, res, next) => {
 		const asyncFunction = async function(req, res, next) {
-			let crops;
+			let organisms;
 			if (typeof req.query.name !== 'undefined') {
-				const cropName = escapeRegEx(req.query.name);
 				try {
-					crops = await Crop.find().byName(cropName).exec();
+					organisms = await Organism.find().byName(escapeRegEx(req.query.name)).exec();
 				} catch (exception) {
 					return next({ status: 500, message: 'Error fetching crops' });
 				}
 			} else {
 				try {
-					crops = await Crop.find({}).exec();
+					organisms = await Organism.find({}).exec();
 				} catch (exception) {
 					return next({ status: 500, message: 'Error fetching crops' });
 				}
 			}
-			res.json(crops);
+			res.json(organisms);
 		};
 		scheduler.push(new ReadWriteTask(asyncFunction, [req, res, next], false));
 	}).post((req, res, next) => {
 		const asyncFunction = async function(req, res, next) {
-			let crop;
+			let organism;
 			try {
-				crop = await new Crop(req.body).save();
+				organism = await new Organism(req.body).save();
 			} catch (exception) {
-				return next({ status: 400, message: 'Error saving crop' });
+				return next({ status: 400, message: 'Error saving organism' });
 			}
 			
-			res.location('/api/crops/' + crop._id);
-			res.status(201).json(crop);
+			res.location('/api/organisms/' + organism._id);
+			res.status(201).json(organism);
 		};
 		scheduler.push(new ReadWriteTask(asyncFunction, [req, res, next], true));
 	});
 
-router.route('/:cropId')
+router.route('/:id')
 	.get((req, res, next) => {
-		scheduler.push(new ReadWriteTask(doGet, [req, res, next, Crop, req.params.cropId], false));
+		scheduler.push(new ReadWriteTask(doGet, [req, res, next, Organism, req.params.id], false));
 	}).put((req, res, next) => {
-		scheduler.push(new ReadWriteTask(doPut, [req, res, next, Crop, req.params.cropId], true));
+		scheduler.push(new ReadWriteTask(doPut, [req, res, next, Organism, req.params.id], true));
 	}).delete((req, res, next) => {
-		scheduler.push(new ReadWriteTask(doDelete, [req, res, next, Crop, req.params.cropId], true));
+		scheduler.push(new ReadWriteTask(doDelete, [req, res, next, Organism, req.params.id], true));
 	});
 
 // all associated companionship objects of the given cropid
@@ -64,14 +61,14 @@ router.route('/:cropId/companionships')
 				return;
 			}
 			
-			let crop;
+			let companionships;
 			try {
-				crop = await getDocument(req, Crop, cropId, 'companionships', next);
+				companionships = await Companionship.find().byCrop(cropId)/*({ $or: [{ crop1: cropId }, { crop2: cropId }] })*/.exec();
 			} catch (exception) {
 				return next({ status: 404, message: 'Error' });
 			}
 			
-			res.json(crop.companionships);
+			res.json(companionships);
 		};
 		scheduler.push(new ReadWriteTask(asyncFunction, [req, res, next], false));
 	});
@@ -88,7 +85,7 @@ router.route('/:cropId1/companionships/:cropId2')
 			
 			let crops;
 			try {
-				crops = await getDocuments(Crop, ids, 'companionships', next);
+				crops = await getDocuments(Organism, ids, '', next);
 			} catch (exception) {
 				return next({ status: 404, message: 'Error' });
 			}
