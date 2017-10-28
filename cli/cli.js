@@ -121,7 +121,7 @@ async function removeDocuments(path) {
 	}
 	debug(documents);
 	
-	const scheduler = new ParallelScheduler();
+	const scheduler = new SerialScheduler();
 	documents.forEach((document) => {
 		scheduler.push(new Task(removeDocument, [path, document._id]));
 	});
@@ -160,7 +160,7 @@ async function pushPfaf() {
 	const [rows, fields] = await connection.query('select `common name`,`latin name` from `species database`');
 	connection.end();
 	
-	const scheduler = new ParallelScheduler();
+	const scheduler = new SerialScheduler();
 	rows.forEach((row) => {
 		debug(row);
 		const organism = {
@@ -228,8 +228,8 @@ async function pushFirebase() {
 	const firebaseToMongo = {};
 	
 	const scheduler = new SerialScheduler();
-	const plantScheduler = new ParallelScheduler();
-	const companionshipScheduler = new ParallelScheduler();
+	const plantScheduler = new SerialScheduler();
+	const companionshipScheduler = new SerialScheduler();
 	
 	scheduler.push(new SchedulerTask(plantScheduler));
 	scheduler.push(new SchedulerTask(companionshipScheduler));

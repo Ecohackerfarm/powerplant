@@ -4,4 +4,4 @@
 
 import { ReadWriteScheduler } from 'async-task-schedulers';
 
-export const scheduler = new ReadWriteScheduler();
+export let scheduler = new ReadWriteScheduler();

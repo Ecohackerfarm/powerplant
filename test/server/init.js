@@ -2,6 +2,8 @@ import 'babel-polyfill';
 import mongoose from 'mongoose';
 import { buildApp } from '/server/app';
 import config from '/server/config';
+import * as server from '/server';
+import { ReadWriteScheduler } from 'async-task-schedulers';
 
 before(() => {
   //TODO: Set up a test database! (pp_test)
@@ -16,4 +18,8 @@ before(() => {
 	mongoose.Promise = global.Promise;
 
 	buildApp(false); // disable webpack
+});
+
+beforeEach(() => {
+	server.scheduler = new ReadWriteScheduler();
 });
