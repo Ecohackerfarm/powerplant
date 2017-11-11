@@ -55,7 +55,8 @@ describe(rootUrl + '/', () => {
 		newLoc = {
 			user: userId,
 			name: 'my location 1',
-			loc: [122.2, 121.1]
+			loc: { address: '', coordinates: [12.2, 12.1] },
+			beds: [ { name: 'test bed 0', soil_type: 0 }, { name: 'test bed 1', soil_type: 1 } ]
 		};
 	});
 	describe('POST', () => {
@@ -135,29 +136,6 @@ describe(rootUrl + '/:locId', () => {
 				.delete(rootUrl + '/' + locId)
 				.set('authorization', 'Bearer ' + token)
 				.expect(204);
-		});
-	});
-});
-
-describe(rootUrl + '/:locId/beds', () => {
-	describe('GET', () => {
-		it('should 401 if not authenticated', () => {
-			return request.get(rootUrl + '/' + neverRemovedLocationId + '/beds').expect(401);
-		});
-		it('should return beds if authenticated', () => {
-			return request
-				.get(rootUrl + '/' + neverRemovedLocationId + '/beds')
-				.set('authorization', 'Bearer ' + token)
-				.expect(200)
-				.then(res => {
-					console.log(res.body);
-				});
-		});
-		it('should not return beds if invalid authentication', () => {
-			return request
-				.get(rootUrl + '/' + neverRemovedLocationId + '/beds')
-				.set('authorization', 'Bearer ' + token + 'f)(#)')
-				.expect(401);
 		});
 	});
 });

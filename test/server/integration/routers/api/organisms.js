@@ -29,7 +29,7 @@ describe(rootUrl + '/', () => {
 	describe('GET', () => {
 		it('should return all organisms with no arguments', () => {
 			return request
-				.get(rootUrl)
+				.get('/api/get-organisms-by-name')
 				.expect(200)
 				.expect('Content-Type', jsonType)
 				.then(res => {
@@ -38,7 +38,7 @@ describe(rootUrl + '/', () => {
 		});
 		it('should return organisms matching a query string', () => {
 			return request
-				.get(rootUrl + '?name=test')
+				.get('/api/get-organisms-by-name' + '?name=test')
 				.expect(200)
 				.expect('Content-Type', jsonType)
 				.then(res => {
@@ -50,7 +50,7 @@ describe(rootUrl + '/', () => {
 		});
 		it('should return no organisms for gibberish query string', () => {
 			return request
-				.get(rootUrl + '?name=jf93 FJ(Fiojs')
+				.get('/api/get-organisms-by-name' + '?name=jf93 FJ(Fiojs')
 				.expect(200)
 				.expect('Content-Type', jsonType)
 				.expect([]);
@@ -64,11 +64,6 @@ describe(rootUrl + '/', () => {
 			return sendForm(request.post(rootUrl), crop).expect(201).then(res => {
 				expect(res.body).to.have.property('_id');
 				expect(res.body).to.have.property('binomialName').and.to.equal(crop.binomialName);
-			});
-		});
-		it('should provide the location of the new resource', () => {
-			return sendForm(request.post(rootUrl), crop).expect(201).then(res => {
-				expect(res.header.location).to.include(rootUrl);
 			});
 		});
 		it('should 400 missing name or display', () => {
@@ -147,7 +142,7 @@ describe(rootUrl + '/:organismId', () => {
 		});
 	});
 	describe('DELETE', () => {
-		it('should delete a valid crop', () => {
+		it('should delete a valid organism', () => {
 			return request.delete(rootUrl + '/' + testId).expect(204);
 		});
 		it('should delete all associated companionships', () => {
@@ -156,7 +151,7 @@ describe(rootUrl + '/:organismId', () => {
 	});
 });
 
-describe(rootUrl + '/:cropId/companionships', () => {
+describe('/api/get-companionships-by-organism', () => {
 	let testId;
 	before(done => {
 		createTestCompanionship(comp => {
@@ -167,7 +162,7 @@ describe(rootUrl + '/:cropId/companionships', () => {
 	describe('GET', () => {
 		it('should fetch an array', () => {
 			return request
-				.get(rootUrl + '/' + testId + '/companionships')
+				.get('/api/get-companionships-by-organism/' + testId)
 				.expect(200)
 				.expect('Content-Type', jsonType)
 				.then(res => {
@@ -176,7 +171,7 @@ describe(rootUrl + '/:cropId/companionships', () => {
 		});
 		it('should populate companionships', () => {
 			return request
-				.get(rootUrl + '/' + testId + '/companionships')
+				.get('/api/get-companionships-by-organism/' + testId)
 				.expect(200)
 				.then(res => {
 					res.body.forEach(item => {
@@ -186,7 +181,7 @@ describe(rootUrl + '/:cropId/companionships', () => {
 		});
 		it('should only fetch matching companionships', () => {
 			return request
-				.get(rootUrl + '/' + testId + '/companionships')
+				.get('/api/get-companionships-by-organism/' + testId)
 				.expect(200)
 				.then(res => {
 					res.body.forEach(item => {
@@ -203,9 +198,9 @@ describe(rootUrl + '/:cropId1/companionships/:cropId2', () => {
 	let appleId;
 	let testId;
 	before(() => {
-		return request.get(rootUrl + '?name=apple').then(res => {
+		return request.get('/api/get-organisms-by-name' + '?name=apple').then(res => {
 			appleId = res.body[0]._id;
-			return request.get(rootUrl + '?name=test').then(res => {
+			return request.get('/api/get-organisms-by-name' + '?name=test').then(res => {
 				testId = res.body[0]._id;
 			});
 		});
@@ -213,7 +208,7 @@ describe(rootUrl + '/:cropId1/companionships/:cropId2', () => {
 	describe('GET', () => {
 		it('should provide proper location on existing companionship', () => {
 			return request
-				.get(rootUrl + '/' + appleId + '/companionships/' + appleId)
+				.get('/api/get-companionship/' + appleId + '/' + appleId)
 				.expect(303)
 				.then(res => {
 					return request.get(res.header.location).expect(200).then(res => {
@@ -227,7 +222,7 @@ describe(rootUrl + '/:cropId1/companionships/:cropId2', () => {
 		});
 		it('should response 204 on existing crops but nonexistent companionship', () => {
 			return request
-				.get(rootUrl + '/' + appleId + '/companionships/' + testId)
+				.get('/api/get-companionship/' + appleId + '/' + testId)
 				.expect(204);
 		});
 	});

@@ -1,9 +1,8 @@
 import mongoose from 'mongoose';
 import { buildApp } from './app';
-import config from '/server/config';
+import { databaseUrl } from '/server/app';
 
-// mongoose.connect('mongodb://localhost/pp_main');
-mongoose.connect(config.databaseUrl);
+mongoose.connect(databaseUrl);
 mongoose.Promise = global.Promise;
 // mongoose.set('debug', true)
 

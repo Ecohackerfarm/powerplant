@@ -64,11 +64,11 @@ describe(rootUrl + '/', () => {
 				.expect(201)
 				.expect('Content-Type', jsonType)
 				.then(res => {
-					expect(res.body).to.have.property('id');
+					expect(res.body).to.have.property('_id');
 				});
 		});
-		it('should 409 on duplicate user', () => {
-			return sendForm(request.post(rootUrl + '/'), user).expect(409);
+		it('should 400 on duplicate user', () => {
+			return sendForm(request.post(rootUrl + '/'), user).expect(400);
 		});
 		it('should 400 a user with missing data', () => {
 			const user = {
@@ -118,11 +118,11 @@ describe(rootUrl + '/:userId', () => {
 describe(rootUrl + '/:userId/locations', () => {
 	describe('GET', () => {
 		it('should 401 if not authenticated', () => {
-			return request.get(rootUrl + '/' + userId + '/locations').expect(401);
+			return request.get('/api/get-locations').expect(401);
 		});
 		it('should return locations if authenticated', () => {
 			return request
-				.get(rootUrl + '/' + userId + '/locations')
+				.get('/api/get-locations')
 				.set('authorization', 'Bearer ' + token)
 				.expect(200)
 				.then(res => {
@@ -131,7 +131,7 @@ describe(rootUrl + '/:userId/locations', () => {
 		});
 		it('should not return locations if invalid authentication', () => {
 			return request
-				.get(rootUrl + '/' + userId + '/locations')
+				.get('/api/get-locations')
 				.set('authorization', 'Bearer ' + token + 'f)(#)')
 				.expect(401);
 		});

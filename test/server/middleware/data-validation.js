@@ -1,30 +1,9 @@
 import { expect } from 'chai';
-import { idValidator, getCompanionshipScores } from '/server/middleware/data-validation';
+import { Processor } from '/server/processor';
 import { Types } from 'mongoose';
 const { ObjectId } = Types;
 
 describe('data-validation', () => {
-	let validId;
-	describe('#idValidation()', () => {
-		it('should reject invalid ids', () => {
-			const ids = ['12345', 'JF(jrf9Nd3gkd0fj2ln  j F)'];
-			let error;
-			const next = err => {
-				error = err;
-			};
-			idValidator(ids, next);
-			expect(error.status).to.equal(400);
-		});
-		it('should accept valid ids', () => {
-			const ids = [ObjectId(), ObjectId()];
-			let error;
-			const next = err => {
-				error = err;
-			};
-			idValidator(ids, next);
-			expect(typeof error).to.equal('undefined');
-		});
-	});
 	describe('#getCompanionshipScores()', () => {
 		const ids = [ObjectId()];
 		const a = ObjectId();
@@ -50,7 +29,7 @@ describe('data-validation', () => {
 			]
 		];
 		it('should return 1 or -1 for correct crops', () => {
-			const results = getCompanionshipScores(sample, ids);
+			const results = (new Processor()).calculateCompanionshipScores(sample, ids);
 			expect(results[a]).to.equal(1);
 			expect(results[b]).to.equal(-1);
 			expect(results[c]).to.equal(1);
@@ -76,7 +55,7 @@ describe('data-validation', () => {
 				}
 			];
 			sample.push(newData);
-			const results = getCompanionshipScores(sample, ids);
+			const results = (new Processor()).calculateCompanionshipScores(sample, ids);
 			const max = 6;
 			expect(results[a]).to.equal(-1);
 			expect(results[b]).to.equal(-1);

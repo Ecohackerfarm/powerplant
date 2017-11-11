@@ -3,6 +3,11 @@ import mongoose from 'mongoose';
 const { Schema } = mongoose;
 const ObjectId = Schema.Types.ObjectId;
 
+const bedSchema = new Schema({
+	name: { type: String, required: true },
+	soil_type: { type: Number, min: 0, max: 2 }
+});
+
 /**
  * Mongoose location model
  * @constructor
@@ -22,7 +27,7 @@ const locationSchema = new Schema({
 		coordinates: { type: [Number], default: [0, 0] },
 		address: String
 	},
-	beds: [ { type: ObjectId, ref: 'Bed' } ]
+	beds: [bedSchema]
 });
 
 // we can index gardens by location on a 2d sphere

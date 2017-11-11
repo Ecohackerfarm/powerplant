@@ -21,7 +21,7 @@ describe(rootUrl + '/', () => {
 		it('should return an array of companionships', function() {
 			this.timeout(5000); // needed to leave as a non-arrow function so that 'this' reference above works
 			return request
-				.get(url)
+				.get('/api/get-all-companionships/')
 				.expect(200)
 				.expect('Content-Type', jsonType)
 				.then(res => {
@@ -52,19 +52,17 @@ describe(rootUrl + '/', () => {
 			};
 			return sendForm(request.post(url), newComp).expect(201);
 		});
-		it('should 303 if trying to create a companionship that already exists', () => {
+		it('should 400 if trying to create a companionship that already exists', () => {
 			const newComp = {
 				crop1: crop2,
 				crop2: crop1,
 				compatibility: -1
 			};
-			return sendForm(request.post(url), newComp).expect(303).then(res => {
-				expect(res.header).to.have
-					.property('location')
-					.and.to.contain('/api/companionships/');
+			return sendForm(request.post(url), newComp).expect(400).then(res => {
+				expect(res.header).to.not.have.property('location');
 			});
 		});
-		it('should 404 with nonexistent crop ids', () => {
+		it('should 400 with nonexistent crop ids', () => {
 			// TODO: This is a BIZARRE bug
 			// when using a nonexistent but valid object id here, the error object gets printed to the console
 			// i see no print statement in the entire project that prints an error object
@@ -74,7 +72,7 @@ describe(rootUrl + '/', () => {
 				crop2: ObjectId().toString(),
 				compatibility: false
 			};
-			return sendForm(request.post(url), newComp).expect(404);
+			return sendForm(request.post(url), newComp).expect(400);
 		});
 		it('should 400 with invalid crop ids', () => {
 			const newComp = {
@@ -87,13 +85,13 @@ describe(rootUrl + '/', () => {
 	});
 });
 
-describe(rootUrl + '/scores', () => {
-	const url = rootUrl + '/scores';
+describe('/api/get-companionship-scores', () => {
+	const url = '/api/get-companionship-scores';
 	describe('GET', () => {
 		let appleId, potatoId, beanId;
 		before(() => {
 			// fetching 3 crops
-			const cropUrl = '/api/organisms?name=';
+			const cropUrl = '/api/get-organisms-by-name?name=';
 			return request.get(cropUrl + 'apple').then(appleRes => {
 				appleId = appleRes.body[0]._id;
 				return request.get(cropUrl + 'potato').then(potatoRes => {
@@ -124,10 +122,10 @@ describe(rootUrl + '/scores', () => {
 				.get(url + '?id=' + appleId + ',fa3j9w0f a0f9jwf')
 				.expect(400);
 		});
-		it('should 404 if there is a nonexistent organism id', () => {
+		it('should 400 if there is a nonexistent organism id', () => {
 			return request
 				.get(url + '?id=' + appleId + ',' + ObjectId().toString())
-				.expect(404);
+				.expect(400);
 		});
 	});
 });

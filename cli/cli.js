@@ -105,10 +105,10 @@ async function removeDocument(path, id) {
  *
  * @param {String} path
  */
-async function removeDocuments(path) {
+async function removeDocuments(getAllDocumentsPath, path) {
 	const httpOptions = {
 		method: 'GET',
-		uri: getApiUrl() + path,
+		uri: getApiUrl() + getAllDocumentsPath,
 		json: true
 	};
 
@@ -123,7 +123,7 @@ async function removeDocuments(path) {
 	
 	const scheduler = new SerialScheduler();
 	documents.forEach((document) => {
-		scheduler.push(new Task(removeDocument, [path, document._id]));
+		scheduler.push(new Task(undefined, removeDocument, path, document._id));
 	});
 	scheduler.activate();
 }
@@ -134,10 +134,10 @@ async function removeDocuments(path) {
 async function remove() {
 	switch (options[1]) {
 		case 'organism':
-			await removeDocuments('/organisms/');
+			await removeDocuments('/get-organisms-by-name', '/organisms/');
 			break;
 		case 'companionship':
-			await removeDocuments('/companionships/');
+			await removeDocuments('/get-all-companionships', '/companionships/');
 			break;
 	}
 }
@@ -167,7 +167,7 @@ async function pushPfaf() {
 			commonName: row['common name'],
 			binomialName: row['latin name']
 		};
-		scheduler.push(new Task(pushDocument, ['/organisms/', organism]));
+		scheduler.push(new Task(undefined, pushDocument, '/organisms/', organism));
 	});
 	scheduler.activate();
 }
@@ -235,14 +235,14 @@ async function pushFirebase() {
 	scheduler.push(new SchedulerTask(companionshipScheduler));
 	
 	Object.keys(firebasePlants).forEach((firebaseId) => {
-		plantScheduler.push(new Task(pushFirebasePlant, [firebaseId, firebasePlants[firebaseId], firebaseToMongo]));
+		plantScheduler.push(new Task(undefined, pushFirebasePlant, firebaseId, firebasePlants[firebaseId], firebaseToMongo));
 	});
 	
 	Object.keys(firebaseCompanions).forEach((firebaseId0) => {
 		Object.keys(firebaseCompanions[firebaseId0]).forEach((firebaseId1) => {
 			const value = firebaseCompanions[firebaseId0][firebaseId1];
 			if (value) {
-				companionshipScheduler.push(new Task(pushFirebaseCompanion, [firebaseToMongo, firebaseId0, firebaseId1, value]));
+				companionshipScheduler.push(new Task(undefined, pushFirebaseCompanion, firebaseToMongo, firebaseId0, firebaseId1, value));
 				delete firebaseCompanions[firebaseId1][firebaseId0];
 			}
 		});

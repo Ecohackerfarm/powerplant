@@ -7,11 +7,16 @@
 import express from 'express';
 import path from 'path';
 import bodyParser from 'body-parser';
-import apiRouter from './routers/api';
+import apiRouter from '/server/api';
 import webpack from 'webpack';
 import webpackMiddleware from 'webpack-dev-middleware';
 import webpackHotWiddleware from 'webpack-hot-middleware';
 import webpackConfig from '../webpack.config.dev';
+import { Processor } from '/server/processor';
+
+export const databaseUrl = 'mongodb://localhost/pp_main';
+
+export let processor = new Processor();
 
 /**
  * the express app

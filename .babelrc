@@ -1,4 +1,4 @@
 {
-  "presets": [ "es2015", "es2016", "es2017", "react" ],
+  "presets": [ ["env", { "targets": { "node": "current" } }], "react" ],
   "plugins": ["transform-class-properties", "babel-root-slash-import", "transform-object-rest-spread"]
 }
