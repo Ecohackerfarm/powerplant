@@ -2,7 +2,258 @@ import url from 'url';
 import request from 'request-promise';
 import mysql from 'mysql2/promise';
 import firebase from 'firebase';
-import { Task, SchedulerTask, SerialScheduler, ParallelScheduler } from 'async-task-schedulers';
+import { override, registerSignal, AsyncObject, Task, SchedulerTask, SerialScheduler, ParallelScheduler } from 'async-task-schedulers';
+
+/**
+ *
+ */
+class DocumentGetter extends AsyncObject {
+	/**
+	 * @param {String} modelPath
+	 */
+	constructor(modelPath) {
+		super();
+		
+		this.modelPath = modelPath;
+		this.documents = [];
+		
+		this.registerTaskParameters('getDocuments');
+	}
+	
+	/**
+	 * Schedule getDocument() calls to fetch all documents before doing the pushed
+	 * getDocuments() task.
+	 *
+	 * @return {Scheduler}
+	 */
+	newScheduler() {
+		const scheduler = new ParallelScheduler();
+		override(scheduler, 'push', (originalPush) => {
+			return function(task) {
+				const fetchScheduler = new ParallelScheduler();
+				const object = task.object;
+				const ids = task.parameters[0];
+				ids.forEach((id, index) => {
+					fetchScheduler.push(new Task(object, object.getDocument, id, index));
+				});
+				
+				const operationScheduler = new SerialScheduler();
+				operationScheduler.push(new SchedulerTask(fetchScheduler));
+				operationScheduler.push(task);
+				
+				originalPush(new SchedulerTask(operationScheduler));
+			};
+		});
+		scheduler.activate();
+		
+		return scheduler;
+	}
+	
+	/**
+	 * @return {Task}
+	 */
+	getTaskClass() {
+		return Task;
+	}
+	
+	/**
+	 * @param {String} id
+	 * @param {Number} index
+	 */
+	async getDocument(id, index) {
+		const requestOptions = {
+			method: 'GET',
+			uri: getApiUrl() + this.modelPath + '/' + id,
+			json: true
+		};
+		this.documents[index] = await request(requestOptions);
+	}
+	
+	/**
+	 * @param {String[]} ids
+	 */
+	async getDocuments(ids) {
+		return this.documents;
+	}
+}
+
+/**
+ *
+ */
+class DocumentRemover extends AsyncObject {
+	/**
+	 * @param {String} modelPath
+	 */
+	constructor(modelPath) {
+		super();
+		
+		this.modelPath = modelPath;
+		
+		this.registerTaskParameters('removeDocument');
+	}
+	
+	newScheduler() {
+		const scheduler = new ParallelScheduler();
+		scheduler.activate();
+		
+		return scheduler;
+	}
+	
+	getTaskClass() {
+		return Task;
+	}
+	
+	/**
+	 * @param {String} id
+	 */
+	async removeDocument(id) {
+		const requestOptions = {
+			method: 'DELETE',
+			uri: getApiUrl() + this.modelPath + '/' + id,
+			json: true
+		};
+		await request(requestOptions);
+		
+		this.onRemoved(id);
+	}
+	
+	/**
+	 * @param {String[]} ids
+	 */
+	removeDocuments(ids) {
+		ids.forEach(id => {
+			this.call('removeDocument', id);
+		});
+	}
+	
+	/**
+	 * Called when a document has been successfully removed.
+	 *
+	 * @param {String} id
+	 */
+	onRemoved(id) {
+	}
+}
+
+/**
+ *
+ */
+class DocumentAdder extends AsyncObject {
+	/**
+	 * @param {String} modelPath
+	 */
+	constructor(modelPath) {
+		super();
+		
+		this.modelPath = modelPath;
+		
+		this.registerTaskParameters('addDocument');
+	}
+	
+	newScheduler() {
+		const scheduler = new ParallelScheduler();
+		scheduler.activate();
+		
+		return scheduler;
+	}
+	
+	getTaskClass() {
+		return Task;
+	}
+	
+	/**
+	 * @param {Object} object
+	 */
+	async addDocument(object) {
+		const requestOptions = {
+			method: 'POST',
+			uri: getApiUrl() + this.modelPath,
+			json: true,
+			body: object
+		};
+		const response = await request(requestOptions);
+		
+		this.onAdded(response);
+	}
+	
+	/**
+	 * @param {Object[]} objects
+	 */
+	addDocuments(objects) {
+		objects.forEach(object => {
+			this.call('addDocument', object);
+		});
+	}
+	
+	/**
+	 * Called with the added document that contains the ID.
+	 *
+	 * @param {Object} document
+	 */
+	onAdded(document) {
+	}
+}
+
+/**
+ *
+ */
+class DocumentUpdater extends AsyncObject {
+	/**
+	 * @param {String} modelPath
+	 */
+	constructor(modelPath) {
+		super();
+		
+		this.modelPath = modelPath;
+		
+		this.registerTaskParameters('updateDocument');
+	}
+	
+	newScheduler() {
+		const scheduler = new ParallelScheduler();
+		scheduler.activate();
+		
+		return scheduler;
+	}
+	
+	getTaskClass() {
+		return Task;
+	}
+	
+	/**
+	 * @param {Object} object
+	 */
+	async updateDocument(id, object) {
+		const requestOptions = {
+			method: 'PUT',
+			uri: getApiUrl() + this.modelPath + '/' + id,
+			json: true,
+			body: object
+		};
+		const response = await request(requestOptions);
+		
+		this.onUpdated(id, response);
+	}
+	
+	/**
+	 * @param {String[]} ids
+	 * @param {Object[]} objects
+	 */
+	updateDocuments(ids, objects) {
+		ids.forEach((id, index) => {
+			this.call('updateDocument', id, objects[index]);
+		});
+	}
+	
+	/**
+	 * Called with the updadted document.
+	 *
+	 * @param {Object} document
+	 */
+	onUpdated(id, document) {
+	}
+}
+
 
 /**
  * Print a message to console.
@@ -24,6 +275,16 @@ function debug(message) {
 	}
 }
 
+
+/**
+ * @return {Object} Value of the option argument
+ */
+function parseOptionValue(argument, argumentWithoutValue) {
+	const valueString = argument.slice(argumentWithoutValue.length);
+	return valueString.includes(':')
+		? eval('({' + valueString + '})') : eval('(' + valueString + ')');
+}
+
 /**
  * Find a command line option either in the form '--optionName=key:value...' or
  * '--optionName=value', and return either an object or a value.
@@ -33,17 +294,40 @@ function debug(message) {
  */
 function parseOption(optionName) {
 	const optionStringWithoutValue = '--' + optionName + '=';
-	const option = options.find(option => option.startsWith(optionStringWithoutValue));
+	const option = optionArguments.find(option => option.startsWith(optionStringWithoutValue));
 	
-	let value = null;
-	if (option) {
-		let optionValue = option.slice(optionStringWithoutValue.length);
-		value = optionValue.includes(':')
-			? eval('({' + optionValue + '})') : eval('(' + optionValue + ')');
-	}
-	
-	return value;
+	return option ? parseOptionValue(option, optionStringWithoutValue) : null;
 }
+
+/**
+ * Parse all command line options with the given name, and return an array of
+ * values.
+ *
+ * @param {String} optionName
+ * @return {Object[]}
+ */
+function parseOptionArray(optionName) {
+	const optionStringWithoutValue = '--' + optionName + '=';
+	const options = optionArguments.filter(option => option.startsWith(optionStringWithoutValue));
+	
+	return options.map(option => parseOptionValue(option, optionStringWithoutValue));
+}
+
+/**
+ * @return {String[]} Non-option command line arguments
+ */
+function getNonOptionArguments() {
+	return commandLineArguments.filter(argument => (!argument.startsWith('--')));
+}
+
+/**
+ * @return {String[]} Option arguments
+ */
+function getOptionArguments() {
+	const nonOptionArguments = getNonOptionArguments();
+	return commandLineArguments.filter(argument => (!nonOptionArguments.includes(argument)));
+}
+
 
 /**
  * @return {String}
@@ -97,7 +381,7 @@ async function removeDocument(path, id) {
 		return;
 	}
 	
-	log('Removed ' + options[1] + ' ' + id);
+	log('Removed ' + nonOptionArguments[1] + ' ' + id);
 }
 
 /**
@@ -128,17 +412,93 @@ async function removeDocuments(getAllDocumentsPath, path) {
 	scheduler.activate();
 }
 
+const modelNameToPath = {};
+modelNameToPath['organism'] = '/organisms';
+modelNameToPath['companionship'] = '/companionships';
+modelNameToPath['location'] = '/locations';
+modelNameToPath['user'] = '/users';
+
+function getDocumentActionModelPath() {
+	return modelNameToPath[nonOptionArguments[1]];
+}
+
+/**
+ * Show documents.
+ */
+async function doShow() {
+	const path = getDocumentActionModelPath();
+	if (!path) {
+		return;
+	}
+	
+	const documents = await new DocumentGetter(path).call('getDocuments', nonOptionArguments.slice(2));
+	
+	documents.forEach(document => {
+		console.log(document);
+	});
+}
+
+/**
+ * Add documents.
+ */
+async function doAdd() {
+	const path = getDocumentActionModelPath();
+	if (!path) {
+		return;
+	}
+	
+	const adder = new DocumentAdder(path);
+	registerSignal(adder, 'onAdded', undefined, (document) => {
+		console.log('Added ' + nonOptionArguments[1]);
+		console.log(document);
+	});
+	
+	adder.addDocuments(parseOptionArray('document'));
+}
+
+/**
+ * Update documents.
+ */
+async function doUpdate() {
+	const path = getDocumentActionModelPath();
+	if (!path) {
+		return;
+	}
+	
+	const updater = new DocumentUpdater(path);
+	registerSignal(updater, 'onUpdated', undefined, (id, document) => {
+		console.log('Updated ' + nonOptionArguments[1] + ' ' + id);
+		console.log(document);
+	});
+	
+	updater.updateDocuments(nonOptionArguments.slice(2), parseOptionArray('document'));
+}
+
 /**
  * Remove documents.
  */
-async function remove() {
-	switch (options[1]) {
+async function doRemove() {
+	const path = getDocumentActionModelPath();
+	if (!path) {
+		return;
+	}
+	
+	if (nonOptionArguments.length > 2) {
+		const remover = new DocumentRemover(path);
+		registerSignal(remover, 'onRemoved', undefined, (id) => {
+			console.log('Removed ' + nonOptionArguments[1] + ' ' + id);
+		});
+		
+		remover.removeDocuments(nonOptionArguments.slice(2));
+	} else {
+		switch (nonOptionArguments[1]) {
 		case 'organism':
 			await removeDocuments('/get-organisms-by-name', '/organisms/');
 			break;
 		case 'companionship':
 			await removeDocuments('/get-all-companionships', '/companionships/');
 			break;
+		}
 	}
 }
 
@@ -265,17 +625,21 @@ let powerplantConfig = {
  * for the command.
  */
 const commands = {
+	'remove': doRemove,
+	'add': doAdd,
+	'update': doUpdate,
+	'show': doShow,
 	'push-pfaf': pushPfaf,
-	'push-firebase': pushFirebase,
-	'remove': remove
+	'push-firebase': pushFirebase
 };
 
-const options = process.argv.slice(2);
-if (options.length > 0) {
-	const command = commands[options[0]];
-	
+const commandLineArguments = process.argv.slice(2);
+const nonOptionArguments = getNonOptionArguments();
+const optionArguments = getOptionArguments();
+
+if (nonOptionArguments.length > 0) {
 	verbose = parseOption('verbose');
 	Object.assign(powerplantConfig, parseOption('powerplantConfig'));
 	
-	command();
+	commands[nonOptionArguments[0]]();
 }

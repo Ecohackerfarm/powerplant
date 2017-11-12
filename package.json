@@ -24,7 +24,7 @@
   },
   "homepage": "https://github.com/Ecohackerfarm/powerplant#readme",
   "dependencies": {
-    "async-task-schedulers": "^0.0.4",
+    "async-task-schedulers": "^0.0.5",
     "axios": "^0.16.2",
     "babel-polyfill": "^6.24.1",
     "bcrypt": "^1.0.2",
