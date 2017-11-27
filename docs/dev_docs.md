@@ -53,11 +53,12 @@ NodeJS, MongoDB
 4. Run `npm install` to get all packages installed
 5. Generate a private key and export it as a string in `/jwt-secret.js`
    ex: `export default 'random-string-comes-here'`
-6. Run the Firebase data migration by running `npm run migrate`
-7. At this point, everything should be set up. Run `npm test` to make
+6. Run the server `npm start`
+7. Run the Firebase data migration by running `npm run migrate` in a second bash (atm you have to ctrl+c at the end)
+8. At this point, everything should be set up. Run `npm test` to make
    sure everything is working, and `npm start` to begin serving the
    website on `http://localhost:8080`
-8. Done!
+9. Done!
 
 It is also possible to run MongoDB in Docker:
 

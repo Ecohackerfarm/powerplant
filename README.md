@@ -29,11 +29,12 @@ NodeJS, Docker (with mongo db)
    `/jwt-secret.js`
    ex: `export default 'random-string-comes-here'`
 7.  Start the Docker image by running `npm run mongo`
-8.  Run the Firebase data migration by running `npm run migrate`
-9.  At this point, everything should be set up. Run `npm test` to make
+8.  Run 'npm start'
+9.  Run the Firebase data migration by running `npm run migrate`
+10.  At this point, everything should be set up. Run `npm test` to make
     sure everything is working, and `npm start` to begin serving the
     website on `http://localhost:8080`
-10. Done!
+11. Done!
 
 The project may not run properly after reboot because it fails to
 connect to the database. Running `docker restart pp_main` fixes the
