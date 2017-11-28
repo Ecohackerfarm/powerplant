@@ -581,6 +581,8 @@ async function pushFirebase() {
 	firebase.initializeApp(firebaseConfig);
 
 	const firebaseData = (await firebase.database().ref('/').once('value')).val();
+	firebase.database().goOffline();
+	
 	const firebasePlants = firebaseData.plants;
 	const firebaseCompanions = firebaseData.companions;
 	debug(firebaseData);

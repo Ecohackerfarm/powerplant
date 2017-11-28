@@ -205,7 +205,7 @@ export class Processor extends AsyncObject {
 				throw VALIDATION_EXCEPTION;
 			}
 			
-			const companionships = await Companionship.find().byCrop(organismIds).exec();
+			const companionships = await Companionship.find().byCrop(...organismIds).exec();
 			if (companionships.length > 0) {
 				throw VALIDATION_EXCEPTION;
 			}
