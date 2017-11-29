@@ -404,9 +404,12 @@ export class Processor extends AsyncObject {
 
 	/**
 	 * @param {String} regex
+	 * @param {Number} index
+	 * @param {Number} length
 	 */
-	async getOrganismsByName(regex) {
-		return await Organism.find().byName(this.escapeRegEx(regex)).exec();
+	async getOrganismsByName(regex, index, length) {
+		const organisms = await Organism.find().byName(this.escapeRegEx(regex)).exec();
+		return organisms.slice(index, index + length);
 	}
 	
 	/**

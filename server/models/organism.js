@@ -13,7 +13,7 @@ const organismSchema = new mongoose.Schema({
  */
 organismSchema.query.byName = function(name) {
 	const regex = new RegExp(name, 'i');
-	return this.find({ $or: [{ commonName: regex }, { binomialName: regex }] });
+	return this.find({ $or: [{ commonName: regex }, { binomialName: regex }] }).sort('commonName binomialName');
 };
 
 const Organism = mongoose.model('Organism', organismSchema);

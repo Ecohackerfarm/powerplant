@@ -281,8 +281,14 @@ function debug(message) {
  */
 function parseOptionValue(argument, argumentWithoutValue) {
 	const valueString = argument.slice(argumentWithoutValue.length);
+	const valueStringLowerCase = valueString.toLowerCase();
+	
+	if ((valueStringLowerCase == 'true') || (valueStringLowerCase == 'false')) {
+		return Boolean(valueStringLowerCase);
+	}
+	
 	return valueString.includes(':')
-		? eval('({' + valueString + '})') : eval('(' + valueString + ')');
+		? eval('({' + valueString + '})') : eval('("' + valueString + '")');
 }
 
 /**
@@ -385,6 +391,28 @@ async function removeDocument(path, id) {
 }
 
 /**
+ *
+ */
+async function getAllOrganisms() {
+	let all = [];
+	let index = 0;
+	const length = 50;
+	
+	for (;;) {
+		const part = await getOrganismsByName('', index, length);
+		
+		all = all.concat(part);
+		index += length;
+		
+		if (part.length < length) {
+			break;
+		}
+	}
+	
+	return all;
+}
+
+/**
  * Remove all documents.
  *
  * @param {String} path
@@ -398,7 +426,11 @@ async function removeDocuments(getAllDocumentsPath, path) {
 
 	let documents;
 	try {
-		documents = await request(httpOptions);
+		if (getAllDocumentsPath.includes('get-organisms-by-name')) {
+			documents = await getAllOrganisms();
+		} else {
+			documents = await request(httpOptions);
+		}
 	} catch (exception) {
 		debug(exception);
 		return;
@@ -500,6 +532,42 @@ async function doRemove() {
 			break;
 		}
 	}
+}
+
+/**
+ * @param {String} name
+ * @param {Number} index
+ * @param {Number} length
+ */
+async function getOrganismsByName(name, index, length) {
+	const httpOptions = {
+		method: 'GET',
+		uri: getApiUrl() + '/get-organisms-by-name?name=' + name + '&index=' + index + '&length=' + length,
+		json: true,
+	};
+	
+	let response;
+	try {
+		response = await request(httpOptions);
+	} catch (exception) {
+		debug(exception);
+		return null;
+	}
+	
+	return response;
+}
+
+/**
+ *
+ */
+async function doGetOrganismsByName() {
+	const name = parseOption('name');
+	const index = parseOption('index');
+	const length = parseOption('length');
+	
+	const organisms = await getOrganismsByName(name, index, length);
+	
+	log(organisms);
 }
 
 /**
@@ -631,6 +699,7 @@ const commands = {
 	'add': doAdd,
 	'update': doUpdate,
 	'show': doShow,
+	'get-organisms-by-name': doGetOrganismsByName,
 	'push-pfaf': pushPfaf,
 	'push-firebase': pushFirebase
 };
