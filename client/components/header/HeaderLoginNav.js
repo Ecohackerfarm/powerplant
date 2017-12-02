@@ -8,6 +8,6 @@ export default () =>
 			<NavItem eventKey={2}>Sign up</NavItem>
 		</LinkContainer>
 		<LinkContainer exact to="/login">
-			<NavItem eventKey={3}>Log in</NavItem>
+			<NavItem className="log in" eventKey={3}>Log in</NavItem>
 		</LinkContainer>
 	</Nav>;
