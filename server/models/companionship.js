@@ -21,6 +21,15 @@ const companionshipSchema = new Schema({
 	compatibility: { type: Number, required: true, min: -1, max: 3 }
 });
 
+/**
+ * @param {Crop} crop
+ * @return {Boolean}
+ */
+companionshipSchema.methods.containsCrop = function(crop) {
+	const id = crop._id.toString();
+	return (this.crop1 == id) || (this.crop2 == id);
+}
+
 companionshipSchema.index({ crop1: 1, crop2: 1 }, { unique: true });
 
 // custom query allowing for things like Companionship.find().byCrop(crop1, crop2)

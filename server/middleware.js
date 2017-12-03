@@ -236,7 +236,21 @@ export async function getOrganismsByName(req, res, next) {
 		const organisms = await processor.call('getOrganismsByName', req.query.name, index, length);
 		
 		res.json(organisms);
-	} catch (exeption) {
+	} catch (exception) {
+		handleError(next, exception);
+	}
+}
+
+/**
+ * @param {Object} req
+ * @param {Object} res
+ * @param {Function} next
+ */
+export async function getCropGroups(req, res, next) {
+	try {
+		const groups = await processor.call('getCropGroups', req.body.cropIds);
+		res.json(groups);
+	} catch (exception) {
 		handleError(next, exception);
 	}
 }

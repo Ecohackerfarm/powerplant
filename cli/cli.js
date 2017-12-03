@@ -571,6 +571,30 @@ async function doGetOrganismsByName() {
 }
 
 /**
+ * {beans,cabbage,peas},apple
+ */
+async function doGetCropGroups() {
+	const crops = parseOptionArray('crop');
+	
+	const httpOptions = {
+		method: 'POST',
+		uri: getApiUrl() + '/get-crop-groups',
+		json: true,
+		body: { cropIds: crops }
+	};
+	
+	let response;
+	try {
+		response = await request(httpOptions);
+	} catch (exception) {
+		debug(exception);
+		return null;
+	}
+	
+	log(response);
+}
+
+/**
  * Push the PFAF (Plants For A Future, http://www.pfaf.org) database to
  * powerplant server.
  */
@@ -700,6 +724,7 @@ const commands = {
 	'update': doUpdate,
 	'show': doShow,
 	'get-organisms-by-name': doGetOrganismsByName,
+	'get-crop-groups': doGetCropGroups,
 	'push-pfaf': pushPfaf,
 	'push-firebase': pushFirebase
 };

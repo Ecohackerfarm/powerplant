@@ -8,6 +8,7 @@ import Organism from '/server/models/organism';
 import Location from '/server/models/location';
 import validateUser from '/shared/validation/userValidation';
 import validateCredentials from '/shared/validation/loginValidation';
+import { Combinations } from '/shared/combinations.js';
 
 class ProcessorException extends Error {
 	/**
@@ -38,8 +39,9 @@ export class Processor extends AsyncObject {
 		this.registerTaskParameters('getAuthorizedDocument', false);
 		this.registerTaskParameters('getAuthenticatedUser', false);
 		this.registerTaskParameters('getAllDocuments', false);
-		this.registerTaskParameters('getCompanionshipScores', false);
 		this.registerTaskParameters('getOrganismsByName', false);
+		this.registerTaskParameters('getCropGroups', false);
+		this.registerTaskParameters('getCompanionshipScores', false);
 		this.registerTaskParameters('getCompanionshipsByOrganism', false);
 		this.registerTaskParameters('getCompanionship', false);
 		this.registerTaskParameters('login', false);
@@ -391,6 +393,78 @@ export class Processor extends AsyncObject {
 		}
 		
 		return this.calculateCompanionshipScores(companionships, ids);
+	}
+	
+	/**
+	 * @param {Combinations} combinations
+	 * @param {Number} maximumGroupSize
+	 * @return {Array}
+	 */
+	removeCropGroupsFromCombinations(combinations, maximumGroupSize) {
+		const groups = [];
+		
+		while (maximumGroupSize >= 2) {
+			const cursorCombinations = combinations.getCombinations(maximumGroupSize);
+			if (cursorCombinations.length > 0) {
+				const combination = cursorCombinations[0];
+				combinations.removeElements(combination);
+				groups.push(combination);
+			} else {
+				maximumGroupSize--;
+			}
+		}
+		
+		return groups;
+	}
+	
+	/**
+	 * @param {String[]} cropIds
+	 */
+	async getCropGroups(cropIds) {
+		let crops = await this.getDocuments(Organism, cropIds);
+		if (!crops) {
+			throw VALIDATION_EXCEPTION;
+		}
+		
+		for (let index = 0; index < crops.length; index++) {
+			const crop = crops[index] = crops[index].toObject();
+			crop.relationships = await Companionship.find().byCrop(crop._id).exec();
+		}
+		
+		let groups = [];
+		
+		// Create groups of companion crops
+		crops = crops.map(crop => {
+			crop.isCompatible = function(anotherCrop) {
+				return this.relationships.some(relationship => (relationship.containsCrop(anotherCrop) && (relationship.compatibility > 0)));
+			};
+			return crop;
+		});
+		const companionCombinations = new Combinations(crops);
+		groups = groups.concat(this.removeCropGroupsFromCombinations(companionCombinations, companionCombinations.getLargestCombinationSize()));
+		
+		// From the remaining crops, create small groups of neutral crops
+		const remainingCrops = companionCombinations.getElements().map(crop => {
+			crop.isCompatible = function(anotherCrop) {
+				return crop.relationships.some(relationship => ((!relationship.containsCrop(anotherCrop)) || ((relationship.containsCrop(anotherCrop)) && (relationship.compatibility == 0))));
+			};
+			return crop;
+		});
+		const neutralCombinations = new Combinations(remainingCrops);
+		if (neutralCombinations.getLargestCombinationSize() >= 2) {
+			groups = groups.concat(this.removeCropGroupsFromCombinations(neutralCombinations, 2));
+		}
+		
+		// From the remaining crops, create single crop groups
+		groups = groups.concat(neutralCombinations.getCombinations(1));
+		
+		for (let index = 0; index < groups.length; index++) {
+			groups[index].forEach(crop => {
+				delete crop.relationships;
+				delete crop.isCompatible;
+			});
+		}
+		return groups;
 	}
 	
 	/**
