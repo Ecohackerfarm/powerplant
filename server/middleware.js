@@ -260,6 +260,20 @@ export async function getCropGroups(req, res, next) {
  * @param {Object} res
  * @param {Function} next
  */
+export async function getCompatibleCrops(req, res, next) {
+	try {
+		const crops = await processor.call('getCompatibleCrops', req.body.cropIds);
+		res.json(crops);
+	} catch (exception) {
+		handleError(next, exception);
+	}
+}
+
+/**
+ * @param {Object} req
+ * @param {Object} res
+ * @param {Function} next
+ */
 export async function getCompanionship(req, res, next) {
 	try {
 		const companionship = await processor.call('getCompanionship', req.params.organism0Id, req.params.organism1Id);

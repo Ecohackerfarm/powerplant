@@ -98,4 +98,35 @@ export class Combinations {
 			this.removeElement(combination[index]);
 		}
 	}
+	
+	/**
+	 * Get the largest combination that contains the given smaller combination.
+	 *
+	 * @param {Array} elements
+	 * @return {Array}
+	 */
+	getLargestCombinationWithElements(elements) {
+		let size = elements.length;
+		let largestCombination = [];
+		
+		while (size <= this.getLargestCombinationSize()) {
+			const found = this.getCombinations(size).some(combination => {
+				const valid = elements.every(element => combinationContainsElement(combination, element));
+				
+				if (valid) {
+					largestCombination = combination;
+				}
+				
+				return valid;
+			});
+			
+			if (!found) {
+				break;
+			}
+			
+			size++;
+		}
+		
+		return largestCombination;
+	}
 }

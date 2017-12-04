@@ -1,5 +1,5 @@
 import express from 'express';
-import { documentGet, documentPut, documentDelete, documentPost, getCropGroups, getCompanionshipScores, getAllCompanionships, getCompanionshipsByOrganism, getOrganismsByName, getCompanionship, getLocations, login } from '/server/middleware';
+import { documentGet, documentPut, documentDelete, documentPost, getCropGroups, getCompatibleCrops, getCompanionshipScores, getAllCompanionships, getCompanionshipsByOrganism, getOrganismsByName, getCompanionship, getLocations, login } from '/server/middleware';
 import Organism from '/server/models/organism';
 import Companionship from '/server/models/companionship';
 import Location from '/server/models/location';
@@ -51,6 +51,7 @@ router.use('/locations', newDocumentRouter(Location));
 router.post('/login', login);
 router.get('/get-organisms-by-name', getOrganismsByName);
 router.post('/get-crop-groups', getCropGroups);
+router.post('/get-compatible-crops', getCompatibleCrops);
 router.get('/get-companionship-scores', getCompanionshipScores);
 router.get('/get-all-companionships', getAllCompanionships);
 router.get('/get-companionships-by-organism/:organismId', getCompanionshipsByOrganism);

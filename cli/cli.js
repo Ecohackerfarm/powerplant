@@ -595,6 +595,30 @@ async function doGetCropGroups() {
 }
 
 /**
+ *
+ */
+async function doGetCompatibleCrops() {
+	const crops = parseOptionArray('crop');
+	
+	const httpOptions = {
+		method: 'POST',
+		uri: getApiUrl() + '/get-compatible-crops',
+		json: true,
+		body: { cropIds: crops }
+	};
+	
+	let response;
+	try {
+		response = await request(httpOptions);
+	} catch (exception) {
+		debug(exception);
+		return null;
+	}
+	
+	log(response);
+}
+
+/**
  * Push the PFAF (Plants For A Future, http://www.pfaf.org) database to
  * powerplant server.
  */
@@ -725,6 +749,7 @@ const commands = {
 	'show': doShow,
 	'get-organisms-by-name': doGetOrganismsByName,
 	'get-crop-groups': doGetCropGroups,
+	'get-compatible-crops': doGetCompatibleCrops,
 	'push-pfaf': pushPfaf,
 	'push-firebase': pushFirebase
 };
