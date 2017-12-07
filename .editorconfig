@@ -15,7 +15,7 @@ tab_width = 2
 trim_trailing_whitespace = true
 [*.js]
 # not officially supported
-quote_type = double
+quote_type = single
 # not officially supported
 spaces_around_operators = true
 
