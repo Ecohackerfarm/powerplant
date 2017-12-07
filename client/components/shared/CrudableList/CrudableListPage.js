@@ -46,67 +46,63 @@ const CrudableListPage = ({
 			<Route
 				exact
 				path={match.url}
-				render={() => (
-					<Grid>
-						<SetHeaderTitle
-							title={itemName.charAt(0).toUpperCase() + itemName.slice(1) + 's'}
-						/>
-						<ItemList
-							deleteAction={actions.delete}
-							match={match}
-							items={items}
-							ItemView={ItemListView}
-							itemName={itemName}
-						/>
-						<LinkContainer to={`${match.url}/add`}>
-							<Button bsStyle="floating">+</Button>
-						</LinkContainer>
-					</Grid>
-				)}
+				render={() =>
+								<Grid>
+										<SetHeaderTitle
+												title={itemName.charAt(0).toUpperCase() + itemName.slice(1) + 's'}
+												/>
+											<ItemList
+													deleteAction={actions.delete}
+													match={match}
+													items={items}
+													ItemView={ItemListView}
+													itemName={itemName}
+													/>
+												<LinkContainer to={`${match.url}/add`}>
+														<Button bsStyle="floating">+</Button>
+													</LinkContainer>
+								</Grid>}
+								/>
+								<Route
+									exact
+									path={`${match.url}/add`}
+									render={() =>
+													<div>
+															<SetHeaderTitle title={`Add ${itemName}`} />
+																<AddItemPage
+																		AddItemForm={AddItemForm}
+																		itemName={itemName}
+																		onSubmit={actions.create}
+																		homeUrl={match.url}
+																		/>
+													</div>}
+													/>
+													<Route
+														exact
+														path={`${match.url}/:id/edit`}
+														render={({ match }) =>
+																		<div>
+																				<SetHeaderTitle title={`Edit ${itemName}`} />
+																					<EditItemPage
+																							EditItemForm={AddItemForm}
+																							editAction={actions.edit}
+																							itemName={itemName}
+																							id={match.params.id}
+																							homeUrl={homeUrl}
+																							items={items}
+																							/>
+																		</div>}
+																		/>
+																		<Route
+																			exact
+																			path={`${match.url}/:id`}
+																			render={({ match }) => (
+																				<div>
+																					<SetHeaderTitle title={`${itemName}`} />
+																					<DetailPage match={match}/>
+																				</div>)}
 			/>
-			<Route
-				exact
-				path={`${match.url}/add`}
-				render={() => (
-					<div>
-						<SetHeaderTitle title={`Add ${itemName}`} />
-						<AddItemPage
-							AddItemForm={AddItemForm}
-							itemName={itemName}
-							onSubmit={actions.create}
-							homeUrl={match.url}
-						/>
-					</div>
-				)}
-			/>
-			<Route
-				exact
-				path={`${match.url}/:id/edit`}
-				render={({ match }) => (
-					<div>
-						<SetHeaderTitle title={`Edit ${itemName}`} />
-						<EditItemPage
-							EditItemForm={AddItemForm}
-							editAction={actions.edit}
-							itemName={itemName}
-							id={match.params.id}
-							homeUrl={homeUrl}
-							items={items}
-						/>
-					</div>
-				)}
-			/>
-			<Route
-				exact
-				path={`${match.url}/:id`}
-				render={({ match }) => (
-					<div>
-						<SetHeaderTitle title={`${itemName}`} />
-						<DetailPage match={match} />
-					</div>
-				)}
-			/>
-		</Switch>
+			</Switch>
 	);
 };
 
