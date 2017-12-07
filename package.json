@@ -4,6 +4,7 @@
   "description": "Make the garden planning process easier and more efficient",
   "main": "server.js",
   "scripts": {
+    "preinstall": "./.git_hooks/_init-hooks-path.sh",
     "start": "nodemon --watch server --exec babel-node -- server/server.js",
     "test": "mocha --compilers js:babel-register",
     "lint": "eslint client server shared test",
