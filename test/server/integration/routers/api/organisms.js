@@ -27,18 +27,12 @@ describe(rootUrl + '/', () => {
 		});
 	});
 	describe('GET', () => {
-		it('should return all organisms with no arguments', () => {
-			return request
-				.get('/api/get-organisms-by-name')
-				.expect(200)
-				.expect('Content-Type', jsonType)
-				.then(res => {
-					expect(res.body).to.have.length(count);
-				});
+		it('should 400 with no arguments', () => {
+			return request.get('/api/get-organisms-by-name').expect(400);
 		});
 		it('should return organisms matching a query string', () => {
 			return request
-				.get('/api/get-organisms-by-name' + '?name=test')
+				.get('/api/get-organisms-by-name' + '?name=test&index=0&length=30')
 				.expect(200)
 				.expect('Content-Type', jsonType)
 				.then(res => {
@@ -50,7 +44,9 @@ describe(rootUrl + '/', () => {
 		});
 		it('should return no organisms for gibberish query string', () => {
 			return request
-				.get('/api/get-organisms-by-name' + '?name=jf93 FJ(Fiojs')
+				.get(
+					'/api/get-organisms-by-name' + '?name=jf93 FJ(Fiojs&index=0&length=30'
+				)
 				.expect(200)
 				.expect('Content-Type', jsonType)
 				.expect([]);
@@ -212,11 +208,11 @@ describe(rootUrl + '/:cropId1/companionships/:cropId2', () => {
 	let testId;
 	before(() => {
 		return request
-			.get('/api/get-organisms-by-name' + '?name=apple')
+			.get('/api/get-organisms-by-name' + '?name=apple&index=0&length=30')
 			.then(res => {
 				appleId = res.body[0]._id;
 				return request
-					.get('/api/get-organisms-by-name' + '?name=test')
+					.get('/api/get-organisms-by-name' + '?name=test&index=0&length=30')
 					.then(res => {
 						testId = res.body[0]._id;
 					});

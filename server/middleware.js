@@ -26,6 +26,34 @@ function handleError(next, exception) {
 }
 
 /**
+ * Parse integer and validate that it is in the given range.
+ *
+ * @param {Function} next
+ * @param {String} string
+ * @param {Number} minimum
+ * @param {Number} maximum
+ * @return {Number}
+ */
+function parseInteger(next, string, minimum, maximum) {
+	let value;
+	try {
+		if (string === undefined) {
+			throw new Error();
+		}
+
+		value = Number(string);
+	} catch (exception) {
+		handleError(next, VALIDATION_EXCEPTION);
+	}
+
+	if (value < minimum || value > maximum) {
+		handleError(next, VALIDATION_EXCEPTION);
+	}
+
+	return value;
+}
+
+/**
  * @param {Object} req
  * @param {Function} next
  * @return {User}
@@ -230,15 +258,49 @@ export async function getCompanionshipScores(req, res, next) {
  */
 export async function getOrganismsByName(req, res, next) {
 	try {
-		let organisms;
-		if (typeof req.query.name !== 'undefined') {
-			organisms = await processor.call('getOrganismsByName', req.query.name);
-		} else {
-			organisms = await processor.call('getAllDocuments', Organism);
+		if (typeof req.query.name === undefined) {
+			throw VALIDATION_EXCEPTION;
 		}
+		const index = parseInteger(next, req.query.index, 0, 20000);
+		const length = parseInteger(next, req.query.length, 1, 50);
+
+		const organisms = await processor.call(
+			'getOrganismsByName',
+			req.query.name,
+			index,
+			length
+		);
 
 		res.json(organisms);
-	} catch (exeption) {
+	} catch (exception) {
+		handleError(next, exception);
+	}
+}
+
+/**
+ * @param {Object} req
+ * @param {Object} res
+ * @param {Function} next
+ */
+export async function getCropGroups(req, res, next) {
+	try {
+		const groups = await processor.call('getCropGroups', req.body.cropIds);
+		res.json(groups);
+	} catch (exception) {
+		handleError(next, exception);
+	}
+}
+
+/**
+ * @param {Object} req
+ * @param {Object} res
+ * @param {Function} next
+ */
+export async function getCompatibleCrops(req, res, next) {
+	try {
+		const crops = await processor.call('getCompatibleCrops', req.body.cropIds);
+		res.json(crops);
+	} catch (exception) {
 		handleError(next, exception);
 	}
 }

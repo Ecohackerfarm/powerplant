@@ -12,6 +12,7 @@ import Organism from '/server/models/organism';
 import Location from '/server/models/location';
 import validateUser from '/shared/validation/userValidation';
 import validateCredentials from '/shared/validation/loginValidation';
+import { Combinations } from '/shared/combinations.js';
 
 class ProcessorException extends Error {
 	/**
@@ -42,8 +43,10 @@ export class Processor extends AsyncObject {
 		this.registerTaskParameters('getAuthorizedDocument', false);
 		this.registerTaskParameters('getAuthenticatedUser', false);
 		this.registerTaskParameters('getAllDocuments', false);
-		this.registerTaskParameters('getCompanionshipScores', false);
 		this.registerTaskParameters('getOrganismsByName', false);
+		this.registerTaskParameters('getCropGroups', false);
+		this.registerTaskParameters('getCompatibleCrops', false);
+		this.registerTaskParameters('getCompanionshipScores', false);
 		this.registerTaskParameters('getCompanionshipsByOrganism', false);
 		this.registerTaskParameters('getCompanionship', false);
 		this.registerTaskParameters('login', false);
@@ -409,9 +412,146 @@ export class Processor extends AsyncObject {
 	}
 
 	/**
+	 * @param {Combinations} combinations
+	 * @param {Number} maximumGroupSize
+	 * @return {Array}
+	 */
+	static removeCropGroupsFromCombinations(combinations, maximumGroupSize) {
+		const groups = [];
+
+		while (maximumGroupSize >= 2) {
+			const cursorCombinations = combinations.getCombinations(maximumGroupSize);
+			if (cursorCombinations.length > 0) {
+				const combination = cursorCombinations[0];
+				combinations.removeElements(combination);
+				groups.push(combination);
+			} else {
+				maximumGroupSize--;
+			}
+		}
+
+		return groups;
+	}
+
+	/**
+	 * @param {Organism[]} crops
+	 */
+	async assignRelationships(crops) {
+		for (let index = 0; index < crops.length; index++) {
+			const crop = (crops[index] = crops[index].toObject());
+			crop.relationships = await Companionship.find()
+				.byCrop(crop._id)
+				.exec();
+		}
+	}
+
+	/**
+	 * @param {Organism} crop
+	 * @return {Boolean}
+	 */
+	static isCompanion = function(crop) {
+		return this.relationships.some(
+			relationship =>
+				relationship.containsCrop(crop) && relationship.compatibility > 0
+		);
+	};
+
+	/**
+	 * @param {Organism} crop
+	 * @return {Boolean}
+	 */
+	static isNeutral = function(crop) {
+		return this.relationships.some(
+			relationship =>
+				!relationship.containsCrop(crop) ||
+				(relationship.containsCrop(crop) && relationship.compatibility == 0)
+		);
+	};
+
+	/**
+	 * @param {Organism[]} crops
+	 * @param {Function} isCompatibleFunction
+	 */
+	static assignIsCompatible(crops, isCompatibleFunction) {
+		crops.forEach(crop => {
+			crop.isCompatible = isCompatibleFunction;
+		});
+	}
+
+	/**
+	 * @param {String[]} cropIds
+	 * @return {Array}
+	 */
+	async getCropGroups(cropIds) {
+		let crops = await this.getDocuments(Organism, cropIds);
+		if (!crops) {
+			throw VALIDATION_EXCEPTION;
+		}
+
+		await this.assignRelationships(crops);
+
+		let groups = [];
+
+		// Create groups of companion crops
+		Processor.assignIsCompatible(crops, Processor.isCompanion);
+		const companionCombinations = new Combinations(crops);
+		groups = groups.concat(
+			Processor.removeCropGroupsFromCombinations(
+				companionCombinations,
+				companionCombinations.getLargestCombinationSize()
+			)
+		);
+
+		// From the remaining crops, create small groups of neutral crops
+		const remainingCrops = companionCombinations.getElements();
+		Processor.assignIsCompatible(remainingCrops, Processor.isNeutral);
+		const neutralCombinations = new Combinations(remainingCrops);
+		if (neutralCombinations.getLargestCombinationSize() >= 2) {
+			groups = groups.concat(
+				Processor.removeCropGroupsFromCombinations(neutralCombinations, 2)
+			);
+		}
+
+		// From the remaining crops, create single crop groups
+		groups = groups.concat(neutralCombinations.getCombinations(1));
+
+		groups.forEach(group =>
+			group.forEach(crop => {
+				delete crop.relationships;
+				delete crop.isCompatible;
+			})
+		);
+		return groups;
+	}
+
+	/**
+	 * @param {String[]} cropIds
+	 * @return {Array}
+	 */
+	async getCompatibleCrops(cropIds) {
+		let allCrops = await this.getAllDocuments(Organism);
+		await this.assignRelationships(allCrops);
+		Processor.assignIsCompatible(allCrops, Processor.isCompanion);
+		const combinations = new Combinations(allCrops);
+
+		const initialCrops = cropIds.map(id =>
+			allCrops.find(crop => crop._id == id)
+		);
+		const compatibleCrops = combinations
+			.getLargestCombinationWithElements(initialCrops)
+			.filter(crop => !initialCrops.includes(crop));
+
+		compatibleCrops.forEach(crop => {
+			delete crop.relationships;
+			delete crop.isCompatible;
+		});
+		return compatibleCrops;
+	}
+
+	/**
 	 * Converts a string into regex-friendly format, escaping all regex special characters
-	 * @param  {String} text string to convert
-	 * @return {String}      escaped string
+	 * @param	 {String} text string to convert
+	 * @return {String}			 escaped string
 	 */
 	escapeRegEx(text) {
 		return text.replace(/[-[\]{}()*+?.,\\^$|#\s]/g, '\\$&');
@@ -419,11 +559,14 @@ export class Processor extends AsyncObject {
 
 	/**
 	 * @param {String} regex
+	 * @param {Number} index
+	 * @param {Number} length
 	 */
-	async getOrganismsByName(regex) {
-		return await Organism.find()
+	async getOrganismsByName(regex, index, length) {
+		const organisms = await Organism.find()
 			.byName(this.escapeRegEx(regex))
 			.exec();
+		return organisms.slice(index, index + length);
 	}
 
 	/**

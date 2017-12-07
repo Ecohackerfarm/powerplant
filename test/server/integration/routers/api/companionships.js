@@ -100,14 +100,19 @@ describe('/api/get-companionship-scores', () => {
 		before(() => {
 			// fetching 3 crops
 			const cropUrl = '/api/get-organisms-by-name?name=';
-			return request.get(cropUrl + 'apple').then(appleRes => {
+			const cropUrlSuffix = '&index=0&length=30';
+			return request.get(cropUrl + 'apple' + cropUrlSuffix).then(appleRes => {
 				appleId = appleRes.body[0]._id;
-				return request.get(cropUrl + 'potato').then(potatoRes => {
-					potatoId = potatoRes.body[0]._id;
-					return request.get(cropUrl + 'bean').then(beanRes => {
-						beanId = beanRes.body[0]._id;
+				return request
+					.get(cropUrl + 'potato' + cropUrlSuffix)
+					.then(potatoRes => {
+						potatoId = potatoRes.body[0]._id;
+						return request
+							.get(cropUrl + 'bean' + cropUrlSuffix)
+							.then(beanRes => {
+								beanId = beanRes.body[0]._id;
+							});
 					});
-				});
 			});
 		});
 		it('should 400 with no query', () => {

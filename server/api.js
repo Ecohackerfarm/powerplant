@@ -4,6 +4,8 @@ import {
 	documentPut,
 	documentDelete,
 	documentPost,
+	getCropGroups,
+	getCompatibleCrops,
 	getCompanionshipScores,
 	getAllCompanionships,
 	getCompanionshipsByOrganism,
@@ -70,6 +72,9 @@ router.use('/locations', newDocumentRouter(Location));
  * API function points for more complex calculations.
  */
 router.post('/login', login);
+router.get('/get-organisms-by-name', getOrganismsByName);
+router.post('/get-crop-groups', getCropGroups);
+router.post('/get-compatible-crops', getCompatibleCrops);
 router.get('/get-companionship-scores', getCompanionshipScores);
 router.get('/get-all-companionships', getAllCompanionships);
 router.get(
@@ -77,7 +82,6 @@ router.get(
 	getCompanionshipsByOrganism
 );
 router.get('/get-companionship/:organism0Id/:organism1Id', getCompanionship);
-router.get('/get-organisms-by-name', getOrganismsByName);
 router.get('/get-locations', getLocations);
 
 router.get('*', (req, res, next) => {
