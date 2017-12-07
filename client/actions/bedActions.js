@@ -3,14 +3,10 @@
  * @memberof client.actions
  */
 
-const createBed = function(bed) {
-  
-}
+const createBed = function(bed) {};
 
-const deleteBed = function() {
-}
+const deleteBed = function() {};
 
-const editBed = function() {
-}
+const editBed = function() {};
 
 export { createBed, deleteBed, editBed };
