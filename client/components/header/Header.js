@@ -33,11 +33,11 @@ class Header extends React.Component {
 							<NavItem eventKey={1.1}>Locations</NavItem>
 						</LinkContainer>
 					</Nav>
-					{this.props.auth.isAuthenticated
-						? <HeaderLogoutNav
-								userLogoutRequest={this.props.userLogoutRequest}
-							/>
-						: <HeaderLoginNav />}
+					{this.props.auth.isAuthenticated ? (
+						<HeaderLogoutNav userLogoutRequest={this.props.userLogoutRequest} />
+					) : (
+						<HeaderLoginNav />
+					)}
 				</Navbar.Collapse>
 			</Navbar>
 		);

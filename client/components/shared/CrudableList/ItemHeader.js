@@ -3,24 +3,27 @@ import PropTypes from 'prop-types';
 import { LinkContainer } from 'react-router-bootstrap';
 import { ButtonGroup, Button, Glyphicon } from 'react-bootstrap';
 
-const ItemHeader = ({ name, editLink, refreshLink, deleteAction }) =>
+const ItemHeader = ({ name, editLink, refreshLink, deleteAction }) => (
 	<div>
 		{name}
 		<ButtonGroup className="pull-right">
-			{editLink &&
+			{editLink && (
 				<LinkContainer to={editLink}>
 					<Button>
 						<Glyphicon glyph="edit" />
 					</Button>
-				</LinkContainer>}
-			{deleteAction &&
+				</LinkContainer>
+			)}
+			{deleteAction && (
 				<LinkContainer to={refreshLink}>
 					<Button onClick={deleteAction}>
 						<Glyphicon glyph="trash" />
 					</Button>
-				</LinkContainer>}
+				</LinkContainer>
+			)}
 		</ButtonGroup>
-	</div>;
+	</div>
+);
 
 ItemHeader.propTypes = {
 	name: PropTypes.string,

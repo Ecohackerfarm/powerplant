@@ -15,10 +15,13 @@ export const locations = (state = defaultState, action) => {
 		case ADD_LOCATION:
 			return state.concat(action.location);
 		case EDIT_LOCATION: {
-			return state.map(loc => ((loc._id === action.id) ? Object.assign({}, loc, action.changes) : loc));
+			return state.map(
+				loc =>
+					loc._id === action.id ? Object.assign({}, loc, action.changes) : loc
+			);
 		}
 		case DELETE_LOCATION: {
-			return state.filter(loc => (loc._id !== action.id));
+			return state.filter(loc => loc._id !== action.id);
 		}
 		case LOGOUT:
 			return defaultState;

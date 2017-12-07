@@ -20,7 +20,9 @@ describe('auth reducer', () => {
 			expect(newState).not.to.equal(state);
 		});
 		it('should set currentUser', () => {
-			expect(newState).to.have.property('currentUser').and.to.equal(user);
+			expect(newState)
+				.to.have.property('currentUser')
+				.and.to.equal(user);
 			expect(newState).not.to.equal(state);
 		});
 	});
@@ -59,7 +61,7 @@ describe('auth reducer', () => {
 				isAuthenticated: true,
 				currentUser: 'user'
 			};
-			action = { };
+			action = {};
 		});
 		it('should do nothing', () => {
 			sanityCheck(auth, testedActions, state, action);

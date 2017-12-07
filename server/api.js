@@ -1,5 +1,17 @@
 import express from 'express';
-import { documentGet, documentPut, documentDelete, documentPost, getCompanionshipScores, getAllCompanionships, getCompanionshipsByOrganism, getOrganismsByName, getCompanionship, getLocations, login } from '/server/middleware';
+import {
+	documentGet,
+	documentPut,
+	documentDelete,
+	documentPost,
+	getCompanionshipScores,
+	getAllCompanionships,
+	getCompanionshipsByOrganism,
+	getOrganismsByName,
+	getCompanionship,
+	getLocations,
+	login
+} from '/server/middleware';
 import Organism from '/server/models/organism';
 import Companionship from '/server/models/companionship';
 import Location from '/server/models/location';
@@ -7,20 +19,29 @@ import User from '/server/models/user';
 
 /**
  * Create a new router for a document API node.
- * 
+ *
  * @return {Router}
  */
 function newDocumentRouter(model) {
 	const router = express.Router();
-	
-	router.route('/').post((req, res, next) => { documentPost(req, res, next, model); });
-	router.route('/:id').get((req, res, next) => { documentGet(req, res, next, model); });
+
+	router.route('/').post((req, res, next) => {
+		documentPost(req, res, next, model);
+	});
+	router.route('/:id').get((req, res, next) => {
+		documentGet(req, res, next, model);
+	});
 	if (model != User) {
-		router.route('/:id')
-			.put((req, res, next) => { documentPut(req, res, next, model); })
-			.delete((req, res, next) => { documentDelete(req, res, next, model); });
+		router
+			.route('/:id')
+			.put((req, res, next) => {
+				documentPut(req, res, next, model);
+			})
+			.delete((req, res, next) => {
+				documentDelete(req, res, next, model);
+			});
 	}
-	
+
 	return router;
 }
 
@@ -51,7 +72,10 @@ router.use('/locations', newDocumentRouter(Location));
 router.post('/login', login);
 router.get('/get-companionship-scores', getCompanionshipScores);
 router.get('/get-all-companionships', getAllCompanionships);
-router.get('/get-companionships-by-organism/:organismId', getCompanionshipsByOrganism);
+router.get(
+	'/get-companionships-by-organism/:organismId',
+	getCompanionshipsByOrganism
+);
 router.get('/get-companionship/:organism0Id/:organism1Id', getCompanionship);
 router.get('/get-organisms-by-name', getOrganismsByName);
 router.get('/get-locations', getLocations);

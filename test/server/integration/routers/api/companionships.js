@@ -25,7 +25,9 @@ describe(rootUrl + '/', () => {
 				.expect(200)
 				.expect('Content-Type', jsonType)
 				.then(res => {
-					expect(res.body).to.be.an('array').and.to.have.length.above(0);
+					expect(res.body)
+						.to.be.an('array')
+						.and.to.have.length.above(0);
 					res.body.forEach(checkCompanionship);
 				});
 		});
@@ -37,12 +39,16 @@ describe(rootUrl + '/', () => {
 				commonName: randString(),
 				binomialName: 'Snozzberry'
 			};
-			return sendForm(request.post('/api/organisms'), organismData).then(res => {
-				crop1 = res.body._id.toString();
-				return sendForm(request.post('/api/organisms'), organismData).then(res => {
-					crop2 = res.body._id.toString();
-				});
-			});
+			return sendForm(request.post('/api/organisms'), organismData).then(
+				res => {
+					crop1 = res.body._id.toString();
+					return sendForm(request.post('/api/organisms'), organismData).then(
+						res => {
+							crop2 = res.body._id.toString();
+						}
+					);
+				}
+			);
 		});
 		it('should create a new companionship with valid existing crop ids', () => {
 			const newComp = {
@@ -58,9 +64,11 @@ describe(rootUrl + '/', () => {
 				crop2: crop1,
 				compatibility: -1
 			};
-			return sendForm(request.post(url), newComp).expect(400).then(res => {
-				expect(res.header).to.not.have.property('location');
-			});
+			return sendForm(request.post(url), newComp)
+				.expect(400)
+				.then(res => {
+					expect(res.header).to.not.have.property('location');
+				});
 		});
 		it('should 400 with nonexistent crop ids', () => {
 			// TODO: This is a BIZARRE bug
@@ -154,7 +162,9 @@ describe(rootUrl + '/:id', () => {
 				.expect(200)
 				.expect('Content-Type', jsonType)
 				.then(res => {
-					expect(res.body).to.have.property('_id').and.to.equal(validId);
+					expect(res.body)
+						.to.have.property('_id')
+						.and.to.equal(validId);
 				});
 		});
 	});
@@ -167,9 +177,11 @@ describe(rootUrl + '/:id', () => {
 				.expect(200)
 				.expect('Content-Type', jsonType)
 				.then(res => {
-					expect(res.body).to.have.property('_id').and.to.equal(validId);
-					expect(res.body).to.have
-						.property('compatibility')
+					expect(res.body)
+						.to.have.property('_id')
+						.and.to.equal(validId);
+					expect(res.body)
+						.to.have.property('compatibility')
 						.and.to.equal(changes.compatibility);
 				});
 		});
@@ -185,11 +197,14 @@ describe(rootUrl + '/:id', () => {
 	});
 	describe('DELETE', () => {
 		it('should delete a valid companionship', () => {
-			return request.delete(url + '/' + validId).expect(204).then(res => {
-				return Companionship.findById(validId, (err, comp) => {
-					expect(comp).to.be.null;
+			return request
+				.delete(url + '/' + validId)
+				.expect(204)
+				.then(res => {
+					return Companionship.findById(validId, (err, comp) => {
+						expect(comp).to.be.null;
+					});
 				});
-			});
 		});
 	});
 });

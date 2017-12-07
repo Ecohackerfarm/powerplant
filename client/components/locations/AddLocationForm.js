@@ -180,12 +180,11 @@ class AddLocationForm extends React.Component {
 		const { errors, isLoading, locationResults } = this.state;
 		return (
 			<form onSubmit={this.onSubmit}>
-				{this.state.errors.form &&
+				{this.state.errors.form && (
 					<FormGroup validationState="error">
-						<HelpBlock>
-							{this.state.errors.form}
-						</HelpBlock>
-					</FormGroup>}
+						<HelpBlock>{this.state.errors.form}</HelpBlock>
+					</FormGroup>
+				)}
 
 				<TextFieldGroup
 					id="name"
@@ -204,18 +203,19 @@ class AddLocationForm extends React.Component {
 					value={this.state.loc.address}
 				/>
 
-				{locationResults.length > 0 &&
+				{locationResults.length > 0 && (
 					<ListGroup>
 						<ListGroupItem bsStyle="info">Select your location</ListGroupItem>
-						{locationResults.map(({ loc }, index) =>
+						{locationResults.map(({ loc }, index) => (
 							<ListGroupItem
 								key={index}
 								onClick={this.setLocation.bind(this, index)}
 							>
 								{loc.address}
 							</ListGroupItem>
-						)}
-					</ListGroup>}
+						))}
+					</ListGroup>
+				)}
 
 				<ButtonToolbar>
 					<LinkContainer to="/locations">

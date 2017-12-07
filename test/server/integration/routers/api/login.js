@@ -23,12 +23,14 @@ describe(rootUrl + '/', () => {
 				.then(res => {
 					expect(res.body).to.have.property('token');
 					const decoded = jwtDecode(res.body.token);
-					expect(decoded).to.have
-						.property('username')
+					expect(decoded)
+						.to.have.property('username')
 						.and.to.equal(user.username);
-					expect(decoded).to.have.property('email').and.to.equal(user.email);
-					expect(decoded).to.have
-						.property('id')
+					expect(decoded)
+						.to.have.property('email')
+						.and.to.equal(user.email);
+					expect(decoded)
+						.to.have.property('id')
 						.and.to.equal(user._id.toString());
 					expect(decoded).not.to.have.property('password');
 				});

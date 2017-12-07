@@ -58,12 +58,11 @@ export default class LoginForm extends React.Component {
 		const { errors, isLoading } = this.state;
 		return (
 			<form onSubmit={this.onSubmit}>
-				{errors.form &&
+				{errors.form && (
 					<FormGroup validationState="error">
-						<HelpBlock>
-							{errors.form}
-						</HelpBlock>
-					</FormGroup>}
+						<HelpBlock>{errors.form}</HelpBlock>
+					</FormGroup>
+				)}
 
 				<TextFieldGroup
 					value={this.state.username}

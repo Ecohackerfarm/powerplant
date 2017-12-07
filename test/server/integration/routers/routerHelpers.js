@@ -14,7 +14,9 @@ export function sendForm(request, data) {
 }
 
 export function randString() {
-	return Math.random().toString(36).substring(7);
+	return Math.random()
+		.toString(36)
+		.substring(7);
 }
 
 export function allStrings(array) {
@@ -55,16 +57,22 @@ export function createTestCompanionship(cb) {
 
 // remove all companionships with things with the word
 export function cleanDb(cb) {
-	Organism.find().byName(sessionString).exec((err, list) => {
-		console.log('Found ' + list.length + ' test organism instances');
-		list.forEach(crop => {
-			Companionship.find().byCrop(crop).exec((err, comps) => {
-				console.log('Found ' + comps.length + ' test companionship instances');
-				comps.forEach(c => {
-					c.remove();
-				});
+	Organism.find()
+		.byName(sessionString)
+		.exec((err, list) => {
+			console.log('Found ' + list.length + ' test organism instances');
+			list.forEach(crop => {
+				Companionship.find()
+					.byCrop(crop)
+					.exec((err, comps) => {
+						console.log(
+							'Found ' + comps.length + ' test companionship instances'
+						);
+						comps.forEach(c => {
+							c.remove();
+						});
+					});
+				crop.remove();
 			});
-			crop.remove();
 		});
-	});
 }

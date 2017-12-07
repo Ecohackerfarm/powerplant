@@ -20,7 +20,7 @@ const LocationsPage = ({ actions, locations, match }) => {
 			ItemListView={LocationItem}
 			AddItemForm={AddLocationForm}
 			DetailPage={LocationPage}
-			/>
+		/>
 	);
 };
 

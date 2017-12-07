@@ -61,10 +61,14 @@ describe(rootUrl + '/', () => {
 			binomialName: "Simon's crop for testing"
 		};
 		it('should create new crop from just binomial name', () => {
-			return sendForm(request.post(rootUrl), crop).expect(201).then(res => {
-				expect(res.body).to.have.property('_id');
-				expect(res.body).to.have.property('binomialName').and.to.equal(crop.binomialName);
-			});
+			return sendForm(request.post(rootUrl), crop)
+				.expect(201)
+				.then(res => {
+					expect(res.body).to.have.property('_id');
+					expect(res.body)
+						.to.have.property('binomialName')
+						.and.to.equal(crop.binomialName);
+				});
 		});
 		it('should 400 missing name or display', () => {
 			delete crop.binomialName;
@@ -97,24 +101,29 @@ describe(rootUrl + '/:organismId', () => {
 				.expect('Content-Type', jsonType);
 		});
 		it('should return the specified organism', () => {
-			return request.get(rootUrl + '/' + testId).expect(200).then(res => {
-				const test = res.body;
-				expect(test).to.have.property('commonName').and.to.match(RegExp('test', 'i'));
-			});
+			return request
+				.get(rootUrl + '/' + testId)
+				.expect(200)
+				.then(res => {
+					const test = res.body;
+					expect(test)
+						.to.have.property('commonName')
+						.and.to.match(RegExp('test', 'i'));
+				});
 		});
 	});
 	describe('PUT', () => {
 		it('should make the specified valid changes', () => {
 			const changes = {
-				commonName: randString(),
+				commonName: randString()
 			};
 			return sendForm(request.put(rootUrl + '/' + testId), changes)
 				.expect(200)
 				.expect('Content-Type', jsonType)
 				.then(res => {
 					const newTest = res.body;
-					expect(newTest).to.have
-						.property('commonName')
+					expect(newTest)
+						.to.have.property('commonName')
 						.and.to.equal(changes.commonName);
 				});
 		});
@@ -133,11 +142,15 @@ describe(rootUrl + '/:organismId', () => {
 				.expect(200)
 				.expect('Content-Type', jsonType)
 				.then(res => {
-					expect(res.body).to.have.property('_id').and.to.equal(testId);
+					expect(res.body)
+						.to.have.property('_id')
+						.and.to.equal(testId);
 				});
 		});
 		it('should not allow invalid data changes', () => {
-			const changes = { commonName: { firstname: 'firstname', lastname: 'lastname' } };
+			const changes = {
+				commonName: { firstname: 'firstname', lastname: 'lastname' }
+			};
 			return sendForm(request.put(rootUrl + '/' + testId), changes).expect(400);
 		});
 	});
@@ -198,12 +211,16 @@ describe(rootUrl + '/:cropId1/companionships/:cropId2', () => {
 	let appleId;
 	let testId;
 	before(() => {
-		return request.get('/api/get-organisms-by-name' + '?name=apple').then(res => {
-			appleId = res.body[0]._id;
-			return request.get('/api/get-organisms-by-name' + '?name=test').then(res => {
-				testId = res.body[0]._id;
+		return request
+			.get('/api/get-organisms-by-name' + '?name=apple')
+			.then(res => {
+				appleId = res.body[0]._id;
+				return request
+					.get('/api/get-organisms-by-name' + '?name=test')
+					.then(res => {
+						testId = res.body[0]._id;
+					});
 			});
-		});
 	});
 	describe('GET', () => {
 		it('should provide proper location on existing companionship', () => {
@@ -211,13 +228,16 @@ describe(rootUrl + '/:cropId1/companionships/:cropId2', () => {
 				.get('/api/get-companionship/' + appleId + '/' + appleId)
 				.expect(303)
 				.then(res => {
-					return request.get(res.header.location).expect(200).then(res => {
-						const c = res.body;
-						expect(c).to.contain.all.keys('crop1', 'crop2', 'compatibility');
-						expect(c).to.satisfy(c => {
-							return c.crop1._id === appleId && c.crop2._id === appleId;
+					return request
+						.get(res.header.location)
+						.expect(200)
+						.then(res => {
+							const c = res.body;
+							expect(c).to.contain.all.keys('crop1', 'crop2', 'compatibility');
+							expect(c).to.satisfy(c => {
+								return c.crop1._id === appleId && c.crop2._id === appleId;
+							});
 						});
-					});
 				});
 		});
 		it('should response 204 on existing crops but nonexistent companionship', () => {

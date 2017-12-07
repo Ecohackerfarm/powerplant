@@ -2,12 +2,13 @@ import React from 'react';
 import { NavItem, Nav } from 'react-bootstrap';
 import PropTypes from 'prop-types';
 
-const HeaderLogoutNav = ({ userLogoutRequest }) =>
+const HeaderLogoutNav = ({ userLogoutRequest }) => (
 	<Nav pullRight>
-		<NavItem  className="log out" eventKey={2} onSelect={userLogoutRequest}>
+		<NavItem className="log out" eventKey={2} onSelect={userLogoutRequest}>
 			Log out
 		</NavItem>
-	</Nav>;
+	</Nav>
+);
 
 HeaderLogoutNav.propTypes = {
 	userLogoutRequest: PropTypes.func.isRequired

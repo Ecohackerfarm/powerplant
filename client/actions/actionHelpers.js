@@ -24,9 +24,9 @@ export const authCheckedRequest = (authAction, nonAuthAction) => {
 };
 
 /**
-* @callback client.actions.actionHelpers~dispatchCallback
-* @param {Function} dispatch the redux dispatch object
-*/
+ * @callback client.actions.actionHelpers~dispatchCallback
+ * @param {Function} dispatch the redux dispatch object
+ */
 
 /**
  * If authorized, exectues a simple HTTP request and then dispatches a single action if successful.

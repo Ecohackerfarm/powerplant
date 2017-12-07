@@ -56,7 +56,10 @@ describe(rootUrl + '/', () => {
 			user: userId,
 			name: 'my location 1',
 			loc: { address: '', coordinates: [12.2, 12.1] },
-			beds: [ { name: 'test bed 0', soil_type: 0 }, { name: 'test bed 1', soil_type: 1 } ]
+			beds: [
+				{ name: 'test bed 0', soil_type: 0 },
+				{ name: 'test bed 1', soil_type: 1 }
+			]
 		};
 	});
 	describe('POST', () => {
@@ -70,7 +73,9 @@ describe(rootUrl + '/', () => {
 				.expect('Content-Type', jsonType)
 				.then(res => {
 					const loc = res.body;
-					expect(loc).to.have.property('user').and.to.equal(userId);
+					expect(loc)
+						.to.have.property('user')
+						.and.to.equal(userId);
 				});
 		});
 	});
@@ -91,7 +96,9 @@ describe(rootUrl + '/:locId', () => {
 				.expect(200)
 				.expect('Content-Type', jsonType)
 				.then(res => {
-					expect(res.body).to.have.property('_id').and.to.equal(locId);
+					expect(res.body)
+						.to.have.property('_id')
+						.and.to.equal(locId);
 				});
 		});
 		it('should 400 with invalid id', () => {
@@ -120,7 +127,9 @@ describe(rootUrl + '/:locId', () => {
 				.expect(200)
 				.expect('Content-Type', jsonType)
 				.then(res => {
-					expect(res.body).to.have.property('name').and.to.equal(changes.name);
+					expect(res.body)
+						.to.have.property('name')
+						.and.to.equal(changes.name);
 				});
 		});
 		it('should not update with invalid data', () => {

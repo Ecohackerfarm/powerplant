@@ -31,10 +31,7 @@ export default class TextFieldGroup extends React.Component {
 					this.props.error ? 'error' : this.props.success ? 'success' : null
 				}
 			>
-				{this.props.label &&
-					<ControlLabel>
-						{this.props.label}
-					</ControlLabel>}
+				{this.props.label && <ControlLabel>{this.props.label}</ControlLabel>}
 
 				<FormControl
 					type={this.props.type}
@@ -45,10 +42,7 @@ export default class TextFieldGroup extends React.Component {
 
 				<FormControl.Feedback />
 
-				{this.props.error &&
-					<HelpBlock>
-						{this.props.error}
-					</HelpBlock>}
+				{this.props.error && <HelpBlock>{this.props.error}</HelpBlock>}
 			</FormGroup>
 		);
 	}

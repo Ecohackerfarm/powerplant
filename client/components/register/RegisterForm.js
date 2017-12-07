@@ -60,12 +60,11 @@ export default class RegisterForm extends React.Component {
 		return (
 			<form onSubmit={this.onSubmit}>
 				<h2>Join the powerplant community!</h2>
-				{errors.form &&
+				{errors.form && (
 					<FormGroup validationState="error">
-						<HelpBlock>
-							{errors.form}
-						</HelpBlock>
-					</FormGroup>}
+						<HelpBlock>{errors.form}</HelpBlock>
+					</FormGroup>
+				)}
 
 				<TextFieldGroup
 					id="username"

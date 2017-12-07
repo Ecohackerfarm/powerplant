@@ -35,12 +35,14 @@ function buildToken(id) {
 before(done => {
 	new User(user).save((err, newUser) => {
 		if (err) {
-			User.find().byUsername(user.username).exec((err, { _id }) => {
-				userId = _id.toString();
-				user._id = _id;
-				buildToken(userId);
-				done();
-			});
+			User.find()
+				.byUsername(user.username)
+				.exec((err, { _id }) => {
+					userId = _id.toString();
+					user._id = _id;
+					buildToken(userId);
+					done();
+				});
 		} else {
 			userId = newUser._id.toString();
 			buildToken(userId);
@@ -51,7 +53,9 @@ before(done => {
 
 describe(rootUrl + '/', () => {
 	before(() => {
-		return User.find().byUsername('testUser1').remove();
+		return User.find()
+			.byUsername('testUser1')
+			.remove();
 	});
 	describe('POST', () => {
 		const user = {
@@ -96,10 +100,12 @@ describe(rootUrl + '/:userId', () => {
 				.expect(200)
 				.expect('Content-Type', jsonType)
 				.then(res => {
-					expect(res.body).to.have
-						.property('username')
+					expect(res.body)
+						.to.have.property('username')
 						.and.to.equal(user.username);
-					expect(res.body).to.have.property('_id').and.to.equal(userId);
+					expect(res.body)
+						.to.have.property('_id')
+						.and.to.equal(userId);
 				});
 		});
 		it('should not return password or email', () => {

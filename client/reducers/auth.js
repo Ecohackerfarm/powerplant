@@ -2,7 +2,7 @@ import * as types from '/client/actions/types';
 
 /**
  * @typedef client.reducers.authdefaultState {Object}
- * @prop {Boolean} [isAuthenticated=false] 
+ * @prop {Boolean} [isAuthenticated=false]
  */
 
 /**
@@ -13,7 +13,7 @@ import * as types from '/client/actions/types';
  * @param {String} state.user.username - current user's username
  * @param {String} state.user.email - current user's email
  * @param {client.actions.setCurrentUserAction|client.actions.createUserAction} action - the action to be performed. all other action types will be ignored
- * @return {state} 
+ * @return {state}
  */
 
 export const auth = (state = { isAuthenticated: false }, action) => {

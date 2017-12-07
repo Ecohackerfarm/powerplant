@@ -29,7 +29,7 @@ describe('data-validation', () => {
 			]
 		];
 		it('should return 1 or -1 for correct crops', () => {
-			const results = (new Processor()).calculateCompanionshipScores(sample, ids);
+			const results = new Processor().calculateCompanionshipScores(sample, ids);
 			expect(results[a]).to.equal(1);
 			expect(results[b]).to.equal(-1);
 			expect(results[c]).to.equal(1);
@@ -55,7 +55,7 @@ describe('data-validation', () => {
 				}
 			];
 			sample.push(newData);
-			const results = (new Processor()).calculateCompanionshipScores(sample, ids);
+			const results = new Processor().calculateCompanionshipScores(sample, ids);
 			const max = 6;
 			expect(results[a]).to.equal(-1);
 			expect(results[b]).to.equal(-1);
