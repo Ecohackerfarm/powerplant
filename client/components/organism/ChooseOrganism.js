@@ -37,40 +37,13 @@ class ChooseOrganism extends React.Component {
 		suggestionFocused: 'active'
 	};
 
-	static getSuggestionValue = suggestion => suggestion;
-
-	static renderSuggestion = suggestion => <a href="#">{suggestion}</a>;
-
-	getSuggestions = value => {
-		const inputValue = value.trim().toLowerCase();
-		const regexString = '.*' + inputValue + '.*';
-		const regex = new RegExp(regexString, 'g');
-
-		return inputValue.length === 0
-			? []
-			: this.props.organismNames.filter(name => regex.test(name.toLowerCase()));
-	};
-
 	onChange = (event, { newValue }) => {
 		this.setState({
 			value: newValue
 		});
 	};
 
-	onSuggestionsFetchRequested = ({ value }) => {
-		this.setState({
-			suggestions: this.getSuggestions(value)
-		});
-	};
-
-	onSuggestionsClearRequested = () => {
-		this.setState({
-			suggestions: []
-		});
-	};
-
 	render() {
-		const { suggestions } = this.state;
 
 		return (
 			<Typeahead
@@ -78,6 +51,7 @@ class ChooseOrganism extends React.Component {
 				multiple
 				options={this.props.organismNames}
 				placeholder="Choose a Organism/Plant ..."
+				onChange={this.onChange}
 			/>
 		);
 	}
