@@ -9,6 +9,8 @@ import User from '/server/models/user';
 import Companionship from '/server/models/companionship';
 import Organism from '/server/models/organism';
 
+const MAX_NAME_ENTRIES = 200000;
+const MAX_RESPONSE_LENGTH = 200000;
 /**
  * @param {Function} next
  * @param {Error} exception
@@ -265,8 +267,8 @@ export async function getOrganismsByName(req, res, next) {
 		if (typeof req.query.name === undefined) {
 			throw VALIDATION_EXCEPTION;
 		}
-		const index = parseInteger(next, req.query.index, 0, 20000);
-		const length = parseInteger(next, req.query.length, 1, 50);
+		const index = parseInteger(next, req.query.index, 0, MAX_NAME_ENTRIES,0);
+		const length = parseInteger(next, req.query.length, 0, MAX_RESPONSE_LENGTH,0);
 
 		const organisms = await processor.call(
 			'getOrganismsByName',

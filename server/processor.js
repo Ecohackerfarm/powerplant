@@ -566,7 +566,9 @@ export class Processor extends AsyncObject {
 		const organisms = await Organism.find()
 			.byName(this.escapeRegEx(regex))
 			.exec();
-		return organisms.slice(index, index + length);
+		return length===0
+				? organisms.slice(index)
+				: organisms.slice(index, index + length);
 	}
 
 	/**
