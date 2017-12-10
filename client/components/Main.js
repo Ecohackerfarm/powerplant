@@ -1,6 +1,6 @@
 import React from 'react';
 import { Route, Switch } from 'react-router-dom';
-import Hello from './Hello';
+import MainContainer from './MainContainer';
 import Login from './login/LoginPage';
 import Register from './register/RegisterPage';
 import Recover from './recover/Recover';
@@ -19,7 +19,7 @@ class Main extends React.Component {
 					<Route
 						exact
 						path="/"
-						render={() => <Hello auth={this.props.auth} />}
+						render={() => <MainContainer auth={this.props.auth} />}
 					/>
 					<Route path="/login" component={Login} />
 					<Route path="/register" component={Register} />

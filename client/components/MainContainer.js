@@ -4,11 +4,11 @@ import PropTypes from 'prop-types';
 import { Jumbotron, Grid, Row, Col } from 'react-bootstrap';
 
 /**
- * A react component that says hello to the current user
- * @namespace Hello
+ * Main Container for components
+ * @namespace MainContainer
  * @memberof client.components
  */
-const Hello = ({ auth }) => {
+const MainContainer = ({ auth }) => {
 	return (
 		<Grid>
 			<Row>
@@ -29,15 +29,15 @@ const Hello = ({ auth }) => {
 
 /**
  * @type {Object}
- * @memberof client.components.Hello
+ * @memberof client.components.MainContainer
  * @prop {Object} auth - object in redux store containing all authentication information
  * @prop {Object} auth.user - current user information
  * @prop {String} auth.user.username - current user's username
  * @prop {String} auth.user.email - current user's email
  * @prop {Boolean} auth.isAuthenticated - quick check for if someone is currently logged in or not
  */
-Hello.propTypes = {
+MainContainer.propTypes = {
 	auth: PropTypes.object.isRequired
 };
 
-export default Hello;
+export default MainContainer;
