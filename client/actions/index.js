@@ -162,3 +162,21 @@ export function setCurrentUser(user) {
  * @property {String} [type={@link client.actions.types.SET_CURRENT_USER SET_CURRENT_USER}]
  * @property {server.models.User} user the user object. should not contain password
  */
+
+
+//==================================
+//======BEGIN CROP ACTIONS======
+//==================================
+
+
+/**
+ * Build an action to get Organisms by prefix
+ * @param  {Array} list of names of all organisms
+ * @return {client.actions.getOrganismsByName}
+ */
+export function getCropsByName(organisms) {
+	return {
+		type: types.GET_CROPS_BY_NAME,
+		organisms
+	};
+}

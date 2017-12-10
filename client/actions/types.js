@@ -54,6 +54,8 @@ export const ADD_CROP = 'ADD_CROP';
 export const DELETE_CROP = 'DELETE_CROP';
 /** Set all crops in a bed */
 export const SET_CROPS = 'SET_CROPS';
+/** Get names of crops starting with a string **/
+export const GET_CROPS_BY_NAME = 'GET_CROPS_BY_NAME';
 
 // Task actions
 /** Edit a task */
