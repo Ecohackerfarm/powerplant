@@ -34,11 +34,15 @@ function handleError(next, exception) {
  * @param {Number} maximum
  * @return {Number}
  */
-function parseInteger(next, string, minimum, maximum) {
+function parseInteger(next, string, minimum, maximum, defaultValue) {
 	let value;
 	try {
 		if (string === undefined) {
-			throw new Error();
+			if (defaultValue === undefined) {
+				throw new Error();
+			} else {
+				return defaultValue;
+			}
 		}
 
 		value = Number(string);
