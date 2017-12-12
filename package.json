@@ -9,7 +9,7 @@
     "test": "mocha --compilers js:babel-register",
     "lint": "eslint cli client server shared test",
     "pretty": "find client server shared test cli -type f -name '*.js' | xargs ./node_modules/.bin/prettier --write",
-    "migrate": "npm run cli -- remove companionship && npm run cli -- remove organism && npm run cli -- push-firebase",
+    "migrate": "npm run cli -- remove crop-relationship && npm run cli -- remove crop && npm run cli -- push-firebase",
     "mocha-spec": "mocha --compilers js:babel-register --reporter markdown > docs/spec.md",
     "mongo": "docker run -p 27017:27017 --name pp_main -d mongo",
     "doc": "jsdoc -u ./docs/tutorials -c ./conf.json -t ./node_modules/ink-docstrap/template -R ./docs/dev_docs.markdown",
