@@ -4,12 +4,12 @@ import React from 'react';
 import PropTypes from 'prop-types';
 
 /**
- * A react component that searches all organisms with autocompletion feature
- * @namespace ChooseOrganism
+ * A react component that searches all crops with autocompletion feature
+ * @namespace ChooseCrop
  * @memberof client.components
  */
 
-class ChooseOrganism extends React.Component {
+class ChooseCrop extends React.Component {
 	constructor(props) {
 		super(props);
 
@@ -25,7 +25,7 @@ class ChooseOrganism extends React.Component {
 	}
 
 	static propTypes = {
-		organismNames: PropTypes.array.isRequired
+		cropNames: PropTypes.array.isRequired
 	};
 
 	theme = {
@@ -49,12 +49,12 @@ class ChooseOrganism extends React.Component {
 			<Typeahead
 				clearButton
 				multiple
-				options={this.props.organismNames}
-				placeholder="Choose a Organism/Plant ..."
+				options={this.props.cropNames}
+				placeholder="Choose a crop ..."
 				onChange={this.onChange}
 			/>
 		);
 	}
 }
 
-export default ChooseOrganism;
+export default ChooseCrop;

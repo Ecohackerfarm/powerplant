@@ -170,13 +170,13 @@ export function setCurrentUser(user) {
 
 
 /**
- * Build an action to get Organisms by prefix
- * @param  {Array} list of names of all organisms
- * @return {client.actions.getOrganismsByName}
+ * Build an action to get crops by prefix
+ * @param  {Array} list of names of all crops
+ * @return {client.actions.getCropsByName}
  */
-export function getCropsByName(organisms) {
+export function getCropsByName(crops) {
 	return {
 		type: types.GET_CROPS_BY_NAME,
-		organisms
+		crops
 	};
 }
