@@ -306,7 +306,7 @@ binomialName:String
 commonName:String
 ```
 
-#### Relationship schema
+#### CropRelationship schema
 
 ```
 crop0:ObjectId(Crop)
