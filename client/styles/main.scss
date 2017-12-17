@@ -39,11 +39,21 @@ $background-color: #eee;
     box-shadow: 0 2px 2px 0 rgba(0,0,0,0.14), 0 1px 5px 0 rgba(0,0,0,0.12), 0 3px 1px -2px rgba(0,0,0,0.2);
   }
   .navbar-brand {
-    //background: url(/images/logo/logo_128.png) center / contain no-repeat;
-    width: 128px;
-    transform: translateX(-50%);
-    right: 0%;
-    position: absolute;
+    background: url(/images/logo/logo_128.png) right no-repeat;
+		right: 50%;
+		position: absolute;
+		background-size: 46px 46px;
+		padding-right: 50px;
+		//if it's small
+		// font: 0/0 a;
+		// color: transparent;
+		// text-shadow: none;
+		// background-color: transparent;
+		// border: 0;
+		// right:0%
+  }
+  .navbar-toggle.collapsed>.navbar-brand {
+
   }
   .navbar-right {
     .log>a {
@@ -62,6 +72,6 @@ $background-color: #eee;
       background-image: url(/images/logo/logo_128_logout.png);
     }
   }
-  
+
 
 }
