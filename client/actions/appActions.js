@@ -4,7 +4,6 @@ import {
 } from './types';
 
 export const storeIsLoaded = () =>{
- console.log('storeIsLoaded');
  return {
  	type : STORE_IS_LOADED,
  	storeIsLoaded : true

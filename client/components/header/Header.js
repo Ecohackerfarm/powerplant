@@ -28,7 +28,6 @@ class Header extends React.Component {
 	}
 }
 Header.propTypes = {
-		userLogoutRequest: PropTypes.func.isRequired,
 		title: PropTypes.string.isRequired
 }
 

@@ -1,10 +1,9 @@
 import React from 'react';
 import { connect } from 'react-redux'
-//import { setHeaderTitle } from './actions/appActions';
 //import ChooseCrops from './organism/ChooseCrops';
 import PropTypes from 'prop-types';
 import { Jumbotron, Grid, Row, Col } from 'react-bootstrap';
-//import { getCropsByName } from '../actions/cropActions'
+import { setHeaderTitle } from '../actions/appActions'
 
 
 /**
@@ -13,8 +12,8 @@ import { Jumbotron, Grid, Row, Col } from 'react-bootstrap';
  * @memberof client.components
  */
 class RootContainer extends React.Component {
-  componentDidMount(){
-  	this.prop.setHeaderTitle('Home');
+  componentWillMount(){
+  	this.props.setHeaderTitle('Home');
   }
 
 	render() {
@@ -23,6 +22,7 @@ class RootContainer extends React.Component {
 				<Row>
 					<Col>
 						<Jumbotron>
+
 						</Jumbotron>
 					</Col>
 				</Row>
@@ -46,8 +46,10 @@ RootContainer.propTypes = {
 	setHeaderTitle: PropTypes.func.isRequired
 };
 
-const mapDispatchToProp = ( {setHeaderTitle}) => {
-	return { setHeaderTitle };
+const mapDispatchToProp = (dispatch) => {
+	return {
+		setHeaderTitle : title => dispatch(setHeaderTitle(title))
+	};
 }
 
-export default connect(mapDispatchToProp)(RootContainer);
+export default connect(undefined,mapDispatchToProp)(RootContainer);
