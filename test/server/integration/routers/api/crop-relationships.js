@@ -39,16 +39,12 @@ describe(rootUrl + '/', () => {
 				commonName: randString(),
 				binomialName: 'Snozzberry'
 			};
-			return sendForm(request.post('/api/crops'), cropData).then(
-				res => {
-					crop0 = res.body._id.toString();
-					return sendForm(request.post('/api/crops'), cropData).then(
-						res => {
-							crop1 = res.body._id.toString();
-						}
-					);
-				}
-			);
+			return sendForm(request.post('/api/crops'), cropData).then(res => {
+				crop0 = res.body._id.toString();
+				return sendForm(request.post('/api/crops'), cropData).then(res => {
+					crop1 = res.body._id.toString();
+				});
+			});
 		});
 		it('should create a new relationship with valid existing crop ids', () => {
 			const newComp = {
@@ -89,56 +85,6 @@ describe(rootUrl + '/', () => {
 				compatiblity: true
 			};
 			return sendForm(request.post(url), newComp).expect(400);
-		});
-	});
-});
-
-describe('/api/get-crop-relationship-scores', () => {
-	const url = '/api/get-crop-relationship-scores';
-	describe('GET', () => {
-		let appleId, potatoId, beanId;
-		before(() => {
-			// fetching 3 crops
-			const cropUrl = '/api/get-crops-by-name?name=';
-			const cropUrlSuffix = '&index=0&length=30';
-			return request.get(cropUrl + 'apple' + cropUrlSuffix).then(appleRes => {
-				appleId = appleRes.body[0]._id;
-				return request
-					.get(cropUrl + 'potato' + cropUrlSuffix)
-					.then(potatoRes => {
-						potatoId = potatoRes.body[0]._id;
-						return request
-							.get(cropUrl + 'bean' + cropUrlSuffix)
-							.then(beanRes => {
-								beanId = beanRes.body[0]._id;
-							});
-					});
-			});
-		});
-		it('should 400 with no query', () => {
-			return request.get(url).expect(400);
-		});
-		it('should return numerical scores with all valid crop ids', () => {
-			return request
-				.get(url + '?id=' + appleId + ',' + potatoId + ',' + beanId)
-				.expect(200)
-				.expect('Content-Type', jsonType)
-				.then(res => {
-					expect(Object.keys(res.body)).to.have.length.above(0);
-					for (let id in res.body) {
-						expect(res.body[id]).to.be.within(-1, 1);
-					}
-				});
-		});
-		it('should 400 if there is a malformed crop id', () => {
-			return request
-				.get(url + '?id=' + appleId + ',fa3j9w0f a0f9jwf')
-				.expect(400);
-		});
-		it('should 400 if there is a nonexistent crop id', () => {
-			return request
-				.get(url + '?id=' + appleId + ',' + ObjectId().toString())
-				.expect(400);
 		});
 	});
 });

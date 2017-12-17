@@ -219,38 +219,6 @@ export async function getAllCropRelationships(req, res, next) {
  * @param {Object} res
  * @param {Function} next
  */
-export async function getCropRelationshipsByCrop(req, res, next) {
-	try {
-		const relationships = await processor.getCropRelationshipsByCrop(
-			req.params.cropId
-		);
-		res.json(relationships);
-	} catch (exception) {
-		handleError(next, exception);
-	}
-}
-
-/**
- * @param {Object} req
- * @param {Object} res
- * @param {Function} next
- */
-export async function getCropRelationshipScores(req, res, next) {
-	try {
-		const ids = (req.query.id || '').split(',');
-		const scores = await processor.getCropRelationshipScores(ids);
-
-		res.json(scores);
-	} catch (exception) {
-		handleError(next, exception);
-	}
-}
-
-/**
- * @param {Object} req
- * @param {Object} res
- * @param {Function} next
- */
 export async function getCropsByName(req, res, next) {
 	try {
 		const name = req.query.name;
@@ -296,31 +264,6 @@ export async function getCompatibleCrops(req, res, next) {
 	try {
 		const crops = await processor.getCompatibleCrops(req.body.cropIds);
 		res.json(crops);
-	} catch (exception) {
-		handleError(next, exception);
-	}
-}
-
-/**
- * @param {Object} req
- * @param {Object} res
- * @param {Function} next
- */
-export async function getCropRelationship(req, res, next) {
-	try {
-		const cropRelationship = await processor.getCropRelationship(
-			req.params.crop0Id,
-			req.params.crop1Id
-		);
-
-		if (cropRelationship) {
-			res
-				.status(303)
-				.location('/api/crop-relationships/' + cropRelationship._id)
-				.send();
-		} else {
-			res.status(204).json();
-		}
 	} catch (exception) {
 		handleError(next, exception);
 	}

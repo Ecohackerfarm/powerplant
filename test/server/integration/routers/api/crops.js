@@ -44,9 +44,7 @@ describe(rootUrl + '/', () => {
 		});
 		it('should return no crops for gibberish query string', () => {
 			return request
-				.get(
-					'/api/get-crops-by-name' + '?name=jf93 FJ(Fiojs&index=0&length=30'
-				)
+				.get('/api/get-crops-by-name' + '?name=jf93 FJ(Fiojs&index=0&length=30')
 				.expect(200)
 				.expect('Content-Type', jsonType)
 				.expect([]);
@@ -156,90 +154,6 @@ describe(rootUrl + '/:cropId', () => {
 		});
 		it('should delete all associated relationships', () => {
 			return request.get('/api/crop-relationships/' + compId).expect(404);
-		});
-	});
-});
-
-describe('/api/get-crop-relationships-by-crop', () => {
-	let testId;
-	before(done => {
-		createTestCropRelationship(comp => {
-			testId = comp.crop0._id.toString();
-			done();
-		});
-	});
-	describe('GET', () => {
-		it('should fetch an array', () => {
-			return request
-				.get('/api/get-crop-relationships-by-crop/' + testId)
-				.expect(200)
-				.expect('Content-Type', jsonType)
-				.then(res => {
-					expect(res.body).to.have.length.above(0);
-				});
-		});
-		it('should populate relationships', () => {
-			return request
-				.get('/api/get-crop-relationships-by-crop/' + testId)
-				.expect(200)
-				.then(res => {
-					res.body.forEach(item => {
-						expect(item).to.contain.all.keys('crop0', 'crop1', 'compatibility');
-					});
-				});
-		});
-		it('should only fetch matching relationships', () => {
-			return request
-				.get('/api/get-crop-relationships-by-crop/' + testId)
-				.expect(200)
-				.then(res => {
-					res.body.forEach(item => {
-						expect(item).to.satisfy(item => {
-							return item.crop0 === testId || item.crop1 === testId;
-						});
-					});
-				});
-		});
-	});
-});
-
-describe(rootUrl + '/:cropId1/crop-relationships/:cropId2', () => {
-	let appleId;
-	let testId;
-	before(() => {
-		return request
-			.get('/api/get-crops-by-name' + '?name=apple&index=0&length=30')
-			.then(res => {
-				appleId = res.body[0]._id;
-				return request
-					.get('/api/get-crops-by-name' + '?name=test&index=0&length=30')
-					.then(res => {
-						testId = res.body[0]._id;
-					});
-			});
-	});
-	describe('GET', () => {
-		it('should provide proper location on existing relationship', () => {
-			return request
-				.get('/api/get-crop-relationship/' + appleId + '/' + appleId)
-				.expect(303)
-				.then(res => {
-					return request
-						.get(res.header.location)
-						.expect(200)
-						.then(res => {
-							const c = res.body;
-							expect(c).to.contain.all.keys('crop0', 'crop1', 'compatibility');
-							expect(c).to.satisfy(c => {
-								return c.crop0._id === appleId && c.crop1._id === appleId;
-							});
-						});
-				});
-		});
-		it('should response 204 on existing crops but nonexistent relationship', () => {
-			return request
-				.get('/api/get-crop-relationship/' + appleId + '/' + testId)
-				.expect(204);
 		});
 	});
 });

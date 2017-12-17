@@ -42,9 +42,6 @@ export class Processor extends AsyncObject {
 		this.registerScheduler(this.getCropsByName, this.scheduleRead);
 		this.registerScheduler(this.getCropGroups, this.scheduleRead);
 		this.registerScheduler(this.getCompatibleCrops, this.scheduleRead);
-		this.registerScheduler(this.getCropRelationshipScores, this.scheduleRead);
-		this.registerScheduler(this.getCropRelationshipsByCrop, this.scheduleRead);
-		this.registerScheduler(this.getCropRelationship, this.scheduleRead);
 		this.registerScheduler(this.login, this.scheduleRead);
 
 		this.registerScheduler(this.updateDocument, this.scheduleWrite);
@@ -352,68 +349,6 @@ export class Processor extends AsyncObject {
 	}
 
 	/**
-	 * Processes an array of relationships and calculates compatibility scores for each possible crop
-	 *
-	 * @param  {Relationship[][]} relationshipTable table of sets of CropRelationships for each crop in ids. All relationships for ids[i] are stored in relationshipTable[i]
-	 * @param  {ObjectId[]} ids ids of crops used to fetch each Relationship.
-	 * @return {Object} Object mapping crop ids to relationship scores
-	 */
-	static calculateCropRelationshipScores(relationshipTable, ids) {
-		// create an intersection of the relationship relationshipTable
-		// crops with any negative interactions will have a value of 0
-		// all other crops will give a percentage score which is how many they complement in the set
-		const result = {};
-		const maxScore = CropRelationship.schema.paths.compatibility.options.max;
-		const maxTotal = maxScore * relationshipTable.length;
-		for (let i = 0; i < ids.length; i++) {
-			const data = relationshipTable[i];
-			const queryId = ids[i];
-			data.forEach(pair => {
-				// look at the one that is NOT the corresponding id in ids
-				// at the same index as the current snapshot
-				// Because the current data is for the snapshot for a single crop
-				const id = pair.crop1.equals(queryId) ? pair.crop0 : pair.crop1;
-
-				// building the relationship scores, storing in result
-				// if a companion crop is incompatible with any query crop, its score will be -1
-				// otherwise, it will be the average of all of its compatiblity scores with the query crops
-				if (pair.compatibility === -1) {
-					result[id] = -1;
-				} else if (pair.compatibility !== -1 && result.hasOwnProperty(id)) {
-					if (result[id] !== -1) {
-						result[id] += pair.compatibility / maxTotal;
-					}
-				} else {
-					result[id] = pair.compatibility / maxTotal;
-				}
-			});
-		}
-		return result;
-	}
-
-	/**
-	 * @param {String[]} ids
-	 */
-	async getCropRelationshipScores(ids) {
-		// Check that the crops exist
-		const crops = await this.getDocumentsUnmanaged(Crop, ids);
-		if (!crops) {
-			throw VALIDATION_EXCEPTION;
-		}
-
-		let cropToRelationships = [];
-		for (let index = 0; index < ids.length; index++) {
-			const id = ids[index];
-			const relationships = await CropRelationship.find()
-				.byCrop(id)
-				.exec();
-			cropToRelationships.push(relationships);
-		}
-
-		return Processor.calculateCropRelationshipScores(cropToRelationships, ids);
-	}
-
-	/**
 	 * @param {Combinations} combinations
 	 * @param {Number} maximumGroupSize
 	 * @return {Array}
@@ -571,36 +506,6 @@ export class Processor extends AsyncObject {
 		return length === 0
 			? crops.slice(index)
 			: crops.slice(index, index + length);
-	}
-
-	/**
-	 * @param {String} cropId
-	 */
-	async getCropRelationshipsByCrop(cropId) {
-		const crop = await this.getDocumentUnmanaged(Crop, cropId);
-		if (!crop) {
-			throw VALIDATION_EXCEPTION;
-		}
-
-		return await CropRelationship.find()
-			.byCrop(cropId)
-			.exec();
-	}
-
-	/**
-	 * @param {String} crop0Id
-	 * @param {String} crop1Id
-	 */
-	async getCropRelationship(crop0Id, crop1Id) {
-		const crops = await this.getDocumentsUnmanaged(Crop, [crop0Id, crop1Id]);
-		if (!crops) {
-			throw VALIDATION_EXCEPTION;
-		}
-
-		const relationships = await CropRelationship.find()
-			.byCrop(crop0Id, crop1Id)
-			.exec();
-		return relationships ? relationships[0] : null;
 	}
 
 	/**
