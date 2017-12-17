@@ -5,16 +5,8 @@ import { Navbar, NavItem, Nav } from 'react-bootstrap';
 import { LinkContainer } from 'react-router-bootstrap';
 import PropTypes from 'prop-types';
 import HeaderBrand from './HeaderBrand';
-import { userLogoutRequest } from '/client/actions/userActions';
-import HeaderLoginNav from './HeaderLoginNav';
-import HeaderLogoutNav from './HeaderLogoutNav';
 
 class Header extends React.Component {
-	static propTypes = {
-		userLogoutRequest: PropTypes.func.isRequired,
-		auth: PropTypes.object.isRequired,
-		title: PropTypes.string.isRequired
-	};
 
 	render() {
 		const customToggleStyle = { float: 'left', marginLeft: '15px' };
@@ -29,23 +21,19 @@ class Header extends React.Component {
 						<LinkContainer exact to="/">
 							<NavItem eventKey={1.0}>Home</NavItem>
 						</LinkContainer>
-						<LinkContainer exact to="/locations">
-							<NavItem eventKey={1.1}>Locations</NavItem>
-						</LinkContainer>
 					</Nav>
-					{this.props.auth.isAuthenticated ? (
-						<HeaderLogoutNav userLogoutRequest={this.props.userLogoutRequest} />
-					) : (
-						<HeaderLoginNav />
-					)}
 				</Navbar.Collapse>
 			</Navbar>
 		);
 	}
 }
+Header.propTypes = {
+		userLogoutRequest: PropTypes.func.isRequired,
+		title: PropTypes.string.isRequired
+}
 
-const stateToProps = ({ app }) => ({
+const mapStateToProps = ({ app }) => ({
  title : app.headerTitle
 });
 
-export default withRouter(connect(stateToProps, { userLogoutRequest })(Header));
+export default withRouter(connect(mapStateToProps)(Header));
