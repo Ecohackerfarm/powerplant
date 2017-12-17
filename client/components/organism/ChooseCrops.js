@@ -2,14 +2,16 @@ import { Typeahead } from 'react-bootstrap-typeahead';
 import style from 'react-bootstrap-typeahead/css/Typeahead.css';
 import React from 'react';
 import PropTypes from 'prop-types';
+import { getCropNames } from '../actions/cropActions'
+import { connect } from 'react-redux';
 
 /**
  * A react component that searches all organisms with autocompletion feature
- * @namespace ChooseOrganism
+ * @namespace ChooseCrops
  * @memberof client.components
  */
 
-class ChooseOrganism extends React.Component {
+class ChooseCrops extends React.Component {
 	constructor(props) {
 		super(props);
 
@@ -19,13 +21,13 @@ class ChooseOrganism extends React.Component {
 		// Suggestions also need to be provided to the Autosuggest,
 		// and they are initially empty because the Autosuggest is closed.
 		this.state = {
-			value: '',
-			suggestions: []
+			loading: false,
+			error: false,
 		};
 	}
 
 	static propTypes = {
-		organismNames: PropTypes.array.isRequired
+		crop: PropTypes.array.isRequired
 	};
 
 	theme = {
@@ -44,17 +46,44 @@ class ChooseOrganism extends React.Component {
 	};
 
 	render() {
-
+		if (this.props.loading){
+			return <p>Loading ... </p>;
+		}
+		if (this.props.error) {
+			return <p>Couldnt load</p>;
+		}
 		return (
 			<Typeahead
 				clearButton
 				multiple
-				options={this.props.organismNames}
+				options={this.props.cropNames}
 				placeholder="Choose a Organism/Plant ..."
 				onChange={this.onChange}
 			/>
 		);
 	}
 }
+ChooseCrops.propTypes = {
+	getCropNames : PropTypes.func.isRequired,
+	cropNames : PropTypes.array.isRequired,
+	loading : PropTypes.bool.isRequired,
+	error : PropTypes.bool.isRequired,
+}
 
-export default ChooseOrganism;
+const mapDispatchToProps = (dispatch) => {
+    return {
+        getCropNames: () => dispatch(getCropNames())
+    };
+};
+
+const mapStateToProps = (state) => {
+    return {
+    	  cropNames: state.cropNames,
+        loading: state.cropsLoading,
+        error: state.cropsError,
+    };
+};
+
+export default connect (mapStateToProps, mapDispatchToProps)( ChooseCrops );
+
+
