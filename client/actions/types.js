@@ -8,6 +8,11 @@
  * @namespace types
  * @memberof client.actions
  */
+// App actions
+export const STORE_IS_LOADED = 'STORE_IS_LOADED';
+
+export const SET_HEADER_TITLE = 'SET_HEADER_TITLE';
+
 
 // Title actions
 /** Set the title */
@@ -55,7 +60,7 @@ export const DELETE_CROP = 'DELETE_CROP';
 /** Set all crops in a bed */
 export const SET_CROPS = 'SET_CROPS';
 /** Get names of crops starting with a string **/
-export const GET_CROPS_BY_NAME = 'GET_CROPS_BY_NAME';
+export const GET_CROPS = 'GET_CROPS';
 
 // Task actions
 /** Edit a task */

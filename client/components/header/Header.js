@@ -44,6 +44,8 @@ class Header extends React.Component {
 	}
 }
 
-const stateToProps = ({ title }) => ({ title });
+const stateToProps = ({ app }) => ({
+ title : app.headerTitle
+});
 
 export default withRouter(connect(stateToProps, { userLogoutRequest })(Header));

@@ -1,6 +1,6 @@
 import React from 'react';
-import { Route, Switch } from 'react-router-dom';
-import MainContainer from './MainContainer';
+import { Route, Switch, withRouter} from 'react-router-dom';
+import RootContainer from './RootContainer';
 import Login from './login/LoginPage';
 import Register from './register/RegisterPage';
 import Recover from './recover/Recover';
@@ -8,10 +8,6 @@ import LocationsPage from './locations/LocationsPage';
 import PropTypes from 'prop-types';
 
 class Main extends React.Component {
-	static propTypes = {
-		auth: PropTypes.object.isRequired
-	};
-
 	render() {
 		return (
 			<div>
@@ -19,7 +15,7 @@ class Main extends React.Component {
 					<Route
 						exact
 						path="/"
-						render={() => <MainContainer auth={this.props.auth} />}
+						render={() => <RootContainer auth={this.props.auth} />}
 					/>
 					<Route path="/login" component={Login} />
 					<Route path="/register" component={Register} />
@@ -31,4 +27,4 @@ class Main extends React.Component {
 	}
 }
 
-export default Main;
+export default withRouter(Main);
