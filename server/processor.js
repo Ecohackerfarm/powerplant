@@ -1,8 +1,4 @@
-import {
-	AsyncObject,
-	ReadWriteTask,
-	ReadWriteScheduler
-} from 'async-task-schedulers';
+import { AsyncObject, ReadWriteScheduler } from 'async-task-schedulers';
 import mongoose from 'mongoose';
 import jwt from 'jsonwebtoken';
 import jwtSecret from '/jwt-secret';
@@ -37,49 +33,45 @@ export class Processor extends AsyncObject {
 	constructor() {
 		super();
 
-		this.registerTaskParameters('getDocuments', false);
-		this.registerTaskParameters('getDocument', false);
-		this.registerTaskParameters('getAuthorizedDocuments', false);
-		this.registerTaskParameters('getAuthorizedDocument', false);
-		this.registerTaskParameters('getAuthenticatedUser', false);
-		this.registerTaskParameters('getAllDocuments', false);
-		this.registerTaskParameters('getCropsByName', false);
-		this.registerTaskParameters('getCropGroups', false);
-		this.registerTaskParameters('getCompatibleCrops', false);
-		this.registerTaskParameters('getCropRelationshipScores', false);
-		this.registerTaskParameters('getCropRelationshipsByCrop', false);
-		this.registerTaskParameters('getCropRelationship', false);
-		this.registerTaskParameters('login', false);
+		this.registerScheduler(this.getDocuments, this.scheduleRead);
+		this.registerScheduler(this.getDocument, this.scheduleRead);
+		this.registerScheduler(this.getAuthorizedDocuments, this.scheduleRead);
+		this.registerScheduler(this.getAuthorizedDocument, this.scheduleRead);
+		this.registerScheduler(this.getAuthenticatedUser, this.scheduleRead);
+		this.registerScheduler(this.getAllDocuments, this.scheduleRead);
+		this.registerScheduler(this.getCropsByName, this.scheduleRead);
+		this.registerScheduler(this.getCropGroups, this.scheduleRead);
+		this.registerScheduler(this.getCompatibleCrops, this.scheduleRead);
+		this.registerScheduler(this.getCropRelationshipScores, this.scheduleRead);
+		this.registerScheduler(this.getCropRelationshipsByCrop, this.scheduleRead);
+		this.registerScheduler(this.getCropRelationship, this.scheduleRead);
+		this.registerScheduler(this.login, this.scheduleRead);
 
-		this.registerTaskParameters('updateDocument', true);
-		this.registerTaskParameters('updateAuthorizedDocument', true);
-		this.registerTaskParameters('saveDocument', true);
-		this.registerTaskParameters('saveAuthorizedDocument', true);
-		this.registerTaskParameters('deleteDocument', true);
-		this.registerTaskParameters('deleteAuthorizedDocument', true);
+		this.registerScheduler(this.updateDocument, this.scheduleWrite);
+		this.registerScheduler(this.updateAuthorizedDocument, this.scheduleWrite);
+		this.registerScheduler(this.saveDocument, this.scheduleWrite);
+		this.registerScheduler(this.saveAuthorizedDocument, this.scheduleWrite);
+		this.registerScheduler(this.deleteDocument, this.scheduleWrite);
+		this.registerScheduler(this.deleteAuthorizedDocument, this.scheduleWrite);
+
+		this.scheduler = new ReadWriteScheduler();
+		this.scheduler.activate();
 	}
 
 	/**
-	 * Create the scheduler that allows only compatible asynchronous methods to
-	 * run at the same time.
-	 *
-	 * TODO: Caching, when needed. One asynchronous method for getting a derived
-	 * value, and one for calculating it. When the getter is called if the derived
-	 * value is not calculated or it is invalid, the scheduler first runs the
-	 * method that calculates the value and only then the getter. When a database
-	 * entry is changed, the scheduler orders all the derived values to be
-	 * recalculated. Possibly a dependency tree of derived values can be used to
-	 * order the calculations.
+	 * @param {AsyncFunction} method
+	 * @param {Object[]} parameters
 	 */
-	newScheduler() {
-		return new ReadWriteScheduler();
+	scheduleRead(method, ...parameters) {
+		return this.scheduler.pushRead(this, method, ...parameters);
 	}
 
 	/**
-	 * @return {Task}
+	 * @param {AsyncFunction} method
+	 * @param {Object[]} parameters
 	 */
-	getTaskClass() {
-		return ReadWriteTask;
+	scheduleWrite(method, ...parameters) {
+		return this.scheduler.pushWrite(this, method, ...parameters);
 	}
 
 	/**
@@ -128,7 +120,7 @@ export class Processor extends AsyncObject {
 	async getDocuments(model, ids) {
 		this.validate(ids);
 
-		const path = (model == CropRelationship) ? 'crop0 crop1' : '';
+		const path = model == CropRelationship ? 'crop0 crop1' : '';
 		const documents = await model
 			.find({ _id: { $in: ids } })
 			.populate(path)
@@ -146,7 +138,7 @@ export class Processor extends AsyncObject {
 	 * @return {Document} Document or null if not found
 	 */
 	async getDocument(model, id) {
-		const documents = await this.getDocuments(model, [id]);
+		const documents = await this.getDocumentsUnmanaged(model, [id]);
 		return documents ? documents[0] : null;
 	}
 
@@ -156,7 +148,7 @@ export class Processor extends AsyncObject {
 	 * @param {String[]} ids
 	 */
 	async getAuthorizedDocuments(currentUser, model, ids) {
-		const documents = await this.getDocuments(model, ids);
+		const documents = await this.getDocumentsUnmanaged(model, ids);
 		if (!documents) {
 			return null;
 		}
@@ -172,9 +164,11 @@ export class Processor extends AsyncObject {
 	 * @param {String} id
 	 */
 	async getAuthorizedDocument(currentUser, model, id) {
-		const documents = await this.getAuthorizedDocuments(currentUser, model, [
-			id
-		]);
+		const documents = await this.getAuthorizedDocumentsUnmanaged(
+			currentUser,
+			model,
+			[id]
+		);
 		return documents ? documents[0] : null;
 	}
 
@@ -212,7 +206,7 @@ export class Processor extends AsyncObject {
 	async saveDocument(model, object) {
 		if (model == CropRelationship) {
 			const cropIds = [object.crop0, object.crop1];
-			const crops = await this.getDocuments(Crop, cropIds);
+			const crops = await this.getDocumentsUnmanaged(Crop, cropIds);
 			if (/*(cropIds[0] == cropIds[1]) ||*/ !crops) {
 				throw VALIDATION_EXCEPTION;
 			}
@@ -247,7 +241,7 @@ export class Processor extends AsyncObject {
 	 */
 	async saveAuthorizedDocument(currentUser, model, object) {
 		this.authorize(currentUser, [object]);
-		const document = await this.saveDocument(model, object);
+		const document = await this.saveDocumentUnmanaged(model, object);
 		if (!document) {
 			return null;
 		}
@@ -269,7 +263,7 @@ export class Processor extends AsyncObject {
 	 * @return {Document} Updated document
 	 */
 	async updateDocument(model, id, update) {
-		const document = await this.getDocument(model, id);
+		const document = await this.getDocumentUnmanaged(model, id);
 		return await this.updateDocumentInternal(document, update);
 	}
 
@@ -283,7 +277,11 @@ export class Processor extends AsyncObject {
 	 * @return {Document} Updated document
 	 */
 	async updateAuthorizedDocument(currentUser, model, id, update) {
-		const document = await this.getAuthorizedDocument(currentUser, model, id);
+		const document = await this.getAuthorizedDocumentUnmanaged(
+			currentUser,
+			model,
+			id
+		);
 		return await this.updateDocumentInternal(document, update);
 	}
 
@@ -310,7 +308,7 @@ export class Processor extends AsyncObject {
 	 * @param {String} id
 	 */
 	async deleteDocument(model, id) {
-		const document = await this.getDocument(model, id);
+		const document = await this.getDocumentUnmanaged(model, id);
 		await this.deleteDocumentInternal(model, document);
 	}
 
@@ -322,7 +320,11 @@ export class Processor extends AsyncObject {
 	 * @param {String} id
 	 */
 	async deleteAuthorizedDocument(currentUser, model, id) {
-		const document = await this.getAuthorizedDocument(currentUser, model, id);
+		const document = await this.getAuthorizedDocumentUnmanaged(
+			currentUser,
+			model,
+			id
+		);
 		await this.deleteDocumentInternal(model, document);
 	}
 
@@ -337,7 +339,7 @@ export class Processor extends AsyncObject {
 			throw AUTHENTICATION_EXCEPTION;
 		}
 
-		const document = await this.getDocument(User, userInfo.id);
+		const document = await this.getDocumentUnmanaged(User, userInfo.id);
 		document.populate('locations');
 		return document;
 	}
@@ -394,7 +396,7 @@ export class Processor extends AsyncObject {
 	 */
 	async getCropRelationshipScores(ids) {
 		// Check that the crops exist
-		const crops = await this.getDocuments(Crop, ids);
+		const crops = await this.getDocumentsUnmanaged(Crop, ids);
 		if (!crops) {
 			throw VALIDATION_EXCEPTION;
 		}
@@ -483,7 +485,7 @@ export class Processor extends AsyncObject {
 	 * @return {Array}
 	 */
 	async getCropGroups(cropIds) {
-		let crops = await this.getDocuments(Crop, cropIds);
+		let crops = await this.getDocumentsUnmanaged(Crop, cropIds);
 		if (!crops) {
 			throw VALIDATION_EXCEPTION;
 		}
@@ -529,7 +531,7 @@ export class Processor extends AsyncObject {
 	 * @return {Array}
 	 */
 	async getCompatibleCrops(cropIds) {
-		let allCrops = await this.getAllDocuments(Crop);
+		let allCrops = await this.getAllDocumentsUnmanaged(Crop);
 		await this.assignRelationships(allCrops);
 		Processor.assignIsCompatible(allCrops, Processor.isCompanion);
 		const combinations = new Combinations(allCrops);
@@ -563,20 +565,19 @@ export class Processor extends AsyncObject {
 	 * @param {Number} length
 	 */
 	async getCropsByName(regex, index, length) {
-		console.log('getCropsByName');
 		const crops = await Crop.find()
 			.byName(this.escapeRegEx(regex))
 			.exec();
 		return length === 0
-				? crops.slice(index)
-				: crops.slice(index, index + length);
+			? crops.slice(index)
+			: crops.slice(index, index + length);
 	}
 
 	/**
 	 * @param {String} cropId
 	 */
 	async getCropRelationshipsByCrop(cropId) {
-		const crop = await this.getDocument(Crop, cropId);
+		const crop = await this.getDocumentUnmanaged(Crop, cropId);
 		if (!crop) {
 			throw VALIDATION_EXCEPTION;
 		}
@@ -591,10 +592,7 @@ export class Processor extends AsyncObject {
 	 * @param {String} crop1Id
 	 */
 	async getCropRelationship(crop0Id, crop1Id) {
-		const crops = await this.getDocuments(Crop, [
-			crop0Id,
-			crop1Id
-		]);
+		const crops = await this.getDocumentsUnmanaged(Crop, [crop0Id, crop1Id]);
 		if (!crops) {
 			throw VALIDATION_EXCEPTION;
 		}

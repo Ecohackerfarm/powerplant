@@ -71,7 +71,7 @@ async function getAuthenticatedUser(req, next) {
 		throw AUTHENTICATION_EXCEPTION;
 	}
 	const [, token] = header.split(' ');
-	return await processor.call('getAuthenticatedUser', token);
+	return await processor.getAuthenticatedUser(token);
 }
 
 /**
@@ -92,14 +92,13 @@ export async function documentGet(req, res, next, model) {
 		let document;
 		if (authorizedModels.includes(model)) {
 			const authenticatedUser = await getAuthenticatedUser(req, next);
-			document = await processor.call(
-				'getAuthorizedDocument',
+			document = await processor.getAuthorizedDocument(
 				authenticatedUser,
 				model,
 				id
 			);
 		} else {
-			document = await processor.call('getDocument', model, id);
+			document = await processor.getDocument(model, id);
 		}
 
 		if (!document) {
@@ -126,15 +125,14 @@ export async function documentPut(req, res, next, model) {
 		let document;
 		if (authorizedModels.includes(model)) {
 			const authenticatedUser = await getAuthenticatedUser(req, next);
-			document = await processor.call(
-				'updateAuthorizedDocument',
+			document = await processor.updateAuthorizedDocument(
 				authenticatedUser,
 				model,
 				id,
 				update
 			);
 		} else {
-			document = await processor.call('updateDocument', model, id, update);
+			document = await processor.updateDocument(model, id, update);
 		}
 
 		if (!document) {
@@ -158,14 +156,13 @@ export async function documentPost(req, res, next, model) {
 		let document;
 		if (authorizedModels.includes(model)) {
 			const authenticatedUser = await getAuthenticatedUser(req, next);
-			document = await processor.call(
-				'saveAuthorizedDocument',
+			document = await processor.saveAuthorizedDocument(
 				authenticatedUser,
 				model,
 				req.body
 			);
 		} else {
-			document = await processor.call('saveDocument', model, req.body);
+			document = await processor.saveDocument(model, req.body);
 		}
 
 		res.status(201).json(document);
@@ -186,14 +183,9 @@ export async function documentDelete(req, res, next, model) {
 
 		if (authorizedModels.includes(model)) {
 			const authenticatedUser = await getAuthenticatedUser(req, next);
-			await processor.call(
-				'deleteAuthorizedDocument',
-				authenticatedUser,
-				model,
-				id
-			);
+			await processor.deleteAuthorizedDocument(authenticatedUser, model, id);
 		} else {
-			await processor.call('deleteDocument', model, id);
+			await processor.deleteDocument(model, id);
 		}
 
 		/*
@@ -215,10 +207,7 @@ export async function getAllCropRelationships(req, res, next) {
 	try {
 		// get all combinations - this is REALLY slow (over 2s) but it's also a huge request
 		// could consider pagination - return 50 results and a link to the next 50
-		const relationships = await processor.call(
-			'getAllDocuments',
-			CropRelationship
-		);
+		const relationships = await processor.getAllDocuments(CropRelationship);
 		res.json(relationships);
 	} catch (exception) {
 		handleError(next, exception);
@@ -232,8 +221,7 @@ export async function getAllCropRelationships(req, res, next) {
  */
 export async function getCropRelationshipsByCrop(req, res, next) {
 	try {
-		const relationships = await processor.call(
-			'getCropRelationshipsByCrop',
+		const relationships = await processor.getCropRelationshipsByCrop(
 			req.params.cropId
 		);
 		res.json(relationships);
@@ -250,7 +238,7 @@ export async function getCropRelationshipsByCrop(req, res, next) {
 export async function getCropRelationshipScores(req, res, next) {
 	try {
 		const ids = (req.query.id || '').split(',');
-		const scores = await processor.call('getCropRelationshipScores', ids);
+		const scores = await processor.getCropRelationshipScores(ids);
 
 		res.json(scores);
 	} catch (exception) {
@@ -270,15 +258,15 @@ export async function getCropsByName(req, res, next) {
 			throw VALIDATION_EXCEPTION;
 		}
 		const index = parseInteger(next, req.query.index, 0, MAX_NAME_ENTRIES, 0);
-		const length = parseInteger(next, req.query.length, 0, MAX_RESPONSE_LENGTH, 0);
-
-		const crops = await processor.call(
-			'getCropsByName',
-			name,
-			index,
-			length
+		const length = parseInteger(
+			next,
+			req.query.length,
+			0,
+			MAX_RESPONSE_LENGTH,
+			0
 		);
 
+		const crops = await processor.getCropsByName(name, index, length);
 		res.json(crops);
 	} catch (exception) {
 		handleError(next, exception);
@@ -292,7 +280,7 @@ export async function getCropsByName(req, res, next) {
  */
 export async function getCropGroups(req, res, next) {
 	try {
-		const groups = await processor.call('getCropGroups', req.body.cropIds);
+		const groups = await processor.getCropGroups(req.body.cropIds);
 		res.json(groups);
 	} catch (exception) {
 		handleError(next, exception);
@@ -306,7 +294,7 @@ export async function getCropGroups(req, res, next) {
  */
 export async function getCompatibleCrops(req, res, next) {
 	try {
-		const crops = await processor.call('getCompatibleCrops', req.body.cropIds);
+		const crops = await processor.getCompatibleCrops(req.body.cropIds);
 		res.json(crops);
 	} catch (exception) {
 		handleError(next, exception);
@@ -320,8 +308,7 @@ export async function getCompatibleCrops(req, res, next) {
  */
 export async function getCropRelationship(req, res, next) {
 	try {
-		const cropRelationship = await processor.call(
-			'getCropRelationship',
+		const cropRelationship = await processor.getCropRelationship(
 			req.params.crop0Id,
 			req.params.crop1Id
 		);
@@ -360,7 +347,7 @@ export async function getLocations(req, res, next) {
  */
 export async function login(req, res, next) {
 	try {
-		const result = await processor.call('login', req.body);
+		const result = await processor.login(req.body);
 		res.json(result);
 	} catch (exception) {
 		handleError(next, exception);

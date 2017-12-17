@@ -2,262 +2,7 @@ import url from 'url';
 import request from 'request-promise';
 import mysql from 'mysql2/promise';
 import firebase from 'firebase';
-import {
-	override,
-	registerSignal,
-	AsyncObject,
-	Task,
-	SchedulerTask,
-	SerialScheduler,
-	ParallelScheduler
-} from 'async-task-schedulers';
-
-/**
- *
- */
-class DocumentGetter extends AsyncObject {
-	/**
-	 * @param {String} modelPath
-	 */
-	constructor(modelPath) {
-		super();
-
-		this.modelPath = modelPath;
-		this.documents = [];
-
-		this.registerTaskParameters('getDocuments');
-	}
-
-	/**
-	 * Schedule getDocument() calls to fetch all documents before doing the pushed
-	 * getDocuments() task.
-	 *
-	 * @return {Scheduler}
-	 */
-	newScheduler() {
-		const scheduler = new ParallelScheduler();
-		override(scheduler, 'push', originalPush => {
-			return function(task) {
-				const fetchScheduler = new ParallelScheduler();
-				const object = task.object;
-				const ids = task.parameters[0];
-				ids.forEach((id, index) => {
-					fetchScheduler.push(new Task(object, object.getDocument, id, index));
-				});
-
-				const operationScheduler = new SerialScheduler();
-				operationScheduler.push(new SchedulerTask(fetchScheduler));
-				operationScheduler.push(task);
-
-				originalPush(new SchedulerTask(operationScheduler));
-			};
-		});
-		scheduler.activate();
-
-		return scheduler;
-	}
-
-	/**
-	 * @return {Task}
-	 */
-	getTaskClass() {
-		return Task;
-	}
-
-	/**
-	 * @param {String} id
-	 * @param {Number} index
-	 */
-	async getDocument(id, index) {
-		const requestOptions = {
-			method: 'GET',
-			uri: getApiUrl() + this.modelPath + '/' + id,
-			json: true
-		};
-		this.documents[index] = await request(requestOptions);
-	}
-
-	/**
-	 * @param {String[]} ids
-	 */
-	async getDocuments(ids) {
-		return this.documents;
-	}
-}
-
-/**
- *
- */
-class DocumentRemover extends AsyncObject {
-	/**
-	 * @param {String} modelPath
-	 */
-	constructor(modelPath) {
-		super();
-
-		this.modelPath = modelPath;
-
-		this.registerTaskParameters('removeDocument');
-	}
-
-	newScheduler() {
-		const scheduler = new ParallelScheduler();
-		scheduler.activate();
-
-		return scheduler;
-	}
-
-	getTaskClass() {
-		return Task;
-	}
-
-	/**
-	 * @param {String} id
-	 */
-	async removeDocument(id) {
-		const requestOptions = {
-			method: 'DELETE',
-			uri: getApiUrl() + this.modelPath + '/' + id,
-			json: true
-		};
-		await request(requestOptions);
-
-		this.onRemoved(id);
-	}
-
-	/**
-	 * @param {String[]} ids
-	 */
-	removeDocuments(ids) {
-		ids.forEach(id => {
-			this.call('removeDocument', id);
-		});
-	}
-
-	/**
-	 * Called when a document has been successfully removed.
-	 *
-	 * @param {String} id
-	 */
-	onRemoved(id) {}
-}
-
-/**
- *
- */
-class DocumentAdder extends AsyncObject {
-	/**
-	 * @param {String} modelPath
-	 */
-	constructor(modelPath) {
-		super();
-
-		this.modelPath = modelPath;
-
-		this.registerTaskParameters('addDocument');
-	}
-
-	newScheduler() {
-		const scheduler = new ParallelScheduler();
-		scheduler.activate();
-
-		return scheduler;
-	}
-
-	getTaskClass() {
-		return Task;
-	}
-
-	/**
-	 * @param {Object} object
-	 */
-	async addDocument(object) {
-		const requestOptions = {
-			method: 'POST',
-			uri: getApiUrl() + this.modelPath,
-			json: true,
-			body: object
-		};
-		const response = await request(requestOptions);
-
-		this.onAdded(response);
-	}
-
-	/**
-	 * @param {Object[]} objects
-	 */
-	addDocuments(objects) {
-		objects.forEach(object => {
-			this.call('addDocument', object);
-		});
-	}
-
-	/**
-	 * Called with the added document that contains the ID.
-	 *
-	 * @param {Object} document
-	 */
-	onAdded(document) {}
-}
-
-/**
- *
- */
-class DocumentUpdater extends AsyncObject {
-	/**
-	 * @param {String} modelPath
-	 */
-	constructor(modelPath) {
-		super();
-
-		this.modelPath = modelPath;
-
-		this.registerTaskParameters('updateDocument');
-	}
-
-	newScheduler() {
-		const scheduler = new ParallelScheduler();
-		scheduler.activate();
-
-		return scheduler;
-	}
-
-	getTaskClass() {
-		return Task;
-	}
-
-	/**
-	 * @param {Object} object
-	 */
-	async updateDocument(id, object) {
-		const requestOptions = {
-			method: 'PUT',
-			uri: getApiUrl() + this.modelPath + '/' + id,
-			json: true,
-			body: object
-		};
-		const response = await request(requestOptions);
-
-		this.onUpdated(id, response);
-	}
-
-	/**
-	 * @param {String[]} ids
-	 * @param {Object[]} objects
-	 */
-	updateDocuments(ids, objects) {
-		ids.forEach((id, index) => {
-			this.call('updateDocument', id, objects[index]);
-		});
-	}
-
-	/**
-	 * Called with the updadted document.
-	 *
-	 * @param {Object} document
-	 */
-	onUpdated(id, document) {}
-}
+import { ApiClient } from './api-client.js';
 
 /**
  * Print a message to console.
@@ -292,7 +37,7 @@ function parseOptionValue(argument, argumentWithoutValue) {
 
 	return valueString.includes(':')
 		? eval('({' + valueString + '})')
-		: eval('(' + valueString + ')');
+		: eval("('" + valueString + "')");
 }
 
 /**
@@ -347,139 +92,29 @@ function getOptionArguments() {
 }
 
 /**
- * @return {String}
- */
-function getApiUrl() {
-	return (
-		'http://' + powerplantConfig.host + ':' + powerplantConfig.port + '/api'
-	);
-}
-
-/**
- * @param {String} path
- * @param {Object} document
- */
-async function pushDocument(path, document) {
-	const httpOptions = {
-		method: 'POST',
-		uri: getApiUrl() + path,
-		json: true,
-		body: document
-	};
-
-	let response;
-	try {
-		response = await request(httpOptions);
-	} catch (exception) {
-		debug(exception);
-		return null;
-	}
-
-	log('Pushed document ' + path + response._id);
-
-	return response;
-}
-
-/**
- * Remove a document.
- *
- * @param {String} path
- * @param {String} id
- */
-async function removeDocument(path, id) {
-	const httpOptions = {
-		method: 'DELETE',
-		uri: getApiUrl() + path + id,
-		json: true
-	};
-
-	try {
-		await request(httpOptions);
-	} catch (exception) {
-		debug(exception);
-		return;
-	}
-
-	log('Removed ' + nonOptionArguments[1] + ' ' + id);
-}
-
-/**
- *
- */
-async function getAllCrops() {
-	let all = [];
-	let index = 0;
-	const length = 50;
-
-	for (;;) {
-		const part = await getCropsByName('', index, length);
-
-		all = all.concat(part);
-		index += length;
-
-		if (part.length < length) {
-			break;
-		}
-	}
-
-	return all;
-}
-
-/**
- * Remove all documents.
- *
- * @param {String} path
- */
-async function removeDocuments(getAllDocumentsPath, path) {
-	const httpOptions = {
-		method: 'GET',
-		uri: getApiUrl() + getAllDocumentsPath,
-		json: true
-	};
-
-	let documents;
-	try {
-		if (getAllDocumentsPath.includes('get-crops-by-name')) {
-			documents = await getAllCrops();
-		} else {
-			documents = await request(httpOptions);
-		}
-	} catch (exception) {
-		debug(exception);
-		return;
-	}
-	debug(documents);
-
-	const scheduler = new SerialScheduler();
-	documents.forEach(document => {
-		scheduler.push(new Task(undefined, removeDocument, path, document._id));
-	});
-	scheduler.activate();
-}
-
-const modelNameToPath = {};
-modelNameToPath['crop'] = '/crops';
-modelNameToPath['crop-relationship'] = '/crop-relationships';
-modelNameToPath['location'] = '/locations';
-modelNameToPath['user'] = '/users';
-
-function getDocumentActionModelPath() {
-	return modelNameToPath[nonOptionArguments[1]];
-}
-
-/**
  * Show documents.
  */
 async function doShow() {
-	const path = getDocumentActionModelPath();
-	if (!path) {
-		return;
-	}
+	const client = new ApiClient(powerplantConfig.host, powerplantConfig.port);
 
-	const documents = await new DocumentGetter(path).call(
-		'getDocuments',
-		nonOptionArguments.slice(2)
-	);
+	const model = nonOptionArguments[1];
+	const ids = nonOptionArguments.slice(2);
+
+	let documents;
+	switch (model) {
+		case 'crop': {
+			documents = await client.getCrops(ids);
+			break;
+		}
+		case 'crop-relationship': {
+			documents = await client.getCropRelationships(ids);
+			break;
+		}
+		case 'user': {
+			documents = await client.getUsers(ids);
+			break;
+		}
+	}
 
 	documents.forEach(document => {
 		console.log(document);
@@ -490,158 +125,130 @@ async function doShow() {
  * Add documents.
  */
 async function doAdd() {
-	const path = getDocumentActionModelPath();
-	if (!path) {
-		return;
+	const client = new ApiClient(powerplantConfig.host, powerplantConfig.port);
+
+	const model = nonOptionArguments[1];
+	const documents = parseOptionArray('document');
+
+	switch (model) {
+		case 'crop': {
+			await client.addCrops(documents);
+			break;
+		}
+		case 'crop-relationship': {
+			await client.addCropRelationships(documents);
+			break;
+		}
+		case 'user': {
+			await client.addUsers(documents);
+			break;
+		}
 	}
 
-	const adder = new DocumentAdder(path);
-	registerSignal(adder, 'onAdded', undefined, document => {
-		console.log('Added ' + nonOptionArguments[1]);
-		console.log(document);
-	});
-
-	adder.addDocuments(parseOptionArray('document'));
+	console.log(documents);
 }
 
 /**
  * Update documents.
  */
 async function doUpdate() {
-	const path = getDocumentActionModelPath();
-	if (!path) {
-		return;
-	}
+	const client = new ApiClient(powerplantConfig.host, powerplantConfig.port);
 
-	const updater = new DocumentUpdater(path);
-	registerSignal(updater, 'onUpdated', undefined, (id, document) => {
-		console.log('Updated ' + nonOptionArguments[1] + ' ' + id);
-		console.log(document);
+	const model = nonOptionArguments[1];
+	const ids = nonOptionArguments.slice(2);
+	const documents = parseOptionArray('document');
+
+	const idMapDocument = {};
+	ids.forEach((id, index) => {
+		idMapDocument[id] = documents[index];
 	});
 
-	updater.updateDocuments(
-		nonOptionArguments.slice(2),
-		parseOptionArray('document')
-	);
+	switch (model) {
+		case 'crop': {
+			await client.setCrops(idMapDocument);
+			break;
+		}
+		case 'crop-relationship': {
+			await client.getCropRelationships(idMapDocument);
+			break;
+		}
+		case 'user': {
+			await client.getUsers(idMapDocument);
+			break;
+		}
+	}
 }
 
 /**
  * Remove documents.
  */
 async function doRemove() {
-	const path = getDocumentActionModelPath();
-	if (!path) {
-		return;
-	}
+	const client = new ApiClient(powerplantConfig.host, powerplantConfig.port);
 
-	if (nonOptionArguments.length > 2) {
-		const remover = new DocumentRemover(path);
-		registerSignal(remover, 'onRemoved', undefined, id => {
-			console.log('Removed ' + nonOptionArguments[1] + ' ' + id);
-		});
+	const model = nonOptionArguments[1];
+	const ids = nonOptionArguments.slice(2);
 
-		remover.removeDocuments(nonOptionArguments.slice(2));
-	} else {
-		switch (nonOptionArguments[1]) {
-			case 'crop':
-				await removeDocuments('/get-crops-by-name', '/crops/');
-				break;
-			case 'crop-relationship':
-				await removeDocuments('/get-all-crop-relationships', '/crop-relationships/');
-				break;
+	switch (model) {
+		case 'crop': {
+			if (ids.length > 0) {
+				await client.removeCrops(ids);
+			} else {
+				await client.removeAllCrops();
+			}
+			break;
+		}
+		case 'crop-relationship': {
+			if (ids.length > 0) {
+				await client.removeCropRelationships(ids);
+			} else {
+				await client.removeAllCropRelationships();
+			}
+			break;
+		}
+		case 'user': {
+			await client.removeUsers(ids);
+			break;
 		}
 	}
-}
-
-/**
- * @param {String} name
- * @param {Number} index
- * @param {Number} length
- */
-async function getCropsByName(name, index, length) {
-	const httpOptions = {
-		method: 'GET',
-		uri:
-			getApiUrl() +
-			'/get-crops-by-name?name=' +
-			name +
-			'&index=' +
-			index +
-			'&length=' +
-			length,
-		json: true
-	};
-
-	let response;
-	try {
-		response = await request(httpOptions);
-	} catch (exception) {
-		debug(exception);
-		return null;
-	}
-
-	return response;
 }
 
 /**
  *
  */
 async function doGetCropsByName() {
+	const client = new ApiClient(powerplantConfig.host, powerplantConfig.port);
+
 	const name = parseOption('name');
 	const index = parseOption('index');
 	const length = parseOption('length');
 
-	const organisms = await getCropsByName(name, index, length);
+	const crops = await client.getCropsByName(name, index, length);
 
-	log(organisms);
+	log(crops);
 }
 
 /**
  * {beans,cabbage,peas},apple
  */
 async function doGetCropGroups() {
+	const client = new ApiClient(powerplantConfig.host, powerplantConfig.port);
+
 	const crops = parseOptionArray('crop');
 
-	const httpOptions = {
-		method: 'POST',
-		uri: getApiUrl() + '/get-crop-groups',
-		json: true,
-		body: { cropIds: crops }
-	};
-
-	let response;
-	try {
-		response = await request(httpOptions);
-	} catch (exception) {
-		debug(exception);
-		return null;
-	}
-
-	log(response);
+	const groups = await client.getCropGroups(crops);
+	log(groups);
 }
 
 /**
  *
  */
 async function doGetCompatibleCrops() {
-	const crops = parseOptionArray('crop');
+	const client = new ApiClient(powerplantConfig.host, powerplantConfig.port);
 
-	const httpOptions = {
-		method: 'POST',
-		uri: getApiUrl() + '/get-compatible-crops',
-		json: true,
-		body: { cropIds: crops }
-	};
+	const ids = parseOptionArray('crop');
 
-	let response;
-	try {
-		response = await request(httpOptions);
-	} catch (exception) {
-		debug(exception);
-		return null;
-	}
-
-	log(response);
+	const crops = await client.getCompatibleCrops(ids);
+	log(crops);
 }
 
 /**
@@ -664,54 +271,18 @@ async function pushPfaf() {
 	);
 	connection.end();
 
-	const scheduler = new SerialScheduler();
+	const crops = [];
 	rows.forEach(row => {
 		debug(row);
 		const crop = {
 			commonName: row['common name'],
 			binomialName: row['latin name']
 		};
-		scheduler.push(new Task(undefined, pushDocument, '/crops/', crop));
+		crops.push(crop);
 	});
-	scheduler.activate();
-}
 
-/**
- * @param {Object} firebasePlant
- * @param {Object} firebaseToMongo Map of firebase IDs to Mongo IDs
- */
-async function pushFirebasePlant(firebaseId, firebasePlant, firebaseToMongo) {
-	debug('Start pushing ' + firebaseId + ' ' + JSON.stringify(firebasePlant));
-
-	const convertedCrop = {
-		commonName: firebasePlant.display_name,
-		binomialName: firebasePlant.display_name
-	};
-
-	let savedCrop = await pushDocument('/crops/', convertedCrop);
-	if (savedCrop) {
-		firebaseToMongo[firebaseId] = savedCrop._id;
-	}
-}
-
-/**
- * @param {Object} firebaseToMongo Map of firebase IDs to Mongo IDs
- * @param {String} firebaseId0
- * @param {String} firebaseId1
- */
-async function pushFirebaseCompanion(
-	firebaseToMongo,
-	firebaseId0,
-	firebaseId1,
-	value
-) {
-	const relationship = {
-		crop0: firebaseToMongo[firebaseId0],
-		crop1: firebaseToMongo[firebaseId1],
-		compatibility: value == 'good' ? 1 : -1
-	};
-
-	await pushDocument('/crop-relationships/', relationship);
+	const client = new ApiClient(powerplantConfig.host, powerplantConfig.port);
+	await client.addCrops(crops);
 }
 
 /**
@@ -734,52 +305,45 @@ async function pushFirebase() {
 		.ref('/')
 		.once('value')).val();
 	firebase.database().goOffline();
-	
+
 	const firebasePlants = firebaseData.plants;
 	const firebaseCompanions = firebaseData.companions;
 	debug(firebaseData);
 
-	const firebaseToMongo = {};
-
-	const scheduler = new SerialScheduler();
-	const plantScheduler = new SerialScheduler();
-	const relationshipScheduler = new SerialScheduler();
-
-	scheduler.push(new SchedulerTask(plantScheduler));
-	scheduler.push(new SchedulerTask(relationshipScheduler));
-
+	const crops = [];
+	const firebaseIdToCrop = {};
 	Object.keys(firebasePlants).forEach(firebaseId => {
-		plantScheduler.push(
-			new Task(
-				undefined,
-				pushFirebasePlant,
-				firebaseId,
-				firebasePlants[firebaseId],
-				firebaseToMongo
-			)
-		);
+		const firebasePlant = firebasePlants[firebaseId];
+		const crop = {
+			commonName: firebasePlant.display_name,
+			binomialName: firebasePlant.display_name
+		};
+		crops.push(crop);
+		firebaseIdToCrop[firebaseId] = crop;
 	});
 
+	const client = new ApiClient(powerplantConfig.host, powerplantConfig.port);
+
+	log(await client.addCrops(crops));
+
+	const relationships = [];
 	Object.keys(firebaseCompanions).forEach(firebaseId0 => {
 		Object.keys(firebaseCompanions[firebaseId0]).forEach(firebaseId1 => {
 			const value = firebaseCompanions[firebaseId0][firebaseId1];
 			if (value) {
-				relationshipScheduler.push(
-					new Task(
-						undefined,
-						pushFirebaseCompanion,
-						firebaseToMongo,
-						firebaseId0,
-						firebaseId1,
-						value
-					)
-				);
+				const relationship = {
+					crop0: firebaseIdToCrop[firebaseId0]._id,
+					crop1: firebaseIdToCrop[firebaseId1]._id,
+					compatibility: value == 'good' ? 1 : -1
+				};
+				relationships.push(relationship);
+
 				delete firebaseCompanions[firebaseId1][firebaseId0];
 			}
 		});
 	});
 
-	scheduler.activate();
+	log(await client.addCropRelationships(relationships));
 }
 
 /*
@@ -792,14 +356,14 @@ let powerplantConfig = {
 };
 
 /*
- * First command line argument is the command, rest of the arguments are options
- * for the command.
+ * First command line argument is the command, rest of the arguments are
+ * options for the command.
  */
 const commands = {
-	'remove': doRemove,
-	'add': doAdd,
-	'update': doUpdate,
-	'show': doShow,
+	remove: doRemove,
+	add: doAdd,
+	update: doUpdate,
+	show: doShow,
 	'get-crops-by-name': doGetCropsByName,
 	'get-crop-groups': doGetCropGroups,
 	'get-compatible-crops': doGetCompatibleCrops,
