@@ -59,7 +59,7 @@ export const fetchCrops = () => {
 		if ( (now.getTime() - lastUpdated) > updateInterval ){
 			dispatch(loadingCrops(true));
 			return axios.get(
-			  '/api/get-organisms-by-name?name='
+			  '/api/get-crops-by-name?name='
 				+ name
 				+ '&index='
 				+ index

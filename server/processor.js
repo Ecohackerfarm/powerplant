@@ -7,8 +7,8 @@ import mongoose from 'mongoose';
 import jwt from 'jsonwebtoken';
 import jwtSecret from '/jwt-secret';
 import User from '/server/models/user';
-import Companionship from '/server/models/companionship';
-import Organism from '/server/models/organism';
+import CropRelationship from '/server/models/crop-relationship';
+import Crop from '/server/models/crop';
 import Location from '/server/models/location';
 import validateUser from '/shared/validation/userValidation';
 import validateCredentials from '/shared/validation/loginValidation';
@@ -43,12 +43,12 @@ export class Processor extends AsyncObject {
 		this.registerTaskParameters('getAuthorizedDocument', false);
 		this.registerTaskParameters('getAuthenticatedUser', false);
 		this.registerTaskParameters('getAllDocuments', false);
-		this.registerTaskParameters('getOrganismsByName', false);
+		this.registerTaskParameters('getCropsByName', false);
 		this.registerTaskParameters('getCropGroups', false);
 		this.registerTaskParameters('getCompatibleCrops', false);
-		this.registerTaskParameters('getCompanionshipScores', false);
-		this.registerTaskParameters('getCompanionshipsByOrganism', false);
-		this.registerTaskParameters('getCompanionship', false);
+		this.registerTaskParameters('getCropRelationshipScores', false);
+		this.registerTaskParameters('getCropRelationshipsByCrop', false);
+		this.registerTaskParameters('getCropRelationship', false);
 		this.registerTaskParameters('login', false);
 
 		this.registerTaskParameters('updateDocument', true);
@@ -128,7 +128,7 @@ export class Processor extends AsyncObject {
 	async getDocuments(model, ids) {
 		this.validate(ids);
 
-		const path = model == Companionship ? 'crop1 crop2' : '';
+		const path = (model == CropRelationship) ? 'crop0 crop1' : '';
 		const documents = await model
 			.find({ _id: { $in: ids } })
 			.populate(path)
@@ -210,17 +210,17 @@ export class Processor extends AsyncObject {
 	 * @param {Object} object
 	 */
 	async saveDocument(model, object) {
-		if (model == Companionship) {
-			const organismIds = [object.crop1, object.crop2];
-			const organisms = await this.getDocuments(Organism, organismIds);
-			if (/*(organismIds[0] == organismIds[1]) ||*/ !organisms) {
+		if (model == CropRelationship) {
+			const cropIds = [object.crop0, object.crop1];
+			const crops = await this.getDocuments(Crop, cropIds);
+			if (/*(cropIds[0] == cropIds[1]) ||*/ !crops) {
 				throw VALIDATION_EXCEPTION;
 			}
 
-			const companionships = await Companionship.find()
-				.byCrop(organismIds)
+			const relationships = await CropRelationship.find()
+				.byCrop(...cropIds)
 				.exec();
-			if (companionships.length > 0) {
+			if (relationships.length > 0) {
 				throw VALIDATION_EXCEPTION;
 			}
 		} else if (model == User) {
@@ -294,8 +294,8 @@ export class Processor extends AsyncObject {
 	 * @param {Document} document
 	 */
 	async deleteDocumentInternal(model, document) {
-		if (model == Organism) {
-			await Companionship.find()
+		if (model == Crop) {
+			await CropRelationship.find()
 				.byCrop(document._id)
 				.remove();
 		}
@@ -350,29 +350,29 @@ export class Processor extends AsyncObject {
 	}
 
 	/**
-	 * Processes an array of companionships and calculates compatibility scores for each possible crop
+	 * Processes an array of relationships and calculates compatibility scores for each possible crop
 	 *
-	 * @param  {Companionship[][]} companionshipTable table of sets of Companionships for each crop in ids. All companionships for ids[i] are stored in companionshipTable[i]
-	 * @param  {ObjectId[]} ids       ids of crops used to fetch each Companionship.
-	 * @return {Object}           Object mapping crop ids to companionship scores
+	 * @param  {Relationship[][]} relationshipTable table of sets of CropRelationships for each crop in ids. All relationships for ids[i] are stored in relationshipTable[i]
+	 * @param  {ObjectId[]} ids ids of crops used to fetch each Relationship.
+	 * @return {Object} Object mapping crop ids to relationship scores
 	 */
-	calculateCompanionshipScores(companionshipTable, ids) {
-		// create an intersection of the companionship companionshipTable
+	static calculateCropRelationshipScores(relationshipTable, ids) {
+		// create an intersection of the relationship relationshipTable
 		// crops with any negative interactions will have a value of 0
 		// all other crops will give a percentage score which is how many they complement in the set
 		const result = {};
-		const maxScore = Companionship.schema.paths.compatibility.options.max;
-		const maxTotal = maxScore * companionshipTable.length;
+		const maxScore = CropRelationship.schema.paths.compatibility.options.max;
+		const maxTotal = maxScore * relationshipTable.length;
 		for (let i = 0; i < ids.length; i++) {
-			const data = companionshipTable[i];
+			const data = relationshipTable[i];
 			const queryId = ids[i];
 			data.forEach(pair => {
 				// look at the one that is NOT the corresponding id in ids
 				// at the same index as the current snapshot
 				// Because the current data is for the snapshot for a single crop
-				const id = pair.crop2.equals(queryId) ? pair.crop1 : pair.crop2;
+				const id = pair.crop1.equals(queryId) ? pair.crop0 : pair.crop1;
 
-				// building the companionship scores, storing in result
+				// building the relationship scores, storing in result
 				// if a companion crop is incompatible with any query crop, its score will be -1
 				// otherwise, it will be the average of all of its compatiblity scores with the query crops
 				if (pair.compatibility === -1) {
@@ -392,23 +392,23 @@ export class Processor extends AsyncObject {
 	/**
 	 * @param {String[]} ids
 	 */
-	async getCompanionshipScores(ids) {
-		// Check that the organisms exist
-		const organisms = await this.getDocuments(Organism, ids);
-		if (!organisms) {
+	async getCropRelationshipScores(ids) {
+		// Check that the crops exist
+		const crops = await this.getDocuments(Crop, ids);
+		if (!crops) {
 			throw VALIDATION_EXCEPTION;
 		}
 
-		let companionships = [];
+		let cropToRelationships = [];
 		for (let index = 0; index < ids.length; index++) {
 			const id = ids[index];
-			const organismCompanionships = await Companionship.find()
+			const relationships = await CropRelationship.find()
 				.byCrop(id)
 				.exec();
-			companionships.push(organismCompanionships);
+			cropToRelationships.push(relationships);
 		}
 
-		return this.calculateCompanionshipScores(companionships, ids);
+		return Processor.calculateCropRelationshipScores(cropToRelationships, ids);
 	}
 
 	/**
@@ -434,19 +434,19 @@ export class Processor extends AsyncObject {
 	}
 
 	/**
-	 * @param {Organism[]} crops
+	 * @param {Crop[]} crops
 	 */
 	async assignRelationships(crops) {
 		for (let index = 0; index < crops.length; index++) {
 			const crop = (crops[index] = crops[index].toObject());
-			crop.relationships = await Companionship.find()
+			crop.relationships = await CropRelationship.find()
 				.byCrop(crop._id)
 				.exec();
 		}
 	}
 
 	/**
-	 * @param {Organism} crop
+	 * @param {Crop} crop
 	 * @return {Boolean}
 	 */
 	static isCompanion = function(crop) {
@@ -457,7 +457,7 @@ export class Processor extends AsyncObject {
 	};
 
 	/**
-	 * @param {Organism} crop
+	 * @param {Crop} crop
 	 * @return {Boolean}
 	 */
 	static isNeutral = function(crop) {
@@ -469,7 +469,7 @@ export class Processor extends AsyncObject {
 	};
 
 	/**
-	 * @param {Organism[]} crops
+	 * @param {Crop[]} crops
 	 * @param {Function} isCompatibleFunction
 	 */
 	static assignIsCompatible(crops, isCompatibleFunction) {
@@ -483,7 +483,7 @@ export class Processor extends AsyncObject {
 	 * @return {Array}
 	 */
 	async getCropGroups(cropIds) {
-		let crops = await this.getDocuments(Organism, cropIds);
+		let crops = await this.getDocuments(Crop, cropIds);
 		if (!crops) {
 			throw VALIDATION_EXCEPTION;
 		}
@@ -529,7 +529,7 @@ export class Processor extends AsyncObject {
 	 * @return {Array}
 	 */
 	async getCompatibleCrops(cropIds) {
-		let allCrops = await this.getAllDocuments(Organism);
+		let allCrops = await this.getAllDocuments(Crop);
 		await this.assignRelationships(allCrops);
 		Processor.assignIsCompatible(allCrops, Processor.isCompanion);
 		const combinations = new Combinations(allCrops);
@@ -562,46 +562,47 @@ export class Processor extends AsyncObject {
 	 * @param {Number} index
 	 * @param {Number} length
 	 */
-	async getOrganismsByName(regex, index, length) {
-		const organisms = await Organism.find()
+	async getCropsByName(regex, index, length) {
+		console.log('getCropsByName');
+		const crops = await Crop.find()
 			.byName(this.escapeRegEx(regex))
 			.exec();
-		return length===0
-				? organisms.slice(index)
-				: organisms.slice(index, index + length);
+		return length === 0
+				? crops.slice(index)
+				: crops.slice(index, index + length);
 	}
 
 	/**
-	 * @param {String} organismId
+	 * @param {String} cropId
 	 */
-	async getCompanionshipsByOrganism(organismId) {
-		const organism = await this.getDocument(Organism, organismId);
-		if (!organism) {
+	async getCropRelationshipsByCrop(cropId) {
+		const crop = await this.getDocument(Crop, cropId);
+		if (!crop) {
 			throw VALIDATION_EXCEPTION;
 		}
 
-		return await Companionship.find()
-			.byCrop(organismId)
+		return await CropRelationship.find()
+			.byCrop(cropId)
 			.exec();
 	}
 
 	/**
-	 * @param {String} organism0Id
-	 * @param {String} organism1Id
+	 * @param {String} crop0Id
+	 * @param {String} crop1Id
 	 */
-	async getCompanionship(organism0Id, organism1Id) {
-		const organisms = await this.getDocuments(Organism, [
-			organism0Id,
-			organism1Id
+	async getCropRelationship(crop0Id, crop1Id) {
+		const crops = await this.getDocuments(Crop, [
+			crop0Id,
+			crop1Id
 		]);
-		if (!organisms) {
+		if (!crops) {
 			throw VALIDATION_EXCEPTION;
 		}
 
-		const companionships = await Companionship.find()
-			.byCrop(organism0Id, organism1Id)
+		const relationships = await CropRelationship.find()
+			.byCrop(crop0Id, crop1Id)
 			.exec();
-		return companionships ? companionships[0] : null;
+		return relationships ? relationships[0] : null;
 	}
 
 	/**

@@ -6,16 +6,16 @@ import {
 	documentPost,
 	getCropGroups,
 	getCompatibleCrops,
-	getCompanionshipScores,
-	getAllCompanionships,
-	getCompanionshipsByOrganism,
-	getOrganismsByName,
-	getCompanionship,
+	getAllCropRelationships,
+	getCropsByName,
 	getLocations,
+	getCropRelationshipScores,
+	getCropRelationship,
+	getCropRelationshipsByCrop,
 	login
 } from '/server/middleware';
-import Organism from '/server/models/organism';
-import Companionship from '/server/models/companionship';
+import Crop from '/server/models/crop';
+import CropRelationship from '/server/models/crop-relationship';
 import Location from '/server/models/location';
 import User from '/server/models/user';
 
@@ -63,8 +63,8 @@ router.all('*', (req, res, next) => {
 /*
  * API document points that allow the low-level editing of database documents.
  */
-router.use('/organisms', newDocumentRouter(Organism));
-router.use('/companionships', newDocumentRouter(Companionship));
+router.use('/crops', newDocumentRouter(Crop));
+router.use('/crop-relationships', newDocumentRouter(CropRelationship));
 router.use('/users', newDocumentRouter(User));
 router.use('/locations', newDocumentRouter(Location));
 
@@ -72,17 +72,17 @@ router.use('/locations', newDocumentRouter(Location));
  * API function points for more complex calculations.
  */
 router.post('/login', login);
-router.get('/get-organisms-by-name', getOrganismsByName);
+router.get('/get-crops-by-name', getCropsByName);
 router.post('/get-crop-groups', getCropGroups);
 router.post('/get-compatible-crops', getCompatibleCrops);
-router.get('/get-companionship-scores', getCompanionshipScores);
-router.get('/get-all-companionships', getAllCompanionships);
-router.get(
-	'/get-companionships-by-organism/:organismId',
-	getCompanionshipsByOrganism
-);
-router.get('/get-companionship/:organism0Id/:organism1Id', getCompanionship);
+router.get('/get-all-crop-relationships', getAllCropRelationships);
 router.get('/get-locations', getLocations);
+router.get('/get-crop-relationship-scores', getCropRelationshipScores);
+router.get(
+	'/get-crop-relationships-by-crop/:cropId',
+	getCropRelationshipsByCrop
+);
+router.get('/get-crop-relationship/:crop0Id/:crop1Id', getCropRelationship);
 
 router.get('*', (req, res, next) => {
 	next({ status: 404, message: 'No such route' });

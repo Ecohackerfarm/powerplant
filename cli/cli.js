@@ -406,13 +406,13 @@ async function removeDocument(path, id) {
 /**
  *
  */
-async function getAllOrganisms() {
+async function getAllCrops() {
 	let all = [];
 	let index = 0;
 	const length = 50;
 
 	for (;;) {
-		const part = await getOrganismsByName('', index, length);
+		const part = await getCropsByName('', index, length);
 
 		all = all.concat(part);
 		index += length;
@@ -439,8 +439,8 @@ async function removeDocuments(getAllDocumentsPath, path) {
 
 	let documents;
 	try {
-		if (getAllDocumentsPath.includes('get-organisms-by-name')) {
-			documents = await getAllOrganisms();
+		if (getAllDocumentsPath.includes('get-crops-by-name')) {
+			documents = await getAllCrops();
 		} else {
 			documents = await request(httpOptions);
 		}
@@ -458,8 +458,8 @@ async function removeDocuments(getAllDocumentsPath, path) {
 }
 
 const modelNameToPath = {};
-modelNameToPath['organism'] = '/organisms';
-modelNameToPath['companionship'] = '/companionships';
+modelNameToPath['crop'] = '/crops';
+modelNameToPath['crop-relationship'] = '/crop-relationships';
 modelNameToPath['location'] = '/locations';
 modelNameToPath['user'] = '/users';
 
@@ -543,11 +543,11 @@ async function doRemove() {
 		remover.removeDocuments(nonOptionArguments.slice(2));
 	} else {
 		switch (nonOptionArguments[1]) {
-			case 'organism':
-				await removeDocuments('/get-organisms-by-name', '/organisms/');
+			case 'crop':
+				await removeDocuments('/get-crops-by-name', '/crops/');
 				break;
-			case 'companionship':
-				await removeDocuments('/get-all-companionships', '/companionships/');
+			case 'crop-relationship':
+				await removeDocuments('/get-all-crop-relationships', '/crop-relationships/');
 				break;
 		}
 	}
@@ -558,12 +558,12 @@ async function doRemove() {
  * @param {Number} index
  * @param {Number} length
  */
-async function getOrganismsByName(name, index, length) {
+async function getCropsByName(name, index, length) {
 	const httpOptions = {
 		method: 'GET',
 		uri:
 			getApiUrl() +
-			'/get-organisms-by-name?name=' +
+			'/get-crops-by-name?name=' +
 			name +
 			'&index=' +
 			index +
@@ -586,12 +586,12 @@ async function getOrganismsByName(name, index, length) {
 /**
  *
  */
-async function doGetOrganismsByName() {
+async function doGetCropsByName() {
 	const name = parseOption('name');
 	const index = parseOption('index');
 	const length = parseOption('length');
 
-	const organisms = await getOrganismsByName(name, index, length);
+	const organisms = await getCropsByName(name, index, length);
 
 	log(organisms);
 }
@@ -667,11 +667,11 @@ async function pushPfaf() {
 	const scheduler = new SerialScheduler();
 	rows.forEach(row => {
 		debug(row);
-		const organism = {
+		const crop = {
 			commonName: row['common name'],
 			binomialName: row['latin name']
 		};
-		scheduler.push(new Task(undefined, pushDocument, '/organisms/', organism));
+		scheduler.push(new Task(undefined, pushDocument, '/crops/', crop));
 	});
 	scheduler.activate();
 }
@@ -683,14 +683,14 @@ async function pushPfaf() {
 async function pushFirebasePlant(firebaseId, firebasePlant, firebaseToMongo) {
 	debug('Start pushing ' + firebaseId + ' ' + JSON.stringify(firebasePlant));
 
-	const convertedOrganism = {
+	const convertedCrop = {
 		commonName: firebasePlant.display_name,
 		binomialName: firebasePlant.display_name
 	};
 
-	let savedOrganism = await pushDocument('/organisms/', convertedOrganism);
-	if (savedOrganism) {
-		firebaseToMongo[firebaseId] = savedOrganism._id;
+	let savedCrop = await pushDocument('/crops/', convertedCrop);
+	if (savedCrop) {
+		firebaseToMongo[firebaseId] = savedCrop._id;
 	}
 }
 
@@ -705,13 +705,13 @@ async function pushFirebaseCompanion(
 	firebaseId1,
 	value
 ) {
-	const companionship = {
-		crop1: firebaseToMongo[firebaseId0],
-		crop2: firebaseToMongo[firebaseId1],
+	const relationship = {
+		crop0: firebaseToMongo[firebaseId0],
+		crop1: firebaseToMongo[firebaseId1],
 		compatibility: value == 'good' ? 1 : -1
 	};
 
-	await pushDocument('/companionships/', companionship);
+	await pushDocument('/crop-relationships/', relationship);
 }
 
 /**
@@ -733,6 +733,8 @@ async function pushFirebase() {
 		.database()
 		.ref('/')
 		.once('value')).val();
+	firebase.database().goOffline();
+	
 	const firebasePlants = firebaseData.plants;
 	const firebaseCompanions = firebaseData.companions;
 	debug(firebaseData);
@@ -741,10 +743,10 @@ async function pushFirebase() {
 
 	const scheduler = new SerialScheduler();
 	const plantScheduler = new SerialScheduler();
-	const companionshipScheduler = new SerialScheduler();
+	const relationshipScheduler = new SerialScheduler();
 
 	scheduler.push(new SchedulerTask(plantScheduler));
-	scheduler.push(new SchedulerTask(companionshipScheduler));
+	scheduler.push(new SchedulerTask(relationshipScheduler));
 
 	Object.keys(firebasePlants).forEach(firebaseId => {
 		plantScheduler.push(
@@ -762,7 +764,7 @@ async function pushFirebase() {
 		Object.keys(firebaseCompanions[firebaseId0]).forEach(firebaseId1 => {
 			const value = firebaseCompanions[firebaseId0][firebaseId1];
 			if (value) {
-				companionshipScheduler.push(
+				relationshipScheduler.push(
 					new Task(
 						undefined,
 						pushFirebaseCompanion,
@@ -794,11 +796,11 @@ let powerplantConfig = {
  * for the command.
  */
 const commands = {
-	remove: doRemove,
-	add: doAdd,
-	update: doUpdate,
-	show: doShow,
-	'get-organisms-by-name': doGetOrganismsByName,
+	'remove': doRemove,
+	'add': doAdd,
+	'update': doUpdate,
+	'show': doShow,
+	'get-crops-by-name': doGetCropsByName,
 	'get-crop-groups': doGetCropGroups,
 	'get-compatible-crops': doGetCompatibleCrops,
 	'push-pfaf': pushPfaf,

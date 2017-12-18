@@ -2,66 +2,66 @@ import { expect } from 'chai';
 import app from '/server/app';
 import supertest from 'supertest';
 import {
-	checkCompanionship,
+	checkCropRelationship,
 	sendForm,
 	randString,
-	createTestCompanionship
+	createTestCropRelationship
 } from '../routerHelpers';
-import Companionship from '/server/models/companionship';
+import CropRelationship from '/server/models/crop-relationship';
 import { Types } from 'mongoose';
 
 const { ObjectId } = Types;
-const rootUrl = '/api/companionships';
+const rootUrl = '/api/crop-relationships';
 const jsonType = 'application/json; charset=utf-8';
 const request = supertest(app);
 
 describe(rootUrl + '/', () => {
 	const url = rootUrl + '/';
 	describe('GET', () => {
-		it('should return an array of companionships', function() {
+		it('should return an array of relationships', function() {
 			this.timeout(5000); // needed to leave as a non-arrow function so that 'this' reference above works
 			return request
-				.get('/api/get-all-companionships/')
+				.get('/api/get-all-crop-relationships/')
 				.expect(200)
 				.expect('Content-Type', jsonType)
 				.then(res => {
 					expect(res.body)
 						.to.be.an('array')
 						.and.to.have.length.above(0);
-					res.body.forEach(checkCompanionship);
+					res.body.forEach(checkCropRelationship);
 				});
 		});
 	});
 	describe('POST', () => {
-		let crop1, crop2;
+		let crop0, crop1;
 		before(() => {
-			const organismData = {
+			const cropData = {
 				commonName: randString(),
 				binomialName: 'Snozzberry'
 			};
-			return sendForm(request.post('/api/organisms'), organismData).then(
+			return sendForm(request.post('/api/crops'), cropData).then(
 				res => {
-					crop1 = res.body._id.toString();
-					return sendForm(request.post('/api/organisms'), organismData).then(
+					crop0 = res.body._id.toString();
+					return sendForm(request.post('/api/crops'), cropData).then(
 						res => {
-							crop2 = res.body._id.toString();
+							crop1 = res.body._id.toString();
 						}
 					);
 				}
 			);
 		});
-		it('should create a new companionship with valid existing crop ids', () => {
+		it('should create a new relationship with valid existing crop ids', () => {
 			const newComp = {
+				crop0: crop0,
 				crop1: crop1,
-				crop2: crop2,
 				compatibility: -1
 			};
 			return sendForm(request.post(url), newComp).expect(201);
 		});
-		it('should 400 if trying to create a companionship that already exists', () => {
+		it('should 400 if trying to create a relationship that already exists', () => {
 			const newComp = {
-				crop1: crop2,
-				crop2: crop1,
+				crop0: crop1,
+				crop1: crop0,
 				compatibility: -1
 			};
 			return sendForm(request.post(url), newComp)
@@ -76,16 +76,16 @@ describe(rootUrl + '/', () => {
 			// i see no print statement in the entire project that prints an error object
 			// figure out where this is coming from?
 			const newComp = {
+				crop0: ObjectId().toString(),
 				crop1: ObjectId().toString(),
-				crop2: ObjectId().toString(),
 				compatibility: false
 			};
 			return sendForm(request.post(url), newComp).expect(400);
 		});
 		it('should 400 with invalid crop ids', () => {
 			const newComp = {
-				crop1: 'ja;fsifa093',
-				crop2: 'jf930wjf93wf',
+				crop0: 'ja;fsifa093',
+				crop1: 'jf930wjf93wf',
 				compatiblity: true
 			};
 			return sendForm(request.post(url), newComp).expect(400);
@@ -93,13 +93,13 @@ describe(rootUrl + '/', () => {
 	});
 });
 
-describe('/api/get-companionship-scores', () => {
-	const url = '/api/get-companionship-scores';
+describe('/api/get-crop-relationship-scores', () => {
+	const url = '/api/get-crop-relationship-scores';
 	describe('GET', () => {
 		let appleId, potatoId, beanId;
 		before(() => {
 			// fetching 3 crops
-			const cropUrl = '/api/get-organisms-by-name?name=';
+			const cropUrl = '/api/get-crops-by-name?name=';
 			const cropUrlSuffix = '&index=0&length=30';
 			return request.get(cropUrl + 'apple' + cropUrlSuffix).then(appleRes => {
 				appleId = appleRes.body[0]._id;
@@ -118,7 +118,7 @@ describe('/api/get-companionship-scores', () => {
 		it('should 400 with no query', () => {
 			return request.get(url).expect(400);
 		});
-		it('should return numerical scores with all valid organism ids', () => {
+		it('should return numerical scores with all valid crop ids', () => {
 			return request
 				.get(url + '?id=' + appleId + ',' + potatoId + ',' + beanId)
 				.expect(200)
@@ -130,12 +130,12 @@ describe('/api/get-companionship-scores', () => {
 					}
 				});
 		});
-		it('should 400 if there is a malformed organism id', () => {
+		it('should 400 if there is a malformed crop id', () => {
 			return request
 				.get(url + '?id=' + appleId + ',fa3j9w0f a0f9jwf')
 				.expect(400);
 		});
-		it('should 400 if there is a nonexistent organism id', () => {
+		it('should 400 if there is a nonexistent crop id', () => {
 			return request
 				.get(url + '?id=' + appleId + ',' + ObjectId().toString())
 				.expect(400);
@@ -148,7 +148,7 @@ describe(rootUrl + '/:id', () => {
 	let validId;
 	let validCompatibility;
 	before(done => {
-		createTestCompanionship(comp => {
+		createTestCropRelationship(comp => {
 			validId = comp._id.toString();
 			validCompatibility = comp.compatibility;
 			done();
@@ -201,12 +201,12 @@ describe(rootUrl + '/:id', () => {
 		});
 	});
 	describe('DELETE', () => {
-		it('should delete a valid companionship', () => {
+		it('should delete a valid relationship', () => {
 			return request
 				.delete(url + '/' + validId)
 				.expect(204)
 				.then(res => {
-					return Companionship.findById(validId, (err, comp) => {
+					return CropRelationship.findById(validId, (err, comp) => {
 						expect(comp).to.be.null;
 					});
 				});

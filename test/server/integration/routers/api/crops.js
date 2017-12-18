@@ -5,13 +5,13 @@ import {
 	randString,
 	allStrings,
 	createTestCrop,
-	createTestCompanionship
+	createTestCropRelationship
 } from '../routerHelpers';
 import supertest from 'supertest';
-import Organism from '/server/models/organism';
+import Crop from '/server/models/crop';
 import { Types } from 'mongoose';
 
-const rootUrl = '/api/organisms';
+const rootUrl = '/api/crops';
 const jsonType = 'application/json; charset=utf-8';
 const { ObjectId } = Types;
 const request = supertest(app);
@@ -20,7 +20,7 @@ describe(rootUrl + '/', () => {
 	let count;
 	before(done => {
 		createTestCrop(crop => {
-			Organism.count({}, (err, num) => {
+			Crop.count({}, (err, num) => {
 				count = num;
 				done();
 			});
@@ -28,11 +28,11 @@ describe(rootUrl + '/', () => {
 	});
 	describe('GET', () => {
 		it('should 400 with no arguments', () => {
-			return request.get('/api/get-organisms-by-name').expect(400);
+			return request.get('/api/get-crops-by-name').expect(400);
 		});
-		it('should return organisms matching a query string', () => {
+		it('should return crops matching a query string', () => {
 			return request
-				.get('/api/get-organisms-by-name' + '?name=test&index=0&length=30')
+				.get('/api/get-crops-by-name' + '?name=test&index=0&length=30')
 				.expect(200)
 				.expect('Content-Type', jsonType)
 				.then(res => {
@@ -42,10 +42,10 @@ describe(rootUrl + '/', () => {
 					});
 				});
 		});
-		it('should return no organisms for gibberish query string', () => {
+		it('should return no crops for gibberish query string', () => {
 			return request
 				.get(
-					'/api/get-organisms-by-name' + '?name=jf93 FJ(Fiojs&index=0&length=30'
+					'/api/get-crops-by-name' + '?name=jf93 FJ(Fiojs&index=0&length=30'
 				)
 				.expect(200)
 				.expect('Content-Type', jsonType)
@@ -73,12 +73,12 @@ describe(rootUrl + '/', () => {
 	});
 });
 
-describe(rootUrl + '/:organismId', () => {
+describe(rootUrl + '/:cropId', () => {
 	let testId;
 	let compId;
 	before(done => {
-		createTestCompanionship(comp => {
-			testId = comp.crop1._id.toString();
+		createTestCropRelationship(comp => {
+			testId = comp.crop0._id.toString();
 			compId = comp._id.toString();
 			done();
 		});
@@ -90,13 +90,13 @@ describe(rootUrl + '/:organismId', () => {
 				.expect(400)
 				.expect('Content-Type', jsonType);
 		});
-		it('should 404 a valid but nonexistent organism id', () => {
+		it('should 404 a valid but nonexistent crop id', () => {
 			return request
 				.get(rootUrl + '/' + ObjectId().toString())
 				.expect(404)
 				.expect('Content-Type', jsonType);
 		});
-		it('should return the specified organism', () => {
+		it('should return the specified crop', () => {
 			return request
 				.get(rootUrl + '/' + testId)
 				.expect(200)
@@ -151,51 +151,51 @@ describe(rootUrl + '/:organismId', () => {
 		});
 	});
 	describe('DELETE', () => {
-		it('should delete a valid organism', () => {
+		it('should delete a valid crop', () => {
 			return request.delete(rootUrl + '/' + testId).expect(204);
 		});
-		it('should delete all associated companionships', () => {
-			return request.get('/api/companionships/' + compId).expect(404);
+		it('should delete all associated relationships', () => {
+			return request.get('/api/crop-relationships/' + compId).expect(404);
 		});
 	});
 });
 
-describe('/api/get-companionships-by-organism', () => {
+describe('/api/get-crop-relationships-by-crop', () => {
 	let testId;
 	before(done => {
-		createTestCompanionship(comp => {
-			testId = comp.crop1._id.toString();
+		createTestCropRelationship(comp => {
+			testId = comp.crop0._id.toString();
 			done();
 		});
 	});
 	describe('GET', () => {
 		it('should fetch an array', () => {
 			return request
-				.get('/api/get-companionships-by-organism/' + testId)
+				.get('/api/get-crop-relationships-by-crop/' + testId)
 				.expect(200)
 				.expect('Content-Type', jsonType)
 				.then(res => {
 					expect(res.body).to.have.length.above(0);
 				});
 		});
-		it('should populate companionships', () => {
+		it('should populate relationships', () => {
 			return request
-				.get('/api/get-companionships-by-organism/' + testId)
+				.get('/api/get-crop-relationships-by-crop/' + testId)
 				.expect(200)
 				.then(res => {
 					res.body.forEach(item => {
-						expect(item).to.contain.all.keys('crop1', 'crop2', 'compatibility');
+						expect(item).to.contain.all.keys('crop0', 'crop1', 'compatibility');
 					});
 				});
 		});
-		it('should only fetch matching companionships', () => {
+		it('should only fetch matching relationships', () => {
 			return request
-				.get('/api/get-companionships-by-organism/' + testId)
+				.get('/api/get-crop-relationships-by-crop/' + testId)
 				.expect(200)
 				.then(res => {
 					res.body.forEach(item => {
 						expect(item).to.satisfy(item => {
-							return item.crop1 === testId || item.crop2 === testId;
+							return item.crop0 === testId || item.crop1 === testId;
 						});
 					});
 				});
@@ -203,25 +203,25 @@ describe('/api/get-companionships-by-organism', () => {
 	});
 });
 
-describe(rootUrl + '/:cropId1/companionships/:cropId2', () => {
+describe(rootUrl + '/:cropId1/crop-relationships/:cropId2', () => {
 	let appleId;
 	let testId;
 	before(() => {
 		return request
-			.get('/api/get-organisms-by-name' + '?name=apple&index=0&length=30')
+			.get('/api/get-crops-by-name' + '?name=apple&index=0&length=30')
 			.then(res => {
 				appleId = res.body[0]._id;
 				return request
-					.get('/api/get-organisms-by-name' + '?name=test&index=0&length=30')
+					.get('/api/get-crops-by-name' + '?name=test&index=0&length=30')
 					.then(res => {
 						testId = res.body[0]._id;
 					});
 			});
 	});
 	describe('GET', () => {
-		it('should provide proper location on existing companionship', () => {
+		it('should provide proper location on existing relationship', () => {
 			return request
-				.get('/api/get-companionship/' + appleId + '/' + appleId)
+				.get('/api/get-crop-relationship/' + appleId + '/' + appleId)
 				.expect(303)
 				.then(res => {
 					return request
@@ -229,16 +229,16 @@ describe(rootUrl + '/:cropId1/companionships/:cropId2', () => {
 						.expect(200)
 						.then(res => {
 							const c = res.body;
-							expect(c).to.contain.all.keys('crop1', 'crop2', 'compatibility');
+							expect(c).to.contain.all.keys('crop0', 'crop1', 'compatibility');
 							expect(c).to.satisfy(c => {
-								return c.crop1._id === appleId && c.crop2._id === appleId;
+								return c.crop0._id === appleId && c.crop1._id === appleId;
 							});
 						});
 				});
 		});
-		it('should response 204 on existing crops but nonexistent companionship', () => {
+		it('should response 204 on existing crops but nonexistent relationship', () => {
 			return request
-				.get('/api/get-companionship/' + appleId + '/' + testId)
+				.get('/api/get-crop-relationship/' + appleId + '/' + testId)
 				.expect(204);
 		});
 	});

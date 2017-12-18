@@ -1,22 +1,22 @@
 import mongoose from 'mongoose';
 
-const organismSchema = new mongoose.Schema({
+const cropSchema = new mongoose.Schema({
 	commonName: { type: String },
 	binomialName: { type: String, index: true, required: true }
 });
 
 /**
- * Query builder method that finds an organism by its name.
+ * Query builder method that finds crops by name.
  *
  * @param {String} name
  * @return {Query}
  */
-organismSchema.query.byName = function(name) {
+cropSchema.query.byName = function(name) {
 	const regex = new RegExp(name, 'i');
 	return this.find({
 		$or: [{ commonName: regex }, { binomialName: regex }]
 	}).sort('commonName binomialName');
 };
 
-const Organism = mongoose.model('Organism', organismSchema);
-export default Organism;
+const Crop = mongoose.model('Crop', cropSchema);
+export default Crop;

@@ -163,20 +163,3 @@ export function setCurrentUser(user) {
  * @property {server.models.User} user the user object. should not contain password
  */
 
-
-//==================================
-//======BEGIN CROP ACTIONS======
-//==================================
-
-
-/**
- * Build an action to get crops by prefix
- * @param  {Array} list of names of all crops
- * @return {client.actions.getcropsByName}
- */
-export function getCrops(crops) {
-	return {
-		type: types.GET_CROPS,
-		crops
-	};
-}

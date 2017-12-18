@@ -6,11 +6,12 @@ import {
 } from '/server/processor';
 import Location from '/server/models/location';
 import User from '/server/models/user';
-import Companionship from '/server/models/companionship';
-import Organism from '/server/models/organism';
+import CropRelationship from '/server/models/crop-relationship';
+import Crop from '/server/models/crop';
 
 const MAX_NAME_ENTRIES = 200000;
 const MAX_RESPONSE_LENGTH = 200000;
+
 /**
  * @param {Function} next
  * @param {Error} exception
@@ -210,15 +211,15 @@ export async function documentDelete(req, res, next, model) {
  * @param {Object} res
  * @param {Function} next
  */
-export async function getAllCompanionships(req, res, next) {
+export async function getAllCropRelationships(req, res, next) {
 	try {
 		// get all combinations - this is REALLY slow (over 2s) but it's also a huge request
 		// could consider pagination - return 50 results and a link to the next 50
-		const companionships = await processor.call(
+		const relationships = await processor.call(
 			'getAllDocuments',
-			Companionship
+			CropRelationship
 		);
-		res.json(companionships);
+		res.json(relationships);
 	} catch (exception) {
 		handleError(next, exception);
 	}
@@ -229,13 +230,13 @@ export async function getAllCompanionships(req, res, next) {
  * @param {Object} res
  * @param {Function} next
  */
-export async function getCompanionshipsByOrganism(req, res, next) {
+export async function getCropRelationshipsByCrop(req, res, next) {
 	try {
-		const companionships = await processor.call(
-			'getCompanionshipsByOrganism',
-			req.params.organismId
+		const relationships = await processor.call(
+			'getCropRelationshipsByCrop',
+			req.params.cropId
 		);
-		res.json(companionships);
+		res.json(relationships);
 	} catch (exception) {
 		handleError(next, exception);
 	}
@@ -246,10 +247,10 @@ export async function getCompanionshipsByOrganism(req, res, next) {
  * @param {Object} res
  * @param {Function} next
  */
-export async function getCompanionshipScores(req, res, next) {
+export async function getCropRelationshipScores(req, res, next) {
 	try {
 		const ids = (req.query.id || '').split(',');
-		const scores = await processor.call('getCompanionshipScores', ids);
+		const scores = await processor.call('getCropRelationshipScores', ids);
 
 		res.json(scores);
 	} catch (exception) {
@@ -262,22 +263,23 @@ export async function getCompanionshipScores(req, res, next) {
  * @param {Object} res
  * @param {Function} next
  */
-export async function getOrganismsByName(req, res, next) {
+export async function getCropsByName(req, res, next) {
 	try {
-		if (typeof req.query.name === undefined) {
+		const name = req.query.name;
+		if (typeof name != 'string') {
 			throw VALIDATION_EXCEPTION;
 		}
-		const index = parseInteger(next, req.query.index, 0, MAX_NAME_ENTRIES,0);
-		const length = parseInteger(next, req.query.length, 0, MAX_RESPONSE_LENGTH,0);
+		const index = parseInteger(next, req.query.index, 0, MAX_NAME_ENTRIES, 0);
+		const length = parseInteger(next, req.query.length, 0, MAX_RESPONSE_LENGTH, 0);
 
-		const organisms = await processor.call(
-			'getOrganismsByName',
-			req.query.name,
+		const crops = await processor.call(
+			'getCropsByName',
+			name,
 			index,
 			length
 		);
 
-		res.json(organisms);
+		res.json(crops);
 	} catch (exception) {
 		handleError(next, exception);
 	}
@@ -316,18 +318,18 @@ export async function getCompatibleCrops(req, res, next) {
  * @param {Object} res
  * @param {Function} next
  */
-export async function getCompanionship(req, res, next) {
+export async function getCropRelationship(req, res, next) {
 	try {
-		const companionship = await processor.call(
-			'getCompanionship',
-			req.params.organism0Id,
-			req.params.organism1Id
+		const cropRelationship = await processor.call(
+			'getCropRelationship',
+			req.params.crop0Id,
+			req.params.crop1Id
 		);
 
-		if (companionship) {
+		if (cropRelationship) {
 			res
 				.status(303)
-				.location('/api/companionships/' + companionship._id)
+				.location('/api/crop-relationships/' + cropRelationship._id)
 				.send();
 		} else {
 			res.status(204).json();

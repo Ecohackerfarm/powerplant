@@ -1,6 +1,6 @@
 import { expect } from 'chai';
-import Organism from '/server/models/organism';
-import Companionship from '/server/models/companionship';
+import Crop from '/server/models/crop';
+import CropRelationship from '/server/models/crop-relationship';
 
 import * as myself from './routerHelpers'; // import myself (it's ok es6 supports cyclic imports)
 export default myself; // this allows default importing AND named importing
@@ -25,15 +25,15 @@ export function allStrings(array) {
 	});
 }
 
-export function checkCompanionship(item) {
-	expect(item).to.contain.all.keys('crop1', 'crop2', 'compatibility');
-	expect(item.crop1 <= item.crop2).to.equal(true);
+export function checkCropRelationship(item) {
+	expect(item).to.contain.all.keys('crop0', 'crop1', 'compatibility');
+	expect(item.crop0 <= item.crop1).to.equal(true);
 }
 
 const sessionString = 'test' + module.exports.randString();
 
 export function createTestCrop(cb) {
-	new Organism({
+	new Crop({
 		commonName: sessionString,
 		binomialName: sessionString
 	}).save((err, crop) => {
@@ -41,12 +41,12 @@ export function createTestCrop(cb) {
 	});
 }
 
-export function createTestCompanionship(cb) {
-	module.exports.createTestCrop(crop1 => {
-		module.exports.createTestCrop(crop2 => {
-			new Companionship({
+export function createTestCropRelationship(cb) {
+	module.exports.createTestCrop(crop0 => {
+		module.exports.createTestCrop(crop1 => {
+			new CropRelationship({
+				crop0: crop0,
 				crop1: crop1,
-				crop2: crop2,
 				compatibility: 3
 			}).save((err, comp) => {
 				cb(comp);
@@ -57,16 +57,16 @@ export function createTestCompanionship(cb) {
 
 // remove all companionships with things with the word
 export function cleanDb(cb) {
-	Organism.find()
+	Crop.find()
 		.byName(sessionString)
 		.exec((err, list) => {
-			console.log('Found ' + list.length + ' test organism instances');
+			console.log('Found ' + list.length + ' test crop instances');
 			list.forEach(crop => {
-				Companionship.find()
+				CropRelationship.find()
 					.byCrop(crop)
 					.exec((err, comps) => {
 						console.log(
-							'Found ' + comps.length + ' test companionship instances'
+							'Found ' + comps.length + ' test relationship instances'
 						);
 						comps.forEach(c => {
 							c.remove();
