@@ -1,24 +1,37 @@
-import { GET_CROPS } from '../actions/types';
+import {
+	UPDATED_CROPS,
+	LOADING_CROPS,
+	UPDATE_CROPS_ERROR
+} from '../actions/types';
 
-export const defaultState = [];
-
-export const getCrops = (state = defaultState, action) => {
-	switch (action.type) {
-		case GET_CROPS:
-			return action.crops;
-		default:
-			return state;
-	}
+export const defaultState = {
+	all: [],
+	loading: false,
+	updated: 0,
+	errorResponse: {},
+	error: false
 };
 
-export const setCrops = (state = defaultState, action) => {
+export const crops = (state = defaultState, action) => {
 	switch (action.type) {
-		case GET_CROPS:
-			return Object.assign({}, state,
-				{
-					crops: action.data
-				}
-			);
+		case UPDATED_CROPS:
+			return {
+			  ...state,
+			  all: action.all,
+			  updated: action.updated,
+			  error: false
+			};
+		case LOADING_CROPS:
+		  return {
+		  	...state,
+		  	loading: action.loading
+		  }
+		case UPDATE_CROPS_ERROR:
+		  return {
+		  	...state,
+		  	errorResponse: action.response,
+		  	error: true
+		  }
 		default:
 			return state;
 	}

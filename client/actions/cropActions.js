@@ -1,52 +1,79 @@
 import axios from 'axios';
-import { setCrops } from '.';
-import { store } from '/client/index';
+import {
+	UPDATED_CROPS,
+	UPDATE_CROPS_ERROR,
+	LOADING_CROPS
+} from './types'
 
 /**
- * Async sends a request to get crops by prefix/name
- * @function
- * @param  {String} names regex of crop names
- * @return {Promise}    the network request
+ * Creates the action object with data for UPDATED_CROPS_ERROR
+ * @param  {object} res response object from failed API CALL
+ * @return {object}     action object
  */
-export const getCrops = ({index,length,name = ''}) => {
+const fetchError = (res) => {
+	return {
+		type : UPDATE_CROPS_ERROR,
+		respone: res
+	}
+}
 
-	return (dispatch,getState) => {
-			//if (getState.crops.updated.)
-			//}
-		axios.get(
-		  '/api/get-organisms-by-name?name='
-			+ name
-			+ '&index='
-			+ index
-			+ '&length='
-			+ length
-		).then(res => {
-			if (res.status === 200) {
-				setCrops(res.data);
-			}
-			return res;
-		});
+
+/**
+ * Creates the action object with data for UPDATED_CROPS
+ * reducer
+ * @function
+ * @param  {object} data data object form API call
+ * @return {object}      action object
+ */
+const recieveCrops = (data) => {
+	console.log('DATA:'+ data);
+	return {
+		type : UPDATED_CROPS,
+		all : data,
+		updated : (new Date()).getTime()
+	}
+}
+
+const loadingCrops = (started) => {
+	return {
+		type : LOADING_CROPS,
+		loading: started
+	}
+}
+
+/**
+ * Fetches crops from server if not existent or old data
+ * @function
+ * @return {Function}		function for dispatch
+ */
+export const fetchCrops = () => {
+  const name = '';
+  const index = '';
+  const length = '';
+  const now = new Date();
+  // some intelligent update mechanism should be here but
+  // instead we set an update interval
+  const updateInterval = 7 * 24 * 60 * 60 * 1000;
+	return ( dispatch , getState ) => {
+		const lastUpdated = getState().crops.updated || 0;
+		if ( (now.getTime() - lastUpdated) > updateInterval ){
+			dispatch(loadingCrops(true));
+			return axios.get(
+			  '/api/get-organisms-by-name?name='
+				+ name
+				+ '&index='
+				+ index
+				+ '&length='
+				+ length
+			).then(res => {
+				if (res.status === 200) {
+					dispatch(recieveCrops(res.data));
+				} else {
+					dispatch(fetchError(res));
+				}
+				dispatch(loadingCrops(false));
+				return {res};
+			});
+		}
 	};
 };
-
-export const fetchCrops = ({index,length,name = ''}) => {
-
-	return dispatch =>
-		axios.get(
-		  '/api/get-organisms-by-name?name='
-			+ name
-			+ '&index='
-			+ index
-			+ '&length='
-			+ length
-		).then(res => {
-			if (res.status === 200) {
-				setCrops(res.data);
-			}
-			return res;
-		});
-};
-
-export const getCropNames = () => {
-	 return (dispatch) => dispatch(getCrops({}))
-}

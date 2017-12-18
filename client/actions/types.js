@@ -57,10 +57,12 @@ export const EDIT_CROP = 'EDIT_CROP';
 export const ADD_CROP = 'ADD_CROP';
 /** Delete a crop */
 export const DELETE_CROP = 'DELETE_CROP';
-/** Set all crops in a bed */
-export const SET_CROPS = 'SET_CROPS';
-/** Get names of crops starting with a string **/
-export const GET_CROPS = 'GET_CROPS';
+/** Update all crops in store */
+export const UPDATED_CROPS = 'UPDATED_CROPS';
+/** Error while fetching crops */
+export const UPDATE_CROPS_ERROR = 'UPDATE_CROPS_ERROR';
+/** Fetch crops in progress or not */
+export const LOADING_CROPS = 'LOADING_CROPS';
 
 // Task actions
 /** Edit a task */

@@ -2,7 +2,7 @@ import { Typeahead } from 'react-bootstrap-typeahead';
 import style from 'react-bootstrap-typeahead/css/Typeahead.css';
 import React from 'react';
 import PropTypes from 'prop-types';
-import { getCropNames } from '../actions/cropActions'
+import { fetchCrops } from '../../actions/cropActions'
 import { connect } from 'react-redux';
 
 /**
@@ -12,38 +12,14 @@ import { connect } from 'react-redux';
  */
 
 class ChooseCrops extends React.Component {
-	constructor(props) {
-		super(props);
-
-		// Autosuggest is a controlled component.
-		// This means that you need to provide an input value
-		// and an onChange handler that updates this value (see below).
-		// Suggestions also need to be provided to the Autosuggest,
-		// and they are initially empty because the Autosuggest is closed.
-		this.state = {
-			loading: false,
-			error: false,
-		};
-	}
-
-	static propTypes = {
-		crop: PropTypes.array.isRequired
-	};
-
-	theme = {
-		container: 'autosuggest dropdown',
-		containerOpen: 'dropdown open',
-		input: 'form-control',
-		suggestionsContainer: 'dropdown-menu',
-		suggestion: '',
-		suggestionFocused: 'active'
-	};
-
 	onChange = (event, { newValue }) => {
 		this.setState({
 			value: newValue
 		});
 	};
+	componentWillMount() {
+		this.props.fetchCrops();
+	}
 
 	render() {
 		if (this.props.loading){
@@ -56,31 +32,33 @@ class ChooseCrops extends React.Component {
 			<Typeahead
 				clearButton
 				multiple
-				options={this.props.cropNames}
-				placeholder="Choose a Organism/Plant ..."
+				options={this.props.crops.all}
+				labelKey='commonName'
+				placeholder='Choose a crop ...'
 				onChange={this.onChange}
+				isLoading={this.props.loading}
 			/>
 		);
 	}
 }
 ChooseCrops.propTypes = {
-	getCropNames : PropTypes.func.isRequired,
-	cropNames : PropTypes.array.isRequired,
+	fetchCrops : PropTypes.func.isRequired,
+	crops : PropTypes.object.isRequired,
 	loading : PropTypes.bool.isRequired,
 	error : PropTypes.bool.isRequired,
 }
 
 const mapDispatchToProps = (dispatch) => {
     return {
-        getCropNames: () => dispatch(getCropNames())
+        fetchCrops: () => dispatch(fetchCrops())
     };
 };
 
 const mapStateToProps = (state) => {
     return {
-    	  cropNames: state.cropNames,
-        loading: state.cropsLoading,
-        error: state.cropsError,
+    	  crops: state.crops,
+        loading: state.crops.loading,
+        error: state.crops.error,
     };
 };
 

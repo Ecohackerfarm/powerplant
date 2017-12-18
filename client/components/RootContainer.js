@@ -1,6 +1,6 @@
 import React from 'react';
 import { connect } from 'react-redux'
-//import ChooseCrops from './organism/ChooseCrops';
+import ChooseCrops from './crops/ChooseCrops';
 import PropTypes from 'prop-types';
 import { Jumbotron, Grid, Row, Col } from 'react-bootstrap';
 import { setHeaderTitle } from '../actions/appActions'
@@ -22,7 +22,7 @@ class RootContainer extends React.Component {
 				<Row>
 					<Col>
 						<Jumbotron>
-
+						  <ChooseCrops/>
 						</Jumbotron>
 					</Col>
 				</Row>
