@@ -9,9 +9,6 @@ import {
 	getAllCropRelationships,
 	getCropsByName,
 	getLocations,
-	getCropRelationshipScores,
-	getCropRelationship,
-	getCropRelationshipsByCrop,
 	login
 } from '/server/middleware';
 import Crop from '/server/models/crop';
@@ -77,12 +74,6 @@ router.post('/get-crop-groups', getCropGroups);
 router.post('/get-compatible-crops', getCompatibleCrops);
 router.get('/get-all-crop-relationships', getAllCropRelationships);
 router.get('/get-locations', getLocations);
-router.get('/get-crop-relationship-scores', getCropRelationshipScores);
-router.get(
-	'/get-crop-relationships-by-crop/:cropId',
-	getCropRelationshipsByCrop
-);
-router.get('/get-crop-relationship/:crop0Id/:crop1Id', getCropRelationship);
 
 router.get('*', (req, res, next) => {
 	next({ status: 404, message: 'No such route' });
