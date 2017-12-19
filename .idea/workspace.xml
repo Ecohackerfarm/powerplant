@@ -2,9 +2,8 @@
 <project version="4">
   <component name="ChangeListManager">
     <list default="true" id="f9bfb849-a042-4b53-af42-bad77546efac" name="Default" comment="">
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/client/components/RootContainer.js" afterPath="$PROJECT_DIR$/client/components/RootContainer.js" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/client/components/header/HeaderBrand.js" afterPath="$PROJECT_DIR$/client/components/header/HeaderBrand.js" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/client/styles/main.scss" afterPath="$PROJECT_DIR$/client/styles/main.scss" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/.gitignore" afterPath="$PROJECT_DIR$/.gitignore" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/.idea/workspace.xml" afterPath="$PROJECT_DIR$/.idea/workspace.xml" />
     </list>
     <ignored path="powerplant.iws" />
     <ignored path=".idea/workspace.xml" />
@@ -83,7 +82,7 @@
           </provider>
         </entry>
       </file>
-      <file leaf-file-name="RootContainer.js" pinned="false" current-in-tab="true">
+      <file leaf-file-name="RootContainer.js" pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/client/components/RootContainer.js">
           <provider selected="true" editor-type-id="text-editor">
             <state relative-caret-position="225">
@@ -91,6 +90,16 @@
               <folding>
                 <element signature="e#0#26#0" expanded="true" />
               </folding>
+            </state>
+          </provider>
+        </entry>
+      </file>
+      <file leaf-file-name=".gitignore" pinned="false" current-in-tab="true">
+        <entry file="file://$PROJECT_DIR$/.gitignore">
+          <provider selected="true" editor-type-id="text-editor">
+            <state relative-caret-position="90">
+              <caret line="6" column="0" selection-start-line="6" selection-start-column="0" selection-end-line="6" selection-end-column="0" />
+              <folding />
             </state>
           </provider>
         </entry>
@@ -139,6 +148,7 @@
         <option value="$PROJECT_DIR$/client/components/header/HeaderBrand.js" />
         <option value="$PROJECT_DIR$/client/styles/main.scss" />
         <option value="$PROJECT_DIR$/client/components/RootContainer.js" />
+        <option value="$PROJECT_DIR$/.gitignore" />
       </list>
     </option>
   </component>
@@ -590,7 +600,7 @@
       <workItem from="1511961203239" duration="1448000" />
       <workItem from="1512404515355" duration="2883000" />
       <workItem from="1512565115063" duration="2890000" />
-      <workItem from="1513000489359" duration="7644000" />
+      <workItem from="1513000489359" duration="8889000" />
     </task>
     <servers />
   </component>
@@ -603,7 +613,7 @@
     </history-entry>
   </component>
   <component name="TimeTrackingManager">
-    <option name="totallyTimeSpent" value="14971000" />
+    <option name="totallyTimeSpent" value="16216000" />
   </component>
   <component name="ToolWindowManager">
     <frame x="65" y="24" width="1301" height="744" extended-state="6" />
@@ -929,6 +939,14 @@
           <folding>
             <element signature="e#0#26#0" expanded="true" />
           </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/.gitignore">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="90">
+          <caret line="6" column="0" selection-start-line="6" selection-start-column="0" selection-end-line="6" selection-end-column="0" />
+          <folding />
         </state>
       </provider>
     </entry>
