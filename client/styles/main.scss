@@ -40,10 +40,13 @@ $background-color: #eee;
   }
   .navbar-brand {
     background: url(/images/logo/logo_128.png) right no-repeat;
-		right: 50%;
+		right: 41%;
+		color: #2F9B12;
+		font-weight: 700;
 		position: absolute;
 		background-size: 46px 46px;
-		padding-right: 50px;
+		//padding-right: 50px;
+		padding: 25px 44px !important;
 		//if it's small
 		// font: 0/0 a;
 		// color: transparent;

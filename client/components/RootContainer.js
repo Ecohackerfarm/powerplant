@@ -13,7 +13,7 @@ import { setHeaderTitle } from '../actions/appActions'
  */
 class RootContainer extends React.Component {
   componentWillMount(){
-  	this.props.setHeaderTitle('Home');
+  	this.props.setHeaderTitle('power plant');
   }
 
 	render() {
