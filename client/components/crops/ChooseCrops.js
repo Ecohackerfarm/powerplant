@@ -2,7 +2,10 @@ import { Typeahead } from 'react-bootstrap-typeahead';
 import style from 'react-bootstrap-typeahead/css/Typeahead.css';
 import React from 'react';
 import PropTypes from 'prop-types';
-import { fetchCrops } from '../../actions/cropActions'
+import {
+	fetchCrops,
+  fetchCombinations
+} from '../../actions/cropActions';
 import { connect } from 'react-redux';
 
 /**
@@ -12,21 +15,29 @@ import { connect } from 'react-redux';
  */
 
 class ChooseCrops extends React.Component {
-	onChange = (event, { newValue }) => {
-		this.setState({
-			value: newValue
+	constructor(props){
+		super(props);
+		this.onChange = this.onChange.bind(this)
+	}
+	onChange(chosenCrops){
+	  this.setState({
+			chosenCrops
 		});
+		if( chosenCrops.length > this.props.minNumberOfCrops ){
+			this.props.fetchCombinations(chosenCrops);
+		}
 	};
 	componentWillMount() {
 		this.props.fetchCrops();
 	}
 
 	render() {
+		let output;
 		if (this.props.loading){
-			return <p>Loading ... </p>;
+			output = <p>Loading ... </p>;
 		}
 		if (this.props.error) {
-			return <p>Couldnt load</p>;
+			output = <p>Couldnt load</p>;
 		}
 		return (
 			<Typeahead
@@ -41,6 +52,7 @@ class ChooseCrops extends React.Component {
 		);
 	}
 }
+
 ChooseCrops.propTypes = {
 	fetchCrops : PropTypes.func.isRequired,
 	crops : PropTypes.object.isRequired,
@@ -48,9 +60,14 @@ ChooseCrops.propTypes = {
 	error : PropTypes.bool.isRequired,
 }
 
+ChooseCrops.defaultProps = {
+	minNumberOfCrops : 3
+}
+
 const mapDispatchToProps = (dispatch) => {
     return {
-        fetchCrops: () => dispatch(fetchCrops())
+        fetchCrops: () => dispatch(fetchCrops()),
+        fetchCombinations : () => dispatch(fetchCombinations())
     };
 };
 

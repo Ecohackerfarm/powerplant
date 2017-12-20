@@ -72,8 +72,12 @@ export const fetchCrops = () => {
 					dispatch(fetchError(res));
 				}
 				dispatch(loadingCrops(false));
-				return {res};
+				//return {res};
 			});
 		}
 	};
 };
+
+export const fetchCombinations = () => {
+
+}
