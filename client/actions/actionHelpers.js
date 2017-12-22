@@ -14,8 +14,8 @@ import axios from 'axios';
  * @return {Object}              the results of either authAction or nonAuthAction
  */
 export const authCheckedRequest = (authAction, nonAuthAction) => {
-	return dispatch => {
-		if (store.getState().auth.isAuthenticated) {
+	return (dispatch, getState) => {
+		if (getState().auth.isAuthenticated) {
 			return authAction(dispatch);
 		} else {
 			return nonAuthAction(dispatch);

@@ -5,7 +5,6 @@
 
 import axios from 'axios';
 import { editLocation, addLocation, deleteLocation, setLocations } from '.';
-import { store } from '/client/index';
 import { simpleAuthCheckedRequest } from './actionHelpers';
 
 /**
@@ -34,8 +33,8 @@ export const getLocationsRequest = id => {
  * @return {Promise} resolves to a {@link client.actions.responseObject}
  */
 export const saveLocationRequest = location => {
-	return dispatch => {
-		if (store.getState().auth.isAuthenticated) {
+	return (dispatch,getState) => {
+		if (getState().auth.isAuthenticated) {
 			return axios.post('/api/locations', location).then(res => {
 				if (res.status === 201) {
 					dispatch(addLocation(res.data));
@@ -54,7 +53,7 @@ export const saveLocationRequest = location => {
 			// user is not authenticated so we will just save it to redux
 			// returning a promise so it looks the same to the component that called it as if it had been a server request
 			return new Promise(resolve => {
-				location._id = store.getState().locations.length.toString();
+				location._id = getState().locations.length.toString();
 				dispatch(addLocation(location));
 				resolve({
 					success: true
