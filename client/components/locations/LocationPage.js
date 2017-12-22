@@ -2,10 +2,25 @@ import React from 'react';
 import { Switch, Route } from 'react-router-dom';
 import BedsPage from '../beds';
 
-export default function({ actions, location, match }) {
+export default function({
+	actions,
+	location,
+	match,
+	items,
+	id
+}) {
 	return (
 		<Switch>
-			<Route path={`${match.url}`} component={BedsPage} />
+			<Route
+				path={`${match.url}`}
+
+				render={ props => (
+					<BedsPage
+						beds={items[Number.parseInt(id,10)].beds}
+						{...props}
+					/>
+				)}
+			/>
 		</Switch>
 	);
 }

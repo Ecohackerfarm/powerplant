@@ -102,7 +102,11 @@ const CrudableListPage = ({
 				render={({ match }) => (
 					<div>
 						<SetHeaderTitle title={`${itemName}`} />
-						<DetailPage match={match} />
+						<DetailPage
+						  match={match}
+						  id={match.params.id}
+						  items={items}
+						/>
 					</div>
 				)}
 			/>

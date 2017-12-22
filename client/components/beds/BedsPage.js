@@ -11,11 +11,11 @@ import AddBedForm from './AddBedForm';
 import BedItem from './BedItem';
 import { createBed, deleteBed, editBed } from '/client/actions/bedActions';
 
-const BedsPage = function({ match, location, actions }) {
+const BedsPage = function({ beds, match, location, actions }) {
 	return (
 		<CrudableList
 			actions={actions}
-			items={location.beds}
+			items={beds}
 			itemName="bed"
 			ItemListView={BedItem}
 			AddItemForm={AddBedForm}
@@ -24,7 +24,7 @@ const BedsPage = function({ match, location, actions }) {
 	);
 };
 
-const dispatchToProps = () => ({
+const dispatchToProps = (dispatch) => ({
 	actions: {
 		create: bed => dispatch(createBed),
 		edit: (id, bedChanges) => dispatch(editBed),

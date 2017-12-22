@@ -9,6 +9,7 @@ import {
 } from '/client/actions/locationActions';
 import AddLocationForm from './AddLocationForm';
 import LocationPage from '../locations/LocationPage';
+import {withRouter} from 'react-router-dom';
 
 const LocationsPage = ({ actions, locations, match }) => {
 	return (
@@ -34,4 +35,4 @@ const dispatchToProps = dispatch => ({
 	}
 });
 
-export default connect(stateToProps, dispatchToProps)(LocationsPage);
+export default withRouter(connect(stateToProps, dispatchToProps)(LocationsPage));
