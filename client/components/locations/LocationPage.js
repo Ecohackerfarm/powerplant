@@ -12,11 +12,10 @@ export default function({
 	return (
 		<Switch>
 			<Route
-				path={`${match.url}`}
-
+				path={`${match.path}`}
 				render={ props => (
 					<BedsPage
-						beds={items[Number.parseInt(id,10)].beds}
+						beds={items[id].beds}
 						{...props}
 					/>
 				)}

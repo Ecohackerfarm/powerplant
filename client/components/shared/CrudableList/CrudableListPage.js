@@ -75,6 +75,7 @@ const CrudableListPage = ({
 							itemName={itemName}
 							onSubmit={actions.create}
 							homeUrl={match.url}
+							items={items}
 						/>
 					</div>
 				)}
@@ -128,7 +129,7 @@ const CrudableListPage = ({
  */
 CrudableListPage.propTypes = {
 	actions: PropTypes.object.isRequired,
-	items: PropTypes.array.isRequired,
+	items: PropTypes.object.isRequired,
 	itemName: PropTypes.string.isRequired,
 	ItemListView: PropTypes.func.isRequired,
 	match: PropTypes.object.isRequired

@@ -160,7 +160,7 @@ class AddLocationForm extends React.Component {
 		const location = {
 			name: this.state.name,
 			loc: this.state.loc,
-			beds: []
+			beds: {}
 		};
 		const { errors, isValid } = validateLocation(location);
 		if (!isValid) {
