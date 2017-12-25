@@ -1,4 +1,15 @@
 {
-  "presets": [ ["env", { "targets": { "node": "current" } }], "react" ],
-  "plugins": ["transform-class-properties", "babel-root-slash-import", "transform-object-rest-spread"]
+  "presets": [
+  	[
+   		"env",
+   		{ "targets": {
+   			"node": "current"
+   			}
+   		}
+  	],
+  	"react"
+  ],
+  "plugins": [
+	  "transform-class-properties", "babel-root-slash-import", "transform-object-rest-spread"
+  ]
 }
