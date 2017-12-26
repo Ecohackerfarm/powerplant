@@ -80,9 +80,14 @@ class RootContainer extends React.Component {
 				<Row>
 					<Col>
 						<Jumbotron>
-						  <ChooseCrops />
+							<div className="choose-crops">
+
+						  	<ChooseCrops />
+							</div>
 						  <CropGroups groups={testGroups}/>
-						  <Button type="submit" class="btn btn-primary">Submit</Button>
+							<Col xs={3} mdOffset={2} md={2} >
+								<Button type="submit" class="btn btn-primary">Submit</Button>
+							</Col>
 						</Jumbotron>
 					</Col>
 				</Row>

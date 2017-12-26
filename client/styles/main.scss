@@ -75,6 +75,27 @@ $background-color: #eee;
       background-image: url(/images/logo/logo_128_logout.png);
     }
   }
+	.choose-crops{
+		padding-bottom: 40px;
+	}
+	.row {
+		padding-bottom: 15px;
+	}
+	.btn-default.active{
+		background-color: green;
 
-
+	}
+	.button-checkbox-center {
+		display: flex;
+		flex-direction: row;
+	}
+	.button-checkbox-center > [class^="col-"],
+	.button-checkbox-center > [class*=" col-"] {
+		display: flex;
+		align-items: center;
+		justify-content: center;
+	}
+	.btn-group>.btn{
+		padding: 13px 13px;
+	}
 }
