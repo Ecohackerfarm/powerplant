@@ -1,9 +1,7 @@
 import React from 'react';
-import { connect } from 'react-redux'
-import ChooseCrops from './crops/ChooseCrops';
-import CropGroups from './crops/CropGroups';
+import { connect } from 'react-redux';
+import AddBedForm from './beds/AddBedForm';
 import PropTypes from 'prop-types';
-import { Jumbotron, Grid, Row, Col, Button } from 'react-bootstrap';
 import { setHeaderTitle } from '../actions/appActions'
 
   const testGroups =
@@ -76,22 +74,7 @@ class RootContainer extends React.Component {
   }
 	render() {
 		return (
-			<Grid>
-				<Row>
-					<Col>
-						<Jumbotron>
-							<div className="choose-crops">
-
-						  	<ChooseCrops />
-							</div>
-						  <CropGroups groups={testGroups}/>
-							<Col xs={3} mdOffset={2} md={2} >
-								<Button type="submit" class="btn btn-primary">Submit</Button>
-							</Col>
-						</Jumbotron>
-					</Col>
-				</Row>
-			</Grid>
+			<AddBedForm location={{beds: testGroups}}/>
 		);
 	};
 };
