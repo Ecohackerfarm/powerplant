@@ -98,7 +98,6 @@ const CrudableListPage = ({
 				)}
 			/>
 			<Route
-				exact
 				path={`${match.url}/:id`}
 				render={({ match }) => (
 					<div>
