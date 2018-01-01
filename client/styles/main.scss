@@ -95,7 +95,14 @@ $background-color: #eee;
 		align-items: center;
 		justify-content: center;
 	}
-	.btn-group>.btn{
+	.btn-group >.btn{
 		padding: 13px 13px;
+	}
+	.yoursBeds{
+		text-align: center;
+	}
+	.yoursBeds li{
+		list-style-type: none;
+		text-align: center;
 	}
 }
