@@ -55,7 +55,7 @@ export const fetchCrops = () => {
   // instead we set an update interval
   const updateInterval = 7 * 24 * 60 * 60 * 1000;
 	return ( dispatch , getState ) => {
-		const lastUpdated = getState().crops.updated || 0;
+		const lastUpdated = 0; //getState().crops.updated || 0;
 		if ( (now.getTime() - lastUpdated) > updateInterval ){
 			dispatch(loadingCrops(true));
 			return axios.get(
