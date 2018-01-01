@@ -2,11 +2,12 @@
  * @namespace bedActions
  * @memberof client.actions
  */
+const type = 'DO_NOTHING';
 
-const createBed = function(bed) {};
+const createBed = (bed) => ({ type });
 
-const deleteBed = function() {};
+const deleteBed = () => ({ type });
 
-const editBed = function() {};
+const editBed = () => ({ type });
 
 export { createBed, deleteBed, editBed };

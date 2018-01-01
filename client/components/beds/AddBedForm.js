@@ -4,7 +4,7 @@ import CropGroups from '../crops/CropGroups';
 import { Jumbotron, Grid, Row, Col, Button } from 'react-bootstrap';
 import Proptypes from 'prop-types';
 import {connect } from 'react-redux';
-import { createBed } from '../../actions/bedActions.js';
+import { createBed } from '../../actions/bedActions';
 
 class AddBedForm extends React.Component {
 	constructor(props){
@@ -12,7 +12,7 @@ class AddBedForm extends React.Component {
 		super(props);
 		this.onChangeValue = this.onChangeValue.bind(this);
 		this.onSubmit = this.onSubmit.bind(this);
-		this.onSuccess;
+		//this.onSuccess;
 
 		this.state = {
 			choosenCrops : [],
@@ -42,21 +42,15 @@ class AddBedForm extends React.Component {
 
 	render(){
 		return (
-			<Grid>
-				<Row>
-					<Col>
 						<Jumbotron>
 							<div className="choose-crops">
 						  	<ChooseCrops onChangeValue={this.onChangeValue}/>
 						  </div>
 						  <CropGroups groups={this.state.choosenCrops}/>
 						  <Col xs={3} mdOffset={2} md={2} >
-								<Button onSubmit={this.onSubmit} type="submit" class="btn btn-primary">Submit</Button>
+								<Button onSubmit={this.onSubmit} type="submit" className="btn btn-primary">Submit</Button>
 							</Col>
 						</Jumbotron>
-					</Col>
-				</Row>
-			</Grid>
 		);
 	}
 }
