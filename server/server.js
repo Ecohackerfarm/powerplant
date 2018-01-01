@@ -11,6 +11,11 @@ const port = process.env.PORT || 8080;
 
 const app = buildApp(true);
 
-app.listen(port, function(event) {
-	console.log('Server running on port ' + port);
-});
+app.listen(
+	port,
+	'127.0.0.1',
+	511,
+	function(event) {
+		console.log('Server running on port ' + port);
+	}
+);
