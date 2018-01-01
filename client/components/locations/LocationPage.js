@@ -12,7 +12,7 @@ export default function({
 	return (
 		<Switch>
 			<Route
-				path={`${match.path}`}
+				path={`${match.url}`}
 				render={ props => (
 					<BedsPage
 						beds={items[id].beds}
