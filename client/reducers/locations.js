@@ -3,12 +3,16 @@ import {
 	SET_LOCATIONS,
 	EDIT_LOCATION,
 	DELETE_LOCATION,
-	LOGOUT
+	EDIT_BED,
+	ADD_BED,
+	DELETE_BED,
+	LOGOUT,
 } from '/client/actions/types';
 
-export const defaultState = {};
+const defaultState = {};
 
 export const locations = (state = defaultState, action) => {
+	let newState;
 	switch (action.type) {
 		case SET_LOCATIONS:
 			return action.locations;
@@ -28,10 +32,31 @@ export const locations = (state = defaultState, action) => {
 			};
 		}
 		case DELETE_LOCATION: {
-			let newState = {...state};
+			newState = {...state};
 			delete newState[action.id];
 			return newState;
 		}
+		case ADD_BED:
+		  newState = { ...state };
+		  //add beds in newState in the specified location
+		  newState[action.locationId].beds = {
+		  	...newState[action.locationId].beds,
+		  	...action.bedEntry
+		  }
+			return newState;
+		case EDIT_BED:
+		  newState = { ...state };
+		  //add beds in newState in the specified location
+		  newState[action.locationId].beds[action.bedId] = {
+		  	...newState[action.locationId].beds[action.bedId],
+		  	...action.changes
+		  }
+			return newState;
+		case DELETE_BED:
+		  newState = { ...state };
+		  //add beds in newState in the specified location
+		  delete newState[action.locationId].beds[action.bedId];
+			return newState;
 		case LOGOUT:
 			return defaultState;
 		default:

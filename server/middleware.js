@@ -222,7 +222,7 @@ export async function getAllCropRelationships(req, res, next) {
 export async function getCropsByName(req, res, next) {
 	try {
 		const name = req.query.name;
-		if (typeof name != 'string') {
+		if (typeof name !== 'string') {
 			throw VALIDATION_EXCEPTION;
 		}
 		const index = parseInteger(next, req.query.index, 0, MAX_NAME_ENTRIES, 0);
