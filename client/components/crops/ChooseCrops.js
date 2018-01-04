@@ -15,29 +15,14 @@ import { connect } from 'react-redux';
  */
 
 class ChooseCrops extends React.Component {
-	constructor(props){
-		super(props);
-		this.onChange = this.onChange.bind(this)
-	}
-	onChange(chosenCrops){
-	  this.setState({
-			chosenCrops
-		});
-		if( chosenCrops.length > this.props.minNumberOfCrops ){
-			this.props.fetchCombinations(chosenCrops);
-		}
-	};
+
 	componentWillMount() {
 		this.props.fetchCrops();
 	}
 
 	render() {
-		let output;
-		if (this.props.loading){
-			output = <p>Loading ... </p>;
-		}
 		if (this.props.error) {
-			output = <p>Couldnt load</p>;
+			return <p>Couldn't load</p>;
 		}
 		return (
 			<Typeahead
@@ -46,7 +31,7 @@ class ChooseCrops extends React.Component {
 				options={this.props.crops.all}
 				labelKey='commonName'
 				placeholder='Choose a crop ...'
-				onChange={this.onChange}
+				onChange={this.props.onChange}
 				isLoading={this.props.loading}
 			/>
 		);
@@ -54,7 +39,7 @@ class ChooseCrops extends React.Component {
 }
 
 ChooseCrops.propTypes = {
-	fetchCrops : PropTypes.func.isRequired,
+	onChange : PropTypes.func.isRequired,
 	crops : PropTypes.object.isRequired,
 	loading : PropTypes.bool.isRequired,
 	error : PropTypes.bool.isRequired,
