@@ -21,6 +21,9 @@ class Header extends React.Component {
 						<LinkContainer exact to="/">
 							<NavItem eventKey={1.0}>Home</NavItem>
 						</LinkContainer>
+						<LinkContainer exact to="/about">
+							<NavItem eventKey={1.0}>About</NavItem>
+						</LinkContainer>
 					</Nav>
 				</Navbar.Collapse>
 			</Navbar>
