@@ -105,4 +105,36 @@ $background-color: #eee;
 		list-style-type: none;
 		text-align: center;
 	}
+	.about{
+
+		#imageTitle{
+			background-image: url(/images/logo/logo_128.png);
+			padding: 100px;
+			background-repeat: no-repeat;
+
+			background-size: 118px;
+			@media (max-width: 992px) {
+				background-position: center;
+			}
+			@media (min-width: 992px) {
+				background-position: right;
+			}
+		}
+		.textTitle{
+			size: 17px;
+			text-align: left;
+			//padding-left: -15px;
+			@media (max-width: 992px) {
+				text-align: center;
+				margin-top: -40px;
+			}
+			@media (min-width: 992px) {
+				text-align: left;
+				padding-top: 70px
+			}
+		}
+		.textBody{
+			text-align: center;
+		}
+	}
 }

@@ -15,7 +15,7 @@ import { createBed, deleteBed, editBed } from '/client/actions/bedActions';
 const BedsPage = function({  beds, match, location, actions }) {
 	return (
 		<div className="yoursBeds">
-			<h3> Yours Beds</h3>
+			<h3> Your Beds</h3>
 			<Grid>
 				<CrudableList
 					actions={actions}

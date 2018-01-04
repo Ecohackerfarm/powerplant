@@ -5,6 +5,7 @@ import Login from './login/LoginPage';
 import Register from './register/RegisterPage';
 import Recover from './recover/Recover';
 import LocationsPage from './locations/LocationsPage';
+import AboutPage from './about/AboutPage'
 import PropTypes from 'prop-types';
 
 class Main extends React.Component {
@@ -21,6 +22,7 @@ class Main extends React.Component {
 					<Route path="/register" component={Register} />
 					<Route path="/recover" component={Recover} />
 					<Route path="/locations" component={LocationsPage} />
+					<Route path="/about" component={AboutPage} />
 				</Switch>
 			</div>
 		);
