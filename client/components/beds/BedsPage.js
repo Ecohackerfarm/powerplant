@@ -12,10 +12,13 @@ import BedItem from './BedItem';
 import { Grid } from 'react-bootstrap';
 import { createBed, deleteBed, editBed } from '/client/actions/bedActions';
 
-const BedsPage = function({  beds, match, location, actions }) {
+const BedsPage = function({  beds, match, location, actions, locationId }) {
+  for (let key in actions){
+  	actions[key]= (...args) => actions[key](locationId, ...args);
+  }
 	return (
 		<div className="yourBeds">
-			<h3> Your Beds</h3>
+			<h3>Your Beds</h3>
 			<Grid>
 				<CrudableList
 					actions={actions}
@@ -32,9 +35,9 @@ const BedsPage = function({  beds, match, location, actions }) {
 
 const dispatchToProps = (dispatch) => ({
 	actions: {
-		create: bed => dispatch(createBed),
-		edit: (id, bedChanges) => dispatch(editBed),
-		delete: id => dispatch(deleteBed)
+		create: (locationId,bed) => dispatch(createBed(locationId, bed)),
+		edit: (locationId, id, changes) => dispatch(editBed(locationId, id,changes)),
+		delete: (locationId, id) => dispatch(deleteBed(locationId, id))
 	}
 });
 
