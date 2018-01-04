@@ -18,10 +18,11 @@ const createBed = (locationId, bed) => {
 		while(currBeds[newId] !== undefined){
 						newId++;
 		}
+		let bedEntry = {[newId] : bed}
 		return ({
 			type: ADD_BED,
 			locationId,
-			bedId: newId
+			bedEntry
 		})
 	}
 

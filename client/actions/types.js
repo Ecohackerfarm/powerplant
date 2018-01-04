@@ -59,10 +59,16 @@ export const ADD_CROP = 'ADD_CROP';
 export const DELETE_CROP = 'DELETE_CROP';
 /** Update all crops in store */
 export const UPDATED_CROPS = 'UPDATED_CROPS';
+/** Update all relationships in store */
+export const UPDATED_RELATIONSHIPS = 'UPDATED_RELATIONSHIPS';
 /** Error while fetching crops */
 export const UPDATE_CROPS_ERROR = 'UPDATE_CROPS_ERROR';
 /** Fetch crops in progress or not */
 export const LOADING_CROPS = 'LOADING_CROPS';
+/** Fetch relationships in progress or not */
+export const LOADING_RELATIONSHIPS = 'LOADING_RELATIONSHIPS';
+/** Error while fetching relationships */
+export const UPDATED_RELATIONSHIPS_ERROR = 'UPDATED_RELATIONSHIPS_ERROR';
 
 // Task actions
 /** Edit a task */
