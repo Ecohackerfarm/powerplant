@@ -51,7 +51,8 @@ export const saveLocationRequest = location => {
 			// in LocationItem we specified that locations need ids
 			// we should make this look the same as a mongodb location item
 			// user is not authenticated so we will just save it to redux
-			// returning a promise so it looks the same to the component that called it as if it had been a server request
+			// returning a promise so it looks the same to the component that
+			// called it as if it had been a server request
 			return new Promise(resolve => {
 				const currentLocations = getState().locations;
 				let newId = 0;
