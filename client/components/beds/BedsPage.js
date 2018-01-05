@@ -13,15 +13,18 @@ import { Grid } from 'react-bootstrap';
 import { createBed, deleteBed, editBed } from '/client/actions/bedActions';
 
 const BedsPage = function({  beds, match, location, actions, locationId }) {
+	let actionsWithLocationId = {};
   for (let key in actions){
-  	actions[key]= (...args) => actions[key](locationId, ...args);
+  	actionsWithLocationId[key]= (...args) => {
+  		return actions[key](locationId, ...args);
+  	}
   }
 	return (
 		<div className="yourBeds">
 			<h3>Your Beds</h3>
 			<Grid>
 				<CrudableList
-					actions={actions}
+					actions={actionsWithLocationId}
 					items={beds}
 					itemName="bed"
 					ItemListView={BedItem}
