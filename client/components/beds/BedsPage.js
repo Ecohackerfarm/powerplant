@@ -15,9 +15,7 @@ import { createBed, deleteBed, editBed } from '/client/actions/bedActions';
 const BedsPage = function({  beds, match, location, actions, locationId }) {
 	let actionsWithLocationId = {};
   for (let key in actions){
-  	actionsWithLocationId[key]= (...args) => {
-  		return actions[key](locationId, ...args);
-  	}
+  	actionsWithLocationId[key]= actions[key].bind(this,locationId);
   }
 	return (
 		<div className="yourBeds">
