@@ -55,9 +55,12 @@ class AddBedForm extends React.Component {
 		e.preventDefault();
 		//TODO: VALIDATE PLANTS
 		let createPromises=[];
-		this.chosenBeds.forEach(bed => {
+		this.chosenBeds.forEach((crops,index) => {
 			//create beds from
-			createPromises.push(this.props.onSubmit( bed ));
+			createPromises.push(this.props.onSubmit({
+				name : index,
+				crops
+			}));
 		});
 		Promise.all(createPromises).then(
 			()=> this.props.onSuccess()
@@ -86,6 +89,7 @@ class AddBedForm extends React.Component {
 	};
 
 	render(){
+		this.chosenBeds = this.state.groups;
 		return (
 						<form onSubmit={this.onSubmit}>
 							<div className="choose-crops">
