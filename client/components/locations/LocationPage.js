@@ -1,5 +1,5 @@
 import React from 'react';
-import { Switch, Route } from 'react-router-dom';
+import { Switch, Route, Redirect } from 'react-router-dom';
 import BedsPage from '../beds';
 
 export default function({
@@ -11,8 +11,12 @@ export default function({
 }) {
 	return (
 		<Switch>
+		  <Route exact path={`${match.path}`}>
+		    {/*Redirect for MVP later here should be a Dashboard*/}
+		    <Redirect to={`${match.url}/beds`}/>
+		  </Route>
 			<Route
-				path={`${match.path}`}
+				path={`${match.path}/beds`}
 				render={ props => (
 					<BedsPage
 						beds={items[id].beds}
