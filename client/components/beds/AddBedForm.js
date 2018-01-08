@@ -4,7 +4,7 @@ import EditBedForm from './EditBedForm';
 import { withRouter } from 'react-router-dom';
 
 const AddBedForm = (props) => {
-	if ( typeof props.itemToEdit === undefined )
+	if ( typeof props.itemToEdit === 'undefined' )
 		return <AddBedsForm {...props}/>
 	else
 		return <EditBedForm {...props}/>
