@@ -45,10 +45,6 @@ ChooseCrops.propTypes = {
 	error : PropTypes.bool.isRequired,
 }
 
-ChooseCrops.defaultProps = {
-	minNumberOfCrops : 3
-}
-
 const mapDispatchToProps = (dispatch) => {
     return {
         fetchCrops: () => dispatch(fetchCrops()),
