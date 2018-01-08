@@ -88,6 +88,9 @@ $background-color: #eee;
 	.button-checkbox-center {
 		display: flex;
 		flex-direction: row;
+		.rbt {
+			width: 100%;
+		}
 	}
 	.button-checkbox-center > [class^="col-"],
 	.button-checkbox-center > [class*=" col-"] {
