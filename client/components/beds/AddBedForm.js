@@ -97,12 +97,12 @@ class AddBedForm extends React.Component {
 						  	groups={this.state.groups}
 						  	onChange={this.onChangeCropGroups}
 						  />
-						  <Col xs={3} mdOffset={2} md={2} >
+							<div className="button-checkbox-center">
 								<Button
 									type="submit"
 									className="btn btn-primary"
-								>Submit</Button>
-							</Col>
+									>Submit</Button>
+							</div>
 						</form>
 		);
 	}

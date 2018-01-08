@@ -63,7 +63,7 @@ class CropGroup extends React.Component {
   render(){
   	return(
   		<Row className="button-checkbox-center">
-				<Col xs={3} mdOffset={2} md={2} >
+				<Col xs={3} md={2} >
 					<ToggleButtonGroup
 					  type="checkbox"
 					  defaultValue={this.state.checked}
@@ -72,7 +72,7 @@ class CropGroup extends React.Component {
 						<ToggleButton value={1}></ToggleButton>
 					</ToggleButtonGroup>
 				</Col>
-				<Col xs={9} md={8}>
+				<Col xs={9} md={10}>
 					<Typeahead
 						clearButton
 						multiple
