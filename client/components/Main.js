@@ -1,12 +1,10 @@
 import React from 'react';
 import { Route, Switch, withRouter} from 'react-router-dom';
-import RootContainer from './RootContainer';
 import Login from './login/LoginPage';
 import Register from './register/RegisterPage';
 import Recover from './recover/Recover';
 import LocationsPage from './locations/LocationsPage';
 import AboutPage from './about/AboutPage'
-import PropTypes from 'prop-types';
 
 class Main extends React.Component {
 	render() {
