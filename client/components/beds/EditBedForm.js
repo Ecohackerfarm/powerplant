@@ -106,6 +106,7 @@ class EditBedForm extends React.Component {
 			  	defaultSelected={this.state.cropsInBed}
 			  	selectHintOnEnter={true}
 			  	autoFocus={true}
+			  	emptyLabel="No compatible crops found."
 			  	/>
 			  </div>
 			  <Col xs={3} mdOffset={2} md={2} >
