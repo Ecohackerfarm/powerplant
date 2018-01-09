@@ -53,9 +53,13 @@ class AddBedForm extends React.Component {
 		//TODO: VALIDATE PLANTS
 		let createPromises=[];
 		this.chosenBeds.forEach((crops,index) => {
+			let genName = '';
+			crops.forEach((crop)=>{
+				genName+=crop.commonName.slice(0,2);
+			})
 			//create beds from
 			createPromises.push(this.props.onSubmit({
-				name : index,
+				name : genName,
 				crops
 			}));
 		});
