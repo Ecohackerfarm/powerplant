@@ -13,7 +13,7 @@ class App extends React.Component {
 			return (
 					<div>
 						<Header auth={this.props.auth} />
-						<Main auth={this.props.auth} />
+						<Main store={this.props.store} auth={this.props.auth} />
 					</div>
 			);
 	  }
