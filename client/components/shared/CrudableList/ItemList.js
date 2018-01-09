@@ -15,7 +15,11 @@ const ItemList = ({ deleteAction, match, items, ItemView, itemName }) => {
 							item={item}
 							header={
 								<ItemHeader
-									name={itemName}
+									name={
+										typeof item.name !== 'undefined'
+										? item.name
+										: itemName
+									}
 									editLink={`${match.url}/${id}/edit`}
 									refreshLink={match.url}
 									deleteAction={deleteAction.bind(this, id)} //binding to this id

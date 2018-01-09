@@ -9,15 +9,14 @@ import { connect } from 'react-redux';
 import CrudableList from '../shared/CrudableList';
 import AddBedForm from './AddBedForm';
 import BedItem from './BedItem';
+import BedPage from './BedPage';
 import { Grid } from 'react-bootstrap';
 import { createBed, deleteBed, editBed } from '/client/actions/bedActions';
 
 const BedsPage = function({  beds, match, location, actions, locationId }) {
 	let actionsWithLocationId = {};
   for (let key in actions){
-  	actionsWithLocationId[key]= (...args) => {
-  		return actions[key](locationId, ...args);
-  	}
+  	actionsWithLocationId[key]= actions[key].bind(this,locationId);
   }
 	return (
 		<div className="yourBeds">
@@ -29,6 +28,7 @@ const BedsPage = function({  beds, match, location, actions, locationId }) {
 					itemName="bed"
 					ItemListView={BedItem}
 					AddItemForm={AddBedForm}
+					DetailPage={BedPage}
 					match={match}
 				/>
 			</Grid>
