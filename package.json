@@ -23,6 +23,23 @@
   "license": "ISC",
   "bugs": {
     "url": "https://github.com/Ecohackerfarm/powerplant/issues"
+  "contributors" : [
+    {
+      "name" : "Franz Gatzke",
+      "email" : "franz@ecohackerfarm.org"
+    },
+    {
+      "name" : "Petteri Pitkänen",
+      "email" : "petteri@ecohackerfarm.org"
+    },
+    {
+      "name" : "Aimee Fenech",
+      "email" : "aimee@ecohackerfarm.org"
+    },
+    {
+      "name" : "Jordi Sorribes"
+    }
+  ],
   },
   "homepage": "https://github.com/Ecohackerfarm/powerplant#readme",
   "dependencies": {
