@@ -8,14 +8,23 @@ mongoose.Promise = global.Promise;
 
 // set our port
 const port = process.env.PORT || 8080;
+const localhostArgs = ['127.0.0.1',511];
+
+const serverStarted = (event) => {
+	console.log('Server running on port ' + port);
+}
 
 const app = buildApp(true);
+if (process.env.LISTEN_TO_LOCALHOST_ONLY) {
+	app.listen(
+		port,
+		...localhostArgs,
+		serverStarted
+	);
+} else {
+	app.listen(
+		port,
+		serverStarted
+	);
+}
 
-app.listen(
-	port,
-	'127.0.0.1',
-	511,
-	function(event) {
-		console.log('Server running on port ' + port);
-	}
-);
