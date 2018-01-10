@@ -15,6 +15,8 @@ $background-color: #eee;
       background: $primary-color;
       border-top-left-radius: 10px;
       border-top-right-radius: 10px;
+			padding-bottom: 0px;
+			padding-top: 15px;
     }
     border-radius: 10px;
   }
@@ -108,8 +110,24 @@ $background-color: #eee;
 		list-style-type: none;
 		text-align: center;
 	}
+	.panel-crudablelist{
+		height: 182px;
+	}
+	.title-center{
+		display: flex;
+		flex-direction: row;
+		.title-center{
+			display: flex;
+			align-items: center;
+			justify-content: flex-end;
+		}
+		.button-center{
+			display: flex;
+			align-items: right;
+			justify-content: flex-end;
+		}
+	}
 	.about{
-
 		#imageTitle{
 			background-image: url(/images/logo/logo_128.png);
 			padding: 100px;
