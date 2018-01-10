@@ -1,7 +1,7 @@
 {
   "name": "powerplant",
-  "version": "1.0.0",
-  "description": "Make the garden planning process easier and more efficient",
+  "version": "0.1.0",
+  "description": "powerplant is a open source software that allows anyone planning a garden to utilize companion planting and other permaculture practices. It provides intelligent suggestions to help the gardener by advising the best planting schedules and combinations of crops to maximize the garden's yield.",
   "main": "server.js",
   "scripts": {
     "preinstall": "sh ./.git_hooks/_init-hooks-path.sh",
@@ -20,9 +20,6 @@
     "url": "git+https://github.com/Ecohackerfarm/powerplant.git"
   },
   "author": "Simon Ever-Hale",
-  "license": "ISC",
-  "bugs": {
-    "url": "https://github.com/Ecohackerfarm/powerplant/issues"
   "contributors" : [
     {
       "name" : "Franz Gatzke",
@@ -40,8 +37,13 @@
       "name" : "Jordi Sorribes"
     }
   ],
+  "license": "MIT",
+  "bugs": "https://work.ecohackerfarm.org/projects/companion-plant-planner",
+  "homepage": "https://wiki.ecohackerfarm.org/powerplant:start",
+  "repository" : {
+    "type" : "git",
+    "url" : "https://github.com/Ecohackerfarm/powerplant.git"
   },
-  "homepage": "https://github.com/Ecohackerfarm/powerplant#readme",
   "dependencies": {
     "async-task-schedulers": "^0.0.9",
     "axios": "^0.16.2",
