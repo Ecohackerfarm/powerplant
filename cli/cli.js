@@ -1,5 +1,4 @@
 import url from 'url';
-import request from 'request-promise';
 import mysql from 'mysql2/promise';
 import firebase from 'firebase';
 import { ApiClient } from './api-client.js';
@@ -31,7 +30,7 @@ function parseOptionValue(argument, argumentWithoutValue) {
 	const valueString = argument.slice(argumentWithoutValue.length);
 	const valueStringLowerCase = valueString.toLowerCase();
 
-	if (valueStringLowerCase == 'true' || valueStringLowerCase == 'false') {
+	if (valueStringLowerCase === 'true' || valueStringLowerCase === 'false') {
 		return Boolean(valueStringLowerCase);
 	}
 
@@ -114,6 +113,8 @@ async function doShow() {
 			documents = await client.getUsers(ids);
 			break;
 		}
+		default:
+		break;
 	}
 
 	documents.forEach(document => {
@@ -143,6 +144,8 @@ async function doAdd() {
 			await client.addUsers(documents);
 			break;
 		}
+		default:
+		break;
 	}
 
 	console.log(documents);
@@ -176,6 +179,8 @@ async function doUpdate() {
 			await client.getUsers(idMapDocument);
 			break;
 		}
+		default:
+		break;
 	}
 }
 
@@ -209,6 +214,8 @@ async function doRemove() {
 			await client.removeUsers(ids);
 			break;
 		}
+		default:
+		break;
 	}
 }
 
@@ -334,7 +341,7 @@ async function pushFirebase() {
 				const relationship = {
 					crop0: firebaseIdToCrop[firebaseId0]._id,
 					crop1: firebaseIdToCrop[firebaseId1]._id,
-					compatibility: value == 'good' ? 1 : -1
+					compatibility: value === 'good' ? 1 : -1
 				};
 				relationships.push(relationship);
 
