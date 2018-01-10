@@ -26,7 +26,7 @@ class AppProvider extends React.Component {
 		return (
 			<Provider store={store}>
 			  <BrowserRouter>
-   			  <App storeIsLoaded={false}/>
+   			  <App storeIsLoaded={false} store={store} />
    			</BrowserRouter>
 			</Provider>
 		);

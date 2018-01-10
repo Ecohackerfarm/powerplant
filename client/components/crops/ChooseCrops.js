@@ -1,5 +1,5 @@
 import { Typeahead } from 'react-bootstrap-typeahead';
-import style from 'react-bootstrap-typeahead/css/Typeahead.css';
+import 'react-bootstrap-typeahead/css/Typeahead.css';
 import React from 'react';
 import PropTypes from 'prop-types';
 import {

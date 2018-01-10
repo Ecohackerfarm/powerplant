@@ -1,10 +1,7 @@
 import React from 'react';
 import ChooseCrops from '../crops/ChooseCrops';
 import CropGroups from '../crops/CropGroups';
-import { Jumbotron, Grid, Row, Col, Button } from 'react-bootstrap';
-import Proptypes from 'prop-types';
-import { connect } from 'react-redux';
-import { createBed } from '../../actions/bedActions';
+import { Button } from 'react-bootstrap'
 import axios from 'axios';
 import { withRouter } from 'react-router-dom';
 
@@ -56,9 +53,13 @@ class AddBedForm extends React.Component {
 		//TODO: VALIDATE PLANTS
 		let createPromises=[];
 		this.chosenBeds.forEach((crops,index) => {
+			let genName = '';
+			crops.forEach((crop)=>{
+				genName+=crop.commonName.slice(0,2);
+			})
 			//create beds from
 			createPromises.push(this.props.onSubmit({
-				name : index,
+				name : genName,
 				crops
 			}));
 		});
