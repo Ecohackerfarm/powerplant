@@ -1,6 +1,6 @@
 {
   "name": "powerplant",
-  "version": "0.1.0",
+  "version": "1.0.0",
   "description": "powerplant is a open source software that allows anyone planning a garden to utilize companion planting and other permaculture practices. It provides intelligent suggestions to help the gardener by advising the best planting schedules and combinations of crops to maximize the garden's yield.",
   "main": "server.js",
   "scripts": {
