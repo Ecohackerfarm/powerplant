@@ -4,7 +4,7 @@
   "description": "powerplant is a open source software that allows anyone planning a garden to utilize companion planting and other permaculture practices. It provides intelligent suggestions to help the gardener by advising the best planting schedules and combinations of crops to maximize the garden's yield.",
   "main": "server.js",
   "scripts": {
-    "preinstall": "sh ./.git_hooks/_init-hooks-path.sh",
+    "preinstall": "test -f ./.git_hooks/_init-hooks-path.sh && test -d ./.git && sh ./.git_hooks/_init-hooks-path.sh",
     "start": "nodemon --watch server --exec babel-node -- server/server.js",
     "test": "mocha --compilers js:babel-register",
     "lint": "eslint cli client server shared test",
