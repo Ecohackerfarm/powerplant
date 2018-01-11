@@ -3,4 +3,5 @@ jwt-secret.js
 npm-debug.log
 *~
 .idea/*
+.build/*
 
