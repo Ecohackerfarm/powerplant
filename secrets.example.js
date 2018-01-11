@@ -1,0 +1,2 @@
+   export const JWT_SECRET = 'YOUR PRIVATE KEY HERE';
+   export const GOOGLE_GEOCODE_API_KEY = 'YOUR API KEY HERE';

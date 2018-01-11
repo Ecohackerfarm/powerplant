@@ -1,7 +1,7 @@
 import { AsyncObject, ReadWriteScheduler } from 'async-task-schedulers';
 import mongoose from 'mongoose';
 import jwt from 'jsonwebtoken';
-import jwtSecret from '/jwt-secret';
+import { JWT_SECRET } from '/secrets';
 import User from '/server/models/user';
 import CropRelationship from '/server/models/crop-relationship';
 import Crop from '/server/models/crop';
@@ -331,7 +331,7 @@ export class Processor extends AsyncObject {
 	async getAuthenticatedUser(token) {
 		let userInfo;
 		try {
-			userInfo = jwt.verify(token, jwtSecret);
+			userInfo = jwt.verify(token, JWT_SECRET);
 		} catch (exception) {
 			throw AUTHENTICATION_EXCEPTION;
 		}
@@ -531,7 +531,7 @@ export class Processor extends AsyncObject {
 
 		const token = jwt.sign(
 			{ id: user._id, username: user.username, email: user.email },
-			jwtSecret
+			JWT_SECRET
 		);
 		return { token };
 	}
