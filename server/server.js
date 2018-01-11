@@ -1,12 +1,35 @@
 import mongoose from 'mongoose';
 import { buildApp } from './app';
-import { databaseUrl } from '/server/app';
+import {
+	DATABASE_USERNAME,
+	DATABASE_PASSWORD,
+	DATABASE_PROTOCOLL,
+	DATABASE_HOST,
+	DATABASE_PORT,
+	DATABASE_DB
+} from '/secrets.js';
 
-mongoose.connect(databaseUrl);
+const getDatabaseURL = () => {
+	let urlString = DATABASE_PROTOCOLL;
+	//Add Username and P
+	if (DATABASE_USERNAME.length>0 && DATABASE_PASSWORD.length>0)
+		urlString+=DATABASE_USERNAME+':'+DATABASE_PASSWORD+'@';
+	urlString+=DATABASE_HOST;
+	if (DATABASE_PORT.length>0)
+		urlString+=':'+DATABASE_PORT;
+	urlString+='/'+DATABASE_DB;
+	return urlString;
+}
+
+
+if (process.env.DATABASEURL){
+  mongoose.connect( process.env.DATABASEURL );
+} else {
+  mongoose.connect( getDatabaseURL() );
+}
+
 mongoose.Promise = global.Promise;
-// mongoose.set('debug', true)
 
-// set our port
 const port = process.env.PORT || 8080;
 const localhostArgs = ['127.0.0.1',511];
 
@@ -15,7 +38,7 @@ const serverStarted = (event) => {
 }
 
 const app = buildApp(true);
-if (process.env.LISTEN_TO_LOCALHOST_ONLY) {
+if (process.env.LOCALHOST_ONLY) {
 	app.listen(
 		port,
 		...localhostArgs,
