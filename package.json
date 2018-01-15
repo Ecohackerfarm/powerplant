@@ -15,7 +15,7 @@
     "pretty": "find client server shared test cli -type f -name '*.js' | xargs ./node_modules/.bin/prettier --write",
     "prerelease_" : "npm version patch",
     "production": "node ./server/server.js",
-    "release": "mkdir .build/pp-$npm_package_version && npm run build_client && npm run build_server && cp -r dist .build/pp-$npm_package_version && cp LICENSE README.md package.json secrets.example.js .build/pp-$npm_package_version/",
+    "release": "rm -R .build/pp-$npm_package_version && mkdir .build/pp-$npm_package_version && npm run build_client && npm run build_server && cp -r dist .build/pp-$npm_package_version && cp LICENSE README.md package.json secrets.example.js .build/pp-$npm_package_version/",
     "setup_dev": "test -f ./.git_hooks/_init-hooks-path.sh && test -d ./.git && sh ./.git_hooks/_init-hooks-path.sh",
     "start": "NODE_ENV=development nodemon --watch server --exec babel-node --inspect -- server/server.js",
     "test": "mocha --compilers js:babel-register"
