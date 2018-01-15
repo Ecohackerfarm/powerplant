@@ -37,7 +37,7 @@ const serverStarted = (event) => {
 	console.log('Server running on port ' + port);
 }
 
-const app = buildApp(true);
+const app = buildApp( process.env.NODE_ENV === "development" );
 if (process.env.LOCALHOST_ONLY) {
 	app.listen(
 		port,

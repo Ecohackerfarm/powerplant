@@ -8,14 +8,9 @@ import express from 'express';
 import path from 'path';
 import bodyParser from 'body-parser';
 import apiRouter from './api';
-import webpack from 'webpack';
-import webpackConfig from '../webpack.config';
 import { Processor } from './processor';
 
-//WebPack Development
-import webpackDevMiddleware from 'webpack-dev-middleware';
-import webpackHotMiddleware from 'webpack-hot-middleware';
-import webpackDevConfig from '../webpack.config.dev';
+
 
 
 export let processor = new Processor();
@@ -31,27 +26,28 @@ const app = express();
  * @param  {Boolean} development whether or not development enviroment for e.g. webpack is enabled,
  * @return {Object} the express app
  */
-export const buildApp = (useWebpack,development = false) => {
+export const buildApp = (development = false) => {
 	const DIST_DIR = path.join(__dirname, '../dist');
 	// set the static files location /dist/images will be /images for users
 	app.use(express.static(DIST_DIR));
 
-	if (useWebpack) {
-		if (development){
-			const compiler = webpack(webpackDevConfig);
-			//Development only
-			app.use(
-				webpackDevMiddleware(compiler, {
-					hot: true,
-					publicPath: webpackDevConfig.output.publicPath,
-					noInfo: true
-				})
-			);
-			//Development only
-			app.use(webpackHotMiddleware(compiler));
-		} else {
-			webpack(webpackConfig);
-		}
+	if (development) {
+		const webpack = require('webpack');
+		const webpackDevMiddleware = require('webpack-dev-middleware');
+		const webpackHotMiddleware = require('webpack-hot-middleware');
+		const webpackDevConfig = require ('../webpack.config.dev');
+
+		const compiler = webpack(webpackDevConfig);
+		//Development only
+		app.use(
+			webpackDevMiddleware(compiler, {
+				hot: true,
+				publicPath: webpackDevConfig.output.publicPath,
+				noInfo: true
+			})
+		);
+		//Development only
+		app.use(webpackHotMiddleware(compiler));
 	}
 
 	app.use(
