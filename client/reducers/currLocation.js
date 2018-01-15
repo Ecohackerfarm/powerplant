@@ -1,4 +1,4 @@
-import { SET_CURRENT_LOCATION, LOGOUT } from '/client/actions/types';
+import { SET_CURRENT_LOCATION, LOGOUT } from '../actions/types';
 
 export const defaultState = null;
 

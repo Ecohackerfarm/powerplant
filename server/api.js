@@ -10,11 +10,11 @@ import {
 	getCropsByName,
 	getLocations,
 	login
-} from '/server/middleware';
-import Crop from '/server/models/crop';
-import CropRelationship from '/server/models/crop-relationship';
-import Location from '/server/models/location';
-import User from '/server/models/user';
+} from './middleware';
+import Crop from './models/crop';
+import CropRelationship from './models/crop-relationship';
+import Location from './models/location';
+import User from './models/user';
 
 /**
  * Create a new router for a document API node.

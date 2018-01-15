@@ -1,6 +1,6 @@
 import React from 'react';
 import PropTypes from 'prop-types';
-import validateLocation from '/shared/validation/locationValidation';
+import validateLocation from '../../../shared/validation/locationValidation';
 import {
 	Button,
 	ButtonToolbar,
@@ -10,7 +10,7 @@ import {
 	ListGroupItem
 } from 'react-bootstrap';
 import { LinkContainer } from 'react-router-bootstrap';
-import TextFieldGroup from '/client/components/shared/TextFieldGroup';
+import TextFieldGroup from '../shared/TextFieldGroup';
 
 class AddLocationForm extends React.Component {
 	static propTypes = {

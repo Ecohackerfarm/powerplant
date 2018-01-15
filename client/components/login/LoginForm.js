@@ -1,7 +1,7 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 import TextFieldGroup from '../shared/TextFieldGroup';
-import validateLogin from '/shared/validation/loginValidation';
+import validateLogin from '../../../shared/validation/loginValidation';
 import { Button, FormGroup, HelpBlock } from 'react-bootstrap';
 
 export default class LoginForm extends React.Component {

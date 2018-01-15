@@ -7,7 +7,7 @@ import {
 	ADD_BED,
 	DELETE_BED,
 	LOGOUT,
-} from '/client/actions/types';
+} from '../actions/types';
 
 const defaultState = {};
 

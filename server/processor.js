@@ -1,14 +1,14 @@
 import { AsyncObject, ReadWriteScheduler } from 'async-task-schedulers';
 import mongoose from 'mongoose';
 import jwt from 'jsonwebtoken';
-import { JWT_SECRET } from '/secrets';
-import User from '/server/models/user';
-import CropRelationship from '/server/models/crop-relationship';
-import Crop from '/server/models/crop';
-import Location from '/server/models/location';
-import validateUser from '/shared/validation/userValidation';
-import validateCredentials from '/shared/validation/loginValidation';
-import { Combinations } from '/shared/combinations.js';
+import { JWT_SECRET } from '../secrets';
+import User from './models/user';
+import CropRelationship from './models/crop-relationship';
+import Crop from './models/crop';
+import Location from './models/location';
+import validateUser from '../shared/validation/userValidation';
+import validateCredentials from '../shared/validation/loginValidation';
+import { Combinations } from '../shared/combinations.js';
 
 class ProcessorException extends Error {
 	/**

@@ -7,12 +7,16 @@
 import express from 'express';
 import path from 'path';
 import bodyParser from 'body-parser';
-import apiRouter from '/server/api';
+import apiRouter from './api';
 import webpack from 'webpack';
-import webpackMiddleware from 'webpack-dev-middleware';
-import webpackHotWiddleware from 'webpack-hot-middleware';
-import webpackConfig from '../webpack.config.dev';
-import { Processor } from '/server/processor';
+import webpackConfig from '../webpack.config';
+import { Processor } from './processor';
+
+//WebPack Development
+import webpackDevMiddleware from 'webpack-dev-middleware';
+import webpackHotMiddleware from 'webpack-hot-middleware';
+import webpackDevConfig from '../webpack.config.dev';
+
 
 export let processor = new Processor();
 
@@ -24,24 +28,30 @@ const app = express();
 
 /**
  * Sets up the express application with all middleware
- * @param  {Boolean} useWebpack whether or not webpack should be used to bundle the client files. Generally should only be false when testing, and server-client communication is not necessary
+ * @param  {Boolean} development whether or not development enviroment for e.g. webpack is enabled,
  * @return {Object} the express app
  */
-export const buildApp = useWebpack => {
+export const buildApp = (useWebpack,development = false) => {
 	const DIST_DIR = path.join(__dirname, '../dist');
-	// set the static files location /public/img will be /img for users
+	// set the static files location /dist/images will be /images for users
 	app.use(express.static(DIST_DIR));
 
 	if (useWebpack) {
-		const compiler = webpack(webpackConfig);
-		app.use(
-			webpackMiddleware(compiler, {
-				hot: true,
-				publicPath: webpackConfig.output.publicPath,
-				noInfo: true
-			})
-		);
-		app.use(webpackHotWiddleware(compiler));
+		if (development){
+			const compiler = webpack(webpackDevConfig);
+			//Development only
+			app.use(
+				webpackDevMiddleware(compiler, {
+					hot: true,
+					publicPath: webpackDevConfig.output.publicPath,
+					noInfo: true
+				})
+			);
+			//Development only
+			app.use(webpackHotMiddleware(compiler));
+		} else {
+			webpack(webpackConfig);
+		}
 	}
 
 	app.use(

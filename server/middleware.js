@@ -1,13 +1,13 @@
-import { processor } from '/server/app';
+import { processor } from './app';
 import {
 	VALIDATION_EXCEPTION,
 	AUTHORIZATION_EXCEPTION,
 	AUTHENTICATION_EXCEPTION
-} from '/server/processor';
-import Location from '/server/models/location';
-import User from '/server/models/user';
-import CropRelationship from '/server/models/crop-relationship';
-import Crop from '/server/models/crop';
+} from './processor';
+import Location from './models/location';
+import User from './models/user';
+import CropRelationship from './models/crop-relationship';
+import Crop from './models/crop';
 
 const MAX_NAME_ENTRIES = 200000;
 const MAX_RESPONSE_LENGTH = 200000;

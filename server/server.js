@@ -7,7 +7,7 @@ import {
 	DATABASE_HOST,
 	DATABASE_PORT,
 	DATABASE_DB
-} from '/secrets.js';
+} from '../secrets.js';
 
 const getDatabaseURL = () => {
 	let urlString = DATABASE_PROTOCOLL;

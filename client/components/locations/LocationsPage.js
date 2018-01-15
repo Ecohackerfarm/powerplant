@@ -6,7 +6,7 @@ import {
 	saveLocationRequest,
 	editLocationRequest,
 	deleteLocationRequest
-} from '/client/actions/locationActions';
+} from '../../actions/locationActions';
 import AddLocationForm from './AddLocationForm';
 import LocationPage from '../locations/LocationPage';
 import {withRouter} from 'react-router-dom';

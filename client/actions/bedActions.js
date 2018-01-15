@@ -2,7 +2,7 @@ import {
 	EDIT_BED,
 	ADD_BED,
 	DELETE_BED,
-} from '/client/actions/types';
+} from './types';
 
 
 /**

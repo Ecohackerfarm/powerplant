@@ -6,7 +6,7 @@ import Recover from './recover/Recover';
 import LocationsPage from './locations/LocationsPage';
 import AboutPage from './about/AboutPage'
 //Changes for MVP
-import { saveLocationRequest } from '/client/actions/locationActions';
+import { saveLocationRequest } from '../actions/locationActions';
 
 class Main extends React.Component {
 	constructor(props){
