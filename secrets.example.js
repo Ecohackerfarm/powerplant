@@ -1,8 +1,16 @@
-export const JWT_SECRET = 'YOUR PRIVATE KEY HERE';
-export const GOOGLE_GEOCODE_API_KEY = 'YOUR API KEY HERE';
-export const DATABASE_USERNAME ='';
-export const DATABASE_PASSWORD ='';
-export const DATABASE_PROTOCOLL = 'mongodb://';
-export const DATABASE_HOST = 'localhost';
-export const DATABASE_PORT = ''; // e.g. '27018'
-export const DATABASE_DB = 'pp_main'; // e.g. 'powerplant'
+'use strict';
+//This file should stay in ES2015
+Object.defineProperty(exports, "__esModule", {
+  value: true
+});
+
+exports.JWT_SECRET = 'YOUR PRIVATE KEY HERE';
+exports.GOOGLE_GEOCODE_API_KEY = 'YOUR API KEY HERE';
+exports.DATABASE_USERNAME = '';
+exports.DATABASE_PASSWORD = '';
+exports.DATABASE_PROTOCOLL = 'mongodb://';
+exports.DATABASE_HOST = 'localhost';
+exports.DATABASE_PORT = ''; // e.g. '27018'
+exports.DATABASE_DB = 'pp_main'; // e.g. 'powerplant'
+exports.PP_PORT = '8080';
+exports.API_HOST = 'localhost';
