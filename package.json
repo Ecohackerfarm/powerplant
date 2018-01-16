@@ -22,6 +22,7 @@
     "setup_dev": "test -f ./.git_hooks/_init-hooks-path.sh && test -d ./.git && sh ./.git_hooks/_init-hooks-path.sh",
     "start": "set NODE_ENV=development && nodemon --watch server --exec babel-node --inspect -- server/server.js",
     "test": "mocha --compilers js:babel-register"
+
   },
   "author": "Simon Ever-Hale",
   "contributors" : [
