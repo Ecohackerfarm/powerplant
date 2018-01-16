@@ -9,26 +9,38 @@ import { connect } from 'react-redux';
 import CrudableList from '../shared/CrudableList';
 import AddBedForm from './AddBedForm';
 import BedItem from './BedItem';
-import { createBed, deleteBed, editBed } from '/client/actions/bedActions';
+import BedPage from './BedPage';
+import { Grid } from 'react-bootstrap';
+import { createBed, deleteBed, editBed } from '../../actions/bedActions';
 
-const BedsPage = function({ match, location, actions }) {
+const BedsPage = function({  beds, match, location, actions, locationId }) {
+	let actionsWithLocationId = {};
+  for (let key in actions){
+  	actionsWithLocationId[key]= actions[key].bind(this,locationId);
+  }
 	return (
-		<CrudableList
-			actions={actions}
-			items={location.beds}
-			itemName="bed"
-			ItemListView={BedItem}
-			AddItemForm={AddBedForm}
-			match={match}
-		/>
+		<div className="yourBeds">
+			<h3>Your Beds</h3>
+			<Grid>
+				<CrudableList
+					actions={actionsWithLocationId}
+					items={beds}
+					itemName="bed"
+					ItemListView={BedItem}
+					AddItemForm={AddBedForm}
+					DetailPage={BedPage}
+					match={match}
+				/>
+			</Grid>
+		</div>
 	);
 };
 
-const dispatchToProps = () => ({
+const dispatchToProps = (dispatch) => ({
 	actions: {
-		create: bed => dispatch(createBed),
-		edit: (id, bedChanges) => dispatch(editBed),
-		delete: id => dispatch(deleteBed)
+		create: (locationId,bed) => dispatch(createBed(locationId, bed)),
+		edit: (locationId, id, changes) => dispatch(editBed(locationId, id,changes)),
+		delete: (locationId, id) => dispatch(deleteBed(locationId, id))
 	}
 });
 

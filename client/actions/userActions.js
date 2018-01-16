@@ -4,10 +4,10 @@
  */
 
 import axios from 'axios';
-import { setAuthorizationToken } from '/client/utils';
+import { setAuthorizationToken } from '../utils';
 import jwtDecode from 'jwt-decode';
 import { setCurrentUser, logoutUser } from '.';
-import { store } from '/client/index';
+import { store } from '../index';
 import { getLocationsRequest, saveLocationRequest } from './locationActions';
 
 // creating a thunk action that dispatches SET_CURRENT_USER once the sign up request is successful

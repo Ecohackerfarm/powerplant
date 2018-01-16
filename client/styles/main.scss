@@ -15,6 +15,8 @@ $background-color: #eee;
       background: $primary-color;
       border-top-left-radius: 10px;
       border-top-right-radius: 10px;
+			padding-bottom: 0px;
+			padding-top: 15px;
     }
     border-radius: 10px;
   }
@@ -40,10 +42,13 @@ $background-color: #eee;
   }
   .navbar-brand {
     background: url(/images/logo/logo_128.png) right no-repeat;
-		right: 50%;
+		right: 41%;
+		color: #2F9B12;
+		font-weight: 700;
 		position: absolute;
 		background-size: 46px 46px;
-		padding-right: 50px;
+		//padding-right: 50px;
+		padding: 25px 44px !important;
 		//if it's small
 		// font: 0/0 a;
 		// color: transparent;
@@ -72,6 +77,85 @@ $background-color: #eee;
       background-image: url(/images/logo/logo_128_logout.png);
     }
   }
+	.choose-crops{
+		padding-bottom: 40px;
+	}
+	.row {
+		padding-bottom: 15px;
+	}
+	.btn-default.active{
+		background-color: green;
 
+	}
+	.button-checkbox-center {
+		display: flex;
+		flex-direction: row;
+		.rbt {
+			width: 100%;
+		}
+	}
+	.button-checkbox-center > [class^="col-"],
+	.button-checkbox-center > [class*=" col-"] {
+		display: flex;
+		align-items: center;
+		justify-content: left;
+	}
+	.btn-group >.btn{
+		padding: 13px 13px;
+	}
+	.yourBeds{
+		text-align: center;
+	}
+	.yourBeds li{
+		list-style-type: none;
+		text-align: center;
+	}
+	.panel-crudablelist{
+		height: 182px;
+	}
+	.title-center{
+		display: flex;
+		flex-direction: row;
+		.title-center{
+			display: flex;
+			align-items: center;
+			justify-content: flex-end;
+		}
+		.button-center{
+			display: flex;
+			align-items: right;
+			justify-content: flex-end;
+		}
+	}
+	.about{
+		#imageTitle{
+			background-image: url(/images/logo/logo_128.png);
+			padding: 100px;
+			background-repeat: no-repeat;
 
+			background-size: 118px;
+			@media (max-width: 992px) {
+				background-position: center;
+			}
+			@media (min-width: 992px) {
+				background-position: right;
+			}
+		}
+		.textTitle{
+			size: 17px;
+			text-align: left;
+			//padding-left: -15px;
+			@media (max-width: 992px) {
+				text-align: center;
+				margin-top: -40px;
+			}
+			@media (min-width: 992px) {
+				text-align: left;
+				padding-top: 70px
+			}
+		}
+		.textBody{
+			text-align: center;
+		}
+	}
 }

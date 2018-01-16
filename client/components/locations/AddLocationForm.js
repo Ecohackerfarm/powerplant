@@ -1,6 +1,6 @@
 import React from 'react';
 import PropTypes from 'prop-types';
-import validateLocation from '/shared/validation/locationValidation';
+import validateLocation from '../../../shared/validation/locationValidation';
 import {
 	Button,
 	ButtonToolbar,
@@ -10,7 +10,7 @@ import {
 	ListGroupItem
 } from 'react-bootstrap';
 import { LinkContainer } from 'react-router-bootstrap';
-import TextFieldGroup from '/client/components/shared/TextFieldGroup';
+import TextFieldGroup from '../shared/TextFieldGroup';
 
 class AddLocationForm extends React.Component {
 	static propTypes = {
@@ -56,7 +56,7 @@ class AddLocationForm extends React.Component {
 
 	typingTimer = {
 		timer: undefined,
-		timeout: 250
+		timeout: 700
 	};
 
 	// gets called when user types in a textbox
@@ -96,7 +96,17 @@ class AddLocationForm extends React.Component {
 	// fetches possible locations from google geocode api
 	requestLocationResults = () => {
 		const address = this.state.loc.address;
-		fetch('http://maps.google.com/maps/api/geocode/json?address=' + address)
+		const headers = new Headers();
+		const init ={
+			method : 'GET',
+			dataType : 'json',
+			headers,
+			credentials : 'omit'
+		}
+		fetch(
+			'http://maps.google.com/maps/api/geocode/json?address='
+			+ address
+			, init)
 			.then(res => res.json())
 			.then(data => {
 				if (data.status === 'ZERO_RESULTS') {
@@ -149,7 +159,8 @@ class AddLocationForm extends React.Component {
 		evt.preventDefault();
 		const location = {
 			name: this.state.name,
-			loc: this.state.loc
+			loc: this.state.loc,
+			beds: {}
 		};
 		const { errors, isValid } = validateLocation(location);
 		if (!isValid) {

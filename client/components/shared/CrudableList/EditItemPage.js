@@ -16,7 +16,7 @@ const EditItemPage = ({
 			itemName={itemName}
 			onSubmit={editAction.bind(this, id)}
 			homeUrl={homeUrl}
-			itemToEdit={items.find(item => item._id === id)}
+			itemToEdit={items[id]}
 		/>
 	);
 };
@@ -26,7 +26,7 @@ EditItemPage.propTypes = {
 	id: PropTypes.string.isRequired,
 	editAction: PropTypes.func.isRequired,
 	itemName: PropTypes.string.isRequired,
-	items: PropTypes.array.isRequired,
+	items: PropTypes.object.isRequired,
 	EditItemForm: PropTypes.func.isRequired
 };
 

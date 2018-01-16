@@ -1,51 +1,70 @@
 {
   "name": "powerplant",
   "version": "1.0.0",
-  "description": "Make the garden planning process easier and more efficient",
+  "description": "powerplant is an open source software that allows anyone planning a garden to utilize companion planting and other permaculture practices. It provides intelligent suggestions to help the gardener by advising the best planting schedules and combinations of crops to maximize the garden's yield.",
   "main": "server.js",
   "scripts": {
-    "preinstall": "sh ./.git_hooks/_init-hooks-path.sh",
-    "start": "nodemon --watch server --exec babel-node -- server/server.js",
-    "test": "mocha --compilers js:babel-register",
+    "build_server": "babel cli -d .build/pp-$npm_package_version/cli && babel server -d .build/pp-$npm_package_version/server && babel shared -d .build/pp-$npm_package_version/shared",
+    "build_client": "babel webpack.config.babel.js -o webpack.config.js && webpack --config webpack.config.js",
+    "cli": "babel-node -- cli/cli.js",
+    "cli_production": "node -- cli/cli.js",
+    "doc": "jsdoc -u ./docs/tutorials -c ./conf.json -t ./node_modules/ink-docstrap/template -R ./docs/dev_docs.markdown",
     "lint": "eslint cli client server shared test",
-    "pretty": "find client server shared test cli -type f -name '*.js' | xargs ./node_modules/.bin/prettier --write",
     "migrate": "npm run cli -- remove crop-relationship && npm run cli -- remove crop && npm run cli -- push-firebase",
+    "migrate_production": "npm run cli_production -- remove crop-relationship && npm run cli_production -- remove crop && npm run cli_production -- push-firebase",
     "mocha-spec": "mocha --compilers js:babel-register --reporter markdown > docs/spec.md",
     "mongo": "docker run -p 27017:27017 --name pp_main -d mongo",
-    "doc": "jsdoc -u ./docs/tutorials -c ./conf.json -t ./node_modules/ink-docstrap/template -R ./docs/dev_docs.markdown",
-    "cli": "babel-node -- cli/cli.js"
-  },
-  "repository": {
-    "type": "git",
-    "url": "git+https://github.com/Ecohackerfarm/powerplant.git"
+    "pretty": "find client server shared test cli -type f -name '*.js' | xargs ./node_modules/.bin/prettier --write",
+    "prerelease" : "npm version patch",
+    "production": "node ./server/server.js",
+    "postrelease" : "tar cfvz .build/pp-$npm_package_version.tar.gz .build/pp-$npm_package_version",
+    "release": "rm -R .build/pp-$npm_package_version && mkdir .build/pp-$npm_package_version && npm run build_client && npm run build_server && cp -r dist .build/pp-$npm_package_version && cp LICENSE README.md package.json secrets.example.js .build/pp-$npm_package_version/",
+    "setup_dev": "test -f ./.git_hooks/_init-hooks-path.sh && test -d ./.git && sh ./.git_hooks/_init-hooks-path.sh",
+    "start": "set NODE_ENV=development && nodemon --watch server --exec babel-node --inspect -- server/server.js",
+    "test": "mocha --compilers js:babel-register"
+
   },
   "author": "Simon Ever-Hale",
-  "license": "ISC",
-  "bugs": {
-    "url": "https://github.com/Ecohackerfarm/powerplant/issues"
+  "contributors" : [
+    {
+      "name" : "Franz Gatzke",
+      "email" : "franz@ecohackerfarm.org"
+    },
+    {
+      "name" : "Petteri Pitkänen",
+      "email" : "petteri@ecohackerfarm.org"
+    },
+    {
+      "name" : "Aimee Fenech",
+      "email" : "aimee@ecohackerfarm.org"
+    },
+    {
+      "name" : "Jordi Sorribes"
+    }
+  ],
+  "license": "MIT",
+  "bugs": "https://work.ecohackerfarm.org/projects/companion-plant-planner",
+  "homepage": "https://wiki.ecohackerfarm.org/powerplant:start",
+  "repository" : {
+    "type" : "git",
+    "url" : "https://github.com/Ecohackerfarm/powerplant.git"
   },
-  "homepage": "https://github.com/Ecohackerfarm/powerplant#readme",
   "dependencies": {
     "async-task-schedulers": "^0.0.9",
     "axios": "^0.16.2",
     "babel-polyfill": "^6.24.1",
     "bcrypt": "^1.0.2",
     "body-parser": "^1.17.2",
-    "btoa": "^1.1.2",
-    "chai": "^4.0.2",
     "express": "^4.15.3",
     "firebase": "^4.1.2",
     "firebase-admin": "^5.0.0",
-    "fs": "0.0.1-security",
     "jsonwebtoken": "^7.4.1",
     "jwt-decode": "^2.2.0",
     "lodash": "^4.17.4",
     "lodash.isempty": "^4.4.0",
-    "mocha": "^3.4.2",
-    "mongoose": "^4.11.13",
-    "mongoose-exists": "^0.1.0",
-    "mongoose-idexists": "^1.0.5",
+    "mongoose": "4.x.x",
     "mongoose-unique-validator": "^1.0.5",
+    "mysql2": "^1.4.2",
     "prop-types": "^15.5.10",
     "react": "^15.6.1",
     "react-bootstrap": "^0.31.0",
@@ -55,9 +74,9 @@
     "react-router-bootstrap": "^0.24.2",
     "react-router-dom": "^4.1.1",
     "redux": "^3.7.1",
+    "redux-logger": "^3.0.6",
     "redux-persist": "^4.8.2",
     "redux-thunk": "^2.2.0",
-    "supertest": "^3.0.0",
     "validator": "^8.0.0"
   },
   "devDependencies": {
@@ -70,6 +89,7 @@
     "babel-preset-react": "^6.24.1",
     "babel-register": "^6.24.1",
     "babel-root-slash-import": "^1.1.0",
+    "chai": "^4.0.2",
     "css-loader": "^0.28.4",
     "eslint": "^3.19.0",
     "eslint-config-react-app": "^1.0.5",
@@ -83,17 +103,15 @@
     "jsdoc": "^3.5.3",
     "jsdoc-memberof-namespace": "^2.1.0",
     "json-loader": "^0.5.4",
+    "mocha": "^3.4.2",
     "mongoose-explain": "^0.1.1",
-    "mysql2": "^1.4.2",
     "node-sass": "^4.5.3",
     "nodemon": "^1.11.0",
     "prettier": "1.9.1",
     "react-hot-loader": "^1.3.1",
-    "redux-logger": "^3.0.6",
-    "request": "^2.83.0",
-    "request-promise": "^4.2.2",
     "sass-loader": "^6.0.6",
     "style-loader": "^0.18.2",
+    "supertest": "^3.0.0",
     "webpack": "^3.1.0",
     "webpack-dev-middleware": "^1.11.0",
     "webpack-hot-middleware": "^2.18.2"

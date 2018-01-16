@@ -6,7 +6,7 @@ import Location from '/server/models/location';
 import User from '/server/models/user';
 import { user as testUser } from './users';
 import jwt from 'jsonwebtoken';
-import jwtSecret from '/jwt-secret';
+import { JWT_SECRET } from '/secrets';
 
 const rootUrl = '/api/locations';
 const jsonType = 'application/json; charset=utf-8';
@@ -29,7 +29,7 @@ before(() => {
 					username: testUser.username,
 					email: testUser.email
 				},
-				jwtSecret
+				JWT_SECRET
 			);
 			return userId;
 		})
@@ -108,7 +108,7 @@ describe(rootUrl + '/:locId', () => {
 					username: 'this is a made up username',
 					email: 'this is a made up email'
 				},
-				jwtSecret
+				JWT_SECRET
 			);
 			return request
 				.get(rootUrl + '/' + locId)

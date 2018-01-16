@@ -1,7 +1,7 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
-import { setTitleRequest } from '/client/actions/headerActions';
+import { setTitleRequest } from '../../actions/headerActions';
 
 // for over md: show in header
 // for under md: hide in header, show inline

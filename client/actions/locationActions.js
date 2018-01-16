@@ -5,7 +5,6 @@
 
 import axios from 'axios';
 import { editLocation, addLocation, deleteLocation, setLocations } from '.';
-import { store } from '/client/index';
 import { simpleAuthCheckedRequest } from './actionHelpers';
 
 /**
@@ -34,11 +33,11 @@ export const getLocationsRequest = id => {
  * @return {Promise} resolves to a {@link client.actions.responseObject}
  */
 export const saveLocationRequest = location => {
-	return dispatch => {
-		if (store.getState().auth.isAuthenticated) {
+	return (dispatch,getState) => {
+		if (getState().auth.isAuthenticated) {
 			return axios.post('/api/locations', location).then(res => {
 				if (res.status === 201) {
-					dispatch(addLocation(res.data));
+					dispatch(addLocation({ [res.data._id] : res.data }));
 					return { success: true };
 				} else {
 					return {
@@ -52,10 +51,17 @@ export const saveLocationRequest = location => {
 			// in LocationItem we specified that locations need ids
 			// we should make this look the same as a mongodb location item
 			// user is not authenticated so we will just save it to redux
-			// returning a promise so it looks the same to the component that called it as if it had been a server request
+			// returning a promise so it looks the same to the component that
+			// called it as if it had been a server request
 			return new Promise(resolve => {
-				location._id = store.getState().locations.length.toString();
-				dispatch(addLocation(location));
+				const currentLocations = getState().locations;
+				let newId = 0;
+				//test if id is not already taken
+				while(currentLocations[newId] !== undefined){
+					newId++;
+				}
+				location._id = newId.toString();
+				dispatch(addLocation({ [location._id] : location }));
 				resolve({
 					success: true
 				});
@@ -75,8 +81,10 @@ export const saveLocationRequest = location => {
  */
 export const saveAllLocationsRequest = locations => {
 	return dispatch => {
-		const oldLocations = locations.slice(); // make a copy
-		const requests = locations.map(loc => axios.post('/api/locations', loc));
+		const oldLocations = {...locations}; // make a copy
+		const requests = Object.entries(locations).map(
+			({key, loc}) => axios.post('/api/locations', loc)
+		);
 		return Promise.all(requests).then(results => {
 			let success = true;
 			results.forEach((res, i) => {

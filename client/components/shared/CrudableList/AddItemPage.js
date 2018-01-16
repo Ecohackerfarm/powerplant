@@ -7,6 +7,7 @@ import { Grid, Row, Col } from 'react-bootstrap';
  * @namespace AddItemPage
  * @memberof client.components.shared.CrudableList
  */
+
 class AddItemPage extends React.Component {
 	static propTypes = {
 		onSubmit: PropTypes.func.isRequired,

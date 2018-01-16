@@ -4,7 +4,7 @@ import { Redirect } from 'react-router-dom';
 import PropTypes from 'prop-types';
 import LoginForm from './LoginForm';
 import { Grid, Row, Col } from 'react-bootstrap';
-import { userLoginRequest } from '/client/actions/userActions';
+import { userLoginRequest } from '../../actions/userActions';
 import SetHeaderTitle from '../shared/SetHeaderTitle';
 
 class Login extends React.Component {

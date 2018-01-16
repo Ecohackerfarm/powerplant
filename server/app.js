@@ -7,14 +7,11 @@
 import express from 'express';
 import path from 'path';
 import bodyParser from 'body-parser';
-import apiRouter from '/server/api';
-import webpack from 'webpack';
-import webpackMiddleware from 'webpack-dev-middleware';
-import webpackHotWiddleware from 'webpack-hot-middleware';
-import webpackConfig from '../webpack.config.dev';
-import { Processor } from '/server/processor';
+import apiRouter from './api';
+import { Processor } from './processor';
 
-export const databaseUrl = 'mongodb://localhost/pp_main';
+
+
 
 export let processor = new Processor();
 
@@ -26,24 +23,31 @@ const app = express();
 
 /**
  * Sets up the express application with all middleware
- * @param  {Boolean} useWebpack whether or not webpack should be used to bundle the client files. Generally should only be false when testing, and server-client communication is not necessary
+ * @param  {Boolean} development whether or not development enviroment for e.g. webpack is enabled,
  * @return {Object} the express app
  */
-export const buildApp = useWebpack => {
+export const buildApp = (development = false) => {
 	const DIST_DIR = path.join(__dirname, '../dist');
-	// set the static files location /public/img will be /img for users
+	// set the static files location /dist/images will be /images for users
 	app.use(express.static(DIST_DIR));
 
-	if (useWebpack) {
-		const compiler = webpack(webpackConfig);
+	if (development) {
+		const webpack = require('webpack');
+		const webpackDevMiddleware = require('webpack-dev-middleware');
+		const webpackHotMiddleware = require('webpack-hot-middleware');
+		const webpackDevConfig = require ('../webpack.config.dev');
+
+		const compiler = webpack(webpackDevConfig);
+		//Development only
 		app.use(
-			webpackMiddleware(compiler, {
+			webpackDevMiddleware(compiler, {
 				hot: true,
-				publicPath: webpackConfig.output.publicPath,
+				publicPath: webpackDevConfig.output.publicPath,
 				noInfo: true
 			})
 		);
-		app.use(webpackHotWiddleware(compiler));
+		//Development only
+		app.use(webpackHotMiddleware(compiler));
 	}
 
 	app.use(

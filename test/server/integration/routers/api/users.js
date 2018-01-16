@@ -4,7 +4,7 @@ import { sendForm } from '../routerHelpers';
 import supertest from 'supertest';
 import User from '/server/models/user';
 import jwt from 'jsonwebtoken';
-import jwtSecret from '/jwt-secret';
+import { JWT_SECRET } from '/secret';
 
 const rootUrl = '/api/users';
 const jsonType = 'application/json; charset=utf-8';
@@ -25,7 +25,7 @@ function buildToken(id) {
 			username: user.username,
 			email: user.email
 		},
-		jwtSecret
+		JWT_SECRET
 	);
 }
 

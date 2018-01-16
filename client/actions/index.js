@@ -50,10 +50,10 @@ export function setTitle(title) {
  * @param {server.models.Location} location location to be added
  * @return {client.actions.addLocationAction}
  */
-export const addLocation = location => {
+export const addLocation = locationEntry => {
 	return {
 		type: types.ADD_LOCATION,
-		location
+		locationEntry
 	};
 };
 

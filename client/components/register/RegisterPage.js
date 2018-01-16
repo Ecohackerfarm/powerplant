@@ -3,7 +3,7 @@ import { Redirect } from 'react-router-dom';
 import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
 import { Grid, Row, Col } from 'react-bootstrap';
-import { userSignupRequest } from '/client/actions/userActions';
+import { userSignupRequest } from '../../actions/userActions';
 import SetHeaderTitle from '../shared/SetHeaderTitle';
 
 import RegisterForm from './RegisterForm';

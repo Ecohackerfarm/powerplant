@@ -3,26 +3,60 @@ import {
 	SET_LOCATIONS,
 	EDIT_LOCATION,
 	DELETE_LOCATION,
-	LOGOUT
-} from '/client/actions/types';
+	EDIT_BED,
+	ADD_BED,
+	DELETE_BED,
+	LOGOUT,
+} from '../actions/types';
 
-export const defaultState = [];
+const defaultState = {};
 
 export const locations = (state = defaultState, action) => {
+	let newState;
 	switch (action.type) {
 		case SET_LOCATIONS:
 			return action.locations;
 		case ADD_LOCATION:
-			return state.concat(action.location);
+			return {
+				...state,
+				...action.locationEntry
+			};
 		case EDIT_LOCATION: {
-			return state.map(
-				loc =>
-					loc._id === action.id ? Object.assign({}, loc, action.changes) : loc
-			);
+			return {
+				...state,
+				//take old location and override changes
+				[action.id] : {
+					...state[action.id],
+					...action.changes
+				}
+			};
 		}
 		case DELETE_LOCATION: {
-			return state.filter(loc => loc._id !== action.id);
+			newState = {...state};
+			delete newState[action.id];
+			return newState;
 		}
+		case ADD_BED:
+		  newState = { ...state };
+		  //add beds in newState in the specified location
+		  newState[action.locationId].beds = {
+		  	...newState[action.locationId].beds,
+		  	...action.bedEntry
+		  }
+			return newState;
+		case EDIT_BED:
+		  newState = { ...state };
+		  //add beds in newState in the specified location
+		  newState[action.locationId].beds[action.bedId] = {
+		  	...newState[action.locationId].beds[action.bedId],
+		  	...action.changes
+		  }
+			return newState;
+		case DELETE_BED:
+		  newState = { ...state };
+		  //add beds in newState in the specified location
+		  delete newState[action.locationId].beds[action.bedId];
+			return newState;
 		case LOGOUT:
 			return defaultState;
 		default:

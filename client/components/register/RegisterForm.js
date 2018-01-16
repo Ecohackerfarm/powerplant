@@ -1,6 +1,6 @@
 import React from 'react';
 import PropTypes from 'prop-types';
-import validateUser from '/shared/validation/userValidation';
+import validateUser from '../../../shared/validation/userValidation';
 import { Button, FormGroup, HelpBlock } from 'react-bootstrap';
 import TextFieldGroup from '../shared/TextFieldGroup';
 

@@ -1,4 +1,4 @@
-import * as types from '/client/actions/types';
+import * as types from '../actions/types';
 
 /**
  * @typedef client.reducers.authdefaultState {Object}

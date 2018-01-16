@@ -25,9 +25,7 @@ NodeJS, Docker (with mongo db)
 4.  Clone the [git
     repository](https://github.com/Ecohackerfarm/powerplant.git)
 5. run `npm install` to get all packages installed
-6. generate a private key and export it as a string in
-   `/jwt-secret.js`
-   ex: `export default 'random-string-comes-here'`
+6. generate a private key and and set it for JWT_SECRET and get an Google Geocode API and set is as GOOGLE_GEOCODE_API_KEY into secret.js(see secrets.example.js)
 7.  Start the Docker image by running `npm run mongo`
 8.  Run 'npm start'
 9.  Run the Firebase data migration by running `npm run migrate`
