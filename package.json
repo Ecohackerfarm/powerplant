@@ -1,7 +1,7 @@
 {
   "name": "powerplant",
   "version": "1.0.0",
-  "description": "powerplant is a open source software that allows anyone planning a garden to utilize companion planting and other permaculture practices. It provides intelligent suggestions to help the gardener by advising the best planting schedules and combinations of crops to maximize the garden's yield.",
+  "description": "powerplant is an open source software that allows anyone planning a garden to utilize companion planting and other permaculture practices. It provides intelligent suggestions to help the gardener by advising the best planting schedules and combinations of crops to maximize the garden's yield.",
   "main": "server.js",
   "scripts": {
     "build_server": "babel cli -d .build/pp-$npm_package_version/cli && babel server -d .build/pp-$npm_package_version/server && babel shared -d .build/pp-$npm_package_version/shared",
@@ -19,10 +19,6 @@
     "setup_dev": "test -f ./.git_hooks/_init-hooks-path.sh && test -d ./.git && sh ./.git_hooks/_init-hooks-path.sh",
     "start": "set NODE_ENV=development && nodemon --watch server --exec babel-node --inspect -- server/server.js",
     "test": "mocha --compilers js:babel-register"
-  },
-  "repository": {
-    "type": "git",
-    "url": "https://github.com/Ecohackerfarm/powerplant.git"
   },
   "author": "Simon Ever-Hale",
   "contributors" : [
@@ -64,6 +60,7 @@
     "lodash.isempty": "^4.4.0",
     "mongoose": "4.x.x",
     "mongoose-unique-validator": "^1.0.5",
+    "mysql2": "^1.4.2",
     "prop-types": "^15.5.10",
     "react": "^15.6.1",
     "react-bootstrap": "^0.31.0",
@@ -104,7 +101,6 @@
     "json-loader": "^0.5.4",
     "mocha": "^3.4.2",
     "mongoose-explain": "^0.1.1",
-    "mysql2": "^1.4.2",
     "node-sass": "^4.5.3",
     "nodemon": "^1.11.0",
     "prettier": "1.9.1",
