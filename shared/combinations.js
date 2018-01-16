@@ -1,4 +1,9 @@
 /**
+ * @namespace combinations
+ * @memberof shared
+ */
+
+/**
  * @param {Array} combination
  * @param {Object} element
  * @return {Boolean}

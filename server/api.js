@@ -1,3 +1,8 @@
+/**
+ * @namespace api
+ * @memberof server
+ */
+
 import express from 'express';
 import {
 	documentGet,

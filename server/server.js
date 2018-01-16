@@ -1,3 +1,8 @@
+/**
+ * @namespace server
+ * @memberof server
+ */
+
 import mongoose from 'mongoose';
 import { buildApp } from './app';
 import {
@@ -10,20 +15,25 @@ import {
 	PP_PORT
 } from '../secrets.js';
 
+/**
+ * @return {String}
+ */
 const getDatabaseURL = () => {
 	let urlString = DATABASE_PROTOCOLL;
 	//Add Username and P
-	if (DATABASE_USERNAME.length>0 && DATABASE_PASSWORD.length>0)
-		urlString+=DATABASE_USERNAME+':'+DATABASE_PASSWORD+'@';
-	urlString+=DATABASE_HOST;
-	if (DATABASE_PORT.length>0)
-		urlString+=':'+DATABASE_PORT;
-	urlString+='/'+DATABASE_DB;
+	if (DATABASE_USERNAME.length > 0 && DATABASE_PASSWORD.length > 0) {
+		urlString += DATABASE_USERNAME + ':' + DATABASE_PASSWORD + '@';
+	}
+	urlString += DATABASE_HOST;
+	if (DATABASE_PORT.length > 0) {
+		urlString += ':' + DATABASE_PORT;
+	}
+	urlString += '/' + DATABASE_DB;
 	return urlString;
 }
 
 
-if (process.env.DATABASEURL){
+if (process.env.DATABASEURL) {
   mongoose.connect( process.env.DATABASEURL, { useMongoClient: true });
 } else {
   mongoose.connect( getDatabaseURL(), { useMongoClient: true });

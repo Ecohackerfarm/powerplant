@@ -1,3 +1,8 @@
+/**
+ * @namespace api-client
+ * @memberof cli
+ */
+
 import {
 	AsyncObject,
 	schedulerFunction,

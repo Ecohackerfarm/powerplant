@@ -1,3 +1,8 @@
+/**
+ * @namespace cli
+ * @memberof cli
+ */
+
 import mysql from 'mysql2/promise';
 import firebase from 'firebase';
 import { ApiClient } from './api-client.js';

@@ -1,0 +1,18 @@
+{
+  "source": {
+    "include": ["server", "shared", "client", "cli"]
+  },
+  "plugins": [
+    "node_modules/jsdoc-memberof-namespace"
+  ],
+  "opts": {
+    "recurse": true,
+    "destination": "docs/generated"
+  },
+  "templates": {
+    "systemName"            : "powerplant",
+    "navType"               : "vertical",
+    "theme"                 : "flatly",
+    "dateFormat"            : "dddd, MMMM Do YYYY, h:mm:ss a"
+  }
+}

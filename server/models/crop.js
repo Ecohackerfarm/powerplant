@@ -1,5 +1,12 @@
 import mongoose from 'mongoose';
 
+/**
+ * @constructor
+ * @alias Crop
+ * @param {Object} crop
+ * @param {String} crop.commonName
+ * @param {String} crop.binomialName
+ */
 const cropSchema = new mongoose.Schema({
 	commonName: { type: String },
 	binomialName: { type: String, index: true, required: true }

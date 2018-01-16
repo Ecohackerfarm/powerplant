@@ -1,3 +1,8 @@
+/**
+ * @namespace middleware
+ * @memberof server
+ */
+
 import { processor } from './app';
 import {
 	VALIDATION_EXCEPTION,
