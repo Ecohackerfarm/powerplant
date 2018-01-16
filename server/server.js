@@ -23,9 +23,9 @@ const getDatabaseURL = () => {
 
 
 if (process.env.DATABASEURL){
-  mongoose.connect( process.env.DATABASEURL );
+  mongoose.connect( process.env.DATABASEURL, { useMongoClient: true });
 } else {
-  mongoose.connect( getDatabaseURL() );
+  mongoose.connect( getDatabaseURL(), { useMongoClient: true });
 }
 
 mongoose.Promise = global.Promise;
