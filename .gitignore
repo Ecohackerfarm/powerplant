@@ -5,3 +5,5 @@ npm-debug.log
 .idea/*
 .build/*
 secrets.js
+/webpack.config.js
+/dist/bundle.js
