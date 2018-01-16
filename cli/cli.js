@@ -1,7 +1,7 @@
-import url from 'url';
 import mysql from 'mysql2/promise';
 import firebase from 'firebase';
 import { ApiClient } from './api-client.js';
+import { PP_PORT, API_HOST } from '../secrets.js'
 
 /**
  * Print a message to console.
@@ -358,8 +358,8 @@ async function pushFirebase() {
  */
 let verbose = false;
 let powerplantConfig = {
-	host: 'localhost',
-	port: 8080
+	host: API_HOST,
+	port: PP_PORT
 };
 
 /*
