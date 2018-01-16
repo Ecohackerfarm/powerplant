@@ -6,7 +6,8 @@ import {
 	DATABASE_PROTOCOLL,
 	DATABASE_HOST,
 	DATABASE_PORT,
-	DATABASE_DB
+	DATABASE_DB,
+	PP_PORT
 } from '../secrets.js';
 
 const getDatabaseURL = () => {
@@ -30,7 +31,7 @@ if (process.env.DATABASEURL){
 
 mongoose.Promise = global.Promise;
 
-const port = process.env.PORT || 8080;
+const port = process.env.PORT || PP_PORT;
 const localhostArgs = ['127.0.0.1',511];
 
 const serverStarted = (event) => {
