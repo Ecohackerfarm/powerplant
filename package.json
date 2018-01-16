@@ -8,7 +8,7 @@
     "build_client": "babel webpack.config.babel.js -o webpack.config.js && webpack --config webpack.config.js",
     "cli": "babel-node -- cli/cli.js",
     "cli_production": "node -- cli/cli.js",
-    "doc": "jsdoc -u ./docs/tutorials -c ./conf.json -t ./node_modules/ink-docstrap/template -R ./docs/dev_docs.markdown",
+    "doc": "jsdoc -u ./docs/tutorials -c ./jsdoc.config.json -t ./node_modules/ink-docstrap/template -R ./docs/dev_docs.md",
     "lint": "eslint cli client server shared test",
     "migrate": "npm run cli -- remove crop-relationship && npm run cli -- remove crop && npm run cli -- push-firebase",
     "migrate_production": "npm run cli_production -- remove crop-relationship && npm run cli_production -- remove crop && npm run cli_production -- push-firebase",

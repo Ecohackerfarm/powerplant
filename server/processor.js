@@ -1,3 +1,8 @@
+/**
+ * @namespace processor
+ * @memberof server
+ */
+
 import { AsyncObject, ReadWriteScheduler } from 'async-task-schedulers';
 import mongoose from 'mongoose';
 import jwt from 'jsonwebtoken';
@@ -10,6 +15,11 @@ import validateUser from '../shared/validation/userValidation';
 import validateCredentials from '../shared/validation/loginValidation';
 import { Combinations } from '../shared/combinations.js';
 
+/**
+ * Base class for exceptions that are thrown by Processor.
+ * 
+ * @extends Error
+ */
 class ProcessorException extends Error {
 	/**
 	 * @param {Number} httpStatusCode
