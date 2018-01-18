@@ -5,10 +5,9 @@ Optimize your garden plan, and learn about permaculture in the process! powerpla
 Status
 ======
 
-Currently in very early stage. A good amount of research and specification work
-has been done but basic functionalities have not been implemented yet.
+Currently in development. A good amount of research and specification work has been done the basic functionalities have been implemented and the minimum viable product can be used [here.](http://powerplant.ecohackerfarm.org/)
 
-[Read more about it.](https://wiki.ecohackerfarm.org/companion_planting)
+[Read more about it.](https://wiki.ecohackerfarm.org/powerplant:start)
 
 Setup
 =====
