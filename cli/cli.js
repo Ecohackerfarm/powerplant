@@ -225,7 +225,7 @@ async function doRemove() {
 }
 
 /**
- *
+ * Get crops by name.
  */
 async function doGetCropsByName() {
 	const client = new ApiClient(powerplantConfig.host, powerplantConfig.port);
@@ -240,7 +240,7 @@ async function doGetCropsByName() {
 }
 
 /**
- * {beans,cabbage,peas},apple
+ * Get crop groups.
  */
 async function doGetCropGroups() {
 	const client = new ApiClient(powerplantConfig.host, powerplantConfig.port);
@@ -252,7 +252,7 @@ async function doGetCropGroups() {
 }
 
 /**
- *
+ * Get compatible crops.
  */
 async function doGetCompatibleCrops() {
 	const client = new ApiClient(powerplantConfig.host, powerplantConfig.port);

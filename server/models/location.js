@@ -9,15 +9,14 @@ const bedSchema = new Schema({
 });
 
 /**
- * Mongoose location model
  * @constructor
  * @alias Location
  * @param {Object} location
- * @param {(ObjectId|server.models.User)} location.user id of the user owning this location
- * @param {Object} [location.loc] the geographic location details
- * @param {String} [location.loc.type="Point"] location type, likely never needs to be anything but the default
- * @param {Number[]} location.loc.coordinates an array of two coordinates in the order [lng, lat]
- * @param {String} location.loc.address the address of the location
+ * @param {(ObjectId|server.models.User)} location.user ID of the user owning this location
+ * @param {Object} [location.loc] Geographic location details
+ * @param {String} [location.loc.type="Point"] Location type, likely never needs to be anything but the default
+ * @param {Number[]} location.loc.coordinates Array of two coordinates in the order [lng, lat]
+ * @param {String} location.loc.address Address of the location
  */
 const locationSchema = new Schema({
 	user: { type: ObjectId, index: true, required: true },
@@ -30,16 +29,17 @@ const locationSchema = new Schema({
 	beds: [bedSchema]
 });
 
-// we can index gardens by location on a 2d sphere
-// so we can select gardens in ranges of coordinates
-// could be cool for visualizations
-// this also allows for queries on distances
+/*
+ * MongoDB has 2dsphere index that allows quick queries based on geographic
+ * proximity. TODO: For what is this useful in powerplant?
+ */
 locationSchema.index({
 	loc: '2dsphere'
 });
 
-// need this pre-save hook here because the type is required for
-// a 2dsphere index but i don't want the user to have to bother
+/*
+ * Type is required for 2dsphere index. It should always be 'Point'.
+ */
 locationSchema.pre('save', function(next) {
 	this.loc.type = 'Point';
 	next();

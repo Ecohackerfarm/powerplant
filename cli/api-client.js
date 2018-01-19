@@ -63,6 +63,8 @@ class ApiClient extends AsyncObject {
 	}
 
 	/**
+	 * Set base URL of powerplant server.
+	 * 
 	 * @param {String} host
 	 * @param {Number} port
 	 */
@@ -74,6 +76,8 @@ class ApiClient extends AsyncObject {
 	}
 
 	/**
+	 * Set credentials that are used when logging in.
+	 * 
 	 * @param {String} username
 	 * @param {String} password
 	 */
@@ -83,7 +87,8 @@ class ApiClient extends AsyncObject {
 	}
 
 	/**
-	 *
+	 * Create the internal axios instance that is used for making HTTP
+	 * requests.
 	 */
 	createAxiosInstance() {
 		const portString = this.port ? ':' + this.port : '';
@@ -113,6 +118,10 @@ class ApiClient extends AsyncObject {
 	}
 
 	/**
+	 * When getDocuments() is called, before actually executing the call,
+	 * schedule each individual document to be fetched in parallel by
+	 * getDocument() calls.
+	 * 
 	 * @param {AsyncFunction} method
 	 * @param {String} path
 	 * @param {String[]} ids
@@ -146,8 +155,10 @@ class ApiClient extends AsyncObject {
 	}
 
 	/**
+	 * Check if the given method requires to be logged in.
+	 * 
 	 * @param {AsyncFunction} method
-	 * @return {Boolean} True if the method requires login
+	 * @return {Boolean}
 	 */
 	requiresLogin(method) {
 		const methodNames = [this.getUsers.name];
@@ -155,6 +166,9 @@ class ApiClient extends AsyncObject {
 	}
 
 	/**
+	 * Schedule login() to be called (if not already logged in) before
+	 * actually executing the method call.
+	 * 
 	 * @param {AsyncFunction} method
 	 * @param {Object[]} parameters
 	 */
@@ -170,6 +184,8 @@ class ApiClient extends AsyncObject {
 	}
 
 	/**
+	 * Cache document.
+	 * 
 	 * @param {String} path
 	 * @param {String} id
 	 * @param {Object} document
@@ -179,6 +195,8 @@ class ApiClient extends AsyncObject {
 	}
 
 	/**
+	 * Get document from server and cache it.
+	 * 
 	 * @param {String} path
 	 * @param {String} id
 	 */
@@ -188,6 +206,8 @@ class ApiClient extends AsyncObject {
 	}
 
 	/**
+	 * Update document to server.
+	 * 
 	 * @param {String} path
 	 * @param {String} id
 	 * @param {Object} document
@@ -197,6 +217,8 @@ class ApiClient extends AsyncObject {
 	}
 
 	/**
+	 * Add document to server.
+	 * 
 	 * @param {String} path
 	 * @param {Object} document
 	 */
@@ -206,6 +228,8 @@ class ApiClient extends AsyncObject {
 	}
 
 	/**
+	 * Remove document from server.
+	 * 
 	 * @param {String} path
 	 * @param {String} id
 	 */
@@ -214,14 +238,19 @@ class ApiClient extends AsyncObject {
 	}
 
 	/**
+	 * Get array of documents.
+	 * 
 	 * @param {String} path
 	 * @param {String[]} ids
+	 * @return {Object[]}
 	 */
 	async getDocuments(path, ids) {
 		return ids.map(id => this.documents[path][id]);
 	}
 
 	/**
+	 * Update array of documents.
+	 * 
 	 * @param {String} path
 	 * @param {String[]} ids
 	 * @param {Object[]} documents
@@ -229,21 +258,27 @@ class ApiClient extends AsyncObject {
 	async setDocuments(path, ids, documents) {}
 
 	/**
+	 * Add array of documents.
 	 *
 	 * @param {String} path
 	 * @param {Object[]} documents
+	 * @return {Object[]} Documents with IDs
 	 */
 	async addDocuments(path, documents) {
 		return documents;
 	}
 
 	/**
+	 * Remove array of documents.
+	 * 
 	 * @param {String} path
 	 * @param {String[]} ids
 	 */
 	async removeDocuments(path, ids) {}
 
 	/**
+	 * Get array of User documents.
+	 * 
 	 * @param {String[]} ids
 	 */
 	async getUsers(ids) {
@@ -251,6 +286,8 @@ class ApiClient extends AsyncObject {
 	}
 
 	/**
+	 * Get array of Crop documents.
+	 * 
 	 * @param {String[]} ids
 	 */
 	async getCrops(ids) {
@@ -258,6 +295,8 @@ class ApiClient extends AsyncObject {
 	}
 
 	/**
+	 * Get array of CropRelationship documents.
+	 * 
 	 * @param {String[]} ids
 	 */
 	async getCropRelationships(ids) {
@@ -265,39 +304,47 @@ class ApiClient extends AsyncObject {
 	}
 
 	/**
-	 * @param {Object} idMapDocument
+	 * Update set of User documents.
+	 * 
+	 * @param {Object} idToDocument
 	 */
-	async setUsers(idMapDocument) {
+	async setUsers(idToDocument) {
 		return await this.setDocuments(
 			'users',
-			Object.keys(idMapDocument),
-			Object.values(idMapDocument)
+			Object.keys(idToDocument),
+			Object.values(idToDocument)
 		);
 	}
 
 	/**
-	 * @param {Object} idMapDocument
+	 * Update set of Crop documents.
+	 * 
+	 * @param {Object} idToDocument
 	 */
-	async setCrops(idMapDocument) {
+	async setCrops(idToDocument) {
 		return await this.setDocuments(
 			'crops',
-			Object.keys(idMapDocument),
-			Object.values(idMapDocument)
+			Object.keys(idToDocument),
+			Object.values(idToDocument)
 		);
 	}
 
 	/**
-	 * @param {Object} idMapDocument
+	 * Update set of CropRelationship documents.
+	 * 
+	 * @param {Object} idToDocument
 	 */
-	async setCropRelationships(idMapDocument) {
+	async setCropRelationships(idToDocument) {
 		return await this.setDocuments(
 			'crop-relationships',
-			Object.keys(idMapDocument),
-			Object.values(idMapDocument)
+			Object.keys(idToDocument),
+			Object.values(idToDocument)
 		);
 	}
 
 	/**
+	 * Add array of User documents.
+	 * 
 	 * @param {Object[]} documents
 	 */
 	async addUsers(documents) {
@@ -305,6 +352,8 @@ class ApiClient extends AsyncObject {
 	}
 
 	/**
+	 * Add array of Crop documents.
+	 * 
 	 * @param {Object[]} documents
 	 */
 	async addCrops(documents) {
@@ -312,6 +361,8 @@ class ApiClient extends AsyncObject {
 	}
 
 	/**
+	 * Add array of CropRelationship documents.
+	 * 
 	 * @param {Object} documents
 	 */
 	async addCropRelationships(documents) {
@@ -319,6 +370,8 @@ class ApiClient extends AsyncObject {
 	}
 
 	/**
+	 * Remove set of User documents.
+	 * 
 	 * @param {String[]} ids
 	 */
 	async removeUsers(ids) {
@@ -326,6 +379,8 @@ class ApiClient extends AsyncObject {
 	}
 
 	/**
+	 * Remove set of Crop documents.
+	 * 
 	 * @param {String[]} ids
 	 */
 	async removeCrops(ids) {
@@ -333,6 +388,8 @@ class ApiClient extends AsyncObject {
 	}
 
 	/**
+	 * Remove set of CropRelationship documents.
+	 * 
 	 * @param {String[]} ids
 	 */
 	async removeCropRelationships(ids) {
@@ -340,6 +397,8 @@ class ApiClient extends AsyncObject {
 	}
 
 	/**
+	 * Get crops whose name matches the given regular expression.
+	 * 
 	 * @param {String} name
 	 * @param {Number} index
 	 * @param {Number} length
@@ -353,6 +412,8 @@ class ApiClient extends AsyncObject {
 	}
 
 	/**
+	 * Get all CropRelationship documents.
+	 * 
 	 * @return {Object[]}
 	 */
 	async getAllCropRelationships() {
@@ -361,7 +422,10 @@ class ApiClient extends AsyncObject {
 	}
 
 	/**
+	 * Given a set of crops, divide them to groups of compatible crops.
+	 * 
 	 * @param {String[]} ids
+	 * @return {Object[][]}
 	 */
 	async getCropGroups(ids) {
 		const response = await this.axios.post('get-crop-groups', {
@@ -371,7 +435,12 @@ class ApiClient extends AsyncObject {
 	}
 
 	/**
+	 * Given a group of compatible crops, find all other crops that are
+	 * compatible with the group. All crops in the sum set are compatible
+	 * with each other.
+	 * 
 	 * @param {String[]} ids
+	 * @return {Object[]}
 	 */
 	async getCompatibleCrops(ids) {
 		const response = await this.axios.post('get-compatible-crops', {
@@ -381,6 +450,8 @@ class ApiClient extends AsyncObject {
 	}
 
 	/**
+	 * Get IDs from the given documents.
+	 * 
 	 * @param {Object[]} documents
 	 * @return {String[]}
 	 */
@@ -389,7 +460,7 @@ class ApiClient extends AsyncObject {
 	}
 
 	/**
-	 *
+	 * Remove all Crop documents.
 	 */
 	async removeAllCrops() {
 		const crops = await this.getCropsByName('', 0, 0);
@@ -397,7 +468,7 @@ class ApiClient extends AsyncObject {
 	}
 
 	/**
-	 *
+	 * Remove all CropRelationship documents.
 	 */
 	async removeAllCropRelationships() {
 		const relationships = await this.getAllCropRelationships();

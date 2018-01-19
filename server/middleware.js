@@ -1,4 +1,7 @@
 /**
+ * Middleware functions produce responses to HTTP clients by talking with
+ * the Processor object to access database documents and do calculations.
+ * 
  * @namespace middleware
  * @memberof server
  */
@@ -18,6 +21,9 @@ const MAX_NAME_ENTRIES = 200000;
 const MAX_RESPONSE_LENGTH = 200000;
 
 /**
+ * Produce error response for the client by consuming the given exception
+ * that occurred during processing.
+ * 
  * @param {Function} next
  * @param {Error} exception
  */
@@ -40,6 +46,7 @@ function handleError(next, exception) {
  * @param {String} string
  * @param {Number} minimum
  * @param {Number} maximum
+ * @param {Number} defaultValue
  * @return {Number}
  */
 function parseInteger(next, string, minimum, maximum, defaultValue) {
@@ -66,6 +73,11 @@ function parseInteger(next, string, minimum, maximum, defaultValue) {
 }
 
 /**
+ * Requests that need authorization have the authorization token that
+ * originates from the login process. Get the User document that corresponds
+ * to the given authorization token, or throw exception if the authentication
+ * fails.
+ * 
  * @param {Object} req
  * @param {Function} next
  * @return {User}
@@ -85,6 +97,8 @@ async function getAuthenticatedUser(req, next) {
 const authorizedModels = [Location];
 
 /**
+ * Fetch database document with the given id.
+ * 
  * @param {Object} req
  * @param {Object} res
  * @param {Function} next
@@ -117,6 +131,8 @@ export async function documentGet(req, res, next, model) {
 }
 
 /**
+ * Update database document.
+ * 
  * @param {Object} req
  * @param {Object} res
  * @param {Function} next
@@ -151,6 +167,8 @@ export async function documentPut(req, res, next, model) {
 }
 
 /**
+ * Create new document.
+ * 
  * @param {Object} req
  * @param {Object} res
  * @param {Function} next
@@ -177,6 +195,8 @@ export async function documentPost(req, res, next, model) {
 }
 
 /**
+ * Delete a document.
+ * 
  * @param {Object} req
  * @param {Object} res
  * @param {Function} next
@@ -204,14 +224,14 @@ export async function documentDelete(req, res, next, model) {
 }
 
 /**
+ * Get all crop relationships.
+ * 
  * @param {Object} req
  * @param {Object} res
  * @param {Function} next
  */
 export async function getAllCropRelationships(req, res, next) {
 	try {
-		// get all combinations - this is REALLY slow (over 2s) but it's also a huge request
-		// could consider pagination - return 50 results and a link to the next 50
 		const relationships = await processor.getAllDocuments(CropRelationship);
 		res.json(relationships);
 	} catch (exception) {
@@ -220,6 +240,8 @@ export async function getAllCropRelationships(req, res, next) {
 }
 
 /**
+ * Get crops whose name matches the given regular expression.
+ * 
  * @param {Object} req
  * @param {Object} res
  * @param {Function} next
@@ -247,6 +269,9 @@ export async function getCropsByName(req, res, next) {
 }
 
 /**
+ * Given a set of crop IDs, divide the set into groups that contain
+ * compatible crops.
+ * 
  * @param {Object} req
  * @param {Object} res
  * @param {Function} next
@@ -261,6 +286,10 @@ export async function getCropGroups(req, res, next) {
 }
 
 /**
+ * Given a set of crop IDs, find all other crops that are compatible
+ * with the given crops. All crops in the sum group are compatible with
+ * each other.
+ * 
  * @param {Object} req
  * @param {Object} res
  * @param {Function} next
@@ -275,6 +304,8 @@ export async function getCompatibleCrops(req, res, next) {
 }
 
 /**
+ * Get the user's locations.
+ * 
  * @param {Object} req
  * @param {Object} res
  * @param {Function} next
@@ -289,6 +320,9 @@ export async function getLocations(req, res, next) {
 }
 
 /**
+ * Login with username and password, and respond with
+ * authorization token.
+ * 
  * @param {Object} req
  * @param {Object} res
  * @param {Function} next

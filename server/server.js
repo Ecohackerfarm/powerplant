@@ -1,4 +1,6 @@
 /**
+ * Connects to MongoDB and starts the Express application.
+ * 
  * @namespace server
  * @memberof server
  */
@@ -20,7 +22,7 @@ import {
  */
 const getDatabaseURL = () => {
 	let urlString = DATABASE_PROTOCOLL;
-	//Add Username and P
+	// Add username and password
 	if (DATABASE_USERNAME.length > 0 && DATABASE_PASSWORD.length > 0) {
 		urlString += DATABASE_USERNAME + ':' + DATABASE_PASSWORD + '@';
 	}
@@ -34,9 +36,9 @@ const getDatabaseURL = () => {
 
 
 if (process.env.DATABASEURL) {
-  mongoose.connect( process.env.DATABASEURL, { useMongoClient: true });
+  mongoose.connect(process.env.DATABASEURL, { useMongoClient: true });
 } else {
-  mongoose.connect( getDatabaseURL(), { useMongoClient: true });
+  mongoose.connect(getDatabaseURL(), { useMongoClient: true });
 }
 
 mongoose.Promise = global.Promise;
@@ -48,7 +50,7 @@ const serverStarted = (event) => {
 	console.log('Server running on port ' + port);
 }
 
-const app = buildApp( process.env.NODE_ENV === "development" );
+const app = buildApp(process.env.NODE_ENV === "development");
 if (process.env.LOCALHOST_ONLY) {
 	app.listen(
 		port,

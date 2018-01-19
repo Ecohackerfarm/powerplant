@@ -6,10 +6,10 @@ const ObjectId = Schema.Types.ObjectId;
  * @constructor
  * @alias CropRelationship
  * @param {Object} relationship
- * @param {(ObectId|server.models.Crop)} relationship.crop0 id referencing the first crop
- * @param {(ObectId|server.models.Crop)} relationship.crop0 id referencing the second crop
- * @param {Number} relationship.compatibility compatibility score for the relationship
- * @param {String} relationship.description description of the relationship
+ * @param {(ObectId|server.models.Crop)} relationship.crop0 ID referencing the first crop
+ * @param {(ObectId|server.models.Crop)} relationship.crop1 ID referencing the second crop
+ * @param {Number} relationship.compatibility Compatibility score for the relationship
+ * @param {String} relationship.description Description of the relationship
  */
 const cropRelationshipSchema = new Schema({
 	crop0: { type: ObjectId, ref: 'Crop', index: true, required: true },
@@ -19,6 +19,8 @@ const cropRelationshipSchema = new Schema({
 });
 
 /**
+ * Check if the relationship includes the given crop.
+ * 
  * @param {Crop} crop
  * @return {Boolean}
  */
@@ -31,6 +33,7 @@ cropRelationshipSchema.index({ crop0: 1, crop1: 1 }, { unique: true });
 
 /**
  * Custom query for searching for a companionship by crop id or ids.
+ * 
  * @example
  * // finds all companionships involving cropId
  * CropRelationship.find().byCrop(cropId).exec((err, results) => {

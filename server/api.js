@@ -1,4 +1,7 @@
 /**
+ * Constructs the API router that calls middleware functions to handle
+ * requests.
+ * 
  * @namespace api
  * @memberof server
  */
@@ -22,8 +25,9 @@ import Location from './models/location';
 import User from './models/user';
 
 /**
- * Create a new router for a document API node.
+ * Create a new router for low-level document access.
  *
+ * @param {Model} model
  * @return {Router}
  */
 function newDocumentRouter(model) {

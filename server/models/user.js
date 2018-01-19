@@ -8,15 +8,16 @@ const ObjectId = Schema.Types.ObjectId;
 const saltRounds = 11;
 
 /**
- * Mongoose User model
- * When fetched with a query, unless explicitly selecting other fields, only the username and id will be returned
+ * When fetched with a query, unless explicitly selecting other fields, only
+ * the username and id will be returned.
+ * 
  * @constructor
  * @alias User
  * @param {Object} user
  * @param {String} user.username
  * @param {String} user.email
- * @param {String} user.password passed in plaintext, but will be salted and hashed on save
- * @param {(ObjectId[]|server.models.Location[])} [locations] ids of all locations stored under the user
+ * @param {String} user.password Passed in plaintext, but will be salted and hashed on save
+ * @param {(ObjectId[]|server.models.Location[])} [locations] IDs of all locations stored under the user
  */
 const userSchema = new Schema({
 	username: { type: String, index: { unique: true }, required: true },
@@ -33,7 +34,7 @@ const userSchema = new Schema({
 userSchema.pre('save', function(next) {
 	const user = this;
 	if (!user.isModified('password')) {
-		// if the password wasn't modified, hash doesn't need to be updated
+		// If the password wasn't modified, hash doesn't need to be updated
 		next();
 	} else {
 		bcrypt.hash(user.password, saltRounds, function(err, hash) {
@@ -44,7 +45,8 @@ userSchema.pre('save', function(next) {
 });
 
 /**
- * Custom query method for finding a single User by their username
+ * Custom query method for finding a single User by their username.
+ * 
  * @example
  * // fetch the user with username "testUser"
  * User.find().byUsername("testUser").exec((err, user) => {
@@ -53,7 +55,7 @@ userSchema.pre('save', function(next) {
  * @alias byUsername
  * @memberof server.models.User
  * @static
- * @param  {String} username exact username to find
+ * @param {String} username Exact username to find
  * @return {Mongoose.Query}
  */
 userSchema.query.byUsername = function(username) {
@@ -63,8 +65,8 @@ userSchema.query.byUsername = function(username) {
 /**
  * @alias checkPassword
  * @memberof server.models.User
- * @param  {String}   password hashed password to check
- * @param  {server.models.User~passwordCheckCallback} callback callback function when done checking
+ * @param {String} password Hashed password to check
+ * @param {server.models.User~passwordCheckCallback} callback Callback function when done checking
  * @return {None}
  */
 userSchema.methods.checkPassword = function(password) {
@@ -73,8 +75,8 @@ userSchema.methods.checkPassword = function(password) {
 
 /**
  * @callback server.models.User~passwordCheckCallback
- * @param {String} err error message, if there was one
- * @param {Boolean} success did the passwords match or not?
+ * @param {String} err Error message, if there was one
+ * @param {Boolean} success Did the passwords match or not?
  */
 
 userSchema.plugin(uniqueValidator);

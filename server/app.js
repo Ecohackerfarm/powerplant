@@ -1,5 +1,6 @@
 /**
  * Holds the instance of the express app
+ * 
  * @namespace app
  * @memberof server
  */
@@ -10,35 +11,40 @@ import bodyParser from 'body-parser';
 import apiRouter from './api';
 import { Processor } from './processor';
 
-
-
-
 export let processor = new Processor();
 
 /**
- * the express app
+ * The express app
+ * 
  * @type {Object}
  */
 const app = express();
 
 /**
- * Sets up the express application with all middleware
- * @param  {Boolean} development whether or not development enviroment for e.g. webpack is enabled,
- * @return {Object} the express app
+ * Set up the Express application with all middleware.
+ * 
+ * @param {Boolean} development Development mode?
+ * @return {Object} Express application
  */
 export const buildApp = (development = false) => {
 	const DIST_DIR = path.join(__dirname, '../dist');
-	// set the static files location /dist/images will be /images for users
+
+	// Set the static files location, /dist/images will be /images for users
 	app.use(express.static(DIST_DIR));
 
 	if (development) {
+		/*
+		 * In development mode when the source code is changed webpack
+		 * automatically rebuilds the bundle. In production the bundle is
+		 * precompiled prior to running the application.
+		 */
 		const webpack = require('webpack');
 		const webpackDevMiddleware = require('webpack-dev-middleware');
 		const webpackHotMiddleware = require('webpack-hot-middleware');
 		const webpackDevConfig = require ('../webpack.config.dev');
 
 		const compiler = webpack(webpackDevConfig);
-		//Development only
+
 		app.use(
 			webpackDevMiddleware(compiler, {
 				hot: true,
@@ -46,7 +52,6 @@ export const buildApp = (development = false) => {
 				noInfo: true
 			})
 		);
-		//Development only
 		app.use(webpackHotMiddleware(compiler));
 	}
 
@@ -57,10 +62,10 @@ export const buildApp = (development = false) => {
 		bodyParser.json()
 	);
 
-	// set up our routers
+	// Set up our routers
 	app.use('/api', apiRouter);
 
-	// thank the LORD this works correctly
+	// Thank the LORD this works correctly
 	app.get('*', function(req, res) {
 		res.sendFile(path.join(DIST_DIR, 'index.html'));
 	});

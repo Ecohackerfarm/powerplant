@@ -4,6 +4,8 @@
  */
 
 /**
+ * Check if given set contains the given element.
+ * 
  * @param {Array} combination
  * @param {Object} element
  * @return {Boolean}
@@ -13,22 +15,31 @@ function combinationContainsElement(combination, element) {
 }
 
 /**
+ * Check if two arrays are the same set, that is, they contain the
+ * same elements.
+ * 
+ * TODO: Rename. Also, make it a static method of Combinations?
+ * 
  * @param {Array} combination0
  * @param {Array} combination1
  * @return {Boolean}
  */
-export function areEqualCombinations(combination0, combination1) {
+function areEqualCombinations(combination0, combination1) {
 	return combination0.every(element =>
 		combinationContainsElement(combination1, element)
 	);
 }
 
 /**
- * Elements must have the isCompatible() method that determines if two elements
- * are compatible with each other.
+ * Represents all compatible combinations of the given elements.
+ * 
+ * Elements must have the isCompatible() method that determines if two
+ * elements are compatible with each other.
  */
-export class Combinations {
+class Combinations {
 	/**
+	 * Construct the combinations.
+	 * 
 	 * @param {Array} elements
 	 */
 	constructor(elements) {
@@ -73,6 +84,8 @@ export class Combinations {
 	}
 
 	/**
+	 * Get the size of the largest compatible combination.
+	 * 
 	 * @return {Number}
 	 */
 	getLargestCombinationSize() {
@@ -86,6 +99,8 @@ export class Combinations {
 	}
 
 	/**
+	 * Get combinations of given size.
+	 * 
 	 * @param {Number} size
 	 */
 	getCombinations(size) {
@@ -93,6 +108,8 @@ export class Combinations {
 	}
 
 	/**
+	 * Get the elements.
+	 * 
 	 * @return {Array}
 	 */
 	getElements() {
@@ -100,6 +117,8 @@ export class Combinations {
 	}
 
 	/**
+	 * Remove the given element and update combinations.
+	 * 
 	 * @param {Object} element
 	 */
 	removeElement(element) {
@@ -111,6 +130,8 @@ export class Combinations {
 	}
 
 	/**
+	 * Remove a set of elements.
+	 * 
 	 * @param {Array} combination
 	 */
 	removeElements(combination) {
@@ -152,3 +173,8 @@ export class Combinations {
 		return largestCombination;
 	}
 }
+
+export {
+	Combinations,
+	areEqualCombinations
+};

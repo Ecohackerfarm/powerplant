@@ -30,16 +30,21 @@ class ProcessorException extends Error {
 	}
 }
 
-export const VALIDATION_EXCEPTION = new ProcessorException(400);
-export const AUTHENTICATION_EXCEPTION = new ProcessorException(401);
-export const AUTHORIZATION_EXCEPTION = new ProcessorException(403);
+const VALIDATION_EXCEPTION = new ProcessorException(400);
+const AUTHENTICATION_EXCEPTION = new ProcessorException(401);
+const AUTHORIZATION_EXCEPTION = new ProcessorException(403);
 
 /**
- * Asynchronous object that does database access and all derived calculations.
+ * Asynchronous object that lets only compatible method calls to run at the
+ * same time. Principle is that each write operation is isolated from all
+ * other operations.
+ * 
+ * This object does all database access and server side calculations. Clients
+ * talk with this object through the HTTP API.
  *
  * @extends AsyncObject
  */
-export class Processor extends AsyncObject {
+class Processor extends AsyncObject {
 	constructor() {
 		super();
 
@@ -66,16 +71,23 @@ export class Processor extends AsyncObject {
 	}
 
 	/**
+	 * Schedule a read operation that can run parallel with other read
+	 * operations.
+	 * 
 	 * @param {AsyncFunction} method
 	 * @param {Object[]} parameters
+	 * @return {Task}
 	 */
 	scheduleRead(method, ...parameters) {
 		return this.scheduler.pushRead(this, method, ...parameters);
 	}
 
 	/**
+	 * Schedule a write operation that will block all other operations.
+	 * 
 	 * @param {AsyncFunction} method
 	 * @param {Object[]} parameters
+	 * @return {Task}
 	 */
 	scheduleWrite(method, ...parameters) {
 		return this.scheduler.pushWrite(this, method, ...parameters);
@@ -119,7 +131,9 @@ export class Processor extends AsyncObject {
 	}
 
 	/**
-	 * @param {Model} model Mongoose model
+	 * Get a set of documents.
+	 * 
+	 * @param {Model} model Document type
 	 * @param {String[]} ids Document IDs
 	 * @return {Document[]} Array of documents or null if one document was not
 	 *                      found.
@@ -140,7 +154,9 @@ export class Processor extends AsyncObject {
 	}
 
 	/**
-	 * @param {Model} model Mongoose model
+	 * Get one document.
+	 * 
+	 * @param {Model} model Document type
 	 * @param {String} id Document ID
 	 * @return {Document} Document or null if not found
 	 */
@@ -150,9 +166,12 @@ export class Processor extends AsyncObject {
 	}
 
 	/**
+	 * Get a set of authorized documents.
+	 * 
 	 * @param {Document} currentUser
 	 * @param {Model} model
 	 * @param {String[]} ids
+	 * @return {Document[]}
 	 */
 	async getAuthorizedDocuments(currentUser, model, ids) {
 		const documents = await this.getDocumentsUnmanaged(model, ids);
@@ -166,9 +185,12 @@ export class Processor extends AsyncObject {
 	}
 
 	/**
+	 * Get one authorized document.
+	 * 
 	 * @param {Document} currentUser
 	 * @param {Model} model
 	 * @param {String} id
+	 * @return {Document} Document, or null if not authorized
 	 */
 	async getAuthorizedDocument(currentUser, model, id) {
 		const documents = await this.getAuthorizedDocumentsUnmanaged(
@@ -184,6 +206,7 @@ export class Processor extends AsyncObject {
 	 *
 	 * @param {Document} document
 	 * @param {Object} update Update for the document
+	 * @return {Document}
 	 */
 	async updateDocumentInternal(document, update) {
 		if (!document) {
@@ -207,8 +230,11 @@ export class Processor extends AsyncObject {
 	}
 
 	/**
+	 * Save document to database.
+	 * 
 	 * @param {Model} model
 	 * @param {Object} object
+	 * @return {Document}
 	 */
 	async saveDocument(model, object) {
 		if (model == CropRelationship) {
@@ -242,9 +268,12 @@ export class Processor extends AsyncObject {
 	}
 
 	/**
+	 * Save authorized document to database.
+	 * 
 	 * @param {Document} currentUser
 	 * @param {Model} model
 	 * @param {Object} object
+	 * @return {Document}
 	 */
 	async saveAuthorizedDocument(currentUser, model, object) {
 		this.authorize(currentUser, [object]);
@@ -320,7 +349,7 @@ export class Processor extends AsyncObject {
 	}
 
 	/**
-	 * Delete the given document.
+	 * Delete the given authorized document.
 	 *
 	 * @param {Document} currentUser
 	 * @param {Model} model
@@ -336,7 +365,10 @@ export class Processor extends AsyncObject {
 	}
 
 	/**
+	 * Get User document matching the authorization token.
+	 * 
 	 * @param {String} token
+	 * @return {Document}
 	 */
 	async getAuthenticatedUser(token) {
 		let userInfo;
@@ -352,13 +384,20 @@ export class Processor extends AsyncObject {
 	}
 
 	/**
-	 * @param {Model} model
+	 * Get all documents of the given type.
+	 * 
+	 * @param {Model} model Document type
+	 * @return {Document[]}
 	 */
 	async getAllDocuments(model) {
 		return await model.find({}).exec();
 	}
 
 	/**
+	 * Given all compatible combinations, get non-overlapping crop groups,
+	 * and update the Combinations object by removing the crops of these
+	 * groups.
+	 * 
 	 * @param {Combinations} combinations
 	 * @param {Number} maximumGroupSize
 	 * @return {Array}
@@ -381,6 +420,9 @@ export class Processor extends AsyncObject {
 	}
 
 	/**
+	 * For each crop find all crop relationships and assign them to the
+	 * document.
+	 * 
 	 * @param {Crop[]} crops
 	 */
 	async assignRelationships(crops) {
@@ -393,6 +435,9 @@ export class Processor extends AsyncObject {
 	}
 
 	/**
+	 * Implements isCompatible() for Crop Combinations. Check if the given
+	 * other crop is compatible.
+	 * 
 	 * @param {Crop} crop
 	 * @return {Boolean}
 	 */
@@ -404,6 +449,9 @@ export class Processor extends AsyncObject {
 	};
 
 	/**
+	 * Implements isCompatible() for Crop Combinations. Check if the given
+	 * other crop is neutral but not incompatible.
+	 * 
 	 * @param {Crop} crop
 	 * @return {Boolean}
 	 */
@@ -416,6 +464,9 @@ export class Processor extends AsyncObject {
 	};
 
 	/**
+	 * Assign isCompatible() for the given Crop documents for use with the
+	 * Combinations class.
+	 * 
 	 * @param {Crop[]} crops
 	 * @param {Function} isCompatibleFunction
 	 */
@@ -426,6 +477,8 @@ export class Processor extends AsyncObject {
 	}
 
 	/**
+	 * Divide the given crops into groups of compatible crops.
+	 * 
 	 * @param {String[]} cropIds
 	 * @return {Array}
 	 */
@@ -472,6 +525,9 @@ export class Processor extends AsyncObject {
 	}
 
 	/**
+	 * Get other crops that are compatible with the given set of crops.
+	 * The crops in the sum set are all compatible.
+	 * 
 	 * @param {String[]} cropIds
 	 * @return {Array}
 	 */
@@ -496,18 +552,23 @@ export class Processor extends AsyncObject {
 	}
 
 	/**
-	 * Converts a string into regex-friendly format, escaping all regex special characters
-	 * @param	 {String} text string to convert
-	 * @return {String}			 escaped string
+	 * Convert a string into regex-friendly format, escaping all regex
+	 * special characters.
+	 * 
+	 * @param {String} text String to convert
+	 * @return {String} Escaped string
 	 */
 	escapeRegEx(text) {
 		return text.replace(/[-[\]{}()*+?.,\\^$|#\s]/g, '\\$&');
 	}
 
 	/**
+	 * Get crops whose name matches the given regular expression.
+	 * 
 	 * @param {String} regex
 	 * @param {Number} index
 	 * @param {Number} length
+	 * @return {Crop[]}
 	 */
 	async getCropsByName(regex, index, length) {
 		const crops = await Crop.find()
@@ -519,7 +580,10 @@ export class Processor extends AsyncObject {
 	}
 
 	/**
+	 * Try to login with the given credentials.
+	 * 
 	 * @param {Object} credentials
+	 * @return {Object} Authorization token
 	 */
 	async login(credentials) {
 		// First, make sure credentials pass validation
@@ -546,3 +610,10 @@ export class Processor extends AsyncObject {
 		return { token };
 	}
 }
+
+export {
+	Processor,
+	VALIDATION_EXCEPTION,
+	AUTHENTICATION_EXCEPTION,
+	AUTHORIZATION_EXCEPTION
+};
