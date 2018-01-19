@@ -4,7 +4,7 @@ import { sendForm } from '../routerHelpers';
 import supertest from 'supertest';
 import User from '/server/models/user';
 import jwt from 'jsonwebtoken';
-import { JWT_SECRET } from '/secret';
+import { JWT_SECRET } from '/secrets';
 
 const rootUrl = '/api/users';
 const jsonType = 'application/json; charset=utf-8';
