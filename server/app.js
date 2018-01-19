@@ -41,7 +41,7 @@ export const buildApp = (development = false) => {
 		const webpack = require('webpack');
 		const webpackDevMiddleware = require('webpack-dev-middleware');
 		const webpackHotMiddleware = require('webpack-hot-middleware');
-		const webpackDevConfig = require ('../webpack.config.dev');
+		const webpackDevConfig = require ('../webpack.config.dev').default;
 
 		const compiler = webpack(webpackDevConfig);
 
