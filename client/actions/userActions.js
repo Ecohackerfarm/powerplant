@@ -63,11 +63,17 @@ export function userLoginRequest(loginData) {
 }
 
 /**
- * Async attempt to set the current user from a JWT token. Sets the authorization token, saves in local storage, and then dispatches
- * {@link client.actions.setCurrentUserAction setCurrentUserAction} and {@link client.actions.locationActions.getLocationsRequest getLocationsRequest}
+ * Async attempt to set the current user from a JWT token. Sets the
+ * authorization token, saves in local storage, and then dispatches
+ * actions {@link client.actions.setCurrentUser setCurrentUser} and
+ * {@link client.actions.locationActions.getLocationsRequest getLocationsRequest}.
+ * 
+ * TODO: jwtToken is loaded and saved to localStorage, but there's
+ * no reason not to switch this to the persistent redux store. i just
+ * haven't gotten to it. pretty sure redux-persist uses localStorage anyway
+ * 
  * @function
- * @param {String} token JSON web token
- * @return {None}
+ * @param {String} token JSON Web Token
  */
 export function setUserFromToken(token) {
 	return dispatch => {
