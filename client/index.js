@@ -15,6 +15,8 @@ import '/client/styles/main.scss';
 
 /**
  * The root component of the application. Everything unfolds from here.
+ * Main job of this component is to make the Redux store available for
+ * connect() calls.
  * 
  * @extends Component
  */
@@ -23,7 +25,7 @@ class AppProvider extends React.Component {
 		return (
 			<Provider store={store}>
 				<BrowserRouter>
-   					<App storeIsLoaded={false} store={store} />
+   					<App storeIsLoaded={false} />
    				</BrowserRouter>
 			</Provider>
 		);
