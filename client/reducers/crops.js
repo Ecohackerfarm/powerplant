@@ -5,9 +5,9 @@ import {
 	LOADING_CROPS,
 	LOADING_RELATIONSHIPS,
 	UPDATED_RELATIONSHIPS_ERROR
-} from '../actions/types';
+} from '../actions';
 
-export const defaultState = {
+const initialState = {
 	all: [],
 	loading: false,
 	updated: 0,
@@ -18,7 +18,7 @@ export const defaultState = {
 	relationships : []
 };
 
-export const crops = (state = defaultState, action) => {
+export function crops(state = initialState, action) {
 	switch (action.type) {
 		case UPDATED_CROPS:
 			return {

@@ -11,7 +11,8 @@ import AddBedForm from './AddBedForm';
 import BedItem from './BedItem';
 import BedPage from './BedPage';
 import { Grid } from 'react-bootstrap';
-import { createBed, deleteBed, editBed } from '../../actions/bedActions';
+import { createBed } from '../../actions/bedActions';
+import { deleteBed, editBed } from '../../actions';
 
 const BedsPage = function({  beds, match, location, actions, locationId }) {
 	let actionsWithLocationId = {};

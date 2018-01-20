@@ -2,7 +2,7 @@ import React from 'react';
 import { connect } from 'react-redux';
 import AddBedForm from './beds/AddBedForm';
 import PropTypes from 'prop-types';
-import { setHeaderTitle } from '../actions/appActions'
+import { setHeaderTitle } from '../actions'
 
   const testGroups =
   [

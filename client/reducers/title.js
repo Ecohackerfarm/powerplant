@@ -1,8 +1,8 @@
-import { SET_TITLE } from '../actions/types';
+import { SET_TITLE } from '../actions';
 
-export const defaultState = 'powerplant';
+const initialState = 'powerplant';
 
-export const title = (state = defaultState, action) => {
+export function title(state = initialState, action) {
 	switch (action.type) {
 		case SET_TITLE:
 			return action.title;

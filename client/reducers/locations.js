@@ -7,11 +7,11 @@ import {
 	ADD_BED,
 	DELETE_BED,
 	LOGOUT,
-} from '../actions/types';
+} from '../actions';
 
-const defaultState = {};
+const initialState = {};
 
-export const locations = (state = defaultState, action) => {
+export function locations(state = initialState, action) {
 	let newState;
 	switch (action.type) {
 		case SET_LOCATIONS:
@@ -58,7 +58,7 @@ export const locations = (state = defaultState, action) => {
 		  delete newState[action.locationId].beds[action.bedId];
 			return newState;
 		case LOGOUT:
-			return defaultState;
+			return initialState;
 		default:
 			return state;
 	}

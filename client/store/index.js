@@ -3,7 +3,7 @@ import thunk from 'redux-thunk';
 import reducer from '../rootReducer';
 import { createStore, compose, applyMiddleware } from 'redux';
 import { persistStore, autoRehydrate } from 'redux-persist';
-import { storeIsLoaded } from '../actions/appActions'
+import { storeIsLoaded } from '../actions'
 
 // create logger
 const logger = createLogger();

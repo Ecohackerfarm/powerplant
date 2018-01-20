@@ -4,7 +4,7 @@ import React from 'react';
 import PropTypes from 'prop-types';
 import {
 	fetchCrops,
-  fetchCombinations
+	fetchCombinations
 } from '../../actions/cropActions';
 import { connect } from 'react-redux';
 
