@@ -9,7 +9,7 @@
 /*
  * Action types
  */
-export const STORE_IS_LOADED = 'STORE_IS_LOADED';
+export const STORE_LOADED = 'STORE_LOADED';
 export const SET_HEADER_TITLE = 'SET_HEADER_TITLE';
 export const SET_TITLE = 'SET_TITLE';
 
@@ -26,12 +26,12 @@ export const EDIT_BED = 'EDIT_BED';
 export const ADD_BED = 'ADD_BED';
 export const DELETE_BED = 'DELETE_BED';
 
-export const UPDATED_CROPS = 'UPDATED_CROPS';
-export const UPDATED_RELATIONSHIPS = 'UPDATED_RELATIONSHIPS';
-export const UPDATE_CROPS_ERROR = 'UPDATE_CROPS_ERROR';
-export const LOADING_CROPS = 'LOADING_CROPS';
-export const LOADING_RELATIONSHIPS = 'LOADING_RELATIONSHIPS';
-export const UPDATED_RELATIONSHIPS_ERROR = 'UPDATED_RELATIONSHIPS_ERROR';
+export const CROPS_LOADING = 'CROPS_LOADING';
+export const CROP_RELATIONSHIPS_LOADING = 'CROP_RELATIONSHIPS_LOADING';
+export const CROPS_UPDATED = 'CROPS_UPDATED';
+export const CROP_RELATIONSHIPS_UPDATED = 'CROP_RELATIONSHIPS_UPDATED';
+export const CROPS_LOADING_ERROR = 'CROPS_LOADING_ERROR';
+export const CROP_RELATIONSHIPS_LOADING_ERROR = 'CROP_RELATIONSHIPS_LOADING_ERROR';
 
 /**
  * Indicate that the persisted Redux store has been loaded.
@@ -39,9 +39,9 @@ export const UPDATED_RELATIONSHIPS_ERROR = 'UPDATED_RELATIONSHIPS_ERROR';
  * @function
  * @return {Object} Action object
  */
-export const storeIsLoaded = () => ({
-	type: STORE_IS_LOADED,
-	storeIsLoaded: true
+export const storeLoaded = () => ({
+	type: STORE_LOADED,
+	storeLoaded: true
 });
 
 /**
@@ -169,8 +169,8 @@ export const deleteBed = (locationId, bedId) => ({
  * @param {Object} respone Response from failed API call
  * @return {Object} Action object
  */
-export const fetchCropsError = (respone) => ({
-	type: UPDATE_CROPS_ERROR,
+export const cropsLoadingError = (respone) => ({
+	type: CROPS_LOADING_ERROR,
 	respone
 });
 
@@ -181,8 +181,8 @@ export const fetchCropsError = (respone) => ({
  * @param {Object} respone Response from failed API CALL
  * @return {Object} Action object
  */
-export const fetchRelationshipsError = (respone) => ({
-	type: UPDATED_RELATIONSHIPS_ERROR,
+export const cropRelationshipsLoadingError = (respone) => ({
+	type: CROP_RELATIONSHIPS_LOADING_ERROR,
 	respone
 });
 
@@ -193,8 +193,8 @@ export const fetchRelationshipsError = (respone) => ({
  * @param {Object} data Crop data from API call
  * @return {Object} Action object
  */
-export const recieveCrops = (data) => ({
-	type: UPDATED_CROPS,
+export const cropsUpdated = (data) => ({
+	type: CROPS_UPDATED,
 	all: data,
 	updated: (new Date()).getTime()
 });
@@ -206,8 +206,8 @@ export const recieveCrops = (data) => ({
  * @param {Object} data Crop relationship data form API call
  * @return {Object} Action object
  */
-export const recieveRelationships = (data) => ({
-	type: UPDATED_RELATIONSHIPS,
+export const cropRelationshipsUpdated = (data) => ({
+	type: CROP_RELATIONSHIPS_UPDATED,
 	relationships: data,
 	relationshipsUpdated: (new Date()).getTime()
 });
@@ -219,8 +219,8 @@ export const recieveRelationships = (data) => ({
  * @param {Object} started 
  * @return {Object} Action object
  */
-export const loadingCrops = (started) => ({
-	type: LOADING_CROPS,
+export const cropsLoading = (started) => ({
+	type: CROPS_LOADING,
 	loading: started
 });
 
@@ -231,8 +231,8 @@ export const loadingCrops = (started) => ({
  * @param {Object} started 
  * @return {Object} Action object
  */
-export const loadingRelationships = (started) => ({
-	type: LOADING_RELATIONSHIPS,
+export const cropRelationshipsLoading = (started) => ({
+	type: CROP_RELATIONSHIPS_LOADING,
 	loading: started
 });
 

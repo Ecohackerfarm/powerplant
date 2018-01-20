@@ -1,11 +1,11 @@
 import axios from 'axios';
 import {
-	loadingCrops,
-	recieveCrops,
-	fetchCropsError,
-	loadingRelationships,
-	recieveRelationships,
-	fetchRelationshipsError
+	cropsLoading,
+	cropsUpdated,
+	cropsLoadingError,
+	cropRelationshipsLoading,
+	cropRelationshipsUpdated,
+	cropRelationshipsLoadingError
 } from '.';
 
 const updateNeeded = (lastUpdated) => {
@@ -30,7 +30,7 @@ export const fetchCrops = () => {
 	
 	return ( dispatch , getState ) => {
 		if ( updateNeeded(getState().crops.relationshipsUpdated) ){
-			dispatch(loadingCrops(true));
+			dispatch(cropsLoading(true));
 			return axios.get(
 			  '/api/get-crops-by-name?name='
 				+ name
@@ -40,11 +40,11 @@ export const fetchCrops = () => {
 				+ length
 			).then(res => {
 				if (res.status === 200) {
-					dispatch(recieveCrops(res.data));
+					dispatch(cropsUpdated(res.data));
 				} else {
-					dispatch(fetchCropsError(res));
+					dispatch(cropsLoadingError(res));
 				}
-				dispatch(loadingCrops(false));
+				dispatch(cropsLoading(false));
 				//return {res};
 			});
 		}
@@ -54,16 +54,16 @@ export const fetchCrops = () => {
 export const fetchRelationships = () => {
 	return ( dispatch , getState ) => {
 		if ( updateNeeded(getState().crops.companionships.updated) ){
-			dispatch(loadingRelationships(true));
+			dispatch(cropRelationshipsLoading(true));
 			return axios.get(
 			  '/get-all-crop-relationships'
 			).then(res => {
 				if (res.status === 200) {
-					dispatch(recieveRelationships(res.data));
+					dispatch(cropRelationshipsUpdated(res.data));
 				} else {
-					dispatch(fetchRelationshipsError(res));
+					dispatch(cropRelationshipsLoadingError(res));
 				}
-				dispatch(loadingRelationships(false));
+				dispatch(cropRelationshipsLoading(false));
 				//return {res};
 			});
 		}

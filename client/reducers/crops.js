@@ -1,10 +1,10 @@
 import {
-	UPDATED_CROPS,
-	UPDATED_RELATIONSHIPS,
-	UPDATE_CROPS_ERROR,
-	LOADING_CROPS,
-	LOADING_RELATIONSHIPS,
-	UPDATED_RELATIONSHIPS_ERROR
+	CROPS_UPDATED,
+	CROP_RELATIONSHIPS_UPDATED,
+	CROPS_LOADING_ERROR,
+	CROPS_LOADING,
+	CROP_RELATIONSHIPS_LOADING,
+	CROP_RELATIONSHIPS_LOADING_ERROR
 } from '../actions';
 
 const initialState = {
@@ -20,37 +20,37 @@ const initialState = {
 
 export function crops(state = initialState, action) {
 	switch (action.type) {
-		case UPDATED_CROPS:
+		case CROPS_UPDATED:
 			return {
 			  ...state,
 			  all: action.all,
 			  updated: action.updated,
 			  error: false
 			};
-		case LOADING_CROPS:
+		case CROPS_LOADING:
 		  return {
 		  	...state,
 		  	loading: action.loading
 		  }
-		case UPDATE_CROPS_ERROR:
+		case CROPS_LOADING_ERROR:
 		  return {
 		  	...state,
 		  	errorResponse: action.response,
 		  	error: true
 		  }
-		case UPDATED_RELATIONSHIPS:
+		case CROP_RELATIONSHIPS_UPDATED:
 		  return {
 			  ...state,
 			  relationships: action.relationships,
 			  relationshipsUpdated: action.relationshipsUpdated,
 			  error: false
 			};
-		case LOADING_RELATIONSHIPS:
+		case CROP_RELATIONSHIPS_LOADING:
 		  return {
 		  	...state,
 		  	relationshipsLoading: action.loading
 		  }
-		case UPDATED_RELATIONSHIPS_ERROR:
+		case CROP_RELATIONSHIPS_LOADING_ERROR:
 		  return {
 		  	...state,
 		  	errorResponse: action.response,

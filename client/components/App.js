@@ -12,7 +12,7 @@ import { withRouter } from 'react-router-dom';
  */
 class App extends React.Component {
 	render() {
-		if (!this.props.storeIsLoaded) {
+		if (!this.props.storeLoaded) {
 			return (<div>Loading...</div>);
 		} else {
 			return (
@@ -26,11 +26,11 @@ class App extends React.Component {
 }
 
 App.propTypes = {
-	storeIsLoaded: PropTypes.bool.isRequired
+	storeLoaded: PropTypes.bool.isRequired
 };
 
 const mapStateToProps = ({ app }) => ({
-	storeIsLoaded: app.storeIsLoaded
+	storeLoaded: app.storeLoaded
 });
 
 export default withRouter(connect(mapStateToProps)(App));

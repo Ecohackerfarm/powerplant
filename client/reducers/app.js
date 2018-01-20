@@ -1,10 +1,10 @@
 import {
-	STORE_IS_LOADED,
+	STORE_LOADED,
 	SET_HEADER_TITLE
 } from '../actions';
 
 const initialState = {
-	storeIsLoaded: false,
+	storeLoaded: false,
 	headerTitle: 'powerplant'
 };
 
@@ -15,10 +15,10 @@ const initialState = {
  */
 export function app(state = initialState, action) {
 	switch (action.type) {
-		case STORE_IS_LOADED:
+		case STORE_LOADED:
 			return {
 				...state,
-				storeIsLoaded: action.storeIsLoaded
+				storeLoaded: action.storeLoaded
 			};
 		case SET_HEADER_TITLE:
 	 		return {
