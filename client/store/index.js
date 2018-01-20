@@ -1,6 +1,6 @@
 import {createLogger } from 'redux-logger'
 import thunk from 'redux-thunk';
-import reducer from '../rootReducer';
+import reducer from '../reducers';
 import { createStore, compose, applyMiddleware } from 'redux';
 import { persistStore, autoRehydrate } from 'redux-persist';
 import { storeLoaded } from '../actions'

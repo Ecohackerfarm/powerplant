@@ -1,3 +1,10 @@
+/**
+ * Reducer for actions that manage locations
+ * 
+ * @namespace locations
+ * @memberof client.reducers
+ */
+
 import {
 	ADD_LOCATION,
 	SET_LOCATIONS,
@@ -9,8 +16,16 @@ import {
 	LOGOUT,
 } from '../actions';
 
+/**
+ * @constant {Object}
+ */
 const initialState = {};
 
+/**
+ * @param {Object} state Current state
+ * @param {Object} action Action object
+ * @return {Object} Next state
+ */
 export function locations(state = initialState, action) {
 	let newState;
 	switch (action.type) {

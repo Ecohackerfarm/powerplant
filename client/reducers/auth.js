@@ -1,9 +1,20 @@
+/**
+ * Reducer for user and authentication actions
+ * 
+ * @namespace auth
+ * @memberof client.reducers
+ */
+
 import {
 	SET_CURRENT_USER,
 	CREATE_USER,
 	LOGOUT
 } from '../actions';
 
+/**
+ * @constant {Object}
+ * @property {Boolean} isAuthenticated
+ */
 const initialState = {
 	isAuthenticated: false
 };

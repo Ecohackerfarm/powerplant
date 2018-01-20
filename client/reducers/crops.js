@@ -1,3 +1,10 @@
+/**
+ * Reducer for actions that manage crops and crop relationships
+ * 
+ * @namespace crops
+ * @memberof client.reducers
+ */
+
 import {
 	CROPS_UPDATED,
 	CROP_RELATIONSHIPS_UPDATED,
@@ -7,17 +14,33 @@ import {
 	CROP_RELATIONSHIPS_LOADING_ERROR
 } from '../actions';
 
+/**
+ * @constant {Object}
+ * @property {Crop[]} all
+ * @property {Boolean} loading
+ * @property {Number} updated
+ * @property {Object} errorResponse
+ * @property {Boolean} error
+ * @property {Boolean} relationshipsLoading
+ * @property {Number} relationshipsUpdated
+ * @property {CropRelationship[]} relationships
+ */
 const initialState = {
 	all: [],
 	loading: false,
 	updated: 0,
 	errorResponse: {},
 	error: false,
-	relationshipsLoading : false,
-	relationshipsUpdated : 0,
-	relationships : []
+	relationshipsLoading: false,
+	relationshipsUpdated: 0,
+	relationships: []
 };
 
+/**
+ * @param {Object} state Current state
+ * @param {Object} action Action object
+ * @return {Object} Next state
+ */
 export function crops(state = initialState, action) {
 	switch (action.type) {
 		case CROPS_UPDATED:
