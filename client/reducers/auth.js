@@ -26,10 +26,6 @@ export function auth(state = initialState, action) {
 					isAuthenticated: false
 				};
 			}
-		case CREATE_USER:
-			// I think that nothing happens here but I will leave it
-			// just in case
-			return state;
 		case LOGOUT:
 			return {
 				isAuthenticated: false
