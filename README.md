@@ -54,7 +54,7 @@ Also you need Node 6.x installed on the system.
 	3. set all `DATABASE_` variables
 	4. set PP_PORT for the port you want powerplant to run
 4. `npm run production`
-5. `npm run migrate_production'
+5. `npm run migrate_production`
 6. Done!
 
 If you have any problems to set it up, send us an email to franz}at{ecohackerfarm.org
