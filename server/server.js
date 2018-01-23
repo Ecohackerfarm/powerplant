@@ -1,6 +1,6 @@
 /**
  * Connects to MongoDB and starts the Express application.
- * 
+ *
  * @namespace server
  * @memberof server
  */
@@ -18,7 +18,8 @@ import {
 } from '../secrets.js';
 
 /**
- * @return {String}
+ * Creates the url to the database from specified constants
+ * @return {String} url to database
  */
 const getDatabaseURL = () => {
 	let urlString = DATABASE_PROTOCOLL;
@@ -33,8 +34,23 @@ const getDatabaseURL = () => {
 	urlString += '/' + DATABASE_DB;
 	return urlString;
 }
+/**
+ * Function called after server started
+ * @param  {object} event
+ * @return {undefined}
+ */
+const serverStarted = (event) => {
+	console.log('Server running on port ' + port);
+}
 
+// if enviroment variable PORT is specified uses PORT otherwise PORT from secret.js
+const port = process.env.PORT || PP_PORT;
+// arguments for listening on localhost
+const localhostArgs = ['127.0.0.1',511];
 
+const app = buildApp(process.env.NODE_ENV === "development");
+
+// if enviroment variable DATABASEURL is set use this other wise build it from secret.js
 if (process.env.DATABASEURL) {
   mongoose.connect(process.env.DATABASEURL, { useMongoClient: true });
 } else {
@@ -43,14 +59,7 @@ if (process.env.DATABASEURL) {
 
 mongoose.Promise = global.Promise;
 
-const port = process.env.PORT || PP_PORT;
-const localhostArgs = ['127.0.0.1',511];
-
-const serverStarted = (event) => {
-	console.log('Server running on port ' + port);
-}
-
-const app = buildApp(process.env.NODE_ENV === "development");
+// if LOCALHOST_ONLY is set the server only listens to localhost
 if (process.env.LOCALHOST_ONLY) {
 	app.listen(
 		port,
@@ -63,4 +72,3 @@ if (process.env.LOCALHOST_ONLY) {
 		serverStarted
 	);
 }
-

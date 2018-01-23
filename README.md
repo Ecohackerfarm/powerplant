@@ -13,7 +13,7 @@ Currently in development. A good amount of research and specification work has b
 
 ## Setup
 
-### Development
+### Development Setup
 
 To start developing, you need to set up the development environment. This includes:
 NodeJS and MongoDB or Docker with MongoDB
@@ -41,7 +41,7 @@ issue.
 
 [More documentation](https://github.com/Ecohackerfarm/powerplant/tree/master/docs)
 
-### Production
+### Production Setup
 
 For Production you need an installed MongoDB and a user that has access to a db in it ("readWrite", "dbAdm").
 Also you need Node 6.x installed on the system.

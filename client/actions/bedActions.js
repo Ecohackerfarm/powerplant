@@ -38,6 +38,13 @@ const createBed = (locationId, bed) => {
 
 };
 
+/**
+ * creates an EDIT_BED action object
+ * @param  {string} locationId id of the location where the bed is located
+ * @param  {string} bedId      id of the bed in the location
+ * @param  {object} changes    object of changes in the bed object
+ * @return {object}            action object
+ */
 const editBed = (locationId, bedId, changes) => ({
  type : EDIT_BED,
  locationId,
@@ -45,6 +52,12 @@ const editBed = (locationId, bedId, changes) => ({
  changes
 });
 
+/**
+ * creates a DELETE_BED action object
+ * @param  {string} locationId id of the location where the bed is located
+ * @param  {string} bedId      id of the bed in the location
+ * @return {object}            action object
+ */
 const deleteBed = (locationId, bedId) => ({
 	type: DELETE_BED,
 	locationId,

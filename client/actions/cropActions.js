@@ -62,6 +62,11 @@ const recieveRelationships = (data) => {
 	}
 }
 
+/**
+ * Creates the action object with data for LOADING_CROPS
+ * @param  {boolean} started if started is true or not
+ * @return {object}         action object
+ */
 const loadingCrops = (started) => {
 	return {
 		type : LOADING_CROPS,
@@ -69,6 +74,11 @@ const loadingCrops = (started) => {
 	}
 }
 
+/**
+ * Creates the action object with data for LOADING_RELATIONSHIPS
+ * @param  {boolean} started if started is true or not
+ * @return {object}         action object
+ */
 const loadingRelationships = (started) => {
 	return {
 		type : LOADING_RELATIONSHIPS,
@@ -76,6 +86,13 @@ const loadingRelationships = (started) => {
 	}
 }
 
+
+/**
+ * decides if an update is needed
+ * TODO: is still dumb and doesn't make decisions
+ * @param  {number} lastUpdated millisec from the date of the last update
+ * @return {boolean}             true if update is neccessary, false if not
+ */
 const updateNeeded = (lastUpdated) => {
 	const now = new Date();
 	const updateInterval = 7 * 24 * 60 * 60 * 1000;
@@ -118,6 +135,10 @@ export const fetchCrops = () => {
 	};
 };
 
+/**
+ * Fetches Relationship from server if not existent or old data
+ * @return {function} function for dispatch
+ */
 export const fetchRelationships = () => {
 	return ( dispatch , getState ) => {
 		if ( updateNeeded(getState().crops.companionships.updated) ){
