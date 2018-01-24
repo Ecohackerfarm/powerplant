@@ -1,5 +1,5 @@
 /**
- * Functions to initialize and start the server. Holds server objects.
+ * Functions to initialize and start the server.
  * 
  * @namespace server
  * @memberof server
@@ -25,7 +25,6 @@ import Crop from './models/crop';
 import CropRelationship from './models/crop-relationship';
 import Location from './models/location';
 import User from './models/user';
-import { Processor } from './processor';
 import {
 	DATABASE_USERNAME,
 	DATABASE_PASSWORD,
@@ -200,10 +199,8 @@ const getDatabaseURL = () => {
  * 
  * @param {Boolean} testMode 
  */
-function startServer(testMode) {
+export function startServer(testMode) {
 	const developmentMode = isDevelopmentMode() && (!testMode);
-
-	processor = new Processor();
 
 	if (process.env.DATABASEURL) {
 		mongoose.connect(process.env.DATABASEURL, { useMongoClient: true });
@@ -220,7 +217,7 @@ function startServer(testMode) {
 		console.log('Server running on port ' + port);
 	}
 
-	app = buildApp(developmentMode);
+	const app = buildApp(developmentMode);
 
 	if (!testMode) {
 		if (process.env.LOCALHOST_ONLY) {
@@ -239,12 +236,3 @@ function startServer(testMode) {
 
 	return app;
 }
-
-let app;
-let processor;
-
-export {
-	app,
-	processor,
-	startServer
-};

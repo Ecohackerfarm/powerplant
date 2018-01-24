@@ -6,8 +6,8 @@
  * @memberof server
  */
 
-import { processor } from './server';
 import {
+	Processor,
 	VALIDATION_EXCEPTION,
 	AUTHORIZATION_EXCEPTION,
 	AUTHENTICATION_EXCEPTION
@@ -17,6 +17,8 @@ import User from './models/user';
 import CropRelationship from './models/crop-relationship';
 import Crop from './models/crop';
 import { debug } from './utils';
+
+const processor = new Processor();
 
 const MAX_NAME_ENTRIES = 200000;
 const MAX_RESPONSE_LENGTH = 200000;
