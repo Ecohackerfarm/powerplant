@@ -35,6 +35,7 @@ import {
 	DATABASE_DB,
 	PP_PORT
 } from '../secrets.js';
+import { isDevelopmentMode } from './utils';
 
 /**
  * Build router for a document API.
@@ -200,7 +201,7 @@ const getDatabaseURL = () => {
  * @param {Boolean} testMode 
  */
 function startServer(testMode) {
-	const developmentMode = (process.env.NODE_ENV == 'development') && (!testMode);
+	const developmentMode = isDevelopmentMode() && (!testMode);
 
 	processor = new Processor();
 
