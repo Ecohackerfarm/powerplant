@@ -6,7 +6,7 @@
  * @memberof server
  */
 
-import { processor } from './app';
+import { processor } from './server';
 import {
 	VALIDATION_EXCEPTION,
 	AUTHORIZATION_EXCEPTION,

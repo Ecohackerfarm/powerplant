@@ -1,30 +1,15 @@
-import 'babel-polyfill';
-import mongoose from 'mongoose';
-import { buildApp } from '/server/app';
-import * as server from '/server/app';
-import { Processor } from '/server/processor';
-import {
-	DATABASE_HOST,
-	DATABASE_DB,
-	DATABASE_PROTOCOLL
-} from '/secrets.js';
+import supertest from 'supertest';
+import { startServer } from '/server/server';
 
 before(() => {
-	//TODO: Set up a test database! (pp_test)
-	const databaseUrl = DATABASE_PROTOCOLL + DATABASE_HOST + '/' + DATABASE_DB;
-	console.log('databaseUrl', databaseUrl);
-	mongoose.connect(databaseUrl, err => {
-		if (err) {
-			console.log('ERROR connecting to database');
-		} else {
-			console.log('Connected to database');
-		}
-	});
-	mongoose.Promise = global.Promise;
-
-	buildApp(false); // disable webpack
+	// TODO: Set up a test database! (pp_test)
+	app = startServer(true);
+	request = supertest(app);
 });
 
 beforeEach(() => {
-	server.processor = new Processor();
+//	server.processor = new Processor();
 });
+
+export let app;
+export let request;

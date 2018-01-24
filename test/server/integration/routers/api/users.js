@@ -1,14 +1,12 @@
 import { expect } from 'chai';
-import app from '/server/app';
 import { sendForm } from '../routerHelpers';
-import supertest from 'supertest';
 import User from '/server/models/user';
 import jwt from 'jsonwebtoken';
 import { JWT_SECRET } from '/secrets';
+import { request } from '/test/server/init.js';
 
 const rootUrl = '/api/users';
 const jsonType = 'application/json; charset=utf-8';
-const request = supertest(app);
 
 let userId;
 let token;
