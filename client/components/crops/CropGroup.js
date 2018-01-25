@@ -82,6 +82,7 @@ class CropGroup extends React.Component {
 						labelKey='commonName'
 						placeholder='Bed is empty, choose crop ...'
 						onChange={this.onChangeGroup}
+						disabled={this.props.disabled?true:false}
 					/>
 				</Col>
 			</Row>

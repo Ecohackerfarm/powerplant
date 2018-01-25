@@ -32,6 +32,7 @@ class CropGroups extends React.Component {
 				  		index={index}
 				  		cropGroup={group}
 				  		onChange={this.onChange}
+				  		disabled
 				  		/>
 			  		);
 		  		})}
