@@ -1,6 +1,5 @@
 import { expect } from 'chai';
-import app from '/server/app';
-import supertest from 'supertest';
+import { request } from '/test/server/init.js';
 import {
 	checkCropRelationship,
 	sendForm,
@@ -13,7 +12,6 @@ import { Types } from 'mongoose';
 const { ObjectId } = Types;
 const rootUrl = '/api/crop-relationships';
 const jsonType = 'application/json; charset=utf-8';
-const request = supertest(app);
 
 describe(rootUrl + '/', () => {
 	const url = rootUrl + '/';

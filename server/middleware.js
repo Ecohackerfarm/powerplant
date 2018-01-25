@@ -6,8 +6,8 @@
  * @memberof server
  */
 
-import { processor } from './app';
 import {
+	Processor,
 	VALIDATION_EXCEPTION,
 	AUTHORIZATION_EXCEPTION,
 	AUTHENTICATION_EXCEPTION
@@ -16,6 +16,9 @@ import Location from './models/location';
 import User from './models/user';
 import CropRelationship from './models/crop-relationship';
 import Crop from './models/crop';
+import { debug } from './utils';
+
+const processor = new Processor();
 
 const MAX_NAME_ENTRIES = 200000;
 const MAX_RESPONSE_LENGTH = 200000;
@@ -262,6 +265,10 @@ export async function getCropsByName(req, res, next) {
 		);
 
 		const crops = await processor.getCropsByName(name, index, length);
+
+		debug('getCropsByName():');
+		debug(crops);
+
 		res.json(crops);
 	} catch (exception) {
 		handleError(next, exception);
@@ -279,6 +286,10 @@ export async function getCropsByName(req, res, next) {
 export async function getCropGroups(req, res, next) {
 	try {
 		const groups = await processor.getCropGroups(req.body.cropIds);
+
+		debug('getCropGroups():');
+		debug(groups);
+
 		res.json(groups);
 	} catch (exception) {
 		handleError(next, exception);
@@ -297,6 +308,10 @@ export async function getCropGroups(req, res, next) {
 export async function getCompatibleCrops(req, res, next) {
 	try {
 		const crops = await processor.getCompatibleCrops(req.body.cropIds);
+
+		debug('getCompatibleCrops():');
+		debug(crops);
+
 		res.json(crops);
 	} catch (exception) {
 		handleError(next, exception);

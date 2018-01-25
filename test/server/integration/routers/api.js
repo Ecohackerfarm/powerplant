@@ -1,9 +1,7 @@
-import app from '/server/app.js';
-import supertest from 'supertest';
+import { request } from '/test/server/init.js';
 
 const rootUrl = '/api';
 const jsonType = 'application/json; charset=utf-8';
-const request = supertest(app);
 
 describe(rootUrl + '/*', () => {
 	describe('GET', () => {

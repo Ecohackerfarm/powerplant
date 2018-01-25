@@ -3,3 +3,7 @@
  * 
  * @namespace server
  */
+
+import { startServer } from './server';
+
+startServer(false);

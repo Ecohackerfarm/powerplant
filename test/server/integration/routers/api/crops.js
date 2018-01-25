@@ -1,5 +1,5 @@
 import { expect } from 'chai';
-import app from '/server/app';
+import { request } from '/test/server/init.js';
 import {
 	sendForm,
 	randString,
@@ -7,14 +7,12 @@ import {
 	createTestCrop,
 	createTestCropRelationship
 } from '../routerHelpers';
-import supertest from 'supertest';
 import Crop from '/server/models/crop';
 import { Types } from 'mongoose';
 
 const rootUrl = '/api/crops';
 const jsonType = 'application/json; charset=utf-8';
 const { ObjectId } = Types;
-const request = supertest(app);
 
 describe(rootUrl + '/', () => {
 	let count;
