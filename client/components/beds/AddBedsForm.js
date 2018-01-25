@@ -83,7 +83,7 @@ class AddBedForm extends React.Component {
 		this.chosenBeds = chosenGroups;
 	};
 
-	crops(){
+	cropGroups(){
 		if ( this.state.chosenCrops.length < this.props.minNumberOfCrops ) {
 			return (<p>{this.props.minNumberOfCropsText}</p>);
 		} else {
@@ -104,7 +104,7 @@ class AddBedForm extends React.Component {
 				<div className="choose-crops">
 			  	<ChooseCrops onChange={this.onChangeChooseCrop}/>
 			  </div>
-			  {this.crops()}
+			  {this.cropGroups()}
 			  <div className="button-checkbox-center" >
 					<Button
 						type="submit"
