@@ -18,9 +18,9 @@ class CropGroups extends React.Component {
 	}
 	render(){
 		if (this.props.loading){
-			return <p>Loading ...</p>;
+			return <p>{this.props.loadingText}</p>;
 		} else if ( this.props.error ){
-			return <p>Error occured</p>;
+			return <p>{this.props.errorText}</p>;
 		} else if (this.props.groups.length) {
 			this.choosenGroups = this.props.groups;
 	 		return (
@@ -37,12 +37,18 @@ class CropGroups extends React.Component {
 		  		})}
 	 			</div>);
 	 } else {
-	   return <div>No Groups Found.</div>;
+	   return <div>this.props.noGroupsText</div>;
 	 }
 	};
 }
 CropGroups.propTypes = {
 	groups : PropTypes.array.isRequired,
+}
+
+CropGroups.defaultProps = {
+	loadingText : "Loading ...",
+	errorText : "Sorry, an error occured.",
+	noGroupsText : "No Groups Found."
 }
 
 export default CropGroups;

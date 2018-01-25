@@ -22,7 +22,6 @@ class AddBedForm extends React.Component {
 			savingError : false,
 		}
 	}
-	minNumberOfCrops = 3;
 
 	getGroups(cropIds){
 		this.setState({
@@ -75,7 +74,7 @@ class AddBedForm extends React.Component {
 		const cropIds = chosenCrops.map((crop)=>{
 			return crop._id;
 		})
-		if( chosenCrops.length >= this.minNumberOfCrops ){
+		if( chosenCrops.length >= this.props.minNumberOfCrops ){
 			this.getGroups(cropIds);
 		}
 	};
@@ -84,28 +83,45 @@ class AddBedForm extends React.Component {
 		this.chosenBeds = chosenGroups;
 	};
 
+	crops(){
+		if ( this.state.chosenCrops.length < this.props.minNumberOfCrops ) {
+			return (<p>{this.props.minNumberOfCropsText}</p>);
+		} else {
+			return (<CropGroups
+		  	error={this.state.groupsError}
+		  	loading={this.state.loadingGroups}
+		  	groups={this.state.groups}
+		  	onChange={this.onChangeCropGroups}
+		  />);
+		}
+	}
+
 	render(){
 		this.chosenBeds = this.state.groups;
 		return (
-						<form onSubmit={this.onSubmit}>
-							<div className="choose-crops">
-						  	<ChooseCrops onChange={this.onChangeChooseCrop}/>
-						  </div>
-						  <CropGroups
-						  	error={this.state.groupsError}
-						  	loading={this.state.loadingGroups}
-						  	groups={this.state.groups}
-						  	onChange={this.onChangeCropGroups}
-						  />
-						  <div className="button-checkbox-center" >
-								<Button
-									type="submit"
-									className="btn btn-primary"
-								>Submit</Button>
-							</div>
-						</form>
+			<form onSubmit={this.onSubmit}>
+			  <div>{this.props.explanation}</div>
+				<div className="choose-crops">
+			  	<ChooseCrops onChange={this.onChangeChooseCrop}/>
+			  </div>
+			  {this.crops()}
+			  <div className="button-checkbox-center" >
+					<Button
+						type="submit"
+						className="btn btn-primary"
+						disabled={this.state.groups.length===0}
+					>{this.props.submitButtonText}</Button>
+				</div>
+			</form>
 		);
 	}
+}
+
+AddBedForm.defaultProps = {
+	minNumberOfCrops : 3,
+	submitButtonText : "Submit",
+	minNumberOfCropsText : "Please select at least 3 crops.",
+	explanation : "Please choose the crops you want to add in your garden. We will suggest you which plants should go together into the same bed."
 }
 
 export default withRouter(AddBedForm);
