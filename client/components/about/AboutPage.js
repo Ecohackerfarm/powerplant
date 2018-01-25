@@ -1,5 +1,6 @@
 import React from 'react';
 import { Grid, Row, Col } from 'react-bootstrap';
+import '../../styles/AboutPage.scss';
 class AboutPage extends React.Component {
 
 	render() {
@@ -7,21 +8,21 @@ class AboutPage extends React.Component {
 			<div className="about">
 				<Grid>
 					<Row>
-						<Col id="imageTitle" sm={12} md={6}>
+						<Col id="imageTitle" sm={12}>
 
 						</Col>
-						<Col className="textTitle" sm={12} md={6}>
-							<h3>power<br/>&nbsp;&nbsp;&nbsp;plant</h3>
+						<Col className="textTitle" sm={12}>
+							<h1 className="pp-font">powerplant</h1>
 						</Col>
 					</Row>
 					<Row className="textBody">
-						<h4>OpenSource Project</h4>
+						<h4>An <a href="https://ecohackerfarm.org">Eco Hacker Farm</a> OpenSource Project under MIT license</h4>
 					</Row>
 					<Row className="textBody">
-						<a href="http://www.powerplant.com"><h4>www.powerplant.com</h4></a>
+						<a href="https://powerplant.ecohackerfarm.org"><h4>powerplant.ecohackerfarm.org</h4></a>
 					</Row>
 					<Row className="textBody">
-						<h4>Copyright</h4>
+						<h4>Copyright (c) 2017 Ecohackerfarm</h4>
 					</Row>
 				</Grid>
 			</div>

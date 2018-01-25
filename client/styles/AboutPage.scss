@@ -1,0 +1,30 @@
+//AboutPage.scss
+.about{
+	#imageTitle{
+		background-image: url(/images/logo/logo_128.png);
+		padding: 60px;
+		background-repeat: no-repeat;
+
+		background-size: 118px;
+		@media (max-width: 992px) {
+			background-position: center;
+		}
+		@media (min-width: 992px) {
+			background-position: center;
+		}
+	}
+	.textTitle{
+		size: 17px;
+		text-align: center;
+		//padding-left: -15px;
+		@media (max-width: 992px) {
+			text-align: center;
+		}
+		@media (min-width: 992px) {
+			text-align: center;
+		}
+	}
+	.textBody{
+		text-align: center;
+	}
+}
