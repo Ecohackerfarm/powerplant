@@ -1,4 +1,5 @@
 import axios from 'axios';
+import { getCropsByName } from '../utils/apiCalls';
 import {
 	UPDATED_CROPS,
 	UPDATED_RELATIONSHIPS,
@@ -109,27 +110,18 @@ export const fetchCrops = () => {
   const name = '';
   const index = '';
   const length = '';
-  // some intelligent update mechanism should be here but
-  // instead we set an update interval
 
 	return ( dispatch , getState ) => {
 		if ( updateNeeded(getState().crops.relationshipsUpdated) ){
 			dispatch(loadingCrops(true));
-			return axios.get(
-			  '/api/get-crops-by-name?name='
-				+ name
-				+ '&index='
-				+ index
-				+ '&length='
-				+ length
+			return getCropsByName(
+				{name,index,length}
 			).then(res => {
-				if (res.status === 200) {
-					dispatch(recieveCrops(res.data));
-				} else {
-					dispatch(fetchCropsError(res));
-				}
+				dispatch(recieveCrops(res.data));
 				dispatch(loadingCrops(false));
-				//return {res};
+			}).catch(error => {
+				dispatch(fetchCropsError(error));
+				dispatch(loadingCrops(false));
 			});
 		}
 	};

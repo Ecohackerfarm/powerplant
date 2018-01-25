@@ -2,7 +2,7 @@ import React from 'react';
 import ChooseCrops from '../crops/ChooseCrops';
 import CropGroups from '../crops/CropGroups';
 import { Button } from 'react-bootstrap'
-import axios from 'axios';
+import { getCropGroups } from '../../utils/apiCalls';
 import { withRouter } from 'react-router-dom';
 
 class AddBedForm extends React.Component {
@@ -28,23 +28,18 @@ class AddBedForm extends React.Component {
 		this.setState({
 			loadingGroups : true
 		});
-		axios.post(
-			  '/api/get-crop-groups',
-			  { cropIds }
+		getCropGroups(
+			{ cropIds }
 		).then(res => {
-				if (res.status === 200) {
-					this.setState({
-						groups : res.data
-					});
-				} else {
-					this.setState({
-						groupsError : res
-					});
-				}
-				this.setState({
-					loadingGroups : false
-				});
-				//return {res};
+			this.setState({
+				groups : res.data,
+				loadingGroups : false
+			});
+		}).catch(error => {
+			this.setState({
+				groupsError : res,
+				loadingGroups : false
+			});
 		});
 	}
 
