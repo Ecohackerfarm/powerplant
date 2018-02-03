@@ -5,9 +5,14 @@ import { connect } from 'react-redux';
 import { Grid, Row, Col } from 'react-bootstrap';
 import { userSignupRequest } from '../../actions/userActions';
 import SetHeaderTitle from '../shared/SetHeaderTitle';
-
 import RegisterForm from './RegisterForm';
 
+/**
+ * TODO: Refactor userSignupRequest, it's needed only in RegisterForm so it
+ * shouldn't be here.
+ * 
+ * @extends Component
+ */
 class RegisterPage extends React.Component {
 	static propTypes = {
 		userSignupRequest: PropTypes.func.isRequired
@@ -17,7 +22,7 @@ class RegisterPage extends React.Component {
 		success: false
 	};
 
-	onSuccess = () => {
+	onSuccess() {
 		this.setState({
 			success: true
 		});

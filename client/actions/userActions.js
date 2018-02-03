@@ -7,7 +7,6 @@ import axios from 'axios';
 import { setAuthorizationToken } from '../utils';
 import jwtDecode from 'jwt-decode';
 import { setCurrentUser, logoutUser } from '.';
-import { store } from '../index';
 import { getLocationsRequest, saveLocationRequest } from './locationActions';
 
 // creating a thunk action that dispatches SET_CURRENT_USER once the sign up request is successful
@@ -21,10 +20,9 @@ import { getLocationsRequest, saveLocationRequest } from './locationActions';
  * @param {String} userData.password
  * @return {Promise} which resolves to whatever the {@link client.actions.userActions.userLoginRequest userLoginRequest} would resolve to
  */
-export function userSignupRequest(userData) {
+export function userSignupRequest(userData, locations) {
 	// TODO: once the back end is ready to handle it, should be able to just nest all data you want to save within the userData
 	// and post that, and have it all save to the back end with new ids automatically
-	const locations = store.getState().locations;
 	return dispatch =>
 		axios
 			.post('/api/users', userData)

@@ -3,7 +3,6 @@
  * @memberof client.actions
  */
 
-import { store } from '../index';
 import axios from 'axios';
 
 /**

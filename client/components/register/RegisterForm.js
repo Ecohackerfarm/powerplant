@@ -3,12 +3,20 @@ import PropTypes from 'prop-types';
 import validateUser from '../../../shared/validation/userValidation';
 import { Button, FormGroup, HelpBlock } from 'react-bootstrap';
 import TextFieldGroup from '../shared/TextFieldGroup';
+import { connect } from 'react-redux';
 
-// RegisterForm is a stateful form used to register new users
-// Props:
-//  userSignupRequest: must be a redux action that submits a request to create a new userSignupRequest
-//  onSuccess: a callback handler when a success message is received from userSignupRequest
-export default class RegisterForm extends React.Component {
+/**
+ * RegisterForm is a stateful form used to register new users.
+ * 
+ * props.userSignupRequest: Must be a Redux action that submits a request to
+ * create a new userSignupRequest.
+ * props.onSuccess: 
+ * 
+ * TODO: Refactor userSignupRequest to be done with mapDispatchToProps
+ * 
+ * @extends Component
+ */
+class RegisterForm extends React.Component {
 	state = {
 		username: '',
 		email: '',
@@ -22,29 +30,36 @@ export default class RegisterForm extends React.Component {
 		onSuccess: PropTypes.func.isRequired
 	};
 
-	// handle user keyboard input passed back from the TextFieldGroups
-	onChange = evt => {
-		this.setState({
-			[evt.target.id]: evt.target.value
+	/**
+	 * Handle user keyboard input passed back from TextFieldGroup components.
+	 * 
+	 * @param {Object} event
+	 */
+	onChange(event) {
+		this.setStae({
+			[event.target.id]: event.target.value
 		});
-	};
+	}
 
-	onSubmit = evt => {
-		evt.preventDefault();
+	/**
+	 * @param {Object} event 
+	 */
+	onSubmit(event) {
+		event.preventDefault();
 		const { errors, isValid } = validateUser(this.state);
 		if (isValid) {
 			this.setState({
 				isLoading: true
 			});
 			this.props
-				.userSignupRequest(this.state)
+				.userSignupRequest(this.state, this.props.locations)
 				.then(this.props.onSuccess)
-				.catch(err => {
-					const res = err.response;
+				.catch((error) => {
+					const response = error.response;
 					const errors =
-						typeof res.data === 'undefined'
+						typeof (response.data === 'undefined')
 							? { form: 'Unable to sign up' }
-							: res.data.errors;
+							: response.data.errors;
 					this.setState({
 						errors,
 						isLoading: false
@@ -102,3 +117,9 @@ export default class RegisterForm extends React.Component {
 		);
 	}
 }
+
+const mapStateToProps = (state) => ({
+	locations: state.locations
+});
+
+export default connect(mapStateToProps)(RegisterForm);

@@ -1,4 +1,6 @@
 /**
+ * Client-side utility functions
+ * 
  * @namespace utils
  * @memberof client
  */
