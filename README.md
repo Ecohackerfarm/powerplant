@@ -18,18 +18,15 @@ Currently in development. A good amount of research and specification work has b
 To start developing, you need to set up the development environment. This includes:
 NodeJS and MongoDB or Docker with MongoDB
 
-1.  [Install Node](https://nodejs.org/en/download/package-manager/) you
-    should install version 6.x
-2.  [Install
-    Docker](https://docs.docker.com/engine/installation)
-3.  Install the [Mongo Docker image](https://hub.docker.com/_/mongo/) by running `docker pull mongo`
-4.  Clone the [git
-    repository](https://github.com/Ecohackerfarm/powerplant.git)
-5. run `npm install` to get all packages installed
-6. generate a private key and and set it for JWT_SECRET and get a Google Geocode API key and set is as GOOGLE_GEOCODE_API_KEY into secrets.js(see secrets.example.js)
-7.  Start the Docker image by running `npm run mongo`
-8.  Run 'npm start'
-9.  Run the Firebase data migration by running `npm run migrate`
+1. [Install Node](https://nodejs.org/en/download/package-manager/) you should install version 6.x
+2. [Install Docker](https://docs.docker.com/engine/installation)
+3. Install the [Mongo Docker image](https://hub.docker.com/_/mongo/) by running `docker pull mongo`
+4. Clone the [git repository](https://github.com/Ecohackerfarm/powerplant.git)
+5. Run `npm install` to get all packages installed
+6. Generate a private key and and set it for JWT_SECRET and get a Google Geocode API key and set is as GOOGLE_GEOCODE_API_KEY into secrets.js (see secrets.example.js)
+7. Start the Docker image by running `npm run mongo`
+8. Run 'npm start'
+9. Run the Firebase data migration by running `npm run migrate`
 10. At this point, everything should be set up. Run `npm test` to make
     sure everything is working, and `npm start` to begin serving the
     website on `http://localhost:8080`
