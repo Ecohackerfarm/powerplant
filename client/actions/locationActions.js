@@ -6,6 +6,7 @@
 import axios from 'axios';
 import { editLocation, addLocation, deleteLocation, setLocations } from '.';
 import { simpleAuthCheckedRequest } from './actionHelpers';
+import { getLocations } from '../utils/apiCalls';
 
 /**
  * Async sends a request to get all the user's locations
@@ -17,11 +18,11 @@ import { simpleAuthCheckedRequest } from './actionHelpers';
  */
 export const getLocationsRequest = id => {
 	return dispatch =>
-		axios.get('/api/users/' + id + '/locations').then(res => {
-			if (res.status === 200) {
+	  getLocations({id})
+	    .then(res => {
 				dispatch(setLocations(res.data));
-			}
-			return res;
+		}).catch(error => {
+				console.log('Unhandled Error:',error);
 		});
 };
 

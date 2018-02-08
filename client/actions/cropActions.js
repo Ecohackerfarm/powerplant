@@ -1,4 +1,5 @@
 import axios from 'axios';
+import { getCropsByName } from '../utils/apiCalls';
 import {
 	cropsLoading,
 	cropsUpdated,
@@ -8,6 +9,13 @@ import {
 	cropRelationshipsLoadingError
 } from '.';
 
+
+/**
+ * decides if an update is needed
+ * TODO: is still dumb and doesn't make decisions
+ * @param  {number} lastUpdated millisec from the date of the last update
+ * @return {boolean}             true if update is neccessary, false if not
+ */
 const updateNeeded = (lastUpdated) => {
 	const now = new Date();
 	const updateInterval = 7 * 24 * 60 * 60 * 1000;
@@ -28,32 +36,27 @@ export const fetchCrops = () => {
   	// some intelligent update mechanism should be here but
 	// instead we set an update interval
 	
-	return ( dispatch , getState ) => {
-		if ( updateNeeded(getState().crops.relationshipsUpdated) ){
+	return (dispatch, getState) => {
+		if (updateNeeded(getState().crops.relationshipsUpdated)) {
 			dispatch(cropsLoading(true));
-			return axios.get(
-			  '/api/get-crops-by-name?name='
-				+ name
-				+ '&index='
-				+ index
-				+ '&length='
-				+ length
-			).then(res => {
-				if (res.status === 200) {
-					dispatch(cropsUpdated(res.data));
-				} else {
-					dispatch(cropsLoadingError(res));
-				}
+			return getCropsByName({ name, index, length }).then(res => {
+				dispatch(cropsUpdated(res.data));
 				dispatch(cropsLoading(false));
-				//return {res};
+			}).catch(error => {
+				dispatch(cropsLoadingError(error));
+				dispatch(cropsLoading(false));
 			});
 		}
 	};
 };
 
+/**
+ * Fetches Relationship from server if not existent or old data
+ * @return {function} function for dispatch
+ */
 export const fetchRelationships = () => {
-	return ( dispatch , getState ) => {
-		if ( updateNeeded(getState().crops.companionships.updated) ){
+	return (dispatch, getState) => {
+		if (updateNeeded(getState().crops.companionships.updated)) {
 			dispatch(cropRelationshipsLoading(true));
 			return axios.get(
 			  '/get-all-crop-relationships'
@@ -64,7 +67,6 @@ export const fetchRelationships = () => {
 					dispatch(cropRelationshipsLoadingError(res));
 				}
 				dispatch(cropRelationshipsLoading(false));
-				//return {res};
 			});
 		}
 	};

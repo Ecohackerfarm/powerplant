@@ -2,7 +2,7 @@ import React from 'react';
 import ChooseCrops from '../crops/ChooseCrops';
 import CropGroups from '../crops/CropGroups';
 import { Button } from 'react-bootstrap'
-import axios from 'axios';
+import { getCropGroups } from '../../utils/apiCalls';
 import { withRouter } from 'react-router-dom';
 
 class AddBedForm extends React.Component {
@@ -22,29 +22,23 @@ class AddBedForm extends React.Component {
 			savingError : false,
 		}
 	}
-	minNumberOfCrops = 3;
 
 	getGroups(cropIds){
 		this.setState({
 			loadingGroups : true
 		});
-		axios.post(
-			  '/api/get-crop-groups',
-			  { cropIds }
+		getCropGroups(
+			{ cropIds }
 		).then(res => {
-				if (res.status === 200) {
-					this.setState({
-						groups : res.data
-					});
-				} else {
-					this.setState({
-						groupsError : res
-					});
-				}
-				this.setState({
-					loadingGroups : false
-				});
-				//return {res};
+			this.setState({
+				groups : res.data,
+				loadingGroups : false
+			});
+		}).catch(error => {
+			this.setState({
+				groupsError : res,
+				loadingGroups : false
+			});
 		});
 	}
 
@@ -80,7 +74,7 @@ class AddBedForm extends React.Component {
 		const cropIds = chosenCrops.map((crop)=>{
 			return crop._id;
 		})
-		if( chosenCrops.length >= this.minNumberOfCrops ){
+		if( chosenCrops.length >= this.props.minNumberOfCrops ){
 			this.getGroups(cropIds);
 		}
 	};
@@ -89,28 +83,45 @@ class AddBedForm extends React.Component {
 		this.chosenBeds = chosenGroups;
 	};
 
+	cropGroups(){
+		if ( this.state.chosenCrops.length < this.props.minNumberOfCrops ) {
+			return (<p>{this.props.minNumberOfCropsText}</p>);
+		} else {
+			return (<CropGroups
+		  	error={this.state.groupsError}
+		  	loading={this.state.loadingGroups}
+		  	groups={this.state.groups}
+		  	onChange={this.onChangeCropGroups}
+		  />);
+		}
+	}
+
 	render(){
 		this.chosenBeds = this.state.groups;
 		return (
-						<form onSubmit={this.onSubmit}>
-							<div className="choose-crops">
-						  	<ChooseCrops onChange={this.onChangeChooseCrop}/>
-						  </div>
-						  <CropGroups
-						  	error={this.state.groupsError}
-						  	loading={this.state.loadingGroups}
-						  	groups={this.state.groups}
-						  	onChange={this.onChangeCropGroups}
-						  />
-						  <div className="button-checkbox-center" >
-								<Button
-									type="submit"
-									className="btn btn-primary"
-								>Submit</Button>
-							</div>
-						</form>
+			<form onSubmit={this.onSubmit}>
+			  <div>{this.props.explanation}</div>
+				<div className="choose-crops">
+			  	<ChooseCrops onChange={this.onChangeChooseCrop}/>
+			  </div>
+			  {this.cropGroups()}
+			  <div className="button-checkbox-center" >
+					<Button
+						type="submit"
+						className="btn btn-primary"
+						disabled={this.state.groups.length===0}
+					>{this.props.submitButtonText}</Button>
+				</div>
+			</form>
 		);
 	}
+}
+
+AddBedForm.defaultProps = {
+	minNumberOfCrops : 3,
+	submitButtonText : "Submit",
+	minNumberOfCropsText : "Please select at least 3 crops.",
+	explanation : "Please choose the crops you want to add in your garden. We will suggest you which plants should go together into the same bed."
 }
 
 export default withRouter(AddBedForm);

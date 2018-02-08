@@ -2,7 +2,7 @@ import React from 'react';
 import { Col, Button } from 'react-bootstrap';
 import Proptypes from 'prop-types';
 import { connect } from 'react-redux';
-import axios from 'axios';
+import { getCompatibleCrops } from '../../utils/apiCalls';
 import { Typeahead } from 'react-bootstrap-typeahead';
 import { withRouter } from 'react-router-dom';
 import { fetchCrops } from '../../actions/cropActions';
@@ -31,27 +31,22 @@ class EditBedForm extends React.Component {
 				this.setState({
 					loading : true,
 				});
-				axios.post(
-					  '/api/get-compatible-crops',
+				getCompatibleCrops(
 					  {
 					  	cropIds : this.state.cropsInBed.map((crop)=>{
 					  		return crop._id;
 					  	})
 					  }
 				).then(res => {
-						if (res.status === 200) {
-							this.setState({
-								compatibleCrops : res.data
-							});
-						} else {
-							this.setState({
-								error : res
-							});
-						}
-						this.setState({
-							loading : false
-						});
-						//return {res};
+					this.setState({
+						compatibleCrops : res.data,
+						loading : false
+					});
+				}).catch(error => {
+					this.setState({
+						error,
+						loading : false
+					});
 				});
 			} else {
 				this.props.fetchCrops();

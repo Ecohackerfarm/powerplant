@@ -1,13 +1,11 @@
 import { expect } from 'chai';
-import app from '/server/app';
 import { sendForm } from '../routerHelpers';
-import supertest from 'supertest';
 import { user } from './users';
 import jwtDecode from 'jwt-decode';
+import { request } from '/test/server/init.js';
 
 const rootUrl = '/api/login';
 const jsonType = 'application/json; charset=utf-8';
-const request = supertest(app);
 
 const testLogin = {
 	username: user.username,

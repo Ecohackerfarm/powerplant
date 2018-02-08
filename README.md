@@ -13,7 +13,7 @@ Currently in development. A good amount of research and specification work has b
 
 ## Setup
 
-### Development
+### Development Setup
 
 To start developing, you need to set up the development environment. This includes:
 NodeJS and MongoDB or Docker with MongoDB
@@ -41,7 +41,7 @@ issue.
 
 [More documentation](https://github.com/Ecohackerfarm/powerplant/tree/master/docs)
 
-### Production
+### Production Setup
 
 For Production you need an installed MongoDB and a user that has access to a db in it ("readWrite", "dbAdm").
 Also you need Node 6.x installed on the system.
@@ -54,7 +54,7 @@ Also you need Node 6.x installed on the system.
 	3. set all `DATABASE_` variables
 	4. set PP_PORT for the port you want powerplant to run
 4. `npm run production`
-5. `npm run migrate_production'
+5. `npm run migrate_production`
 6. Done!
 
 If you have any problems to set it up, send us an email to franz}at{ecohackerfarm.org
