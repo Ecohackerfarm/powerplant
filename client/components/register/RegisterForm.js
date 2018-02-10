@@ -1,3 +1,8 @@
+/**
+ * @namespace RegisterForm
+ * @memberof client.components.register
+ */
+
 import React from 'react';
 import PropTypes from 'prop-types';
 import validateUser from '../../../shared/validation/userValidation';

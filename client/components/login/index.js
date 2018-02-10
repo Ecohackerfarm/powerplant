@@ -1,6 +1,6 @@
 /**
- * Generic components
+ * Login components
  * 
- * @namespace shared
+ * @namespace login
  * @memberof client.components
  */

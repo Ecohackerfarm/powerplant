@@ -1,6 +1,6 @@
 /**
- * Generic components
+ * Header components
  * 
- * @namespace shared
+ * @namespace header
  * @memberof client.components
  */

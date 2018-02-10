@@ -1,15 +1,24 @@
+/**
+ * @namespace AboutPage
+ * @memberof client.components.about
+ */
+
 import React from 'react';
 import { Grid, Row, Col } from 'react-bootstrap';
 import '../../styles/AboutPage.scss';
-class AboutPage extends React.Component {
 
+/**
+ * About page
+ * 
+ * @extends Component
+ */
+class AboutPage extends React.Component {
 	render() {
 		return (
 			<div className="about">
 				<Grid>
 					<Row>
 						<Col id="imageTitle" sm={12}>
-
 						</Col>
 						<Col className="textTitle" sm={12}>
 							<h1 className="pp-font">powerplant</h1>

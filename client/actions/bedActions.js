@@ -1,3 +1,8 @@
+/**
+ * @namespace bedActions
+ * @memberof client.actions
+ */
+
 import { addBed } from '.';
 
 /**

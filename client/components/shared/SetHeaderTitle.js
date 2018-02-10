@@ -3,9 +3,12 @@ import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
 import { setTitleRequest } from '../../actions/headerActions';
 
-// for over md: show in header
-// for under md: hide in header, show inline
-
+/**
+ * For over md: show in header
+ * For under md: hide in header, show inline
+ * 
+ * @extends Component
+ */
 class SetHeaderTitle extends React.Component {
 	static propTypes = {
 		setTitleRequest: PropTypes.func.isRequired,

@@ -1,3 +1,8 @@
+/**
+ * @namespace ChooseCrops
+ * @memberof client.components.crops
+ */
+
 import { Typeahead } from 'react-bootstrap-typeahead';
 import 'react-bootstrap-typeahead/css/Typeahead.css';
 import React from 'react';
@@ -9,13 +14,11 @@ import {
 import { connect } from 'react-redux';
 
 /**
- * A react component that searches all organisms with autocompletion feature
- * @namespace ChooseCrops
- * @memberof client.components
+ * A react component that searches all organisms with autocompletion feature.
+ * 
+ * @extends Component
  */
-
 class ChooseCrops extends React.Component {
-
 	componentWillMount() {
 		this.props.fetchCrops();
 	}
@@ -45,21 +48,15 @@ ChooseCrops.propTypes = {
 	error : PropTypes.bool.isRequired,
 }
 
-const mapDispatchToProps = (dispatch) => {
-    return {
-        fetchCrops: () => dispatch(fetchCrops()),
-        fetchCombinations : () => dispatch(fetchCombinations())
-    };
-};
+const mapDispatchToProps = (dispatch) => ({
+	fetchCrops: () => dispatch(fetchCrops()),
+	fetchCombinations: () => dispatch(fetchCombinations())
+});
 
-const mapStateToProps = (state) => {
-    return {
-    	  crops: state.crops,
-        loading: state.crops.loading,
-        error: state.crops.error,
-    };
-};
+const mapStateToProps = (state) => ({
+	crops: state.crops,
+	loading: state.crops.loading,
+	error: state.crops.error,
+});
 
-export default connect (mapStateToProps, mapDispatchToProps)( ChooseCrops );
-
-
+export default connect (mapStateToProps, mapDispatchToProps)(ChooseCrops);

@@ -7,7 +7,10 @@ import {
 } from 'react-bootstrap';
 import PropTypes from 'prop-types';
 
-export default class TextFieldGroup extends React.Component {
+/**
+ * @extends Component
+ */
+class TextFieldGroup extends React.Component {
 	static propTypes = {
 		id: PropTypes.string.isRequired,
 		onChange: PropTypes.func.isRequired,
@@ -47,3 +50,5 @@ export default class TextFieldGroup extends React.Component {
 		);
 	}
 }
+
+export default TextFieldGroup;

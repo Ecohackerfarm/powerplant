@@ -1,3 +1,8 @@
+/**
+ * @namespace Main
+ * @memberof client.components
+ */
+
 import React from 'react';
 import { Redirect, Route, Switch, withRouter} from 'react-router-dom';
 import Login from './login/LoginPage';

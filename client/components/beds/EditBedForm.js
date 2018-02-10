@@ -1,3 +1,8 @@
+/**
+ * @namespace EditBedForm
+ * @memberof client.components.beds
+ */
+
 import React from 'react';
 import { Col, Button } from 'react-bootstrap';
 import Proptypes from 'prop-types';
@@ -7,72 +12,77 @@ import { Typeahead } from 'react-bootstrap-typeahead';
 import { withRouter } from 'react-router-dom';
 import { fetchCrops } from '../../actions/cropActions';
 
+/**
+ * @extends Component
+ */
 class EditBedForm extends React.Component {
-	constructor(props){
+	/**
+	 * @param {Object} props 
+	 */
+	constructor(props) {
 		super(props);
 		this.onChange = this.onChange.bind(this);
 		this.onSubmit = this.onSubmit.bind(this);
 		//this.onSuccess;
 
 		this.state = {
-			compatibleCrops : [],
-			loading : false,
-			cropsInBed : this.props.itemToEdit.crops,
-			error : false,
+			compatibleCrops: [],
+			loading: false,
+			cropsInBed: this.props.itemToEdit.crops,
+			error: false,
 		}
 	}
-	componentWillMount(){
+
+	componentWillMount() {
 		this.getPossibleCrops();
 	}
-	getPossibleCrops(){
+
+	getPossibleCrops() {
 		window.clearTimeout(this.callApi);
-		this.callApi = window.setTimeout(()=>{
-			if(this.state.cropsInBed.length > 0){
-				this.setState({
-					loading : true,
-				});
-				getCompatibleCrops(
-					  {
-					  	cropIds : this.state.cropsInBed.map((crop)=>{
-					  		return crop._id;
-					  	})
-					  }
-				).then(res => {
+		this.callApi = window.setTimeout(() => {
+			if (this.state.cropsInBed.length > 0) {
+				this.setState({ loading: true });
+				getCompatibleCrops({
+					cropIds: this.state.cropsInBed.map((crop) => crop._id)
+				}).then((response) => {
 					this.setState({
-						compatibleCrops : res.data,
-						loading : false
+						compatibleCrops: response.data,
+						loading: false
 					});
-				}).catch(error => {
+				}).catch((error) => {
 					this.setState({
 						error,
-						loading : false
+						loading: false
 					});
 				});
 			} else {
 				this.props.fetchCrops();
 			}
-		}, 450)
+		}, 450);
 	}
 
-	onSubmit(e){
-		e.preventDefault();
-		//TODO: VALIDATE PLANTS
+	/**
+	 * @param {Object} event
+	 */
+	onSubmit(event) {
+		event.preventDefault();
+		// TODO: VALIDATE PLANTS
 		this.props.onSubmit({
-			crops : this.state.cropsInBed
+			crops: this.state.cropsInBed
 		})
 		this.props.onSuccess();
 	}
 
-	onChange(chosenCrops){
-	  this.setState(
-	  	{
-				cropsInBed : chosenCrops
-			},
-			this.getPossibleCrops
-		);
-	};
+	/**
+	 * @param {Crop[]} chosenCrops 
+	 */
+	onChange(chosenCrops) {
+		this.setState({
+			cropsInBed: chosenCrops
+		}, this.getPossibleCrops);
+	}
 
-	render(){
+	render() {
 		return (
 			<form onSubmit={this.onSubmit}>
 				<div className="choose-crops">
@@ -115,18 +125,14 @@ class EditBedForm extends React.Component {
 	}
 }
 
-const mapStateToProps = (state) => {
-    return {
-    	  crops: state.crops,
-        allCropsLoading: state.crops.loading,
-        allCropsError: state.crops.error,
-    };
-};
+const mapStateToProps = (state) => ({
+	crops: state.crops,
+	allCropsLoading: state.crops.loading,
+	allCropsError: state.crops.error
+});
 
-const mapDispatchToProps = (dispatch) => {
-    return {
-        fetchCrops: () => dispatch(fetchCrops())
-    };
-};
+const mapDispatchToProps = (dispatch) => ({
+	fetchCrops: () => dispatch(fetchCrops())
+});
 
 export default withRouter(connect(mapStateToProps, mapDispatchToProps)(EditBedForm));

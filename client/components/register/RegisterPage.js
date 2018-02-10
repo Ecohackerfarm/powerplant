@@ -1,3 +1,8 @@
+/**
+ * @namespace RegisterPage
+ * @memberof client.components.register
+ */
+
 import React from 'react';
 import { Redirect } from 'react-router-dom';
 import PropTypes from 'prop-types';

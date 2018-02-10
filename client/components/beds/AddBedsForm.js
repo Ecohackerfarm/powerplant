@@ -1,12 +1,23 @@
-import React from 'react';
+/**
+ * @namespace AddBedsForm
+ * @memberof client.components.beds
+ */
+
+ import React from 'react';
 import ChooseCrops from '../crops/ChooseCrops';
 import CropGroups from '../crops/CropGroups';
 import { Button } from 'react-bootstrap'
 import { getCropGroups } from '../../utils/apiCalls';
 import { withRouter } from 'react-router-dom';
 
+/**
+ * @extends Component
+ */
 class AddBedForm extends React.Component {
-	constructor(props){
+	/**
+	 * @param {Object} props 
+	 */
+	constructor(props) {
 		super(props);
 		this.onChangeChooseCrop = this.onChangeChooseCrop.bind(this);
 		this.onChangeCropGroups = this.onChangeCropGroups.bind(this);
@@ -15,102 +26,110 @@ class AddBedForm extends React.Component {
 		//this.onSuccess;
 
 		this.state = {
-			chosenCrops : [],
-			loadingGroups : false,
-			groups : [],
-			groupsError : false,
-			savingError : false,
+			chosenCrops: [],
+			loadingGroups: false,
+			groups: [],
+			groupsError: false,
+			savingError: false,
 		}
 	}
 
-	getGroups(cropIds){
+	/**
+	 * @param {String[]} cropIds 
+	 */
+	getGroups(cropIds) {
 		this.setState({
-			loadingGroups : true
+			loadingGroups: true
 		});
-		getCropGroups(
-			{ cropIds }
-		).then(res => {
+		getCropGroups({ cropIds }).then((response) => {
 			this.setState({
-				groups : res.data,
-				loadingGroups : false
+				groups: response.data,
+				loadingGroups: false
 			});
-		}).catch(error => {
+		}).catch((error) => {
 			this.setState({
-				groupsError : res,
-				loadingGroups : false
+				groupsError: response,
+				loadingGroups: false
 			});
 		});
 	}
 
-	onSubmit(e){
-		e.preventDefault();
+	/**
+	 * @param {Object} event
+	 */
+	onSubmit(event) {
+		event.preventDefault();
 		//TODO: VALIDATE PLANTS
-		let createPromises=[];
-		this.chosenBeds.forEach((crops,index) => {
-			let genName = '';
-			crops.forEach((crop)=>{
-				genName+=crop.commonName.slice(0,2);
-			})
+		let createPromises = [];
+		this.chosenBeds.forEach((crops, index) => {
+			let generatedName = '';
+			crops.forEach((crop) => {
+				generatedName += crop.commonName.slice(0, 2);
+			});
 			//create beds from
 			createPromises.push(this.props.onSubmit({
-				name : genName,
+				name: generatedName,
 				crops
 			}));
 		});
-		Promise.all(createPromises).then(
-			()=> this.props.onSuccess()
-		).catch(err => {
+		Promise.all(createPromises).then(() => this.props.onSuccess())
+		.catch((error) => {
 			this.setState({
-				savingError: { form : 'Error saving beds'}
-			})
+				savingError: { form: 'Error saving beds'}
+			});
 		});
-
 	}
 
-	onChangeChooseCrop(chosenCrops){
-	  this.setState({
-			chosenCrops
-		});
-		const cropIds = chosenCrops.map((crop)=>{
-			return crop._id;
-		})
-		if( chosenCrops.length >= this.props.minNumberOfCrops ){
+	/**
+	 * @param {Crop[]} chosenCrops 
+	 */
+	onChangeChooseCrop(chosenCrops) {
+		this.setState({ chosenCrops });
+		const cropIds = chosenCrops.map((crop) => crop._id);
+		if (chosenCrops.length >= this.props.minNumberOfCrops) {
 			this.getGroups(cropIds);
 		}
-	};
+	}
 
-	onChangeCropGroups(chosenGroups){
+	/**
+	 * @param {Object} chosenGroups 
+	 */
+	onChangeCropGroups(chosenGroups) {
 		this.chosenBeds = chosenGroups;
-	};
+	}
 
-	cropGroups(){
-		if ( this.state.chosenCrops.length < this.props.minNumberOfCrops ) {
+	cropGroups() {
+		if (this.state.chosenCrops.length < this.props.minNumberOfCrops) {
 			return (<p>{this.props.minNumberOfCropsText}</p>);
 		} else {
-			return (<CropGroups
-		  	error={this.state.groupsError}
-		  	loading={this.state.loadingGroups}
-		  	groups={this.state.groups}
-		  	onChange={this.onChangeCropGroups}
-		  />);
+			return (
+				<CropGroups
+					error={this.state.groupsError}
+					loading={this.state.loadingGroups}
+					groups={this.state.groups}
+		  			onChange={this.onChangeCropGroups}
+					/>
+			);
 		}
 	}
 
-	render(){
+	render() {
 		this.chosenBeds = this.state.groups;
 		return (
 			<form onSubmit={this.onSubmit}>
-			  <div>{this.props.explanation}</div>
+				<div>{this.props.explanation}</div>
 				<div className="choose-crops">
-			  	<ChooseCrops onChange={this.onChangeChooseCrop}/>
-			  </div>
-			  {this.cropGroups()}
-			  <div className="button-checkbox-center" >
+					<ChooseCrops onChange={this.onChangeChooseCrop}/>
+				</div>
+				{this.cropGroups()}
+				<div className="button-checkbox-center">
 					<Button
 						type="submit"
 						className="btn btn-primary"
-						disabled={this.state.groups.length===0}
-					>{this.props.submitButtonText}</Button>
+						disabled={this.state.groups.length === 0}
+						>
+						{this.props.submitButtonText}
+					</Button>
 				</div>
 			</form>
 		);
@@ -118,10 +137,10 @@ class AddBedForm extends React.Component {
 }
 
 AddBedForm.defaultProps = {
-	minNumberOfCrops : 3,
-	submitButtonText : "Submit",
-	minNumberOfCropsText : "Please select at least 3 crops.",
-	explanation : "Please choose the crops you want to add in your garden. We will suggest you which plants should go together into the same bed."
+	minNumberOfCrops: 3,
+	submitButtonText: "Submit",
+	minNumberOfCropsText: "Please select at least 3 crops.",
+	explanation: "Please choose the crops you want to add in your garden. We will suggest you which plants should go together into the same bed."
 }
 
 export default withRouter(AddBedForm);

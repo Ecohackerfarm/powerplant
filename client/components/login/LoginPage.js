@@ -1,3 +1,8 @@
+/**
+ * @namespace LoginPage
+ * @memberof client.components.login
+ */
+
 import React from 'react';
 import { connect } from 'react-redux';
 import { Redirect } from 'react-router-dom';
@@ -7,6 +12,9 @@ import { Grid, Row, Col } from 'react-bootstrap';
 import { userLoginRequest } from '../../actions/userActions';
 import SetHeaderTitle from '../shared/SetHeaderTitle';
 
+/**
+ * @extends Component
+ */
 class Login extends React.Component {
 	static propTypes = {
 		userLoginRequest: PropTypes.func.isRequired,

@@ -1,3 +1,8 @@
+/**
+ * @namespace Header
+ * @memberof client.components.header
+ */
+
 import React from 'react';
 import { withRouter } from 'react-router-dom';
 import { connect } from 'react-redux';
@@ -6,8 +11,10 @@ import { LinkContainer } from 'react-router-bootstrap';
 import PropTypes from 'prop-types';
 import HeaderBrand from './HeaderBrand';
 
+/**
+ * @extends Component
+ */
 class Header extends React.Component {
-
 	render() {
 		const customToggleStyle = { float: 'left', marginLeft: '15px' };
 		return (
@@ -30,12 +37,13 @@ class Header extends React.Component {
 		);
 	}
 }
+
 Header.propTypes = {
 		title: PropTypes.string.isRequired
 }
 
-const mapStateToProps = ({ app }) => ({
- title : app.headerTitle
+const mapStateToProps = (state) => ({
+	title: state.app.headerTitle
 });
 
 export default withRouter(connect(mapStateToProps)(Header));

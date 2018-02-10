@@ -1,3 +1,8 @@
+/**
+ * @namespace cropActions
+ * @memberof client.actions
+ */
+
 import axios from 'axios';
 import { getCropsByName } from '../utils/apiCalls';
 import {

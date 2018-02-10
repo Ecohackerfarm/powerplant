@@ -1,3 +1,8 @@
+/**
+ * @namespace AddLocationForm
+ * @memberof client.components.locations
+ */
+
 import React from 'react';
 import PropTypes from 'prop-types';
 import validateLocation from '../../../shared/validation/locationValidation';
@@ -12,6 +17,9 @@ import {
 import { LinkContainer } from 'react-router-bootstrap';
 import TextFieldGroup from '../shared/TextFieldGroup';
 
+/**
+ * @extends Component
+ */
 class AddLocationForm extends React.Component {
 	static propTypes = {
 		// both will be passed in by the Crudable AddItemPage
@@ -24,6 +32,9 @@ class AddLocationForm extends React.Component {
 		// pass in to this form as property rather than storing state in the form
 	};
 
+	/**
+	 * @param {Object} props 
+	 */
 	constructor(props) {
 		super(props);
 		const { itemToEdit } = props;
@@ -59,18 +70,22 @@ class AddLocationForm extends React.Component {
 		timeout: 700
 	};
 
-	// gets called when user types in a textbox
-	onChange = evt => {
+	/**
+	 * Gets called when user types in a textbox.
+	 * 
+	 * @param {Object} event 
+	 */
+	onChange(event) {
 		const { typingTimer, requestLocationResults } = this;
 		let errors = Object.assign({}, this.state.errors, {
-			[evt.target.id]: undefined
+			[event.target.id]: undefined
 		});
-		let id = evt.target.id;
+		let id = event.target.id;
 
 		if (id === 'address') {
 			clearTimeout(typingTimer.value);
 			errors = Object.assign({}, errors, { address: undefined });
-			if (evt.target.value) {
+			if (event.target.value) {
 				typingTimer.value = setTimeout(
 					requestLocationResults,
 					typingTimer.timeout
@@ -79,36 +94,38 @@ class AddLocationForm extends React.Component {
 			this.setState({
 				loc: {
 					coordinates: [],
-					address: evt.target.value
+					address: event.target.value
 				},
 				selectedLocation: false,
 				errors
 			});
 		} else {
 			this.setState({
-				[evt.target.id]: evt.target.value,
+				[event.target.id]: event.target.value,
 				errors
 			});
 		}
-	};
+	}
 
-	// gets called when the user types a query in the address textbox
-	// fetches possible locations from google geocode api
-	requestLocationResults = () => {
+	/**
+	 * Gets called when the user types a query in the address textbox.
+	 * Fetches possible locations from Google geocode API.
+	 */
+	requestLocationResults() {
 		const address = this.state.loc.address;
 		const headers = new Headers();
-		const init ={
-			method : 'GET',
-			dataType : 'json',
+		const init = {
+			method: 'GET',
+			dataType: 'json',
 			headers,
-			credentials : 'omit'
-		}
+			credentials: 'omit'
+		};
 		fetch(
 			'http://maps.google.com/maps/api/geocode/json?address='
 			+ address
 			, init)
-			.then(res => res.json())
-			.then(data => {
+			.then((response) => response.json())
+			.then((data) => {
 				if (data.status === 'ZERO_RESULTS') {
 					this.setState({
 						errors: Object.assign({}, this.state.errors, {
@@ -116,7 +133,7 @@ class AddLocationForm extends React.Component {
 						})
 					});
 				} else {
-					let locationResults = data.results.map(location => ({
+					let locationResults = data.results.map((location) => ({
 						loc: {
 							// yes, I know this is backwards
 							// it's a mongodb thing :(
@@ -140,9 +157,13 @@ class AddLocationForm extends React.Component {
 					})
 				});
 			});
-	};
+	}
 
-	// gets called when the user selects a location from the list
+	/**
+	 * Gets called when the user selects a location from the list.
+	 * 
+	 * @param {Number} index 
+	 */
 	setLocation(index) {
 		let loc = this.state.locationResults[index].loc;
 		let locationResults = [];
@@ -155,8 +176,11 @@ class AddLocationForm extends React.Component {
 		});
 	}
 
-	onSubmit = evt => {
-		evt.preventDefault();
+	/**
+	 * @param {Object} event 
+	 */
+	onSubmit(event) {
+		event.preventDefault();
 		const location = {
 			name: this.state.name,
 			loc: this.state.loc,
@@ -178,14 +202,14 @@ class AddLocationForm extends React.Component {
 						console.log('Error saving');
 					}
 				})
-				.catch(err => {
-					console.log(err);
+				.catch((error) => {
+					console.log(error);
 					this.setState({
 						errors: { form: 'Error saving location' }
 					});
 				});
 		}
-	};
+	}
 
 	render() {
 		const { errors, isLoading, locationResults } = this.state;

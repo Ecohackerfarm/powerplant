@@ -1,15 +1,25 @@
+/**
+ * @namespace LocationItem
+ * @memberof client.components.locations
+ */
+
 import React from 'react';
 import { Col, Panel } from 'react-bootstrap';
 import PropTypes from 'prop-types';
 
-const LocationItem = ({ item, header }) => {
-	return (
-		<Col sm={6} lg={3}>
-			<Panel className="panel-custom" header={header}>
-				{item.loc.address}
-			</Panel>
-		</Col>
-	)
+/**
+ * @extends Component
+ */
+class LocationItem extends React.Component {
+	render() {
+		return (
+			<Col sm={6} lg={3}>
+				<Panel className="panel-custom" header={this.props.header}>
+					{this.props.item.loc.address}
+				</Panel>
+			</Col>
+		)
+	}
 }
 
 LocationItem.propTypes = {

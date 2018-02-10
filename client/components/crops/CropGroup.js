@@ -1,41 +1,55 @@
+/**
+ * @namespace CropGroup
+ * @memberof client.components.crops
+ */
+
 import React from 'react';
 import PropTypes from 'prop-types';
 import { Typeahead } from 'react-bootstrap-typeahead';
 import style from 'react-bootstrap-typeahead/css/Typeahead.css';
 import { ToggleButton, ToggleButtonGroup, Row, Col} from 'react-bootstrap';
 
+/**
+ * @extends Component
+ */
 class CropGroup extends React.Component {
-	constructor(props){
+	/**
+	 * @param {Object} props 
+	 */
+	constructor(props) {
 		super(props);
 		this.onChangeGroup = this.onChangeGroup.bind(this);
 		this.onChangeCheckbox = this.onChangeCheckbox.bind(this);
 		this.group = props.cropGroup;
 		this.state = {
-			checked : [1]
-		}
+			checked: [1]
+		};
 	}
-	onChangeGroup(group){
-		if (group.length>0){
+
+	/**
+	 * @param {Array} group 
+	 */
+	onChangeGroup(group) {
+		if (group.length > 0) {
 			this.group = group;
-		  let checkedNow;
-		  if (!this.state.checked){
-		  	this.setState({
-		  		checked : true
-		  	})
-		  	checkedNow = true;
-		  } else {
-		  	checkedNow = false;
-		  }
-		  this.props.onChange(
+			let checkedNow;
+			if (!this.state.checked) {
+				this.setState({
+					checked: true
+				});
+				checkedNow = true;
+			} else {
+				checkedNow = false;
+			}
+			this.props.onChange(
 				this.props.index,
 				this.group,
 				checkedNow
 			);
-
 		} else {
 			this.group = [];
 			this.setState({
-					checked : false
+				checked: false
 			});
 			this.props.onChange(
 				this.props.index,
@@ -44,9 +58,13 @@ class CropGroup extends React.Component {
 			);
 		}
 	}
-	onChangeCheckbox(checkArray){
+
+	/**
+	 * @param {Array} checkArray 
+	 */
+	onChangeCheckbox(checkArray) {
 		let checkedNow;
-		if (checkArray.length>0){
+		if (checkArray.length > 0){
 			checkedNow = true;
 		} else {
 			checkedNow = false;
@@ -60,14 +78,15 @@ class CropGroup extends React.Component {
 			checkedNow//this.state.checked
 		);
 	}
-  render(){
-  	return(
-  		<Row className="button-checkbox-center">
+
+	render() {
+		return (
+			<Row className="button-checkbox-center">
 				<Col xs={3} md={2} >
 					<ToggleButtonGroup
-					  type="checkbox"
-					  defaultValue={this.state.checked}
-					  onChange={this.onChangeCheckbox}
+						type="checkbox"
+						defaultValue={this.state.checked}
+						onChange={this.onChangeCheckbox}
 					>
 						<ToggleButton value={1}></ToggleButton>
 					</ToggleButtonGroup>
@@ -82,16 +101,16 @@ class CropGroup extends React.Component {
 						labelKey='commonName'
 						placeholder='Bed is empty, choose crop ...'
 						onChange={this.onChangeGroup}
-						disabled={this.props.disabled?true:false}
+						disabled={this.props.disabled ? true : false}
 					/>
 				</Col>
 			</Row>
-	  );
-  }
+		);
+	}
 }
 
 CropGroup.propTypes = {
-	cropGroup : PropTypes.array.isRequired,
+	cropGroup: PropTypes.array.isRequired,
 }
 
 export default CropGroup;

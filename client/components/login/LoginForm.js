@@ -1,10 +1,18 @@
+/**
+ * @namespace LoginForm
+ * @memberof client.components.login
+ */
+
 import React from 'react';
 import PropTypes from 'prop-types';
 import TextFieldGroup from '../shared/TextFieldGroup';
 import validateLogin from '../../../shared/validation/loginValidation';
 import { Button, FormGroup, HelpBlock } from 'react-bootstrap';
 
-export default class LoginForm extends React.Component {
+/**
+ * @extends Component
+ */
+class LoginForm extends React.Component {
 	static propTypes = {
 		userLoginRequest: PropTypes.func.isRequired
 	};
@@ -16,33 +24,38 @@ export default class LoginForm extends React.Component {
 		isLoading: false
 	};
 
-	// since we reference the id, we need to make the id of each field
-	// the same as its corresponding state key
-	onChange = evt => {
+	/**
+	 * Since we reference the ID, we need to make the ID of each field
+	 * the same as its corresponding state key.
+	 * 
+	 * @param {Object} event 
+	 */
+	onChange(event) {
 		this.setState({
-			[evt.target.id]: evt.target.value
+			[event.target.id]: event.target.value
 		});
-	};
+	}
 
-	onSubmit = evt => {
-		evt.preventDefault();
+	/**
+	 * @param {Object} event 
+	 */
+	onSubmit(event) {
+		event.preventDefault();
 		let { errors } = validateLogin(this.state);
 		const isValid = !errors.username && !errors.password;
 		if (isValid) {
 			// calling our redux action to log in
-			this.setState({
-				isLoading: true
-			});
-			this.props.userLoginRequest(this.state).catch(err => {
+			this.setState({ isLoading: true });
+			this.props.userLoginRequest(this.state).catch((error) => {
 				console.log('ERROR');
-				console.log(err);
-				const res = err.response;
+				console.log(error);
+				const response = error.response;
 				// if (typeof res !== 'undefined') {
 				// if we get a response, use its errors
 				errors =
-					typeof res.data === 'undefined'
+					typeof response.data === 'undefined'
 						? { form: 'Unable to log in' }
-						: res.data.errors || {};
+						: response.data.errors || {};
 				// }
 				this.setState({
 					errors,
@@ -52,7 +65,7 @@ export default class LoginForm extends React.Component {
 		} else {
 			this.setState({ errors });
 		}
-	};
+	}
 
 	render() {
 		const { errors, isLoading } = this.state;
@@ -92,3 +105,5 @@ export default class LoginForm extends React.Component {
 		);
 	}
 }
+
+export default LoginForm;
