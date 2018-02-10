@@ -3,10 +3,10 @@
  * @memberof cli
  */
 
-import mysql from 'mysql2/promise';
-import firebase from 'firebase';
-import { ApiClient } from './api-client.js';
-import { PP_PORT, API_HOST } from '../secrets.js'
+const mysql = require('mysql2/promise');
+const firebase = require('firebase');
+const { ApiClient } = require('./api-client.js');
+const { PP_PORT, API_HOST } = require('../secrets.js');
 
 /**
  * Print a message to console.
@@ -279,7 +279,7 @@ async function pushPfaf() {
 	Object.assign(mysqlConfig, parseOption('mysqlConfig'));
 	const connection = await mysql.createConnection(mysqlConfig);
 	const [rows, fields] = await connection.query(
-		'select `common name`,`latin name` from `species database`'
+		'select `common name`,`latin name` = require(`species database`'
 	);
 	connection.end();
 
@@ -298,7 +298,7 @@ async function pushPfaf() {
 }
 
 /**
- * Push the initial plant and companionship data from Firebase database to
+ * Push the initial plant and companionship data = require(Firebase database to
  * powerplant server.
  */
 async function pushFirebase() {

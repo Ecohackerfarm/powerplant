@@ -1,4 +1,4 @@
-import React from 'react';
+const React = require('react');
 
 /**
  * @extends Component
@@ -9,4 +9,4 @@ class Recover extends React.Component {
 	}
 }
 
-export default Recover;
+module.exports = Recover;

@@ -21,15 +21,15 @@
  * @memberof client
  */
 
-import { combineReducers } from 'redux';
-import { title } from './title';
-import { auth } from './auth';
-import { currLocation } from './currLocation';
-import { locations } from './locations';
-import { crops } from './crops';
-import { app } from './app';
+const { combineReducers } = require('redux');
+const { title } = require('./title');
+const { auth } = require('./auth');
+const { currLocation } = require('./currLocation');
+const { locations } = require('./locations');
+const { crops } = require('./crops');
+const { app } = require('./app');
 
-export default combineReducers({
+module.exports = combineReducers({
     title,
     auth,
     currLocation,

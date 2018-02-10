@@ -5,8 +5,8 @@
  * @memberof client
  */
 
-import { bootstrapUtils } from 'react-bootstrap/lib/utils';
-import * as components from 'react-bootstrap';
+const { bootstrapUtils } = require('react-bootstrap/lib/utils');
+const components = require('react-bootstrap');
 
 /**
  * Custom styles for React-Bootstrap components.
@@ -27,10 +27,14 @@ const styles = {
  * 
  * @function
  */
-export const addAllStyles = () => {
+const addAllStyles = () => {
 	for (let component in styles) {
 		styles[component].forEach(style => {
 			bootstrapUtils.addStyle(components[component], style);
 		});
 	}
+};
+
+module.exports = {
+	addAllStyles
 };

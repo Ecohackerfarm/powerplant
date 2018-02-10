@@ -3,18 +3,18 @@
  * @memberof client.components.locations
  */
 
-import React from 'react';
-import { connect } from 'react-redux';
-import CrudableListPage from '../shared/CrudableList';
-import LocationItem from './LocationItem';
-import {
+const React = require('react');
+const { connect } = require('react-redux');
+const CrudableListPage = require('../shared/CrudableList');
+const LocationItem = require('./LocationItem');
+const {
 	saveLocationRequest,
 	editLocationRequest,
 	deleteLocationRequest
-} from '../../actions/locationActions';
-import AddLocationForm from './AddLocationForm';
-import LocationPage from '../locations/LocationPage';
-import {withRouter} from 'react-router-dom';
+} = require('../../actions/locationActions');
+const AddLocationForm = require('./AddLocationForm');
+const LocationPage = require('../locations/LocationPage');
+const {withRouter} = require('react-router-dom');
 
 /**
  * @extends Component
@@ -45,4 +45,4 @@ const dispatchToProps = dispatch => ({
 	}
 });
 
-export default withRouter(connect(stateToProps, dispatchToProps)(LocationsPage));
+module.exports = withRouter(connect(stateToProps, dispatchToProps)(LocationsPage));

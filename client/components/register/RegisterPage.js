@@ -3,14 +3,14 @@
  * @memberof client.components.register
  */
 
-import React from 'react';
-import { Redirect } from 'react-router-dom';
-import PropTypes from 'prop-types';
-import { connect } from 'react-redux';
-import { Grid, Row, Col } from 'react-bootstrap';
-import { userSignupRequest } from '../../actions/userActions';
-import SetHeaderTitle from '../shared/SetHeaderTitle';
-import RegisterForm from './RegisterForm';
+const React = require('react');
+const { Redirect } = require('react-router-dom');
+const PropTypes = require('prop-types');
+const { connect } = require('react-redux');
+const { Grid, Row, Col } = require('react-bootstrap');
+const { userSignupRequest } = require('../../actions/userActions');
+const SetHeaderTitle = require('../shared/SetHeaderTitle');
+const RegisterForm = require('./RegisterForm');
 
 /**
  * TODO: Refactor userSignupRequest, it's needed only in RegisterForm so it
@@ -19,13 +19,15 @@ import RegisterForm from './RegisterForm';
  * @extends Component
  */
 class RegisterPage extends React.Component {
-	static propTypes = {
-		userSignupRequest: PropTypes.func.isRequired
-	};
-
-	state = {
-		success: false
-	};
+	/**
+	 * @param {Object} props 
+	 */
+	constructor(props) {
+		super(props);
+		this.state = {
+			success: false
+		};
+	}
 
 	onSuccess() {
 		this.setState({
@@ -52,4 +54,8 @@ class RegisterPage extends React.Component {
 	}
 }
 
-export default connect(null, { userSignupRequest })(RegisterPage);
+RegisterPage.propTypes = {
+	userSignupRequest: PropTypes.func.isRequired
+};
+
+module.exports = connect(null, { userSignupRequest })(RegisterPage);

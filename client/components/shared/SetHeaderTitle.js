@@ -1,7 +1,7 @@
-import React from 'react';
-import PropTypes from 'prop-types';
-import { connect } from 'react-redux';
-import { setTitleRequest } from '../../actions/headerActions';
+const React = require('react');
+const PropTypes = require('prop-types');
+const { connect } = require('react-redux');
+const { setTitleRequest } = require('../../actions/headerActions');
 
 /**
  * For over md: show in header
@@ -10,15 +10,6 @@ import { setTitleRequest } from '../../actions/headerActions';
  * @extends Component
  */
 class SetHeaderTitle extends React.Component {
-	static propTypes = {
-		setTitleRequest: PropTypes.func.isRequired,
-		title: PropTypes.string
-	};
-
-	static defaultProps = {
-		title: 'powerplant'
-	};
-
 	componentWillMount() {
 		let title = this.props.children;
 		if (!title) {
@@ -36,4 +27,13 @@ class SetHeaderTitle extends React.Component {
 	}
 }
 
-export default connect(null, { setTitleRequest })(SetHeaderTitle);
+SetHeaderTitle.propTypes = {
+	setTitleRequest: PropTypes.func.isRequired,
+	title: PropTypes.string
+};
+
+SetHeaderTitle.defaultProps = {
+	title: 'powerplant'
+};
+
+module.exports = connect(null, { setTitleRequest })(SetHeaderTitle);

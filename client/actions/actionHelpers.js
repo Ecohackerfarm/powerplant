@@ -3,7 +3,7 @@
  * @memberof client.actions
  */
 
-import axios from 'axios';
+const axios = require('axios');
 
 /**
  * A convenience function which passes dispatch to authAction if authorized and passes it to nonAuthAction if not authorized
@@ -12,7 +12,7 @@ import axios from 'axios';
  * @param  {client.actions.actionHelpers~dispatchCallback} nonAuthAction callback if not authorized
  * @return {Object}              the results of either authAction or nonAuthAction
  */
-export const authCheckedRequest = (authAction, nonAuthAction) => {
+const authCheckedRequest = (authAction, nonAuthAction) => {
 	return (dispatch, getState) => {
 		if (getState().auth.isAuthenticated) {
 			return authAction(dispatch);
@@ -37,7 +37,7 @@ export const authCheckedRequest = (authAction, nonAuthAction) => {
  * @param  {Array} actionParams parameters of the action builder function
  * @return {client.actions.responseObject}
  */
-export const simpleAuthCheckedRequest = (
+const simpleAuthCheckedRequest = (
 	url,
 	method,
 	action,
@@ -60,4 +60,9 @@ export const simpleAuthCheckedRequest = (
 				resolve({ success: true });
 			})
 	);
+};
+
+module.exports = {
+	authCheckedRequest,
+	simpleAuthCheckedRequest
 };

@@ -3,11 +3,11 @@
  * @memberof client.actions
  */
 
-import axios from 'axios';
-import { setAuthorizationToken } from '../utils';
-import jwtDecode from 'jwt-decode';
-import { setCurrentUser, logoutUser } from '.';
-import { getLocationsRequest, saveLocationRequest } from './locationActions';
+const axios = require('axios');
+const { setAuthorizationToken } = require('../utils');
+const jwtDecode = require('jwt-decode');
+const { setCurrentUser, logoutUser } = require('.');
+const { getLocationsRequest, saveLocationRequest } = require('./locationActions');
 
 // creating a thunk action that dispatches SET_CURRENT_USER once the sign up request is successful
 // the desired functionality: a user creates an account, and all local data that they had previously
@@ -20,7 +20,7 @@ import { getLocationsRequest, saveLocationRequest } from './locationActions';
  * @param {String} userData.password
  * @return {Promise} which resolves to whatever the {@link client.actions.userActions.userLoginRequest userLoginRequest} would resolve to
  */
-export function userSignupRequest(userData, locations) {
+function userSignupRequest(userData, locations) {
 	// TODO: once the back end is ready to handle it, should be able to just nest all data you want to save within the userData
 	// and post that, and have it all save to the back end with new ids automatically
 	return dispatch =>
@@ -48,7 +48,7 @@ export function userSignupRequest(userData, locations) {
  * @param {String} loginData.password
  * @return {Promise} the network request
  */
-export function userLoginRequest(loginData) {
+function userLoginRequest(loginData) {
 	return dispatch => {
 		return axios.post('/api/login', loginData).then(res => {
 			if (res.status === 200) {
@@ -73,7 +73,7 @@ export function userLoginRequest(loginData) {
  * @function
  * @param {String} token JSON Web Token
  */
-export function setUserFromToken(token) {
+function setUserFromToken(token) {
 	return dispatch => {
 		setAuthorizationToken(token);
 		localStorage.setItem('jwtToken', token);
@@ -87,10 +87,17 @@ export function setUserFromToken(token) {
  * Async attempt to logout the current user, then dispatch a {@link client.actions.logoutUserAction logoutUserAction}
  * @return {None}
  */
-export function userLogoutRequest() {
+function userLogoutRequest() {
 	return dispatch => {
 		setAuthorizationToken(false);
 		localStorage.removeItem('jwtToken');
 		dispatch(logoutUser());
 	};
 }
+
+module.exports = {
+	userSignupRequest,
+	userLoginRequest,
+	setUserFromToken,
+	userLogoutRequest
+};

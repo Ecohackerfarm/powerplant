@@ -174,7 +174,7 @@ class Combinations {
 	}
 }
 
-export {
+module.exports = {
 	Combinations,
 	areEqualCombinations
 };

@@ -5,7 +5,7 @@
  * @memberof client.reducers
  */
 
-import { SET_TITLE } from '../actions';
+const { SET_TITLE } = require('../actions');
 
 /**
  * @constant {String}
@@ -17,11 +17,15 @@ const initialState = 'powerplant';
  * @param {Object} action Action object
  * @return {Object} Next state
  */
-export function title(state = initialState, action) {
+function title(state = initialState, action) {
 	switch (action.type) {
 		case SET_TITLE:
 			return action.title;
 		default:
 			return state;
 	}
+};
+
+module.exports = {
+	title
 };

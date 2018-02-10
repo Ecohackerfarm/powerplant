@@ -3,7 +3,7 @@
  * @memberof client.actions
  */
 
-import { addBed } from '.';
+const { addBed } = require('.');
 
 /**
  * creates an action object for ADD_BED
@@ -33,6 +33,6 @@ const createBed = (locationId, bed) => {
 	}
 };
 
-export {
+module.exports = {
 	createBed
 };

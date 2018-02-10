@@ -1,7 +1,7 @@
-import Validator from 'validator';
-import isEmpty from 'lodash.isempty';
+const Validator = require('validator');
+const isEmpty = require('lodash.isempty');
 
-export default function(location) {
+function locationValidation(location) {
 	let errors = {};
 
 	if (Validator.isEmpty(location.loc.coordinates.toString())) {
@@ -19,3 +19,5 @@ export default function(location) {
 		isValid: isEmpty(errors)
 	};
 }
+
+module.exports = locationValidation;

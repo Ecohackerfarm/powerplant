@@ -3,12 +3,12 @@
  * @memberof client.components
  */
 
-import React from 'react';
-import Header from './header/Header';
-import Main from './Main';
-import PropTypes from 'prop-types';
-import { connect } from 'react-redux';
-import { withRouter } from 'react-router-dom';
+const React = require('react');
+const Header = require('./header/Header');
+const Main = require('./Main');
+const PropTypes = require('prop-types');
+const { connect } = require('react-redux');
+const { withRouter } = require('react-router-dom');
 
 /**
  * Represents the main page.
@@ -38,4 +38,4 @@ const mapStateToProps = ({ app }) => ({
 	storeLoaded: app.storeLoaded
 });
 
-export default withRouter(connect(mapStateToProps)(App));
+module.exports = withRouter(connect(mapStateToProps)(App));

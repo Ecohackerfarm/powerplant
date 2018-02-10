@@ -1,8 +1,8 @@
-import { expect } from 'chai';
+const { expect } = require('chai');
 
-import * as types from '/client/actions/types';
+const types = require('../../../client/actions');
 
-export const expectNoActionForAllBut = (
+const expectNoActionForAllBut = (
 	reducer,
 	validTypes,
 	sampleState,
@@ -12,9 +12,13 @@ export const expectNoActionForAllBut = (
 		const type = types[key];
 		if (validTypes.indexOf(type) < 0) {
 			const action = Object.assign({}, sampleAction, { type });
-			const state = { ...sampleState };
+			const state = Object.assign({}, sampleState);
 			const newState = reducer(state, action);
 			expect(newState).to.equal(state);
 		}
 	}
+};
+
+module.exports = {
+	expectNoActionForAllBut
 };

@@ -1,12 +1,12 @@
-import React from 'react';
-import { Switch, Route } from 'react-router-dom';
-import { LinkContainer } from 'react-router-bootstrap';
-import PropTypes from 'prop-types';
-import { Grid, Button } from 'react-bootstrap';
-import ItemList from './ItemList';
-import AddItemPage from './AddItemPage';
-import EditItemPage from './EditItemPage';
-import SetHeaderTitle from '../SetHeaderTitle';
+const React = require('react');
+const { Switch, Route } = require('react-router-dom');
+const { LinkContainer } = require('react-router-bootstrap');
+const PropTypes = require('prop-types');
+const { Grid, Button } = require('react-bootstrap');
+const ItemList = require('./ItemList');
+const AddItemPage = require('./AddItemPage');
+const EditItemPage = require('./EditItemPage');
+const SetHeaderTitle = require('../SetHeaderTitle');
 
 /**
  * @callback client.components.shared.CrudableList.CrudableListPage~createCallback
@@ -26,7 +26,7 @@ import SetHeaderTitle from '../SetHeaderTitle';
 
 /**
  * React Component
- * Build a fully CRUDable list from a few template components and action functions
+ * Build a fully CRUDable list = require(a few template components and action functions
  * Typical usage is to have a redux-connected container component which builds the actions and passes all props in to the CrudableList
  * @namespace CrudableListPage
  * @memberof client.components.shared.CrudableList
@@ -134,4 +134,4 @@ CrudableListPage.propTypes = {
 	match: PropTypes.object.isRequired
 };
 
-export default CrudableListPage;
+module.exports = CrudableListPage;

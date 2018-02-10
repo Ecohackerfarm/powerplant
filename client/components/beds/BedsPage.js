@@ -3,15 +3,15 @@
  * @memberof client.components.beds
  */
 
- import React from 'react';
-import { connect } from 'react-redux';
-import CrudableList from '../shared/CrudableList';
-import AddBedForm from './AddBedForm';
-import BedItem from './BedItem';
-import BedPage from './BedPage';
-import { Grid } from 'react-bootstrap';
-import { createBed } from '../../actions/bedActions';
-import { deleteBed, editBed } from '../../actions';
+const React = require('react');
+const { connect } = require('react-redux');
+const CrudableList = require('../shared/CrudableList');
+const AddBedForm = require('./AddBedForm');
+const BedItem = require('./BedItem');
+const BedPage = require('./BedPage');
+const { Grid } = require('react-bootstrap');
+const { createBed } = require('../../actions/bedActions');
+const { deleteBed, editBed } = require('../../actions');
 
 /**
  * @extends Component
@@ -49,4 +49,4 @@ const dispatchToProps = (dispatch) => ({
 	}
 });
 
-export default connect(null, dispatchToProps)(BedsPage);
+module.exports = connect(null, dispatchToProps)(BedsPage);

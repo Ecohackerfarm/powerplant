@@ -3,12 +3,12 @@
  * @memberof client.components.register
  */
 
-import React from 'react';
-import PropTypes from 'prop-types';
-import validateUser from '../../../shared/validation/userValidation';
-import { Button, FormGroup, HelpBlock } from 'react-bootstrap';
-import TextFieldGroup from '../shared/TextFieldGroup';
-import { connect } from 'react-redux';
+const React = require('react');
+const PropTypes = require('prop-types');
+const validateUser = require('../../../shared/validation/userValidation');
+const { Button, FormGroup, HelpBlock } = require('react-bootstrap');
+const TextFieldGroup = require('../shared/TextFieldGroup');
+const { connect } = require('react-redux');
 
 /**
  * RegisterForm is a stateful form used to register new users.
@@ -22,21 +22,19 @@ import { connect } from 'react-redux';
  * @extends Component
  */
 class RegisterForm extends React.Component {
-	state = {
-		username: '',
-		email: '',
-		password: '',
-		errors: {},
-		isLoading: false
-	};
-
-	static propTypes = {
-		userSignupRequest: PropTypes.func.isRequired,
-		onSuccess: PropTypes.func.isRequired
-	};
+	constructor(props) {
+		super(props);
+		this.state = {
+			username: '',
+			email: '',
+			password: '',
+			errors: {},
+			isLoading: false
+		};
+	}
 
 	/**
-	 * Handle user keyboard input passed back from TextFieldGroup components.
+	 * Handle user keyboard input passed back = require(TextFieldGroup components.
 	 * 
 	 * @param {Object} event
 	 */
@@ -123,8 +121,13 @@ class RegisterForm extends React.Component {
 	}
 }
 
+RegisterForm.propTypes = {
+	userSignupRequest: PropTypes.func.isRequired,
+	onSuccess: PropTypes.func.isRequired
+};
+
 const mapStateToProps = (state) => ({
 	locations: state.locations
 });
 
-export default connect(mapStateToProps)(RegisterForm);
+module.exports = connect(mapStateToProps)(RegisterForm);

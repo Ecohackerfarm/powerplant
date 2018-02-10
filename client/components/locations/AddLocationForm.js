@@ -3,35 +3,24 @@
  * @memberof client.components.locations
  */
 
-import React from 'react';
-import PropTypes from 'prop-types';
-import validateLocation from '../../../shared/validation/locationValidation';
-import {
+const React = require('react');
+const PropTypes = require('prop-types');
+const validateLocation = require('../../../shared/validation/locationValidation');
+const {
 	Button,
 	ButtonToolbar,
 	FormGroup,
 	HelpBlock,
 	ListGroup,
 	ListGroupItem
-} from 'react-bootstrap';
-import { LinkContainer } from 'react-router-bootstrap';
-import TextFieldGroup from '../shared/TextFieldGroup';
+} = require('react-bootstrap');
+const { LinkContainer } = require('react-router-bootstrap');
+const TextFieldGroup = require('../shared/TextFieldGroup');
 
 /**
  * @extends Component
  */
 class AddLocationForm extends React.Component {
-	static propTypes = {
-		// both will be passed in by the Crudable AddItemPage
-		onSuccess: PropTypes.func.isRequired,
-		onSubmit: PropTypes.func.isRequired,
-		itemToEdit: PropTypes.object // shit, this is an antipattern isn't it
-		// I shouldn't set state from props
-		// ok, it works fine, so I won't change it BUT
-		// TODO: store form state in CrudableList/AddItemPage,
-		// pass in to this form as property rather than storing state in the form
-	};
-
 	/**
 	 * @param {Object} props 
 	 */
@@ -63,12 +52,12 @@ class AddLocationForm extends React.Component {
 				selectedLocation: false
 			};
 		}
-	}
 
-	typingTimer = {
-		timer: undefined,
-		timeout: 700
-	};
+		this.typingTimer = {
+			timer: undefined,
+			timeout: 700
+		};
+	}
 
 	/**
 	 * Gets called when user types in a textbox.
@@ -109,7 +98,7 @@ class AddLocationForm extends React.Component {
 
 	/**
 	 * Gets called when the user types a query in the address textbox.
-	 * Fetches possible locations from Google geocode API.
+	 * Fetches possible locations = require(Google geocode API.
 	 */
 	requestLocationResults() {
 		const address = this.state.loc.address;
@@ -160,7 +149,7 @@ class AddLocationForm extends React.Component {
 	}
 
 	/**
-	 * Gets called when the user selects a location from the list.
+	 * Gets called when the user selects a location = require(the list.
 	 * 
 	 * @param {Number} index 
 	 */
@@ -270,4 +259,15 @@ class AddLocationForm extends React.Component {
 	}
 }
 
-export default AddLocationForm;
+AddLocationForm.propTypes = {
+	// both will be passed in by the Crudable AddItemPage
+	onSuccess: PropTypes.func.isRequired,
+	onSubmit: PropTypes.func.isRequired,
+	itemToEdit: PropTypes.object // shit, this is an antipattern isn't it
+	// I shouldn't set state = require(props
+	// ok, it works fine, so I won't change it BUT
+	// TODO: store form state in CrudableList/AddItemPage,
+	// pass in to this form as property rather than storing state in the form
+};
+
+module.exports = AddLocationForm;

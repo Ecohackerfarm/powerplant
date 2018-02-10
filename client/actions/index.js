@@ -9,29 +9,29 @@
 /*
  * Action types
  */
-export const STORE_LOADED = 'STORE_LOADED';
-export const SET_HEADER_TITLE = 'SET_HEADER_TITLE';
-export const SET_TITLE = 'SET_TITLE';
+const STORE_LOADED = 'STORE_LOADED';
+const SET_HEADER_TITLE = 'SET_HEADER_TITLE';
+const SET_TITLE = 'SET_TITLE';
 
-export const SET_CURRENT_USER = 'SET_CURRENT_USER';
-export const LOGOUT = 'LOGOUT';
+const SET_CURRENT_USER = 'SET_CURRENT_USER';
+const LOGOUT = 'LOGOUT';
 
-export const SET_CURRENT_LOCATION = 'SET_CURRENT_LOCATION';
-export const EDIT_LOCATION = 'EDIT_LOCATION';
-export const ADD_LOCATION = 'ADD_LOCATION';
-export const DELETE_LOCATION = 'DELETE_LOCATION';
-export const SET_LOCATIONS = 'SET_LOCATIONS';
+const SET_CURRENT_LOCATION = 'SET_CURRENT_LOCATION';
+const EDIT_LOCATION = 'EDIT_LOCATION';
+const ADD_LOCATION = 'ADD_LOCATION';
+const DELETE_LOCATION = 'DELETE_LOCATION';
+const SET_LOCATIONS = 'SET_LOCATIONS';
 
-export const EDIT_BED = 'EDIT_BED';
-export const ADD_BED = 'ADD_BED';
-export const DELETE_BED = 'DELETE_BED';
+const EDIT_BED = 'EDIT_BED';
+const ADD_BED = 'ADD_BED';
+const DELETE_BED = 'DELETE_BED';
 
-export const CROPS_LOADING = 'CROPS_LOADING';
-export const CROP_RELATIONSHIPS_LOADING = 'CROP_RELATIONSHIPS_LOADING';
-export const CROPS_UPDATED = 'CROPS_UPDATED';
-export const CROP_RELATIONSHIPS_UPDATED = 'CROP_RELATIONSHIPS_UPDATED';
-export const CROPS_LOADING_ERROR = 'CROPS_LOADING_ERROR';
-export const CROP_RELATIONSHIPS_LOADING_ERROR = 'CROP_RELATIONSHIPS_LOADING_ERROR';
+const CROPS_LOADING = 'CROPS_LOADING';
+const CROP_RELATIONSHIPS_LOADING = 'CROP_RELATIONSHIPS_LOADING';
+const CROPS_UPDATED = 'CROPS_UPDATED';
+const CROP_RELATIONSHIPS_UPDATED = 'CROP_RELATIONSHIPS_UPDATED';
+const CROPS_LOADING_ERROR = 'CROPS_LOADING_ERROR';
+const CROP_RELATIONSHIPS_LOADING_ERROR = 'CROP_RELATIONSHIPS_LOADING_ERROR';
 
 /**
  * Indicate that the persisted Redux store has been loaded.
@@ -39,7 +39,7 @@ export const CROP_RELATIONSHIPS_LOADING_ERROR = 'CROP_RELATIONSHIPS_LOADING_ERRO
  * @function
  * @return {Object} Action object
  */
-export const storeLoaded = () => ({
+const storeLoaded = () => ({
 	type: STORE_LOADED,
 	storeLoaded: true
 });
@@ -51,7 +51,7 @@ export const storeLoaded = () => ({
  * @param {String} title 
  * @return {Object} Action object
  */
-export const setHeaderTitle = (title) => ({
+const setHeaderTitle = (title) => ({
 	type: SET_HEADER_TITLE,
 	title
 });
@@ -63,7 +63,7 @@ export const setHeaderTitle = (title) => ({
  * @param {String} title New title to display
  * @return {Object} Action object
  */
-export const setTitle = (title) => ({
+const setTitle = (title) => ({
 	type: SET_TITLE,
 	title
 });
@@ -75,7 +75,7 @@ export const setTitle = (title) => ({
  * @param {server.models.Location} location
  * @return {Object} Action object
  */
-export const addLocation = (locationEntry) => ({
+const addLocation = (locationEntry) => ({
 	type: ADD_LOCATION,
 	locationEntry
 });
@@ -88,7 +88,7 @@ export const addLocation = (locationEntry) => ({
  * @param {server.models.Location} changes Changes to document
  * @return {Object} Action object
  */
-export const editLocation = (id, changes) => ({
+const editLocation = (id, changes) => ({
 	type: EDIT_LOCATION,
 	id,
 	changes
@@ -101,7 +101,7 @@ export const editLocation = (id, changes) => ({
  * @param {ObjectId|String} id Document ID
  * @return {Object} Action object
  */
-export const deleteLocation = id => ({
+const deleteLocation = id => ({
 	type: DELETE_LOCATION,
 	id
 });
@@ -113,7 +113,7 @@ export const deleteLocation = id => ({
  * @param {server.models.Location[]} locations
  * @return {Object} Action object
  */
-export const setLocations = locations => ({
+const setLocations = locations => ({
 	type: SET_LOCATIONS,
 	locations
 });
@@ -126,7 +126,7 @@ export const setLocations = locations => ({
  * @param {Object} bedEntry 
  * @return {Object} Action object
  */
-export const addBed = (locationId, bedEntry) => ({
+const addBed = (locationId, bedEntry) => ({
 	type: ADD_BED,
 	locationId,
 	bedEntry
@@ -141,7 +141,7 @@ export const addBed = (locationId, bedEntry) => ({
  * @param {Object} changes 
  * @return {Object} Action object
  */
-export const editBed = (locationId, bedId, changes) => ({
+const editBed = (locationId, bedId, changes) => ({
 	type: EDIT_BED,
 	locationId,
 	bedId,
@@ -156,7 +156,7 @@ export const editBed = (locationId, bedId, changes) => ({
  * @param {ObjectId|String} bedId 
  * @return {Object} Action object
  */
-export const deleteBed = (locationId, bedId) => ({
+const deleteBed = (locationId, bedId) => ({
 	type: DELETE_BED,
 	locationId,
 	bedId
@@ -169,7 +169,7 @@ export const deleteBed = (locationId, bedId) => ({
  * @param {Object} respone Response from failed API call
  * @return {Object} Action object
  */
-export const cropsLoadingError = (respone) => ({
+const cropsLoadingError = (respone) => ({
 	type: CROPS_LOADING_ERROR,
 	respone
 });
@@ -181,7 +181,7 @@ export const cropsLoadingError = (respone) => ({
  * @param {Object} respone Response from failed API CALL
  * @return {Object} Action object
  */
-export const cropRelationshipsLoadingError = (respone) => ({
+const cropRelationshipsLoadingError = (respone) => ({
 	type: CROP_RELATIONSHIPS_LOADING_ERROR,
 	respone
 });
@@ -193,7 +193,7 @@ export const cropRelationshipsLoadingError = (respone) => ({
  * @param {Object} data Crop data from API call
  * @return {Object} Action object
  */
-export const cropsUpdated = (data) => ({
+const cropsUpdated = (data) => ({
 	type: CROPS_UPDATED,
 	all: data,
 	updated: (new Date()).getTime()
@@ -206,7 +206,7 @@ export const cropsUpdated = (data) => ({
  * @param {Object} data Crop relationship data form API call
  * @return {Object} Action object
  */
-export const cropRelationshipsUpdated = (data) => ({
+const cropRelationshipsUpdated = (data) => ({
 	type: CROP_RELATIONSHIPS_UPDATED,
 	relationships: data,
 	relationshipsUpdated: (new Date()).getTime()
@@ -219,7 +219,7 @@ export const cropRelationshipsUpdated = (data) => ({
  * @param {Object} started 
  * @return {Object} Action object
  */
-export const cropsLoading = (started) => ({
+const cropsLoading = (started) => ({
 	type: CROPS_LOADING,
 	loading: started
 });
@@ -231,7 +231,7 @@ export const cropsLoading = (started) => ({
  * @param {Object} started 
  * @return {Object} Action object
  */
-export const cropRelationshipsLoading = (started) => ({
+const cropRelationshipsLoading = (started) => ({
 	type: CROP_RELATIONSHIPS_LOADING,
 	loading: started
 });
@@ -242,7 +242,7 @@ export const cropRelationshipsLoading = (started) => ({
  * @function
  * @return {Object} Action object
  */
-export const logout = () => ({
+const logout = () => ({
 	type: LOGOUT
 });
 
@@ -253,7 +253,47 @@ export const logout = () => ({
  * @param {server.models.User} user
  * @return {Object} Action object
  */
-export const setCurrentUser = (user) => ({
+const setCurrentUser = (user) => ({
 	type: SET_CURRENT_USER,
 	user
 });
+
+module.exports = {
+	STORE_LOADED,
+	SET_HEADER_TITLE,
+	SET_TITLE,
+	SET_CURRENT_USER,
+	LOGOUT,
+	SET_CURRENT_LOCATION,
+	EDIT_LOCATION,
+	ADD_LOCATION,
+	DELETE_LOCATION,
+	SET_LOCATIONS,
+	EDIT_BED,
+	ADD_BED,
+	DELETE_BED,
+	CROPS_LOADING,
+	CROP_RELATIONSHIPS_LOADING,
+	CROPS_UPDATED,
+	CROP_RELATIONSHIPS_UPDATED,
+	CROPS_LOADING_ERROR,
+	CROP_RELATIONSHIPS_LOADING_ERROR,
+	storeLoaded,
+	setHeaderTitle,
+	setTitle,
+	setCurrentUser,
+	logout,
+	editLocation,
+	addLocation,
+	deleteLocation,
+	setLocations,
+	editBed,
+	addBed,
+	deleteBed,
+	cropsLoading,
+	cropRelationshipsLoading,
+	cropsUpdated,
+	cropRelationshipsUpdated,
+	cropsLoadingError,
+	cropRelationshipsLoadingError
+};

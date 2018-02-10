@@ -1,9 +1,9 @@
-import { expect } from 'chai';
-import * as types from '/client/actions/types';
-import { locations } from '/client/reducers';
-import { defaultState } from '/client/reducers/locations';
-import { randString } from '/client/utils';
-import { expectNoActionForAllBut as sanityCheck } from './Helper';
+const { expect } = require('chai');
+const types = require('../../../client/actions');
+const { locations } = require('../../../client/reducers/locations');
+const { defaultState } = require('../../../client/reducers/locations');
+const { randString } = require('../../../client/utils');
+const { expectNoActionForAllBut } = require('./Helper');
 
 describe('locations reducer', () => {
 	const testedActions = [];
@@ -175,7 +175,7 @@ describe('locations reducer', () => {
 				id: myloc[0]._id,
 				changes: { name: randString() }
 			};
-			sanityCheck(locations, testedActions, myloc, action);
+			expectNoActionForAllBut(locations, testedActions, myloc, action);
 		});
 	});
 });

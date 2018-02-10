@@ -5,5 +5,10 @@
  * @memberof client
  */
 
-export { setAuthorizationToken } from './authUtils';
-export { randString } from './randString';
+const { setAuthorizationToken } = require('./authUtils');
+const { randString } = require('./randString');
+
+module.exports = {
+    setAuthorizationToken,
+    randString
+};

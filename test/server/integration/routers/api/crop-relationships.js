@@ -1,13 +1,13 @@
-import { expect } from 'chai';
-import { request } from '/test/server/init.js';
-import {
+const { expect } = require('chai');
+const { request } = require('../../../init.js');
+const {
 	checkCropRelationship,
 	sendForm,
 	randString,
 	createTestCropRelationship
-} from '../routerHelpers';
-import CropRelationship from '/server/models/crop-relationship';
-import { Types } from 'mongoose';
+} = require('../routerHelpers');
+const CropRelationship = require('../../../../../server/models/crop-relationship');
+const { Types } = require('mongoose');
 
 const { ObjectId } = Types;
 const rootUrl = '/api/crop-relationships';

@@ -3,26 +3,28 @@
  * @memberof client.components.login
  */
 
-import React from 'react';
-import PropTypes from 'prop-types';
-import TextFieldGroup from '../shared/TextFieldGroup';
-import validateLogin from '../../../shared/validation/loginValidation';
-import { Button, FormGroup, HelpBlock } from 'react-bootstrap';
+const React = require('react');
+const PropTypes = require('prop-types');
+const TextFieldGroup = require('../shared/TextFieldGroup');
+const validateLogin = require('../../../shared/validation/loginValidation');
+const { Button, FormGroup, HelpBlock } = require('react-bootstrap');
 
 /**
  * @extends Component
  */
 class LoginForm extends React.Component {
-	static propTypes = {
-		userLoginRequest: PropTypes.func.isRequired
-	};
-
-	state = {
-		username: '',
-		password: '',
-		errors: {},
-		isLoading: false
-	};
+	/**
+	 * @param {Object} props 
+	 */
+	constructor(props) {
+		super(props);
+		this.state = {
+			username: '',
+			password: '',
+			errors: {},
+			isLoading: false
+		};
+	}
 
 	/**
 	 * Since we reference the ID, we need to make the ID of each field
@@ -106,4 +108,8 @@ class LoginForm extends React.Component {
 	}
 }
 
-export default LoginForm;
+LoginForm.propTypes = {
+	userLoginRequest: PropTypes.func.isRequired
+};
+
+module.exports = LoginForm;

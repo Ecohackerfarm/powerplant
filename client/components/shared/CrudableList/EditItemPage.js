@@ -1,6 +1,6 @@
-import React from 'react';
-import PropTypes from 'prop-types';
-import AddItemPage from './AddItemPage';
+const React = require('react');
+const PropTypes = require('prop-types');
+const AddItemPage = require('./AddItemPage');
 
 const EditItemPage = ({
 	items,
@@ -30,4 +30,4 @@ EditItemPage.propTypes = {
 	EditItemForm: PropTypes.func.isRequired
 };
 
-export default EditItemPage;
+module.exports = EditItemPage;

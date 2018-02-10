@@ -3,9 +3,9 @@
  * @memberof client.components.header
  */
 
-import React from 'react';
-import { LinkContainer } from 'react-router-bootstrap';
-import { NavItem, Nav } from 'react-bootstrap';
+const React = require('react');
+const { LinkContainer } = require('react-router-bootstrap');
+const { NavItem, Nav } = require('react-bootstrap');
 
 /**
  * @extends Component
@@ -25,4 +25,4 @@ class HeaderLoginNav extends React.Component {
 	}
 }
 
-export default HeaderLoginNav;
+module.exports = HeaderLoginNav;

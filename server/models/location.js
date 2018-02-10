@@ -1,4 +1,4 @@
-import mongoose from 'mongoose';
+const mongoose = require('mongoose');
 
 const { Schema } = mongoose;
 const ObjectId = Schema.Types.ObjectId;
@@ -45,4 +45,6 @@ locationSchema.pre('save', function(next) {
 	next();
 });
 
-export default mongoose.model('Location', locationSchema);
+const Location = mongoose.model('Location', locationSchema);
+
+module.exports = Location;

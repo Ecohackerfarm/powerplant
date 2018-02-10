@@ -1,7 +1,7 @@
-import React from 'react';
-import PropTypes from 'prop-types';
-import { LinkContainer } from 'react-router-bootstrap';
-import { Row, Col, ButtonGroup, Button, Glyphicon } from 'react-bootstrap';
+const React = require('react');
+const PropTypes = require('prop-types');
+const { LinkContainer } = require('react-router-bootstrap');
+const { Row, Col, ButtonGroup, Button, Glyphicon } = require('react-bootstrap');
 
 const ItemHeader = ({ name, editLink, refreshLink, deleteAction }) => (
 	<Row className="title-center">
@@ -35,4 +35,4 @@ ItemHeader.propTypes = {
 	deleteAction: PropTypes.func
 };
 
-export default ItemHeader;
+module.exports = ItemHeader;

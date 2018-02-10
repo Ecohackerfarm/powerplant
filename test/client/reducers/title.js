@@ -1,7 +1,7 @@
-import { expect } from 'chai';
-import * as types from '/client/actions/types';
-import { title } from '/client/reducers';
-import { expectNoActionForAllBut as sanityCheck } from './Helper';
+const { expect } = require('chai');
+const types = require('../../../client/actions');
+const { title } = require('../../../client/reducers/title');
+const { expectNoActionForAllBut } = require('./Helper');
 
 describe('title reducer', () => {
 	const { SET_TITLE } = types;
@@ -32,7 +32,7 @@ describe('title reducer', () => {
 			const action = {
 				title: 'newTitle'
 			};
-			sanityCheck(title, testedActions, state, action);
+			expectNoActionForAllBut(title, testedActions, state, action);
 		});
 	});
 });

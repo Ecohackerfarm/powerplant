@@ -1,7 +1,7 @@
-import { expect } from 'chai';
-import * as types from '/client/actions/types';
-import { auth } from '/client/reducers';
-import { expectNoActionForAllBut as sanityCheck } from './Helper';
+const { expect } = require('chai');
+const types = require('../../../client/actions');
+const { auth } = require('../../../client/reducers/auth');
+const { expectNoActionForAllBut } = require('./Helper');
 
 describe('auth reducer', () => {
 	const testedActions = [];
@@ -64,7 +64,7 @@ describe('auth reducer', () => {
 			action = {};
 		});
 		it('should do nothing', () => {
-			sanityCheck(auth, testedActions, state, action);
+			expectNoActionForAllBut(auth, testedActions, state, action);
 		});
 	});
 });

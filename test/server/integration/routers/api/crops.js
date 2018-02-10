@@ -1,14 +1,14 @@
-import { expect } from 'chai';
-import { request } from '/test/server/init.js';
-import {
+const { expect } = require('chai');
+const { request } = require('../../../init.js');
+const {
 	sendForm,
 	randString,
 	allStrings,
 	createTestCrop,
 	createTestCropRelationship
-} from '../routerHelpers';
-import Crop from '/server/models/crop';
-import { Types } from 'mongoose';
+} = require('../routerHelpers');
+const Crop = require('../../../../../server/models/crop');
+const { Types } = require('mongoose');
 
 const rootUrl = '/api/crops';
 const jsonType = 'application/json; charset=utf-8';
@@ -52,7 +52,7 @@ describe(rootUrl + '/', () => {
 		const crop = {
 			binomialName: "Simon's crop for testing"
 		};
-		it('should create new crop from just binomial name', () => {
+		it('should create new crop = require(just binomial name', () => {
 			return sendForm(request.post(rootUrl), crop)
 				.expect(201)
 				.then(res => {

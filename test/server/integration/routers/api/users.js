@@ -1,16 +1,16 @@
-import { expect } from 'chai';
-import { sendForm } from '../routerHelpers';
-import User from '/server/models/user';
-import jwt from 'jsonwebtoken';
-import { JWT_SECRET } from '/secrets';
-import { request } from '/test/server/init.js';
+const { expect } = require('chai');
+const { sendForm } = require('../routerHelpers');
+const User = require('../../../../../server/models/user');
+const jwt = require('jsonwebtoken');
+const { JWT_SECRET } = require('../../../../../secrets');
+const { request } = require('../../../../server/init.js');
 
 const rootUrl = '/api/users';
 const jsonType = 'application/json; charset=utf-8';
 
 let userId;
 let token;
-export const user = {
+const user = {
 	username: 'testUser',
 	email: 'testEmail@email.com',
 	password: 'testPassword'
@@ -142,3 +142,7 @@ describe(rootUrl + '/:userId/locations', () => {
 		// TODO: test if a user is authenticated but accessing another users locations
 	});
 });
+
+module.exports = {
+	user
+};

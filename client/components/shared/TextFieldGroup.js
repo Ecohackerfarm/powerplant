@@ -1,31 +1,16 @@
-import React from 'react';
-import {
+const React = require('react');
+const {
 	FormGroup,
 	FormControl,
 	ControlLabel,
 	HelpBlock
-} from 'react-bootstrap';
-import PropTypes from 'prop-types';
+} = require('react-bootstrap');
+const PropTypes = require('prop-types');
 
 /**
  * @extends Component
  */
 class TextFieldGroup extends React.Component {
-	static propTypes = {
-		id: PropTypes.string.isRequired,
-		onChange: PropTypes.func.isRequired,
-		value: PropTypes.string.isRequired,
-		error: PropTypes.string,
-		success: PropTypes.bool,
-		label: PropTypes.string,
-		placeholder: PropTypes.string,
-		type: PropTypes.string
-	};
-
-	static defaultProps = {
-		type: 'text'
-	};
-
 	render() {
 		return (
 			<FormGroup
@@ -51,4 +36,19 @@ class TextFieldGroup extends React.Component {
 	}
 }
 
-export default TextFieldGroup;
+TextFieldGroup.propTypes = {
+	id: PropTypes.string.isRequired,
+	onChange: PropTypes.func.isRequired,
+	value: PropTypes.string.isRequired,
+	error: PropTypes.string,
+	success: PropTypes.bool,
+	label: PropTypes.string,
+	placeholder: PropTypes.string,
+	type: PropTypes.string
+};
+
+TextFieldGroup.defaultProps = {
+	type: 'text'
+};
+
+module.exports = TextFieldGroup;

@@ -5,5 +5,6 @@
  * @memberof client.components
  */
 
-import BedsPage from './BedsPage';
-export default BedsPage;
+const BedsPage = require('./BedsPage');
+
+module.exports = BedsPage;

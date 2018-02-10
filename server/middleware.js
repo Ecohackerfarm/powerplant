@@ -6,17 +6,17 @@
  * @memberof server
  */
 
-import {
+const {
 	Processor,
 	VALIDATION_EXCEPTION,
 	AUTHORIZATION_EXCEPTION,
 	AUTHENTICATION_EXCEPTION
-} from './processor';
-import Location from './models/location';
-import User from './models/user';
-import CropRelationship from './models/crop-relationship';
-import Crop from './models/crop';
-import { debug } from './utils';
+} = require('./processor');
+const Location = require('./models/location');
+const User = require('./models/user');
+const CropRelationship = require('./models/crop-relationship');
+const Crop = require('./models/crop');
+const { debug } = require('./utils');
 
 const processor = new Processor();
 
@@ -107,7 +107,7 @@ const authorizedModels = [Location];
  * @param {Function} next
  * @param {Model} model
  */
-export async function documentGet(req, res, next, model) {
+async function documentGet(req, res, next, model) {
 	try {
 		const id = req.params.id;
 
@@ -141,7 +141,7 @@ export async function documentGet(req, res, next, model) {
  * @param {Function} next
  * @param {Model} model
  */
-export async function documentPut(req, res, next, model) {
+async function documentPut(req, res, next, model) {
 	try {
 		const id = req.params.id;
 		const update = req.body;
@@ -177,7 +177,7 @@ export async function documentPut(req, res, next, model) {
  * @param {Function} next
  * @param {Model} model
  */
-export async function documentPost(req, res, next, model) {
+async function documentPost(req, res, next, model) {
 	try {
 		let document;
 		if (authorizedModels.includes(model)) {
@@ -205,7 +205,7 @@ export async function documentPost(req, res, next, model) {
  * @param {Function} next
  * @param {Model} model
  */
-export async function documentDelete(req, res, next, model) {
+async function documentDelete(req, res, next, model) {
 	try {
 		const id = req.params.id;
 
@@ -233,7 +233,7 @@ export async function documentDelete(req, res, next, model) {
  * @param {Object} res
  * @param {Function} next
  */
-export async function getAllCropRelationships(req, res, next) {
+async function getAllCropRelationships(req, res, next) {
 	try {
 		const relationships = await processor.getAllDocuments(CropRelationship);
 		res.json(relationships);
@@ -249,7 +249,7 @@ export async function getAllCropRelationships(req, res, next) {
  * @param {Object} res
  * @param {Function} next
  */
-export async function getCropsByName(req, res, next) {
+async function getCropsByName(req, res, next) {
 	try {
 		const name = req.query.name;
 		if (typeof name !== 'string') {
@@ -283,7 +283,7 @@ export async function getCropsByName(req, res, next) {
  * @param {Object} res
  * @param {Function} next
  */
-export async function getCropGroups(req, res, next) {
+async function getCropGroups(req, res, next) {
 	try {
 		const groups = await processor.getCropGroups(req.body.cropIds);
 
@@ -305,7 +305,7 @@ export async function getCropGroups(req, res, next) {
  * @param {Object} res
  * @param {Function} next
  */
-export async function getCompatibleCrops(req, res, next) {
+async function getCompatibleCrops(req, res, next) {
 	try {
 		const crops = await processor.getCompatibleCrops(req.body.cropIds);
 
@@ -325,7 +325,7 @@ export async function getCompatibleCrops(req, res, next) {
  * @param {Object} res
  * @param {Function} next
  */
-export async function getLocations(req, res, next) {
+async function getLocations(req, res, next) {
 	try {
 		const user = await getAuthenticatedUser(req, next);
 		res.status(200).json(user.locations);
@@ -342,7 +342,7 @@ export async function getLocations(req, res, next) {
  * @param {Object} res
  * @param {Function} next
  */
-export async function login(req, res, next) {
+async function login(req, res, next) {
 	try {
 		const result = await processor.login(req.body);
 		res.json(result);
@@ -350,3 +350,16 @@ export async function login(req, res, next) {
 		handleError(next, exception);
 	}
 }
+
+module.exports = {
+	documentGet,
+	documentPut,
+	documentPost,
+	documentDelete,
+	getAllCropRelationships,
+	getCropsByName,
+	getCropGroups,
+	getCompatibleCrops,
+	getLocations,
+	login
+};

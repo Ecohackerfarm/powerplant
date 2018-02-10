@@ -3,11 +3,11 @@
  * @memberof client.components.crops
  */
 
-import React from 'react';
-import PropTypes from 'prop-types';
-import { Typeahead } from 'react-bootstrap-typeahead';
-import style from 'react-bootstrap-typeahead/css/Typeahead.css';
-import { ToggleButton, ToggleButtonGroup, Row, Col} from 'react-bootstrap';
+const React = require('react');
+const PropTypes = require('prop-types');
+const { Typeahead } = require('react-bootstrap-typeahead');
+const style = require('react-bootstrap-typeahead/css/Typeahead.css');
+const { ToggleButton, ToggleButtonGroup, Row, Col} = require('react-bootstrap');
 
 /**
  * @extends Component
@@ -113,4 +113,4 @@ CropGroup.propTypes = {
 	cropGroup: PropTypes.array.isRequired,
 }
 
-export default CropGroup;
+module.exports = CropGroup;

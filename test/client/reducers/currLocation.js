@@ -1,8 +1,8 @@
-import { expect } from 'chai';
-import * as types from '/client/actions/types';
-import { currLocation } from '/client/reducers';
-import { defaultState } from '/client/reducers/currLocation';
-import { expectNoActionForAllBut as sanityCheck } from './Helper';
+const { expect } = require('chai');
+const types = require('../../../client/actions');
+const { currLocation } = require('../../../client/reducers/currLocation');
+const { defaultState } = require('../../../client/reducers/currLocation');
+const { expectNoActionForAllBut } = require('./Helper');
 
 describe('currLocation reducer', () => {
 	const testedActions = [];
@@ -43,7 +43,7 @@ describe('currLocation reducer', () => {
 			action = { location };
 		});
 		it('should do nothing', () => {
-			sanityCheck(currLocation, testedActions, state, action);
+			expectNoActionForAllBut(currLocation, testedActions, state, action);
 		});
 	});
 });

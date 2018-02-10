@@ -3,8 +3,8 @@
  * @memberof client.components.beds
  */
 
-import React from 'react';
-import { Redirect } from 'react-router-dom';
+const React = require('react');
+const { Redirect } = require('react-router-dom');
 
 /**
  * @extends Component
@@ -16,4 +16,4 @@ class BedPage extends React.Component {
 	}
 }
 
-export default BedPage;
+module.exports = BedPage;

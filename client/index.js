@@ -4,19 +4,19 @@
  * @namespace client
  */
 
-import React from 'react';
-import { render } from 'react-dom';
-import { Provider } from 'react-redux';
-import { addAllStyles } from './styles';
-import App from './components/App';
-import { createLogger } from 'redux-logger'
-import thunk from 'redux-thunk';
-import reducer from './reducers';
-import { createStore, compose, applyMiddleware } from 'redux';
-import { persistStore, autoRehydrate } from 'redux-persist';
-import { storeLoaded } from './actions'
-import { BrowserRouter } from 'react-router-dom';
-import '/client/styles/main.scss';
+const React = require('react');
+const { render } = require('react-dom');
+const { Provider } = require('react-redux');
+const { addAllStyles } = require('./styles');
+const App = require('./components/App');
+const { createLogger } = require('redux-logger');
+const thunk = require('redux-thunk').default;
+const reducer = require('./reducers');
+const { createStore, compose, applyMiddleware } = require('redux');
+const { persistStore, autoRehydrate } = require('redux-persist');
+const { storeLoaded } = require('./actions');
+const { BrowserRouter } = require('react-router-dom');
+require('./styles/main.scss');
 
 /**
  * The root component of the application. Everything unfolds from here.

@@ -5,7 +5,7 @@
  * @memberof client.reducers
  */
 
-import { SET_CURRENT_LOCATION, LOGOUT } from '../actions';
+const { SET_CURRENT_LOCATION, LOGOUT } = require('../actions');
 
 /**
  * @constant {Location}
@@ -17,7 +17,7 @@ const initialState = null;
  * @param {Object} action Action object
  * @return {Object} Next state
  */
-export function currLocation(state = initialState, action) {
+function currLocation(state = initialState, action) {
 	switch (action.type) {
 		case SET_CURRENT_LOCATION:
 			return action.location;
@@ -27,3 +27,7 @@ export function currLocation(state = initialState, action) {
 			return state;
 	}
 }
+
+module.exports = {
+	currLocation
+};

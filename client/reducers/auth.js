@@ -5,11 +5,11 @@
  * @memberof client.reducers
  */
 
-import {
+const {
 	SET_CURRENT_USER,
 	CREATE_USER,
 	LOGOUT
-} from '../actions';
+} = require('../actions');
 
 /**
  * @constant {Object}
@@ -24,7 +24,7 @@ const initialState = {
  * @param {Object} action Action object
  * @return {state} Next state
  */
-export function auth(state = initialState, action) {
+function auth(state = initialState, action) {
 	switch (action.type) {
 		case SET_CURRENT_USER:
 			if (action.user) {
@@ -44,4 +44,8 @@ export function auth(state = initialState, action) {
 		default:
 			return state;
 	}
+};
+
+module.exports = {
+	auth
 };

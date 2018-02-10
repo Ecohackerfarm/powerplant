@@ -1,4 +1,5 @@
-import mongoose from 'mongoose';
+const mongoose = require('mongoose');
+
 const Schema = mongoose.Schema;
 const ObjectId = Schema.Types.ObjectId;
 
@@ -75,4 +76,5 @@ cropRelationshipSchema.pre('save', function(next) {
 });
 
 const CropRelationship = mongoose.model('CropRelationship', cropRelationshipSchema);
-export default CropRelationship;
+
+module.exports = CropRelationship;

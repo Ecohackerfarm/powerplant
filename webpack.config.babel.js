@@ -1,7 +1,7 @@
-import path from 'path';
-import webpack from 'webpack';
+const path = require('path');
+const webpack = require('webpack');
 
-export default {
+module.exports = {
 	entry: "./client/index.js",
 	output: {
 		path: path.join(__dirname, "dist"),
@@ -48,4 +48,4 @@ export default {
 	resolve: {
 		extensions: [ '*', '.js' ]
 	}
-}
+};

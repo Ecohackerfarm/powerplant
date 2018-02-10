@@ -3,10 +3,10 @@
  * @memberof client.components.beds
  */
 
-import React from 'react';
-import AddBedsForm from './AddBedsForm';
-import EditBedForm from './EditBedForm';
-import { withRouter } from 'react-router-dom';
+const React = require('react');
+const AddBedsForm = require('./AddBedsForm');
+const EditBedForm = require('./EditBedForm');
+const { withRouter } = require('react-router-dom');
 
 /**
  * @extends Component
@@ -21,4 +21,4 @@ class AddBedForm extends React.Component {
 	}
 }
 
-export default withRouter(AddBedForm);
+module.exports = withRouter(AddBedForm);

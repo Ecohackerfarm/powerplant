@@ -3,9 +3,9 @@
  * @memberof client.components.locations
  */
 
-import React from 'react';
-import { Col, Panel } from 'react-bootstrap';
-import PropTypes from 'prop-types';
+const React = require('react');
+const { Col, Panel } = require('react-bootstrap');
+const PropTypes = require('prop-types');
 
 /**
  * @extends Component
@@ -33,4 +33,4 @@ LocationItem.propTypes = {
 	header: PropTypes.object.isRequired
 };
 
-export default LocationItem;
+module.exports = LocationItem;

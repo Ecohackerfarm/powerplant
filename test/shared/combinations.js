@@ -1,5 +1,5 @@
-import assert from 'assert';
-import { Combinations, areEqualCombinations } from '/shared/combinations.js';
+const assert = require('assert');
+const { Combinations, areEqualCombinations } = require('../../shared/combinations.js');
 
 /**
  * @return {Combinations}

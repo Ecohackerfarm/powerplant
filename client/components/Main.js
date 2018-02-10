@@ -3,15 +3,15 @@
  * @memberof client.components
  */
 
-import React from 'react';
-import { Redirect, Route, Switch, withRouter} from 'react-router-dom';
-import Login from './login/LoginPage';
-import Register from './register/RegisterPage';
-import Recover from './recover/Recover';
-import LocationsPage from './locations/LocationsPage';
-import AboutPage from './about/AboutPage'
-import { saveLocationRequest } from '../actions/locationActions';
-import { connect } from 'react-redux';
+const React = require('react');
+const { Redirect, Route, Switch, withRouter} = require('react-router-dom');
+const Login = require('./login/LoginPage');
+const Register = require('./register/RegisterPage');
+const Recover = require('./recover/Recover');
+const LocationsPage = require('./locations/LocationsPage');
+const AboutPage = require('./about/AboutPage');
+const { saveLocationRequest } = require('../actions/locationActions');
+const { connect } = require('react-redux');
 
 /**
  * Represents the main content area of the application, in contrast to
@@ -77,4 +77,4 @@ const mapDispatchToProps = (dispatch) => ({
 	saveLocation: (location) => dispatch(saveLocationRequest(location))
 });
 
-export default withRouter(connect(mapStateToProps, mapDispatchToProps)(Main));
+module.exports = withRouter(connect(mapStateToProps, mapDispatchToProps)(Main));

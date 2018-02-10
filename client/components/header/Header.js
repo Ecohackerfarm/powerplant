@@ -3,13 +3,13 @@
  * @memberof client.components.header
  */
 
-import React from 'react';
-import { withRouter } from 'react-router-dom';
-import { connect } from 'react-redux';
-import { Navbar, NavItem, Nav } from 'react-bootstrap';
-import { LinkContainer } from 'react-router-bootstrap';
-import PropTypes from 'prop-types';
-import HeaderBrand from './HeaderBrand';
+const React = require('react');
+const { withRouter } = require('react-router-dom');
+const { connect } = require('react-redux');
+const { Navbar, NavItem, Nav } = require('react-bootstrap');
+const { LinkContainer } = require('react-router-bootstrap');
+const PropTypes = require('prop-types');
+const HeaderBrand = require('./HeaderBrand');
 
 /**
  * @extends Component
@@ -46,4 +46,4 @@ const mapStateToProps = (state) => ({
 	title: state.app.headerTitle
 });
 
-export default withRouter(connect(mapStateToProps)(Header));
+module.exports = withRouter(connect(mapStateToProps)(Header));

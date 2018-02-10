@@ -1,8 +1,8 @@
-import { expect } from 'chai';
-import { sendForm } from '../routerHelpers';
-import { user } from './users';
-import jwtDecode from 'jwt-decode';
-import { request } from '/test/server/init.js';
+const { expect } = require('chai');
+const { sendForm } = require('../routerHelpers');
+const { user } = require('./users');
+const jwtDecode = require('jwt-decode');
+const { request } = require('../../../init.js');
 
 const rootUrl = '/api/login';
 const jsonType = 'application/json; charset=utf-8';

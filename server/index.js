@@ -4,6 +4,6 @@
  * @namespace server
  */
 
-import { startServer } from './server';
+const { startServer } = require('./server');
 
 startServer(false);

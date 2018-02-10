@@ -3,13 +3,17 @@
  * @memberof client.actions
  */
 
-import { setTitle } from '.';
+const { setTitle } = require('.');
 
 /**
  * Request a title change
  * @param {String} title
  * @return {client.actions.setTitleAction}
  */
-export function setTitleRequest(title) {
+function setTitleRequest(title) {
 	return setTitle(title);
 }
+
+module.exports = {
+	setTitleRequest
+};

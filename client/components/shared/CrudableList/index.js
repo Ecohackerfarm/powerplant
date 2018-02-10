@@ -8,5 +8,6 @@
  * @memberof client.components.shared
  */
 
-import ListPage from './CrudableListPage';
-export default ListPage;
+const ListPage = require('./CrudableListPage');
+
+module.exports = ListPage;

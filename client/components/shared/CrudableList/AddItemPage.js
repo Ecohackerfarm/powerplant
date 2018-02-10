@@ -1,7 +1,7 @@
-import React from 'react';
-import { Redirect } from 'react-router-dom';
-import PropTypes from 'prop-types';
-import { Grid, Row, Col } from 'react-bootstrap';
+const React = require('react');
+const { Redirect } = require('react-router-dom');
+const PropTypes = require('prop-types');
+const { Grid, Row, Col } = require('react-bootstrap');
 
 /**
  * @namespace AddItemPage
@@ -9,23 +9,18 @@ import { Grid, Row, Col } from 'react-bootstrap';
  */
 
 class AddItemPage extends React.Component {
-	static propTypes = {
-		onSubmit: PropTypes.func.isRequired,
-		itemName: PropTypes.string.isRequired,
-		AddItemForm: PropTypes.func.isRequired,
-		homeUrl: PropTypes.string.isRequired,
-		itemToEdit: PropTypes.object
-	};
+	constructor(props) {
+		super(props);
+		this.state = {
+			success: false
+		};
+	}
 
-	state = {
-		success: false
-	};
-
-	onSuccess = () => {
+	onSuccess() {
 		this.setState({
 			success: true
 		});
-	};
+	}
 
 	render() {
 		if (this.state.success) {
@@ -37,7 +32,7 @@ class AddItemPage extends React.Component {
 					<Row>
 						<Col md={6} mdOffset={3}>
 							<AddItemForm
-								onSuccess={this.onSuccess}
+								onSuccess={this.onSuccess.bind(this)}
 								onSubmit={this.props.onSubmit}
 								itemToEdit={this.props.itemToEdit}
 							/>
@@ -49,4 +44,12 @@ class AddItemPage extends React.Component {
 	}
 }
 
-export default AddItemPage;
+AddItemPage.propTypes = {
+	onSubmit: PropTypes.func.isRequired,
+	itemName: PropTypes.string.isRequired,
+	AddItemForm: PropTypes.func.isRequired,
+	homeUrl: PropTypes.string.isRequired,
+	itemToEdit: PropTypes.object
+};
+
+module.exports = AddItemPage;

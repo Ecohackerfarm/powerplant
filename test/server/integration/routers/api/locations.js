@@ -1,12 +1,13 @@
-import { expect } from 'chai';
-import { sendForm, randString } from '../routerHelpers';
-import Location from '/server/models/location';
-import User from '/server/models/user';
-import { user as testUser } from './users';
-import jwt from 'jsonwebtoken';
-import { JWT_SECRET } from '/secrets';
-import { request } from '/test/server/init.js';
+const { expect } = require('chai');
+const { sendForm, randString } = require('../routerHelpers');
+const Location = require('../../../../../server/models/location');
+const User = require('../../../../../server/models/user');
+const { user } = require('./users');
+const jwt = require('jsonwebtoken');
+const { JWT_SECRET } = require('../../../../../secrets');
+const { request } = require('../../../init.js');
 
+const testUser = user;
 const rootUrl = '/api/locations';
 const jsonType = 'application/json; charset=utf-8';
 

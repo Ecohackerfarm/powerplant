@@ -3,9 +3,9 @@
  * @memberof client.components.locations
  */
 
-import React from 'react';
-import { Switch, Route, Redirect } from 'react-router-dom';
-import BedsPage from '../beds';
+const React = require('react');
+const { Switch, Route, Redirect } = require('react-router-dom');
+const BedsPage = require('../beds');
 
 /**
  * @extends Component
@@ -33,4 +33,4 @@ class LocationPage extends React.Component {
 	}
 }
 
-export default LocationPage;
+module.exports = LocationPage;

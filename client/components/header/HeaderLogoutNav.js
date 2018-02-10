@@ -3,9 +3,9 @@
  * @memberof client.components.header
  */
 
-import React from 'react';
-import { NavItem, Nav } from 'react-bootstrap';
-import PropTypes from 'prop-types';
+const React = require('react');
+const { NavItem, Nav } = require('react-bootstrap');
+const PropTypes = require('prop-types');
 
 /**
  * @extends Component
@@ -24,4 +24,4 @@ HeaderLogoutNav.propTypes = {
 	userLogoutRequest: PropTypes.func.isRequired
 };
 
-export default HeaderLogoutNav;
+module.exports = HeaderLogoutNav;

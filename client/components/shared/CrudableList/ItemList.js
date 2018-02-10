@@ -1,8 +1,8 @@
-import React from 'react';
-import { Link } from 'react-router-dom';
-import PropTypes from 'prop-types';
-import { HelpBlock, Col, Row } from 'react-bootstrap';
-import ItemHeader from './ItemHeader';
+const React = require('react');
+const { Link } = require('react-router-dom');
+const PropTypes = require('prop-types');
+const { HelpBlock, Col, Row } = require('react-bootstrap');
+const ItemHeader = require('./ItemHeader');
 
 const ItemList = ({ deleteAction, match, items, ItemView, itemName }) => {
 	const itemEntries = Object.entries(items);
@@ -45,4 +45,4 @@ ItemList.propTypes = {
 	itemName: PropTypes.string.isRequired
 };
 
-export default ItemList;
+module.exports = ItemList;

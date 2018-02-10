@@ -1,15 +1,10 @@
-import supertest from 'supertest';
-import { startServer } from '/server/server';
+const supertest = require('supertest');
+const { startServer } = require('../../server/server');
 
-before(() => {
-	// TODO: Set up a test database! (pp_test)
-	app = startServer(true);
-	request = supertest(app);
-});
+const app = startServer(true);
+const request = supertest(app);
 
-beforeEach(() => {
-//	server.processor = new Processor();
-});
-
-export let app;
-export let request;
+module.exports = {
+	app,
+	request
+};

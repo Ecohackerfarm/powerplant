@@ -3,8 +3,12 @@
  * @function
  * @return {String} [description]
  */
-export const randString = () => {
+const randString = () => {
 	return Math.random()
 		.toString(36)
 		.substring(2);
+};
+
+module.exports = {
+	randString
 };

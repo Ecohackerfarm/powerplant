@@ -5,10 +5,10 @@
  * @memberof client.reducers
  */
 
-import {
+const {
 	STORE_LOADED,
 	SET_HEADER_TITLE
-} from '../actions';
+} = require('../actions');
 
 /**
  * @constant {Object}
@@ -25,19 +25,21 @@ const initialState = {
  * @param {Object} action Action object
  * @return {Object} Next state
  */
-export function app(state = initialState, action) {
+function app(state = initialState, action) {
 	switch (action.type) {
 		case STORE_LOADED:
-			return {
-				...state,
+			return Object.assign({}, state, {
 				storeLoaded: action.storeLoaded
-			};
+			});
 		case SET_HEADER_TITLE:
-	 		return {
-				...state,
+			return Object.assign({}, state, {
 				headerTitle: action.title
-	  		};
+			});
 		default:
 	  		return state;
   	}
 }
+
+module.exports = {
+	app
+};

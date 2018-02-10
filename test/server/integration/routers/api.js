@@ -1,4 +1,4 @@
-import { request } from '/test/server/init.js';
+const { request } = require('../../init.js');
 
 const rootUrl = '/api';
 const jsonType = 'application/json; charset=utf-8';

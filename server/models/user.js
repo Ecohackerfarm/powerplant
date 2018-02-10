@@ -1,6 +1,6 @@
-import mongoose from 'mongoose';
-import bcrypt from 'bcrypt';
-import uniqueValidator from 'mongoose-unique-validator';
+const mongoose = require('mongoose');
+const bcrypt = require('bcrypt');
+const uniqueValidator = require('mongoose-unique-validator');
 
 const Schema = mongoose.Schema;
 const ObjectId = Schema.Types.ObjectId;
@@ -81,4 +81,6 @@ userSchema.methods.checkPassword = function(password) {
 
 userSchema.plugin(uniqueValidator);
 
-export default mongoose.model('User', userSchema);
+const User = mongoose.model('User', userSchema);
+
+module.exports = User;

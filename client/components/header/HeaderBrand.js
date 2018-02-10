@@ -3,9 +3,9 @@
  * @memberof client.components.header
  */
 
- import React from 'react';
-import PropTypes from 'prop-types';
-import { Navbar, Col } from 'react-bootstrap';
+const React = require('react');
+const PropTypes = require('prop-types');
+const { Navbar, Col } = require('react-bootstrap');
 
 /**
  * @extends Component
@@ -29,4 +29,4 @@ HeaderBrand.propTypes = {
 	title: PropTypes.string.isRequired
 };
 
-export default HeaderBrand;
+module.exports = HeaderBrand;

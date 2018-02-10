@@ -10,7 +10,7 @@
  * 
  * @return {Boolean}
  */
-export function isDevelopmentMode() {
+function isDevelopmentMode() {
 	return process.env.NODE_ENV == 'development';
 }
 
@@ -19,8 +19,13 @@ export function isDevelopmentMode() {
  * 
  * @param {Object} message
  */
-export function debug(message) {
+function debug(message) {
 	if (isDevelopmentMode()) {
 		console.log(message);
 	}
 }
+
+module.exports = {
+	isDevelopmentMode,
+	debug
+};

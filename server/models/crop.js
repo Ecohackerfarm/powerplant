@@ -1,4 +1,4 @@
-import mongoose from 'mongoose';
+const mongoose = require('mongoose');
 
 /**
  * @constructor
@@ -26,4 +26,5 @@ cropSchema.query.byName = function(name) {
 };
 
 const Crop = mongoose.model('Crop', cropSchema);
-export default Crop;
+
+module.exports = Crop;

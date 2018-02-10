@@ -3,8 +3,8 @@
  * @memberof client.components.beds
  */
 
- import React from 'react';
-import { Col, Panel } from 'react-bootstrap';
+const React = require('react');
+const { Col, Panel } = require('react-bootstrap');
 
 /**
  * @extends Component
@@ -23,4 +23,4 @@ class BedItem extends React.Component {
 	}
 }
 
-export default BedItem;
+module.exports = BedItem;

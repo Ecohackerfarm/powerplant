@@ -3,12 +3,12 @@
  * @memberof client.components.beds
  */
 
- import React from 'react';
-import ChooseCrops from '../crops/ChooseCrops';
-import CropGroups from '../crops/CropGroups';
-import { Button } from 'react-bootstrap'
-import { getCropGroups } from '../../utils/apiCalls';
-import { withRouter } from 'react-router-dom';
+const React = require('react');
+const ChooseCrops = require('../crops/ChooseCrops');
+const CropGroups = require('../crops/CropGroups');
+const { Button } = require('react-bootstrap');
+const { getCropGroups } = require('../../utils/apiCalls');
+const { withRouter } = require('react-router-dom');
 
 /**
  * @extends Component
@@ -141,6 +141,6 @@ AddBedForm.defaultProps = {
 	submitButtonText: "Submit",
 	minNumberOfCropsText: "Please select at least 3 crops.",
 	explanation: "Please choose the crops you want to add in your garden. We will suggest you which plants should go together into the same bed."
-}
+};
 
-export default withRouter(AddBedForm);
+module.exports = withRouter(AddBedForm);

@@ -3,16 +3,16 @@
  * @memberof client.actions
  */
 
-import axios from 'axios';
-import { getCropsByName } from '../utils/apiCalls';
-import {
+const axios = require('axios');
+const { getCropsByName } = require('../utils/apiCalls');
+const {
 	cropsLoading,
 	cropsUpdated,
 	cropsLoadingError,
 	cropRelationshipsLoading,
 	cropRelationshipsUpdated,
 	cropRelationshipsLoadingError
-} from '.';
+} = require('.');
 
 
 /**
@@ -33,7 +33,7 @@ const updateNeeded = (lastUpdated) => {
  * @function
  * @return {Function}		function for dispatch
  */
-export const fetchCrops = () => {
+const fetchCrops = () => {
 	const name = '';
 	const index = '';
 	const length = '';
@@ -59,7 +59,7 @@ export const fetchCrops = () => {
  * Fetches Relationship from server if not existent or old data
  * @return {function} function for dispatch
  */
-export const fetchRelationships = () => {
+const fetchRelationships = () => {
 	return (dispatch, getState) => {
 		if (updateNeeded(getState().crops.companionships.updated)) {
 			dispatch(cropRelationshipsLoading(true));
@@ -75,4 +75,9 @@ export const fetchRelationships = () => {
 			});
 		}
 	};
+};
+
+module.exports = {
+	fetchCrops,
+	fetchRelationships
 };

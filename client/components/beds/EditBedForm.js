@@ -3,14 +3,14 @@
  * @memberof client.components.beds
  */
 
-import React from 'react';
-import { Col, Button } from 'react-bootstrap';
-import Proptypes from 'prop-types';
-import { connect } from 'react-redux';
-import { getCompatibleCrops } from '../../utils/apiCalls';
-import { Typeahead } from 'react-bootstrap-typeahead';
-import { withRouter } from 'react-router-dom';
-import { fetchCrops } from '../../actions/cropActions';
+const React = require('react');
+const { Col, Button } = require('react-bootstrap');
+const Proptypes = require('prop-types');
+const { connect } = require('react-redux');
+const { getCompatibleCrops } = require('../../utils/apiCalls');
+const { Typeahead } = require('react-bootstrap-typeahead');
+const { withRouter } = require('react-router-dom');
+const { fetchCrops } = require('../../actions/cropActions');
 
 /**
  * @extends Component
@@ -135,4 +135,4 @@ const mapDispatchToProps = (dispatch) => ({
 	fetchCrops: () => dispatch(fetchCrops())
 });
 
-export default withRouter(connect(mapStateToProps, mapDispatchToProps)(EditBedForm));
+module.exports = withRouter(connect(mapStateToProps, mapDispatchToProps)(EditBedForm));

@@ -3,10 +3,10 @@
  * @memberof client.actions
  */
 
-import axios from 'axios';
-import { editLocation, addLocation, deleteLocation, setLocations } from '.';
-import { simpleAuthCheckedRequest } from './actionHelpers';
-import { getLocations } from '../utils/apiCalls';
+const axios = require('axios');
+const { editLocation, addLocation, deleteLocation, setLocations } = require('.');
+const { simpleAuthCheckedRequest } = require('./actionHelpers');
+const { getLocations } = require('../utils/apiCalls');
 
 /**
  * Async sends a request to get all the user's locations
@@ -16,7 +16,7 @@ import { getLocations } from '../utils/apiCalls';
  * @param  {String} id id of user whose locations are being fetched
  * @return {Promise}    the network request
  */
-export const getLocationsRequest = id => {
+const getLocationsRequest = id => {
 	return dispatch =>
 	  getLocations({id})
 	    .then(res => {
@@ -33,7 +33,7 @@ export const getLocationsRequest = id => {
  * @param  {server.models.Location} location unlike server model, does not require an _id parameter
  * @return {Promise} resolves to a {@link client.actions.responseObject}
  */
-export const saveLocationRequest = location => {
+const saveLocationRequest = location => {
 	return (dispatch,getState) => {
 		if (getState().auth.isAuthenticated) {
 			return axios.post('/api/locations', location).then(res => {
@@ -41,11 +41,7 @@ export const saveLocationRequest = location => {
 					dispatch(addLocation({ [res.data._id] : res.data }));
 					return { success: true };
 				} else {
-					return {
-						// TODO: properly handle server error
-						success: false,
-						...res.data // es7 object spread
-					};
+					return Object.assign({}, res.data, { success: false });
 				}
 			});
 		} else {
@@ -80,9 +76,9 @@ export const saveLocationRequest = location => {
  * @param  {server.model.Location[]} locations locations to be saved
  * @return {Promise} resolves to a {@link client.actions.responseObject}
  */
-export const saveAllLocationsRequest = locations => {
+const saveAllLocationsRequest = locations => {
 	return dispatch => {
-		const oldLocations = {...locations}; // make a copy
+		const oldLocations = Object.assign({}, locations); // make a copy
 		const requests = Object.entries(locations).map(
 			({key, loc}) => axios.post('/api/locations', loc)
 		);
@@ -108,7 +104,7 @@ export const saveAllLocationsRequest = locations => {
  * @param  {Object} locChanges changes to be made to the location
  * @return {client.actions.responseObject}
  */
-export const editLocationRequest = (id, locChanges) => {
+const editLocationRequest = (id, locChanges) => {
 	return simpleAuthCheckedRequest(
 		'/api/locations/' + id,
 		'put',
@@ -118,11 +114,19 @@ export const editLocationRequest = (id, locChanges) => {
 	);
 };
 
-export const deleteLocationRequest = id => {
+const deleteLocationRequest = id => {
 	return simpleAuthCheckedRequest(
 		'/api/locations/' + id,
 		'delete',
 		deleteLocation,
 		id
 	);
+};
+
+module.exports = {
+	getLocationsRequest,
+	saveLocationRequest,
+	saveAllLocationsRequest,
+	editLocationRequest,
+	deleteLocationRequest
 };

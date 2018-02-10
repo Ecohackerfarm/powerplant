@@ -5,11 +5,11 @@
  * @memberof server
  */
 
-import express from 'express';
-import mongoose from 'mongoose';
-import path from 'path';
-import bodyParser from 'body-parser';
-import {
+const express = require('express');
+const mongoose = require('mongoose');
+const path = require('path');
+const bodyParser = require('body-parser');
+const {
 	documentGet,
 	documentPut,
 	documentDelete,
@@ -20,12 +20,12 @@ import {
 	getCropsByName,
 	getLocations,
 	login
-} from './middleware';
-import Crop from './models/crop';
-import CropRelationship from './models/crop-relationship';
-import Location from './models/location';
-import User from './models/user';
-import {
+} = require('./middleware');
+const Crop = require('./models/crop');
+const CropRelationship = require('./models/crop-relationship');
+const Location = require('./models/location');
+const User = require('./models/user');
+const {
 	DATABASE_USERNAME,
 	DATABASE_PASSWORD,
 	DATABASE_PROTOCOLL,
@@ -33,8 +33,8 @@ import {
 	DATABASE_PORT,
 	DATABASE_DB,
 	PP_PORT
-} from '../secrets.js';
-import { isDevelopmentMode } from './utils';
+} = require('../secrets.js');
+const { isDevelopmentMode } = require('./utils');
 
 /**
  * Build router for a document API.
@@ -144,7 +144,7 @@ function buildApp(development) {
 		const webpack = require('webpack');
 		const webpackDevMiddleware = require('webpack-dev-middleware');
 		const webpackHotMiddleware = require('webpack-hot-middleware');
-		const webpackDevConfig = require('../webpack.config.dev').default;
+		const webpackDevConfig = require('../webpack.config.dev');
 
 		const compiler = webpack(webpackDevConfig);
 
@@ -199,7 +199,7 @@ const getDatabaseURL = () => {
  * 
  * @param {Boolean} testMode 
  */
-export function startServer(testMode) {
+function startServer(testMode) {
 	const developmentMode = isDevelopmentMode() && (!testMode);
 
 	if (process.env.DATABASEURL) {
@@ -236,3 +236,7 @@ export function startServer(testMode) {
 
 	return app;
 }
+
+module.exports = {
+	startServer
+};

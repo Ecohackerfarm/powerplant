@@ -14,7 +14,7 @@
  *   }
  * )
  */
-import axios from 'axios';
+const axios = require('axios');
 
 /**
  * Gets crops by names
@@ -25,7 +25,7 @@ import axios from 'axios';
  *
  * @return {Promise}       Promise
  */
-export const getCropsByName = (params) => {
+const getCropsByName = (params) => {
   return axios.get(
 	  '/api/get-crops-by-name', {params}
 	)
@@ -37,7 +37,7 @@ export const getCropsByName = (params) => {
  * @param  {Array} params.cropIds 	array of ids of crops
  * @return {Promise}       					Promise
  */
-export const getCropGroups = (params) => {
+const getCropGroups = (params) => {
 	return axios.post(
 		'/api/get-crop-groups',
 		params
@@ -50,7 +50,7 @@ export const getCropGroups = (params) => {
  * @param  {Array} params.cropIds 	array of ids of crops
  * @return {Promise}       					Promise
  */
-export const getCompatibleCrops = (params) => {
+const getCompatibleCrops = (params) => {
 	return axios.post(
 		'/api/get-compatible-crops',
 		params
@@ -64,10 +64,15 @@ export const getCompatibleCrops = (params) => {
  *
  * @return {Promise}        			Promise
  */
-export const getLocations = (params) => {
+const getLocations = (params) => {
   return axios.get(
 	  '/api/users/'+ params.id + '/locations'
 	)
 }
 
-
+module.exports = {
+	getCropsByName,
+	getCropGroups,
+	getCompatibleCrops,
+	getLocations
+};

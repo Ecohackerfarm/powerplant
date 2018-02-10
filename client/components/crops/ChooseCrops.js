@@ -3,15 +3,15 @@
  * @memberof client.components.crops
  */
 
-import { Typeahead } from 'react-bootstrap-typeahead';
-import 'react-bootstrap-typeahead/css/Typeahead.css';
-import React from 'react';
-import PropTypes from 'prop-types';
-import {
+const { Typeahead } = require('react-bootstrap-typeahead');
+require('react-bootstrap-typeahead/css/Typeahead.css');
+const React = require('react');
+const PropTypes = require('prop-types');
+const {
 	fetchCrops,
 	fetchCombinations
-} from '../../actions/cropActions';
-import { connect } from 'react-redux';
+} = require('../../actions/cropActions');
+const { connect } = require('react-redux');
 
 /**
  * A react component that searches all organisms with autocompletion feature.
@@ -59,4 +59,4 @@ const mapStateToProps = (state) => ({
 	error: state.crops.error,
 });
 
-export default connect (mapStateToProps, mapDispatchToProps)(ChooseCrops);
+module.exports = connect (mapStateToProps, mapDispatchToProps)(ChooseCrops);

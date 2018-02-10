@@ -1,8 +1,8 @@
-import Validator from 'validator';
-import isEmpty from 'lodash.isempty';
+const Validator = require('validator');
+const isEmpty = require('lodash.isempty');
 
 const props = ['username', 'password', 'email'];
-export default function(user) {
+function userValidation(user) {
 	let errors = {};
 
 	props.forEach(item => {
@@ -19,3 +19,5 @@ export default function(user) {
 		isValid: isEmpty(errors)
 	};
 }
+
+module.exports = userValidation;

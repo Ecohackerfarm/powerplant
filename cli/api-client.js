@@ -3,13 +3,13 @@
  * @memberof cli
  */
 
-import {
+const {
 	AsyncObject,
 	schedulerFunction,
 	SerialScheduler,
 	ParallelScheduler
-} from 'async-task-schedulers';
-import axios from 'axios';
+} = require('async-task-schedulers');
+const axios = require('axios');
 
 /**
  * Powerplant HTTP API client that uses axios for making the HTTP requests.
@@ -476,4 +476,6 @@ class ApiClient extends AsyncObject {
 	}
 }
 
-export { ApiClient };
+module.exports = {
+	ApiClient
+};

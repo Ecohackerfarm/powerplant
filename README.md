@@ -18,7 +18,7 @@ Currently in development. A good amount of research and specification work has b
 To start developing, you need to set up the development environment. This includes:
 NodeJS and MongoDB or Docker with MongoDB
 
-1. [Install Node](https://nodejs.org/en/download/package-manager/) you should install version 6.x
+1. [Install Node](https://nodejs.org/en/download/package-manager/) you should install version >9.4.0
 2. [Install Docker](https://docs.docker.com/engine/installation)
 3. Install the [Mongo Docker image](https://hub.docker.com/_/mongo/) by running `docker pull mongo`
 4. Clone the [git repository](https://github.com/Ecohackerfarm/powerplant.git)

@@ -3,24 +3,19 @@
  * @memberof client.components.login
  */
 
-import React from 'react';
-import { connect } from 'react-redux';
-import { Redirect } from 'react-router-dom';
-import PropTypes from 'prop-types';
-import LoginForm from './LoginForm';
-import { Grid, Row, Col } from 'react-bootstrap';
-import { userLoginRequest } from '../../actions/userActions';
-import SetHeaderTitle from '../shared/SetHeaderTitle';
+const React = require('react');
+const { connect } = require('react-redux');
+const { Redirect } = require('react-router-dom');
+const PropTypes = require('prop-types');
+const LoginForm = require('./LoginForm');
+const { Grid, Row, Col } = require('react-bootstrap');
+const { userLoginRequest } = require('../../actions/userActions');
+const SetHeaderTitle = require('../shared/SetHeaderTitle');
 
 /**
  * @extends Component
  */
 class Login extends React.Component {
-	static propTypes = {
-		userLoginRequest: PropTypes.func.isRequired,
-		success: PropTypes.bool.isRequired
-	};
-
 	render() {
 		const { userLoginRequest } = this.props;
 		return (
@@ -40,6 +35,11 @@ class Login extends React.Component {
 	}
 }
 
+Login.propTypes = {
+	userLoginRequest: PropTypes.func.isRequired,
+	success: PropTypes.bool.isRequired
+};
+
 const stateToProps = state => ({ success: state.auth.isAuthenticated });
 
-export default connect(stateToProps, { userLoginRequest })(Login);
+module.exports = connect(stateToProps, { userLoginRequest })(Login);

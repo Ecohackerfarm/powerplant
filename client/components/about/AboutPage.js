@@ -3,9 +3,9 @@
  * @memberof client.components.about
  */
 
-import React from 'react';
-import { Grid, Row, Col } from 'react-bootstrap';
-import '../../styles/AboutPage.scss';
+const React = require('react');
+const { Grid, Row, Col } = require('react-bootstrap');
+require('../../styles/AboutPage.scss');
 
 /**
  * About page
@@ -39,4 +39,4 @@ class AboutPage extends React.Component {
 	};
 };
 
-export default AboutPage;
+module.exports = AboutPage;

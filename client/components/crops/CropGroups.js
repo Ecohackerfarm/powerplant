@@ -3,9 +3,9 @@
  * @memberof client.components.crops
  */
 
- import PropTypes from 'prop-types';
-import React from 'react';
-import CropGroup from './CropGroup'
+const PropTypes = require('prop-types');
+const React = require('react');
+const CropGroup = require('./CropGroup');
 
 /**
  * @extends Component
@@ -70,4 +70,4 @@ CropGroups.defaultProps = {
 	noGroupsText: "No Groups Found."
 }
 
-export default CropGroups;
+module.exports = CropGroups;

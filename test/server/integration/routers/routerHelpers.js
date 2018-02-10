@@ -1,38 +1,35 @@
-import { expect } from 'chai';
-import Crop from '/server/models/crop';
-import CropRelationship from '/server/models/crop-relationship';
-
-import * as myself from './routerHelpers'; // import myself (it's ok es6 supports cyclic imports)
-export default myself; // this allows default importing AND named importing
+const { expect } = require('chai');
+const Crop = require('../../../../server/models/crop');
+const CropRelationship = require('../../../../server/models/crop-relationship');
 
 // Helper functions for integration tests go here
 
-export function sendForm(request, data) {
+function sendForm(request, data) {
 	return request
 		.set('Content-Type', 'application/x-www-form-urlencoded')
 		.send(data);
 }
 
-export function randString() {
+function randString() {
 	return Math.random()
 		.toString(36)
 		.substring(7);
 }
 
-export function allStrings(array) {
+function allStrings(array) {
 	return array.every(item => {
 		return typeof item === 'string';
 	});
 }
 
-export function checkCropRelationship(item) {
+function checkCropRelationship(item) {
 	expect(item).to.contain.all.keys('crop0', 'crop1', 'compatibility');
 	expect(item.crop0 <= item.crop1).to.equal(true);
 }
 
-const sessionString = 'test' + module.exports.randString();
+const sessionString = 'test' + randString();
 
-export function createTestCrop(cb) {
+function createTestCrop(cb) {
 	new Crop({
 		commonName: sessionString,
 		binomialName: sessionString
@@ -41,9 +38,9 @@ export function createTestCrop(cb) {
 	});
 }
 
-export function createTestCropRelationship(cb) {
-	module.exports.createTestCrop(crop0 => {
-		module.exports.createTestCrop(crop1 => {
+function createTestCropRelationship(cb) {
+	createTestCrop(crop0 => {
+		createTestCrop(crop1 => {
 			new CropRelationship({
 				crop0: crop0,
 				crop1: crop1,
@@ -56,7 +53,7 @@ export function createTestCropRelationship(cb) {
 }
 
 // remove all companionships with things with the word
-export function cleanDb(cb) {
+function cleanDb(cb) {
 	Crop.find()
 		.byName(sessionString)
 		.exec((err, list) => {
@@ -76,3 +73,13 @@ export function cleanDb(cb) {
 			});
 		});
 }
+
+module.exports = {
+	sendForm,
+	randString,
+	allStrings,
+	checkCropRelationship,
+	createTestCrop,
+	createTestCropRelationship,
+	cleanDb
+};

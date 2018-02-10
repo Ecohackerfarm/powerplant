@@ -3,17 +3,17 @@
  * @memberof server
  */
 
-import { AsyncObject, ReadWriteScheduler } from 'async-task-schedulers';
-import mongoose from 'mongoose';
-import jwt from 'jsonwebtoken';
-import { JWT_SECRET } from '../secrets';
-import User from './models/user';
-import CropRelationship from './models/crop-relationship';
-import Crop from './models/crop';
-import Location from './models/location';
-import validateUser from '../shared/validation/userValidation';
-import validateCredentials from '../shared/validation/loginValidation';
-import { Combinations } from '../shared/combinations.js';
+const { AsyncObject, ReadWriteScheduler } = require('async-task-schedulers');
+const mongoose = require('mongoose');
+const jwt = require('jsonwebtoken');
+const { JWT_SECRET } = require('../secrets');
+const User = require('./models/user');
+const CropRelationship = require('./models/crop-relationship');
+const Crop = require('./models/crop');
+const Location = require('./models/location');
+const validateUser = require('../shared/validation/userValidation');
+const validateCredentials = require('../shared/validation/loginValidation');
+const { Combinations } = require('../shared/combinations.js');
 
 /**
  * Base class for exceptions that are thrown by Processor.
@@ -435,35 +435,6 @@ class Processor extends AsyncObject {
 	}
 
 	/**
-	 * Implements isCompatible() for Crop Combinations. Check if the given
-	 * other crop is compatible.
-	 * 
-	 * @param {Crop} crop
-	 * @return {Boolean}
-	 */
-	static isCompanion = function(crop) {
-		return this.relationships.some(
-			relationship =>
-				relationship.containsCrop(crop) && relationship.compatibility > 0
-		);
-	};
-
-	/**
-	 * Implements isCompatible() for Crop Combinations. Check if the given
-	 * other crop is neutral but not incompatible.
-	 * 
-	 * @param {Crop} crop
-	 * @return {Boolean}
-	 */
-	static isNeutral = function(crop) {
-		return this.relationships.some(
-			relationship =>
-				!relationship.containsCrop(crop) ||
-				(relationship.containsCrop(crop) && relationship.compatibility == 0)
-		);
-	};
-
-	/**
 	 * Assign isCompatible() for the given Crop documents for use with the
 	 * Combinations class.
 	 * 
@@ -493,7 +464,7 @@ class Processor extends AsyncObject {
 		let groups = [];
 
 		// Create groups of companion crops
-		Processor.assignIsCompatible(crops, Processor.isCompanion);
+		Processor.assignIsCompatible(crops, isCompanion);
 		const companionCombinations = new Combinations(crops);
 		groups = groups.concat(
 			Processor.removeCropGroupsFromCombinations(
@@ -504,7 +475,7 @@ class Processor extends AsyncObject {
 
 		// From the remaining crops, create small groups of neutral crops
 		const remainingCrops = companionCombinations.getElements();
-		Processor.assignIsCompatible(remainingCrops, Processor.isNeutral);
+		Processor.assignIsCompatible(remainingCrops, isNeutral);
 		const neutralCombinations = new Combinations(remainingCrops);
 		if (neutralCombinations.getLargestCombinationSize() >= 2) {
 			groups = groups.concat(
@@ -534,7 +505,7 @@ class Processor extends AsyncObject {
 	async getCompatibleCrops(cropIds) {
 		let allCrops = await this.getAllDocumentsUnmanaged(Crop);
 		await this.assignRelationships(allCrops);
-		Processor.assignIsCompatible(allCrops, Processor.isCompanion);
+		Processor.assignIsCompatible(allCrops, isCompanion);
 		const combinations = new Combinations(allCrops);
 
 		const initialCrops = cropIds.map(id =>
@@ -558,7 +529,7 @@ class Processor extends AsyncObject {
 	 * @param {String} text String to convert
 	 * @return {String} Escaped string
 	 */
-	escapeRegEx(text) {
+	static escapeRegEx(text) {
 		return text.replace(/[-[\]{}()*+?.,\\^$|#\s]/g, '\\$&');
 	}
 
@@ -572,7 +543,7 @@ class Processor extends AsyncObject {
 	 */
 	async getCropsByName(regex, index, length) {
 		const crops = await Crop.find()
-			.byName(this.escapeRegEx(regex))
+			.byName(Processor.escapeRegEx(regex))
 			.exec();
 		return length === 0
 			? crops.slice(index)
@@ -611,7 +582,36 @@ class Processor extends AsyncObject {
 	}
 }
 
-export {
+/**
+ * Implements isCompatible() for Crop Combinations. Check if the given
+ * other crop is compatible.
+ * 
+ * @param {Crop} crop
+ * @return {Boolean}
+ */
+function isCompanion(crop) {
+	return this.relationships.some(
+		(relationship) =>
+			(relationship.containsCrop(crop) && (relationship.compatibility > 0))
+	);
+}
+
+/**
+ * Implements isCompatible() for Crop Combinations. Check if the given
+ * other crop is neutral but not incompatible.
+ * 
+ * @param {Crop} crop
+ * @return {Boolean}
+ */
+function isNeutral(crop) {
+	return this.relationships.some(
+		(relationship) =>
+			!relationship.containsCrop(crop) ||
+			(relationship.containsCrop(crop) && (relationship.compatibility == 0))
+	);
+}
+
+module.exports = {
 	Processor,
 	VALIDATION_EXCEPTION,
 	AUTHENTICATION_EXCEPTION,
