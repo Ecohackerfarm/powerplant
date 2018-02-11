@@ -1,63 +1,41 @@
 Developer Documentation for powerplant
 
-Last updated: Jul 28, 2017
+Last updated: Feb 11, 2018
 
 
 Introduction
 ============
 
-**Dev aside** Hi. I (Simon, my email's at the end of this section) wrote this document to outline some of the standards used in this software. It's very unfinished, and I apologize for that. The end of my time at the mill snuck up on me much quicker than I expected. If you continue working on this project, it would be awesome if you also continue working on the documentation. Thanks!
+powerplant is a full-stack JS web app utilizing several external services and
+many interlocking components. The aim of this document is to help you, as a
+developer, to get familiar with all parts of the software. It should act as a
+roadmap, showing you where each functionality of the software lies, and where
+each new functionality belongs.
 
-powerplant is a full-stack JS web app utilizing several external
-services and many interlocking components. The aim of this doc is to
-help you, as a developer, get familiar with all the parts of the
-software. It should act as a roadmap, showing you where each
-functionality of the software lies, and where each new functionality
-belongs.
+Helpful external documentation:
 
-It would be helpful to have
-
--   A bit of working knowledge of javascript
-    -   ES6 standards are a plus
--   Understanding of JS `Promises`
--   Understanding of the principles behind building a React app - see
-    [Thinking in
-    React](https://facebook.github.io/react/docs/thinking-in-react.html)
--   Knowledge of REST principles for building web APIs - see [RESTful
-    Web Services](http://restfulwebapis.org/RESTful_Web_Services.pdf)
-
-**NOTE** These would just be helpful. If you're like me, you started
-with none of these except for a bit of JS.
-
-**RELATED** If you see something in these docs that you think should be
-changed or see existing code that you think is leading the project down
-the wrong path and needs to be refactored or restructured, PLEASE work
-to change it! The project is in its early stages, and there are many
-features or implementation details that made it through simply because
-the project is so small. Also, I apologize if you find any awful code.
-
-You can send questions, complaints, or hate mail to
-simoneverhale@gmail.com
+- [Thinking in React](https://reactjs.org/docs/thinking-in-react.html)
+- [RESTful Web Services](http://restfulwebapis.org/RESTful_Web_Services.pdf)
+- [Redux principles](https://redux.js.org/docs/introduction/ThreePrinciples.html)
+- [ECMAScript 6 overview](http://es6-features.org/)
+- [JSDoc documentation](http://usejsdoc.org/)
+- [webpack concepts](https://webpack.js.org/concepts/)
 
 Setup
 =====
 
-To start, you need to set up the development environment. This includes:
-NodeJS, MongoDB
+To start, you need to set up the development environment.
 
-1. [Install Node](https://nodejs.org/en/download/package-manager/) you
-   should install version 6.x
+1. [Install Node](https://nodejs.org/en/download/current/). Version 9.x.
 2. [Install MongoDB](https://www.mongodb.com/download-center#community) and
-   run `mongod`. Version 3.4 works.
+   run `mongod`. Version 3.4.
 3. Clone the [git repository](https://github.com/Ecohackerfarm/powerplant.git)
 4. Run `npm install` to get all packages installed
-5. Generate a private key and export it as a string in `/jwt-secret.js`
-   ex: `export default 'random-string-comes-here'`
-6. Run the server `npm start`
-7. Run the Firebase data migration by running `npm run migrate` in a second bash (atm you have to ctrl+c at the end)
-8. At this point, everything should be set up. Run `npm test` to make
-   sure everything is working, and `npm start` to begin serving the
-   website on `http://localhost:8080`
+5. Generate a private key in secrets.js (see secrets.example.js)
+6. Run `npm start` to start the server
+7. Run `npm run migrate` to migrate crop data from Firebase database
+8. At this point everything should be set up. Run `npm test` to make sure
+   everything is working.
 9. Done!
 
 It is also possible to run MongoDB in Docker:
@@ -75,73 +53,168 @@ issue.
 Architecture
 ============
 
-Codebase
---------
+Users use web browser to operate on a powerplant system. The system is
+composed of three main components: UI, client and server. UI is the front
+end, while client and server are the back end. An important aspect of the
+system design is that most functionality may be used offline. Therefore most
+calculations are done on the client side while the server is mostly used for
+persisting data and for synchronization.
 
-The entire codebase, front and back, is written in ES6 using Babel to
-transpile to CommonJS. Through Babel and webpack, some importing
-conveniences are available, namely using a slash ('/') to specify the
-root of the project, allowing for absolute imports rather than just
-relative.
+UI is running in the browser and it is using the client component to perform
+calculations and to persist data by communicating with the server. Our plan
+is to eventually build a generic client component that is used by the web UI,
+the CLI, and by third-party software.
 
-Documentation
--------------
+### UI
 
-Documentation can be found in the `/docs` folder. `/docs/index.html`
-loads a fully navigatible documentation site. It is also available
-online through github pages at
-https://ecohackerfarm.github.io/powerplant
+UI is built with React. The code is written in a subset of ES6 that is
+natively supported by modern versions of most web browsers. Babel is used to
+translate JSX to JS, and that is the only thing that gets translated. Webpack
+is used to bundle all UI modules together, and it is using the Node module
+format with `require`.
 
-### JSDoc
+#### Redux store
 
-All documentation is generated with JSDoc (and
-[docstrap](https://www.npmjs.com/package/ink-docstrap) for the
-template). See the http://usejsdoc.org/ for documentation on how to
-properly document things. The documentation pattern used is to make
-every folder and file a namespace (unless a file should not be its own
-namespace, like if you only ever import it through the directory's
-index.js). Each `namespace` should also specify who it is a `memberof`.
-This allows for proper navigation of the file hierarchy in the
-documentation. Additionally, a plugin called
-[jsdoc-memberof-namespace](https://www.npmjs.com/package/jsdoc-memberof-namespace)
-is used to generate proper nesting structure for methods, constants, and
-classes within namespaces. This was the best way I could find to
-maintain the right file hierarchy in the documentation.
-
-The one exception is that classes can be documented as `class`es rather
-than `namespace`s. This is only for things that you would instantiate
-with the `new` keyword. Mongoose models, for example, can be documented
-as classes because they are instantiated as `new` objects. Take a look
-at `/server/models` for examples of how this works.
-
-Here's an example for documenting a file called `bar` within a folder
-called `foo` (although you should be able to find plenty in the code, at
-least in `/server/data-validation`)
+Redux is the be-all-end-all of the state of the application (with very
+few exceptions, like form state). Every bit of user data is stored in
+redux. The store has the following architecture:
 
 ```
-    // File: /foo/index.js
-    /**
-     * @namespace foo
-     */
-
-    // File: /foo/bar.js
-    /**
-     * @namespace bar
-     * @memberof foo
-     */
+    {
+      title: String (default: "powerplant"), // the title that will be displayed in the window
+      auth: {
+        isAuthenticated: Bool (default: false),
+        currentUser: User (default: null),
+      },
+      currLocation: Location (default: null),
+      locations: [Location] (default: []),
+      beds: [Bed] (default: []),
+      crops: [Crop] (default: []),
+      cropInfos: [CropInformation] (default: []),
+      cropRelationships: [CropRelationship] (default: [])
+    }
 ```
 
-Pretty simple, right? Make sure to specify the full namespace in
-`memberof`, e.g. if foo was contained within baz, in bar you'd say it's
-a member of `baz.foo`, not just `foo`. You might need to add a few
-index.js files if there are folders that don't have them already.\
-NOTE: If you notice a function being skipped in the documentation, check
-if it's a default export! jsdoc-memberof-namespace has trouble with
-inline default export function declarations. Better to declare the
-function, then default export it, otherwise it may be skipped.
+In addition, the `redux-persist` module saves the redux store in local
+storage and reloads ("rehydrates") it every time the user visits the
+website. This is what allows users to save data without registering, and
+speeds up the process of displaying registered users' data. It also
+means that the website can be used offline if the page is loaded first.
 
-Testing
--------
+### CLI
+
+The CLI is used for migrating crop data and for administration tasks. To keep
+everything properly synchronized the database is never modified directly, but
+always through the server even for administration tasks.
+
+Eventually the CLI and the UI should be using a common client component.
+
+### Server
+
+The server is a Node application. The code is written in a subset of ES6 that
+is natively supported by Node/V8. There are three main components in the
+server: Express HTTP server (`server/server.js`), middleware
+(`server/middleware.js`) and Processor (`server/processor.js`).
+
+Middleware consists of functions that handle HTTP requests and produce
+responses to them. These functions are called by the Express HTTP server, and
+they use the services of the Processor object to access data and to perform
+calculations.
+
+Processor is the only component that has access to the database. It uses
+mongoose to connect to a MongoDB database. Processor consists of async
+methods that operate on the database data. Sometimes these operations want
+to access the same part of data at the same time. To solve this problem,
+Processor places each operation to a queue and lets only compatible
+operations to run in parallel.
+
+#### Database structure
+
+Crop schema
+
+```
+binomialName:String
+commonName:String
+```
+
+---
+
+CropRelationship schema
+
+```
+crop0:ObjectId(Crop)
+crop1:ObjectId(Crop)
+compatibility:Number
+```
+
+Coding style
+============
+
+- Use a subset of ES6 that is natively supported by both Node and web
+  browsers.
+- Define React components always with `class` instead of functions.
+
+Developer documentation
+=======================
+
+Developer documentation consists of this overview of the structure of the
+project, and API documentation that is generated with JSDoc.
+
+The documentation is also available
+[online](https://ecohackerfarm.github.io/powerplant), and it should be
+regenerated at least when this overview is updated.
+
+Documentation should be kept synchronized with code. If you find something
+that is missing in this overview, or a function that lacks a jsdoc comment,
+fix it.
+
+### JSDoc conventions
+
+Every directory and every file is marked with `@namespace`. For directories,
+this is done in file `index.js`. At the top of each file there should be a
+jsdoc comment with the following structure. Take for example the file
+`server/models/crop.js`:
+
+```
+/**
+ * Mongoose model for crops.
+ *
+ * @namespace crop
+ * @memberof server.models
+ */
+```
+
+---
+
+Every function should have a jsdoc comment that documents the parameters
+(`@param`) and the return value (`@return`). For example:
+
+```
+/**
+ * Try to login with the given credentials.
+ * 
+ * @param {Object} credentials Username and password
+ * @return {Object} Authorization token
+ */
+async login(credentials) {
+```
+
+---
+
+Every class should have a jsdoc comment like this:
+
+```
+/**
+ * Represents the main content area of the application, in contrast to
+ * Header which is the main navigation component.
+ * 
+ * @extends Component
+ */
+class Main extends React.Component {
+```
+
+Tests
+=====
 
 You can run tests with the `npm test` command. Note that in order to
 test the server code correctly, the tests must be able to connect to the
@@ -240,103 +313,3 @@ API routes, in our case). See the tests in `/test/server/routes/api/`
 for examples. A supertest request return a promise, so it can be
 returned in an `it` function and the test will wait until the request
 completes to continue.
-
-Front end
----------
-
-### React, react-router-dom
-
-### Redux + redux-peresist + react-redux
-
-Redux is the be-all-end-all of the state of the application (with very
-few exceptions, like form state). Every bit of user data is stored in
-redux. The store has the following architecture:
-
-```
-    {
-      title: String (default: "powerplant"), // the title that will be displayed in the window
-      auth: {
-        isAuthenticated: Bool (default: false),
-        currentUser: User (default: null),
-      },
-      currLocation: Location (default: null),
-      locations: [Location] (default: []),
-      beds: [Bed] (default: []),
-      crops: [Crop] (default: []),
-      cropInfos: [CropInformation] (default: []),
-      cropRelationships: [CropRelationship] (default: [])
-    }
-```
-
-In addition, the `redux-persist` module saves the redux store in local
-storage and reloads ("rehydrates") it every time the user visits the
-website. This is what allows users to save data without registering, and
-speeds up the process of displaying registered users' data. It also
-means that the website can be used offline if the page is loaded first.
-
-### React-bootstrap
-
-### Webpack
-
-Back end
---------
-
-### Technologies used
-
-powerplant is a [Node.js](https://nodejs.org/) application. It uses
-the [Express](https://expressjs.com/) web application framework.
-[Mongoose](http://mongoosejs.com/) is used for connecting with MongoDB.
-
-### Database structure
-
-#### User schema
-
-```
-username:String
-email:String
-password:String
-```
-
-#### Location schema
-
-#### Crop schema
-
-```
-binomialName:String
-commonName:String
-```
-
-#### CropRelationship schema
-
-```
-crop0:ObjectId(Crop)
-crop1:ObjectId(Crop)
-compatibility:Number
-```
-
-### HTTP API
-
-#### Low-level document editing
-
-#### High-level functions
-
-Common tasks
-============
-
-Front end
----------
-
-### Adding tests
-
-### Adding a new page
-
-Back end
---------
-
-### Adding tests
-
-#### Unit tests
-
-#### Integration tests
-
-### Modifying the database structure
