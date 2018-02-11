@@ -36,7 +36,7 @@ The project may not run properly after reboot because it fails to
 connect to the database. Running `docker restart pp_main` fixes the
 issue.
 
-[More documentation](https://github.com/Ecohackerfarm/powerplant/tree/master/docs)
+[More documentation](https://ecohackerfarm.github.io/powerplant/)
 
 ### Production Setup
 
