@@ -49,6 +49,38 @@ The project may not run properly after reboot because it fails to
 connect to the database. Running `docker restart pp_main` fixes the
 issue.
 
+Common Mistakes
+===============
+
+Server doesn't start:
+---------------------
+
+```
+/Users/adinajohnson/repos/powerplant/server/middleware.js:88
+async function getAuthenticatedUser(req, next) {
+      ^^^^^^^^
+SyntaxError: Unexpected token function
+  ...
+[nodemon] app crashed - waiting for file changes before starting...
+```
+
+This looks like you didn't install the right version of NodeJS (power plant needs >9.4.0). So install the right Version: https://nodejs.org/en/download/current/ .
+
+Server doesn't start after NodeJS update:
+-----------------------------------------
+
+```
+Error: The module '/home/justus/workspace/powerplant/node_modules/bcrypt/lib/binding/bcrypt_lib.node'
+was compiled against a different Node.js version using
+NODE_MODULE_VERSION 48. This version of Node.js requires
+NODE_MODULE_VERSION 59. Please try re-compiling or re-installing
+the module (for instance, using `npm rebuild` or `npm install`).
+```
+
+This means you updated NodeJS and the easiest way to solve this is to run.
+```bash
+rm -R node_modules && npm install
+```
 
 Architecture
 ============
