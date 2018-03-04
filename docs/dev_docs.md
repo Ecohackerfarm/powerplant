@@ -1,10 +1,9 @@
 Developer Documentation for powerplant
 
-Last updated: Feb 11, 2018
+Last updated: March 4th, 2018
 
 
-Introduction
-============
+# Introduction
 
 powerplant is a full-stack JS web app utilizing several external services and
 many interlocking components. The aim of this document is to help you, as a
@@ -21,8 +20,7 @@ Helpful external documentation:
 - [JSDoc documentation](http://usejsdoc.org/)
 - [webpack concepts](https://webpack.js.org/concepts/)
 
-Setup
-=====
+# Setup
 
 To start, you need to set up the development environment.
 
@@ -49,11 +47,9 @@ The project may not run properly after reboot because it fails to
 connect to the database. Running `docker restart pp_main` fixes the
 issue.
 
-Common Mistakes
-===============
+## Common Mistakes
 
-Server doesn't start:
----------------------
+### Server doesn't start:
 
 ```
 /Users/adinajohnson/repos/powerplant/server/middleware.js:88
@@ -66,8 +62,7 @@ SyntaxError: Unexpected token function
 
 This looks like you didn't install the right version of NodeJS (power plant needs >9.4.0). So install the right Version: https://nodejs.org/en/download/current/ .
 
-Server doesn't start after NodeJS update:
------------------------------------------
+### Server doesn't start after NodeJS update:
 
 ```
 Error: The module '/home/justus/workspace/powerplant/node_modules/bcrypt/lib/binding/bcrypt_lib.node'
@@ -82,8 +77,7 @@ This means you updated NodeJS and the easiest way to solve this is to run.
 rm -R node_modules && npm install
 ```
 
-Architecture
-============
+# Architecture
 
 Users use web browser to operate on a powerplant system. The system is
 composed of three main components: UI, client and server. UI is the front
@@ -97,7 +91,7 @@ calculations and to persist data by communicating with the server. Our plan
 is to eventually build a generic client component that is used by the web UI,
 the CLI, and by third-party software.
 
-### UI
+## UI
 
 UI is built with React. The code is written in a subset of ES6 that is
 natively supported by modern versions of most web browsers. Babel is used to
@@ -105,7 +99,7 @@ translate JSX to JS, and that is the only thing that gets translated. Webpack
 is used to bundle all UI modules together, and it is using the Node module
 format with `require`.
 
-#### Redux store
+### Redux store
 
 Redux is the be-all-end-all of the state of the application (with very
 few exceptions, like form state). Every bit of user data is stored in
@@ -133,7 +127,7 @@ website. This is what allows users to save data without registering, and
 speeds up the process of displaying registered users' data. It also
 means that the website can be used offline if the page is loaded first.
 
-### CLI
+## CLI
 
 The CLI is used for migrating crop data and for administration tasks. To keep
 everything properly synchronized the database is never modified directly, but
@@ -141,7 +135,7 @@ always through the server even for administration tasks.
 
 Eventually the CLI and the UI should be using a common client component.
 
-### Server
+## Server
 
 The server is a Node application. The code is written in a subset of ES6 that
 is natively supported by Node/V8. There are three main components in the
@@ -160,7 +154,7 @@ to access the same part of data at the same time. To solve this problem,
 Processor places each operation to a queue and lets only compatible
 operations to run in parallel.
 
-#### Database structure
+### Database structure
 
 Crop schema
 
@@ -179,15 +173,13 @@ crop1:ObjectId(Crop)
 compatibility:Number
 ```
 
-Coding style
-============
+# Coding style
 
 - Use a subset of ES6 that is natively supported by both Node and web
   browsers.
 - Define React components always with `class` instead of functions.
 
-Developer documentation
-=======================
+# Developer documentation
 
 Developer documentation consists of this overview of the structure of the
 project, and API documentation that is generated with JSDoc.
@@ -200,7 +192,7 @@ Documentation should be kept synchronized with code. If you find something
 that is missing in this overview, or a function that lacks a jsdoc comment,
 fix it.
 
-### JSDoc conventions
+## JSDoc conventions
 
 Every directory and every file is marked with `@namespace`. For directories,
 this is done in file `index.js`. At the top of each file there should be a
@@ -245,8 +237,7 @@ Every class should have a jsdoc comment like this:
 class Main extends React.Component {
 ```
 
-Tests
-=====
+# Tests
 
 You can run tests with the `npm test` command. Note that in order to
 test the server code correctly, the tests must be able to connect to the
@@ -274,7 +265,7 @@ necessary for API tests, and possibly also for database functions.
 All tests are dispatched with Mocha and use the `expect` function from
 the assertion library Chai. API tests use supertest to create requests.
 
-### Mocha
+## Mocha
 
 https://mochajs.org/
 
@@ -325,7 +316,7 @@ code through the use of promises. To test asynchronous code, simply have
 the `it` function return a promise. The next test will not execute until
 the promise is resolved.
 
-### Chai
+## Chai
 
 http://chaijs.com/, [cheat
 sheet](https://gist.github.com/yoavniran/1e3b0162e1545055429e)
@@ -336,7 +327,7 @@ If all `expect` calls in an `it()` function pass, the test passes. Chai
 supports function chaining to create self-documenting tests. See the
 cheat sheet above for an overview of the functions.
 
-### Supertest
+## Supertest
 
 https://www.npmjs.com/package/supertest
 
