@@ -1,6 +1,6 @@
 /**
  * Functions to initialize and start the server.
- * 
+ *
  * @namespace server
  * @memberof server
  */
@@ -67,7 +67,7 @@ function buildDocumentApiRouter(model) {
 
 /**
  * Build router for the API.
- * 
+ *
  * @return {Router}
  */
 function buildApiRouter() {
@@ -123,7 +123,7 @@ function buildApiRouter() {
 
 /**
  * Build the Express application with all middleware.
- * 
+ *
  * @param {Boolean} development Development mode?
  * @return {Object} Express application
  */
@@ -196,8 +196,8 @@ const getDatabaseURL = () => {
 /**
  * Start the server. This creates the Express app object, and initializes
  * the mongoose database connection.
- * 
- * @param {Boolean} testMode 
+ *
+ * @param {Boolean} testMode
  */
 function startServer(testMode) {
 	const developmentMode = isDevelopmentMode() && (!testMode);
