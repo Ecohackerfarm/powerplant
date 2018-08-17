@@ -1,6 +1,6 @@
 {
   "source": {
-    "include": ["server", "shared", "client", "cli"]
+    "include": ["server", "shared", "client", "cli", "db"]
   },
   "plugins": [
     "node_modules/jsdoc-memberof-namespace"

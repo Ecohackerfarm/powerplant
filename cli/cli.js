@@ -4,7 +4,7 @@
  */
 
 const mysql = require('mysql2/promise');
-const firebase = require('firebase');
+const { plants, companions } = require('../db/companions.js');
 const { ApiClient } = require('./api-client.js');
 const { PP_PORT, API_HOST } = require('../secrets.js');
 
@@ -298,62 +298,29 @@ async function pushPfaf() {
 }
 
 /**
- * Push the initial plant and companionship data = require(Firebase database to
- * powerplant server.
+ * Push the companion plant database to powerplant server.
  */
-async function pushFirebase() {
-	const firebaseConfig = {
-		apiKey: 'AIzaSyCKLggXck_1fxtoSn0uvjQ00gEapjLJDbM',
-		authDomain: 'companion-planting-b56b5.firebaseapp.com',
-		databaseURL: 'https://companion-planting-b56b5.firebaseio.com',
-		projectId: 'companion-planting-b56b5',
-		storageBucket: 'companion-planting-b56b5.appspot.com',
-		messagingSenderId: '158677284326'
-	};
-	firebase.initializeApp(firebaseConfig);
-
-	const firebaseData = (await firebase
-		.database()
-		.ref('/')
-		.once('value')).val();
-	firebase.database().goOffline();
-
-	const firebasePlants = firebaseData.plants;
-	const firebaseCompanions = firebaseData.companions;
-	debug(firebaseData);
-
+async function pushCompanions() {
 	const crops = [];
-	const firebaseIdToCrop = {};
-	Object.keys(firebasePlants).forEach(firebaseId => {
-		const firebasePlant = firebasePlants[firebaseId];
-		const crop = {
-			commonName: firebasePlant.display_name,
-			binomialName: firebasePlant.display_name
+	const plantNameToCrop = {};
+	plants.forEach(plant => {
+		let crop = {
+			commonName: plant,
+			binomialName: plant
 		};
 		crops.push(crop);
-		firebaseIdToCrop[firebaseId] = crop;
+		plantNameToCrop[plant] = crop;
 	});
 
 	const client = new ApiClient(powerplantConfig.host, powerplantConfig.port);
 
 	log(await client.addCrops(crops));
 
-	const relationships = [];
-	Object.keys(firebaseCompanions).forEach(firebaseId0 => {
-		Object.keys(firebaseCompanions[firebaseId0]).forEach(firebaseId1 => {
-			const value = firebaseCompanions[firebaseId0][firebaseId1];
-			if (value) {
-				const relationship = {
-					crop0: firebaseIdToCrop[firebaseId0]._id,
-					crop1: firebaseIdToCrop[firebaseId1]._id,
-					compatibility: value === 'good' ? 1 : -1
-				};
-				relationships.push(relationship);
-
-				delete firebaseCompanions[firebaseId1][firebaseId0];
-			}
-		});
-	});
+	const relationships = companions.map(companion => ({
+		crop0: plantNameToCrop[companion.plant0]._id,
+		crop1: plantNameToCrop[companion.plant1]._id,
+		compatibility: ((companion.companion == 1) ? 1 : -1)
+	}));
 
 	log(await client.addCropRelationships(relationships));
 }
@@ -380,7 +347,7 @@ const commands = {
 	'get-crop-groups': doGetCropGroups,
 	'get-compatible-crops': doGetCompatibleCrops,
 	'push-pfaf': pushPfaf,
-	'push-firebase': pushFirebase
+	'push-companions': pushCompanions
 };
 
 const commandLineArguments = process.argv.slice(2);
