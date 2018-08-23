@@ -7,7 +7,7 @@ const React = require('react');
 const ChooseCrops = require('../crops/ChooseCrops');
 const CropGroups = require('../crops/CropGroups');
 const { Button } = require('react-bootstrap');
-const { getCropGroups } = require('../../utils/apiCalls');
+const { getCropGroups } = require('../../../shared/api-client.js');
 const { withRouter } = require('react-router-dom');
 
 /**

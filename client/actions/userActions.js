@@ -4,7 +4,7 @@
  */
 
 const axios = require('axios');
-const { setAuthorizationToken } = require('../utils');
+const { setAuthorizationToken } = require('../../shared/api-client.js');
 const jwtDecode = require('jwt-decode');
 const { setCurrentUser, logoutUser } = require('.');
 const { getLocationsRequest, saveLocationRequest } = require('./locationActions');

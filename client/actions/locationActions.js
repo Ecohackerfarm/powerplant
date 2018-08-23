@@ -6,7 +6,7 @@
 const axios = require('axios');
 const { editLocation, addLocation, deleteLocation, setLocations } = require('.');
 const { simpleAuthCheckedRequest } = require('./actionHelpers');
-const { getLocations } = require('../utils/apiCalls');
+const { getLocations } = require('../../shared/api-client.js');
 
 /**
  * Async sends a request to get all the user's locations
