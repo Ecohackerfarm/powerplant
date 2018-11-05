@@ -46,7 +46,6 @@
     "url": "https://github.com/Ecohackerfarm/powerplant.git"
   },
   "dependencies": {
-    "async-task-schedulers": "^0.0.9",
     "axios": "^0.16.2",
     "bcrypt": "^3.0.2",
     "body-parser": "^1.17.2",
@@ -55,8 +54,8 @@
     "jwt-decode": "^2.2.0",
     "lodash": "^4.17.10",
     "lodash.isempty": "^4.4.0",
-    "mongoose": "4.x.x",
-    "mongoose-unique-validator": "^1.0.5",
+    "mongoose": "5.2.17",
+    "mongoose-unique-validator": "^2.0.2",
     "mysql2": "^1.4.2",
     "prop-types": "^15.5.10",
     "react": "^15.6.1",

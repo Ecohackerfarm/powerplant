@@ -202,10 +202,14 @@ const getDatabaseURL = () => {
 function startServer(testMode) {
 	const developmentMode = isDevelopmentMode() && (!testMode);
 
+	const options = {
+		replicaSet: 'rs',
+		useNewUrlParser: true,
+	};
 	if (process.env.DATABASEURL) {
-		mongoose.connect(process.env.DATABASEURL, { useMongoClient: true });
+		mongoose.connect(process.env.DATABASEURL, options);
 	} else {
-		mongoose.connect(getDatabaseURL(), { useMongoClient: true });
+		mongoose.connect(getDatabaseURL(), options);
 	}
 
 	mongoose.Promise = global.Promise;

@@ -3,8 +3,7 @@
  * @memberof client.actions
  */
 
-const axios = require('axios');
-const { getCropsByName } = require('../utils/apiCalls');
+const { getCropsByName, getAllCropRelationships } = require('../../shared/api-client.js');
 const {
 	cropsLoading,
 	cropsUpdated,
@@ -63,9 +62,7 @@ const fetchRelationships = () => {
 	return (dispatch, getState) => {
 		if (updateNeeded(getState().crops.companionships.updated)) {
 			dispatch(cropRelationshipsLoading(true));
-			return axios.get(
-			  '/get-all-crop-relationships'
-			).then(res => {
+			return getAllCropRelationships().then(res => {
 				if (res.status === 200) {
 					dispatch(cropRelationshipsUpdated(res.data));
 				} else {

@@ -1,24 +1,23 @@
 /**
- * Middleware functions produce responses to HTTP clients by talking with
- * the Processor object to access database documents and do calculations.
+ * Middleware functions produce responses to HTTP clients by executing
+ * database transactions and other actions to obtain results.
  * 
  * @namespace middleware
  * @memberof server
  */
 
-const {
-	Processor,
-	VALIDATION_EXCEPTION,
-	AUTHORIZATION_EXCEPTION,
-	AUTHENTICATION_EXCEPTION
-} = require('./processor');
 const Location = require('./models/location');
 const User = require('./models/user');
 const CropRelationship = require('./models/crop-relationship');
 const Crop = require('./models/crop');
 const { debug } = require('./utils');
-
-const processor = new Processor();
+const processor = require('./processor');
+const {
+	VALIDATION_EXCEPTION,
+	AUTHORIZATION_EXCEPTION,
+	AUTHENTICATION_EXCEPTION
+} = require('./processor');
+const mongoose = require('mongoose');
 
 const MAX_NAME_ENTRIES = 200000;
 const MAX_RESPONSE_LENGTH = 200000;
@@ -31,6 +30,7 @@ const MAX_RESPONSE_LENGTH = 200000;
  * @param {Error} exception
  */
 function handleError(next, exception) {
+	debug(exception);
 	if (exception == VALIDATION_EXCEPTION) {
 		next({ status: exception.httpStatusCode, message: 'Invalid input' });
 	} else if (exception == AUTHORIZATION_EXCEPTION) {
@@ -76,6 +76,41 @@ function parseInteger(next, string, minimum, maximum, defaultValue) {
 }
 
 /**
+ * Commit transaction and end session.
+ *
+ * @param {Object} session
+ */
+async function endSessionAndTransaction(session) {
+	await session.commitTransaction();
+	session.endSession();
+}
+
+/**
+ * Start session and transaction.
+ *
+ * @return {Object} Session object
+ */
+async function startSessionAndTransaction() {
+	const session = await mongoose.startSession();
+	startTransaction(session);
+	return session;
+}
+
+/**
+ * Start transaction where reads are guaranteed to be done from single
+ * snapshot.
+ *
+ * @param {Object} session
+ */
+function startTransaction(session) {
+	session.startTransaction({
+		readConcern: {
+			level: 'snapshot'
+		}
+	});
+}
+
+/**
  * Requests that need authorization have the authorization token that
  * originates from the login process. Get the User document that corresponds
  * to the given authorization token, or throw exception if the authentication
@@ -83,15 +118,16 @@ function parseInteger(next, string, minimum, maximum, defaultValue) {
  * 
  * @param {Object} req
  * @param {Function} next
+ * @param {Object} session
  * @return {User}
  */
-async function getAuthenticatedUser(req, next) {
+async function getAuthenticatedUser(req, next, session) {
 	const header = req.headers['authorization'];
 	if (!header) {
 		throw AUTHENTICATION_EXCEPTION;
 	}
 	const [, token] = header.split(' ');
-	return await processor.getAuthenticatedUser(token);
+	return await processor.getAuthenticatedUser(session, token);
 }
 
 /**
@@ -111,17 +147,20 @@ async function documentGet(req, res, next, model) {
 	try {
 		const id = req.params.id;
 
+		const session = await startSessionAndTransaction();
 		let document;
 		if (authorizedModels.includes(model)) {
-			const authenticatedUser = await getAuthenticatedUser(req, next);
+			const authenticatedUser = await getAuthenticatedUser(req, next, session);
 			document = await processor.getAuthorizedDocument(
+				session,
 				authenticatedUser,
 				model,
 				id
 			);
 		} else {
-			document = await processor.getDocument(model, id);
+			document = await processor.getDocument(session, model, id);
 		}
+		await endSessionAndTransaction(session);
 
 		if (!document) {
 			return next({ status: 404, message: 'Not found' });
@@ -146,18 +185,21 @@ async function documentPut(req, res, next, model) {
 		const id = req.params.id;
 		const update = req.body;
 
+		const session = await startSessionAndTransaction();
 		let document;
 		if (authorizedModels.includes(model)) {
-			const authenticatedUser = await getAuthenticatedUser(req, next);
+			const authenticatedUser = await getAuthenticatedUser(req, next, session);
 			document = await processor.updateAuthorizedDocument(
+				session,
 				authenticatedUser,
 				model,
 				id,
 				update
 			);
 		} else {
-			document = await processor.updateDocument(model, id, update);
+			document = await processor.updateDocument(session, model, id, update);
 		}
+		await endSessionAndTransaction(session);
 
 		if (!document) {
 			return next({ status: 404, message: 'Not found' });
@@ -179,17 +221,20 @@ async function documentPut(req, res, next, model) {
  */
 async function documentPost(req, res, next, model) {
 	try {
+		const session = await startSessionAndTransaction();
 		let document;
 		if (authorizedModels.includes(model)) {
-			const authenticatedUser = await getAuthenticatedUser(req, next);
+			const authenticatedUser = await getAuthenticatedUser(req, next, session);
 			document = await processor.saveAuthorizedDocument(
+				session,
 				authenticatedUser,
 				model,
 				req.body
 			);
 		} else {
-			document = await processor.saveDocument(model, req.body);
+			document = await processor.saveDocument(session, model, req.body);
 		}
+		await endSessionAndTransaction(session);
 
 		res.status(201).json(document);
 	} catch (exception) {
@@ -209,12 +254,14 @@ async function documentDelete(req, res, next, model) {
 	try {
 		const id = req.params.id;
 
+		const session = await startSessionAndTransaction();
 		if (authorizedModels.includes(model)) {
-			const authenticatedUser = await getAuthenticatedUser(req, next);
-			await processor.deleteAuthorizedDocument(authenticatedUser, model, id);
+			const authenticatedUser = await getAuthenticatedUser(req, next, session);
+			await processor.deleteAuthorizedDocument(session, authenticatedUser, model, id);
 		} else {
-			await processor.deleteDocument(model, id);
+			await processor.deleteDocument(session, model, id);
 		}
+		await endSessionAndTransaction(session);
 
 		/*
 		 * RFC 2616: A successful response SHOULD be 204 (No Content) if the
@@ -235,7 +282,10 @@ async function documentDelete(req, res, next, model) {
  */
 async function getAllCropRelationships(req, res, next) {
 	try {
-		const relationships = await processor.getAllDocuments(CropRelationship);
+		const session = await startSessionAndTransaction();
+		const relationships = await processor.getAllDocuments(session, CropRelationship);
+		await endSessionAndTransaction(session);
+		
 		res.json(relationships);
 	} catch (exception) {
 		handleError(next, exception);
@@ -264,13 +314,16 @@ async function getCropsByName(req, res, next) {
 			0
 		);
 
-		const crops = await processor.getCropsByName(name, index, length);
+		const session = await startSessionAndTransaction();
+		const crops = await processor.getCropsByName(session, name, index, length);
+		await endSessionAndTransaction(session);
 
 		debug('getCropsByName():');
 		debug(crops);
 
 		res.json(crops);
 	} catch (exception) {
+		console.log(exception);
 		handleError(next, exception);
 	}
 }
@@ -285,7 +338,9 @@ async function getCropsByName(req, res, next) {
  */
 async function getCropGroups(req, res, next) {
 	try {
-		const groups = await processor.getCropGroups(req.body.cropIds);
+		const session = await startSessionAndTransaction();
+		const groups = await processor.getCropGroups(session, req.body.cropIds);
+		await endSessionAndTransaction(session);
 
 		debug('getCropGroups():');
 		debug(groups);
@@ -307,7 +362,9 @@ async function getCropGroups(req, res, next) {
  */
 async function getCompatibleCrops(req, res, next) {
 	try {
-		const crops = await processor.getCompatibleCrops(req.body.cropIds);
+		const session = await startSessionAndTransaction();
+		const crops = await processor.getCompatibleCrops(session, req.body.cropIds);
+		await endSessionAndTransaction(session);
 
 		debug('getCompatibleCrops():');
 		debug(crops);
@@ -327,7 +384,10 @@ async function getCompatibleCrops(req, res, next) {
  */
 async function getLocations(req, res, next) {
 	try {
-		const user = await getAuthenticatedUser(req, next);
+		const session = await startSessionAndTransaction();
+		const user = await processor.getAuthenticatedUser(session, req, next);
+		await endSesssionAndTransaction(session);
+		
 		res.status(200).json(user.locations);
 	} catch (exception) {
 		handleError(next, exception);
@@ -344,7 +404,9 @@ async function getLocations(req, res, next) {
  */
 async function login(req, res, next) {
 	try {
-		const result = await processor.login(req.body);
+		const session = await startSessionAndTransaction();
+		const result = await processor.login(session, req.body);
+		await endSessionAndTransaction(session);
 		res.json(result);
 	} catch (exception) {
 		handleError(next, exception);

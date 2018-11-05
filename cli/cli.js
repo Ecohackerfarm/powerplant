@@ -3,9 +3,9 @@
  * @memberof cli
  */
 
+const { setBaseUrl, getCropsByName, getCropGroups, getCompatibleCrops, getCrops, getCropRelationships, getUsers, addCrops, addCropRelationships, addUsers, setCrops, setCropRelationships, setUsers, removeCrops, removeCropRelationships, removeUsers, removeAllCrops, removeAllCropRelationships } = require('../shared/api-client.js');
 const mysql = require('mysql2/promise');
 const { plants, companions } = require('../db/companions.js');
-const { ApiClient } = require('./api-client.js');
 const { PP_PORT, API_HOST } = require('../secrets.js');
 
 /**
@@ -99,31 +99,30 @@ function getOptionArguments() {
  * Show documents.
  */
 async function doShow() {
-	const client = new ApiClient(powerplantConfig.host, powerplantConfig.port);
-
 	const model = nonOptionArguments[1];
 	const ids = nonOptionArguments.slice(2);
+	const params = { ids: ids };
 
-	let documents;
+	let responses;
 	switch (model) {
 		case 'crop': {
-			documents = await client.getCrops(ids);
+			responses = await getCrops(params);
 			break;
 		}
 		case 'crop-relationship': {
-			documents = await client.getCropRelationships(ids);
+			responses = await getCropRelationships(params);
 			break;
 		}
 		case 'user': {
-			documents = await client.getUsers(ids);
+			responses = await getUsers(params);
 			break;
 		}
 		default:
 		break;
 	}
 
-	documents.forEach(document => {
-		console.log(document);
+	responses.forEach(response => {
+		console.log(response.data);
 	});
 }
 
@@ -131,22 +130,21 @@ async function doShow() {
  * Add documents.
  */
 async function doAdd() {
-	const client = new ApiClient(powerplantConfig.host, powerplantConfig.port);
-
 	const model = nonOptionArguments[1];
 	const documents = parseOptionArray('document');
+	const params = { documents: documents };
 
 	switch (model) {
 		case 'crop': {
-			await client.addCrops(documents);
+			await addCrops(params);
 			break;
 		}
 		case 'crop-relationship': {
-			await client.addCropRelationships(documents);
+			await addCropRelationships(params);
 			break;
 		}
 		case 'user': {
-			await client.addUsers(documents);
+			await addUsers(params);
 			break;
 		}
 		default:
@@ -160,28 +158,22 @@ async function doAdd() {
  * Update documents.
  */
 async function doUpdate() {
-	const client = new ApiClient(powerplantConfig.host, powerplantConfig.port);
-
 	const model = nonOptionArguments[1];
 	const ids = nonOptionArguments.slice(2);
 	const documents = parseOptionArray('document');
-
-	const idMapDocument = {};
-	ids.forEach((id, index) => {
-		idMapDocument[id] = documents[index];
-	});
+	const params = { documents: documents, ids: ids };
 
 	switch (model) {
 		case 'crop': {
-			await client.setCrops(idMapDocument);
+			await setCrops(params);
 			break;
 		}
 		case 'crop-relationship': {
-			await client.getCropRelationships(idMapDocument);
+			await setCropRelationships(params);
 			break;
 		}
 		case 'user': {
-			await client.getUsers(idMapDocument);
+			await setUsers(params);
 			break;
 		}
 		default:
@@ -193,30 +185,29 @@ async function doUpdate() {
  * Remove documents.
  */
 async function doRemove() {
-	const client = new ApiClient(powerplantConfig.host, powerplantConfig.port);
-
 	const model = nonOptionArguments[1];
 	const ids = nonOptionArguments.slice(2);
+	const params = { ids: ids };
 
 	switch (model) {
 		case 'crop': {
 			if (ids.length > 0) {
-				await client.removeCrops(ids);
+				await removeCrops(params);
 			} else {
-				await client.removeAllCrops();
+				await removeAllCrops();
 			}
 			break;
 		}
 		case 'crop-relationship': {
 			if (ids.length > 0) {
-				await client.removeCropRelationships(ids);
+				await removeCropRelationships(params);
 			} else {
-				await client.removeAllCropRelationships();
+				await removeAllCropRelationships();
 			}
 			break;
 		}
 		case 'user': {
-			await client.removeUsers(ids);
+			await removeUsers(params);
 			break;
 		}
 		default:
@@ -228,39 +219,33 @@ async function doRemove() {
  * Get crops by name.
  */
 async function doGetCropsByName() {
-	const client = new ApiClient(powerplantConfig.host, powerplantConfig.port);
-
 	const name = parseOption('name');
 	const index = parseOption('index');
 	const length = parseOption('length');
 
-	const crops = await client.getCropsByName(name, index, length);
+	const crops = await getCropsByName({ name: name, index: index, length: length });
 
-	log(crops);
+	log(crops.data);
 }
 
 /**
  * Get crop groups.
  */
 async function doGetCropGroups() {
-	const client = new ApiClient(powerplantConfig.host, powerplantConfig.port);
+	const ids = parseOptionArray('crop');
 
-	const crops = parseOptionArray('crop');
-
-	const groups = await client.getCropGroups(crops);
-	log(groups);
+	const groups = await getCropGroups({ cropIds: ids });
+	log(groups.data);
 }
 
 /**
  * Get compatible crops.
  */
 async function doGetCompatibleCrops() {
-	const client = new ApiClient(powerplantConfig.host, powerplantConfig.port);
-
 	const ids = parseOptionArray('crop');
 
-	const crops = await client.getCompatibleCrops(ids);
-	log(crops);
+	const crops = await getCompatibleCrops({ cropIds: ids });
+	log(crops.data);
 }
 
 /**
@@ -293,8 +278,7 @@ async function pushPfaf() {
 		crops.push(crop);
 	});
 
-	const client = new ApiClient(powerplantConfig.host, powerplantConfig.port);
-	await client.addCrops(crops);
+	await addCrops({ documents: crops });
 }
 
 /**
@@ -312,9 +296,10 @@ async function pushCompanions() {
 		plantNameToCrop[plant] = crop;
 	});
 
-	const client = new ApiClient(powerplantConfig.host, powerplantConfig.port);
-
-	log(await client.addCrops(crops));
+	responses = await addCrops({ documents: crops });
+	responses.forEach((response, index) => {
+		Object.assign(crops[index], response.data);
+	});
 
 	const relationships = companions.map(companion => ({
 		crop0: plantNameToCrop[companion.plant0]._id,
@@ -322,7 +307,7 @@ async function pushCompanions() {
 		compatibility: ((companion.companion == 1) ? 1 : -1)
 	}));
 
-	log(await client.addCropRelationships(relationships));
+	debug(await addCropRelationships({ documents: relationships }));
 }
 
 /*
@@ -358,5 +343,6 @@ if (nonOptionArguments.length > 0) {
 	verbose = parseOption('verbose');
 	Object.assign(powerplantConfig, parseOption('powerplantConfig'));
 
+	setBaseUrl(powerplantConfig.host, powerplantConfig.port);
 	commands[nonOptionArguments[0]]();
 }

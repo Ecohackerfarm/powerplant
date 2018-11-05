@@ -25,16 +25,18 @@ Helpful external documentation:
 To start, you need to set up the development environment.
 
 1. [Install Node](https://nodejs.org/en/download/current/). Version 9.x.
-2. [Install MongoDB](https://www.mongodb.com/download-center#community) and
-   run `mongod`. Version 3.4.
-3. Clone the [git repository](https://github.com/Ecohackerfarm/powerplant.git)
-4. Run `npm install` to get all packages installed
-5. Generate a private key in secrets.js (see secrets.example.js)
-6. Run `npm start` to start the server
-7. Run `npm run migrate` to migrate crop data from Firebase database
-8. At this point everything should be set up. Run `npm test` to make sure
+2. [Install MongoDB](https://www.mongodb.com/download-center#community). Version 4.x.
+3. Start MongoDB with `mongod --replSet rs`.
+4. Connect a mongo shell to the mongod instance.
+5. Use `rs.initiate()` to initiate the new replica set.
+6. Clone the [git repository](https://github.com/Ecohackerfarm/powerplant.git)
+7. Run `npm install` to get all packages installed
+8. Generate a private key in secrets.js (see secrets.example.js)
+9. Run `npm start` to start the server
+10. Run `npm run migrate` to migrate crop data from Firebase database
+11. At this point everything should be set up. Run `npm test` to make sure
    everything is working.
-9. Done!
+12. Done!
 
 It is also possible to run MongoDB in Docker:
 
@@ -133,26 +135,25 @@ The CLI is used for migrating crop data and for administration tasks. To keep
 everything properly synchronized the database is never modified directly, but
 always through the server even for administration tasks.
 
-Eventually the CLI and the UI should be using a common client component.
+The CLI and the UI are using common client functions (`shared/api-client.js`)
+that are based on the Axios HTTP client.
 
 ## Server
 
 The server is a Node application. The code is written in a subset of ES6 that
 is natively supported by Node/V8. There are three main components in the
 server: Express HTTP server (`server/server.js`), middleware
-(`server/middleware.js`) and Processor (`server/processor.js`).
+(`server/middleware.js`) and processor functions (`server/processor.js`).
 
 Middleware consists of functions that handle HTTP requests and produce
 responses to them. These functions are called by the Express HTTP server, and
-they use the services of the Processor object to access data and to perform
+they use the operations of the processor file to access data and to perform
 calculations.
 
-Processor is the only component that has access to the database. It uses
-mongoose to connect to a MongoDB database. Processor consists of async
-methods that operate on the database data. Sometimes these operations want
-to access the same part of data at the same time. To solve this problem,
-Processor places each operation to a queue and lets only compatible
-operations to run in parallel.
+All operations that access the database are wrapped inside MongoDB
+transactions to ensure that all reads inside a transaction are done on a
+single snapshot and that writes across multiple operations don't interfere
+with each other.
 
 ### Database structure
 
