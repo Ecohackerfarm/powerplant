@@ -2,6 +2,7 @@ const path = require('path');
 const webpack = require('webpack');
 
 module.exports = {
+	mode : 'production',
 	entry: "./client/index.js",
 	output: {
 		path: path.join(__dirname, "dist"),
@@ -13,14 +14,14 @@ module.exports = {
 		new webpack.optimize.OccurrenceOrderPlugin()
 	],
 	module: {
-		loaders: [
+		rules: [
 			{
 				test: /\.js$/,
 				include: [
 					path.join(__dirname, 'client'),
 					path.join(__dirname, 'shared')
 				],
-				loaders: [ 'babel-loader' ]
+				use: [ 'babel-loader' ]
 			},
 			{
 				test: /\.scss$/,

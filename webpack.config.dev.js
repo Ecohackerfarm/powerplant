@@ -2,6 +2,7 @@ const path = require('path');
 const webpack = require('webpack');
 
 module.exports = {
+	mode: 'development',
   devtool: 'source-map',
   entry: [
     'webpack-hot-middleware/client',
@@ -18,14 +19,14 @@ module.exports = {
     new webpack.HotModuleReplacementPlugin()
   ],
   module: {
-    loaders: [
+    rules: [
       {
         test: /\.js$/,
         include: [
           path.join(__dirname, 'client'),
           path.join(__dirname, 'shared')
         ],
-        loaders: [ 'react-hot-loader', 'babel-loader' ]
+        use: [ 'react-hot-loader', 'babel-loader' ]
       },
       {
         test: /\.scss$/,
