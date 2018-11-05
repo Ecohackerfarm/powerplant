@@ -9,7 +9,7 @@ require('../../styles/AboutPage.scss');
 
 /**
  * About page
- * 
+ *
  * @extends Component
  */
 class AboutPage extends React.Component {
