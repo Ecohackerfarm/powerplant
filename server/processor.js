@@ -328,7 +328,7 @@ async function getAuthenticatedUser(session, token) {
 	}
 
 	const document = await getDocument(session, User, userInfo.id);
-	document.populate('locations');
+	await document.populate('locations').execPopulate();
 	return document;
 }
 

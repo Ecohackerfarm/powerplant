@@ -385,8 +385,8 @@ async function getCompatibleCrops(req, res, next) {
 async function getLocations(req, res, next) {
 	try {
 		const session = await startSessionAndTransaction();
-		const user = await processor.getAuthenticatedUser(session, req, next);
-		await endSesssionAndTransaction(session);
+		const user = await getAuthenticatedUser(req, next, session);
+		await endSessionAndTransaction(session);
 		
 		res.status(200).json(user.locations);
 	} catch (exception) {
