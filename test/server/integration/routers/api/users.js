@@ -1,4 +1,4 @@
-const { expect } = require('chai');
+const { assert, expect } = require('chai');
 const { sendForm } = require('../routerHelpers');
 const User = require('../../../../../server/models/user');
 const jwt = require('jsonwebtoken');
@@ -130,7 +130,7 @@ describe(rootUrl + '/:userId/locations', () => {
 				.set('authorization', 'Bearer ' + token)
 				.expect(200)
 				.then(res => {
-					console.log(res.body);
+					assert.equal(res.body[0].name, 'my location 1');
 				});
 		});
 		it('should not return locations if invalid authentication', () => {

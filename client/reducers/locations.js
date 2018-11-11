@@ -71,5 +71,6 @@ function locations(state = initialState, action) {
 }
 
 module.exports = {
+	initialState,
 	locations
 };

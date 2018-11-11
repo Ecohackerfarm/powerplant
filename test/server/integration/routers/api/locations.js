@@ -19,8 +19,8 @@ let token;
 before(() => {
 	// need to add a location to our test user
 	return User.find()
-		.byUsername(testUser.username)
-		.exec((err, { _id }) => {
+		.byUsername(testUser.username).exec()
+		.then(({ _id }) => {
 			userId = _id.toString();
 			token = jwt.sign(
 				{

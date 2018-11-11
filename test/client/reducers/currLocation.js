@@ -1,7 +1,7 @@
 const { expect } = require('chai');
 const types = require('../../../client/actions');
 const { currLocation } = require('../../../client/reducers/currLocation');
-const { defaultState } = require('../../../client/reducers/currLocation');
+const { initialState } = require('../../../client/reducers/currLocation');
 const { expectNoActionForAllBut } = require('./Helper');
 
 describe('currLocation reducer', () => {
@@ -31,7 +31,7 @@ describe('currLocation reducer', () => {
 			newState = currLocation(state, action);
 		});
 		it('should clear on LOGOUT', () => {
-			expect(newState).to.equal(defaultState);
+			expect(newState).to.equal(initialState);
 			expect(newState).not.to.equal(state);
 		});
 	});

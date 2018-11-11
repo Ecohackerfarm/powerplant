@@ -29,5 +29,6 @@ function currLocation(state = initialState, action) {
 }
 
 module.exports = {
+	initialState,
 	currLocation
 };

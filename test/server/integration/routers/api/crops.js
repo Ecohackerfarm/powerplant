@@ -50,6 +50,7 @@ describe(rootUrl + '/', () => {
 	});
 	describe('POST', () => {
 		const crop = {
+			commonName: "Simon's crop for testing",
 			binomialName: "Simon's crop for testing"
 		};
 		it('should create new crop = require(just binomial name', () => {

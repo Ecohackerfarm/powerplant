@@ -1,4 +1,4 @@
-const { expect } = require('chai');
+const { assert } = require('chai');
 
 const types = require('../../../client/actions');
 
@@ -14,7 +14,7 @@ const expectNoActionForAllBut = (
 			const action = Object.assign({}, sampleAction, { type });
 			const state = Object.assign({}, sampleState);
 			const newState = reducer(state, action);
-			expect(newState).to.equal(state);
+			assert.equal(newState, state, 'type=' + type);
 		}
 	}
 };
