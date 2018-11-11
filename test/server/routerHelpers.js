@@ -1,6 +1,6 @@
 const { expect } = require('chai');
-const Crop = require('../../../../server/models/crop');
-const CropRelationship = require('../../../../server/models/crop-relationship');
+const Crop = require('../../server/models/crop');
+const CropRelationship = require('../../server/models/crop-relationship');
 
 // Helper functions for integration tests go here
 
