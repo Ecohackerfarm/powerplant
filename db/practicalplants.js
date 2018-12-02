@@ -1,7 +1,7 @@
 /**
  * Support code for the crop database exported from practicalplants.org wiki.
  * 
- * @namespace pfaf
+ * @namespace practicalplants
  * @memberof db
  */
 
@@ -171,7 +171,7 @@ function setDefaultValue(object, property, defaultValue) {
  * @return {Array} Crop objects
  */
 function readCropsLower() {
-	const lines = fs.readFileSync(__dirname + '/pfaf.json', { encoding: 'latin1' }).split('\n');
+	const lines = fs.readFileSync(__dirname + '/practicalplants.json', { encoding: 'latin1' }).split('\n');
 	return lines.splice(0, lines.length - 1).map(line => JSON.parse(line));
 }
 

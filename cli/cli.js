@@ -249,39 +249,6 @@ async function doGetCompatibleCrops() {
 }
 
 /**
- * Push the PFAF (Plants For A Future, http://www.pfaf.org) database to
- * powerplant server.
- */
-async function pushPfaf() {
-	let mysqlConfig = {
-		host: 'localhost',
-		port: 3306,
-		user: 'root',
-		password: 'password',
-		database: 'permaflorae'
-	};
-
-	Object.assign(mysqlConfig, parseOption('mysqlConfig'));
-	const connection = await mysql.createConnection(mysqlConfig);
-	const [rows, fields] = await connection.query(
-		'select `common name`,`latin name` = require(`species database`'
-	);
-	connection.end();
-
-	const crops = [];
-	rows.forEach(row => {
-		debug(row);
-		const crop = {
-			commonName: row['common name'],
-			binomialName: row['latin name']
-		};
-		crops.push(crop);
-	});
-
-	await addCrops({ documents: crops });
-}
-
-/**
  * Push the companion plant database to powerplant server.
  */
 async function pushCompanions() {
@@ -331,7 +298,6 @@ const commands = {
 	'get-crops-by-name': doGetCropsByName,
 	'get-crop-groups': doGetCropGroups,
 	'get-compatible-crops': doGetCompatibleCrops,
-	'push-pfaf': pushPfaf,
 	'push-companions': pushCompanions
 };
 
