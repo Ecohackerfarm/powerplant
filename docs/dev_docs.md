@@ -1,6 +1,6 @@
 Developer Documentation for powerplant
 
-Last updated: March 4th, 2018
+Last updated: December 2nd, 2018
 
 
 # Introduction
@@ -19,6 +19,9 @@ Helpful external documentation:
 - [ECMAScript 6 overview](http://es6-features.org/)
 - [JSDoc documentation](http://usejsdoc.org/)
 - [webpack concepts](https://webpack.js.org/concepts/)
+- [Mocha test framework](https://mochajs.org/)
+- [Chai assertion styles](https://www.chaijs.com/guide/styles/)
+- [Chai cheat sheet for the expect style](https://gist.github.com/yoavniran/1e3b0162e1545055429e)
 
 # Setup
 
@@ -240,100 +243,23 @@ class Main extends React.Component {
 
 # Tests
 
-You can run tests with the `npm test` command. Note that in order to
-test the server code correctly, the tests must be able to connect to the
-mongo docker image. This connection happens in `/test/server/init.js`.
-You also need to have migrated the data to the mongodb database with
-`npm run migrate`. If you ever get a few odd failed tests ("cannot get
-property '\_id'" or something like that), it's possible you forgot to
-migrate the data.
+You can run the tests with the `npm test` command. Note that MongoDB must be
+running and the data must be migrated with `npm run migrate` for the server
+integration tests to pass.
 
-Tests are stored in the `/test` folder. The structure of this folder
-should mirror the root file structure. This makes it easy to find the
-test module for any module. Tests should be written for every component
-that contains business logic or helper functions, as well as every API
-route. No tests need to be written for external library functions (like
-Mongoose `Models`). However, if you write an extensions to an external
-function, like a query function for a Mongoose `Model`, that should be
-tested.
+Tests are in the `/test` directory. The directory structure should mirror
+the root directory structure as close as possible.
 
-Whenever possible, use unit testing to test a single component separate
-from the rest of the codebase.
+[Mocha](https://mochajs.org/) is used as the test framework.
 
-If isolation is not possibe, integration tests are ok too. This is
-necessary for API tests, and possibly also for database functions.
+[Chai](https://www.chaijs.com/) is used as the assertion library. You may
+choose either the expect or the assert style. 
 
-All tests are dispatched with Mocha and use the `expect` function from
-the assertion library Chai. API tests use supertest to create requests.
+[SuperTest](https://www.npmjs.com/package/supertest) is used for the server
+integration tests.
 
-## Mocha
+## Using `npm test` to study/play with a specific piece of code
 
-https://mochajs.org/
-
-Mocha is the test-running framework which is used to organize the tests.
-It is used by the `npm test` command as the environment in which the
-tests are run, so it does not need to be imported in any of the test
-classes.
-
-We use the BDD (behaviour-drive-development) syntax, so the main
-functions used to organize tests are `describe` and `it`. `describe` is
-used to separate modules and functionalities within modules, and `it` is
-used to describe a specific behaviour. Generally, tests for a module are
-organized with two levels of `describe`, the first being the name of the
-module, and the second being for a specific function or functionality.
-Test code then goes within an `it` function in the second.
-
-For example:
-
-```
-    describe('data-validation', () => { // module name
-        describe('#idValidation()', () => { // function name
-            it('should validate a correct id', () = > {
-                // test code goes here
-            });
-        });
-        describe('#getCompanionshipScores()', () => { // other function name
-        it('should return correct scores', () => {
-    // test code goes here
-    });
-        });
-    });
-```
-
-or
-
-```
-    describe('authReducer', () => { // module name
-        describe('SET_CURRENT_USER', () => { //not a function, but a specific functionality
-            it("should set the current user", () => {
-                // test code goes here
-            });
-        });
-    });
-```
-
-Mocha tests run synchronously, but it does support asynchronous test
-code through the use of promises. To test asynchronous code, simply have
-the `it` function return a promise. The next test will not execute until
-the promise is resolved.
-
-## Chai
-
-http://chaijs.com/, [cheat
-sheet](https://gist.github.com/yoavniran/1e3b0162e1545055429e)
-
-Tests use the `expect` function of Chai to assert that all things are as
-they should be. Each `expect` call is an opportunity for a test to fail.
-If all `expect` calls in an `it()` function pass, the test passes. Chai
-supports function chaining to create self-documenting tests. See the
-cheat sheet above for an overview of the functions.
-
-## Supertest
-
-https://www.npmjs.com/package/supertest
-
-Supertest allows testing of network request-based functionality (REST
-API routes, in our case). See the tests in `/test/server/routes/api/`
-for examples. A supertest request return a promise, so it can be
-returned in an `it` function and the test will wait until the request
-completes to continue.
+Sometimes when studying code it is easiest to write a local test to expose
+its behavior. One way to do this is to use the [exclusivity feature](https://mochajs.org/#exclusive-tests)
+of Mocha to specify only the written test to be run with `npm test`.
