@@ -110,7 +110,7 @@ function readCrops() {
 		replaceArrayValue(object['functions'], [''], []);
 		
 		PP_PROPERTIES.forEach(property => {
-			if (!NUMBER_PROPERTIES.concat(ARRAY_PROPERTIES, BOOLEAN_PROPERTIES).includes(property)) {
+			if (!NUMBER_PROPERTIES.concat(ARRAY_PROPERTIES, BOOLEAN_PROPERTIES, NAME_PROPERTIES).includes(property)) {
 				object[property] = object[property].toLowerCase();
 			}
 		});
@@ -311,6 +311,8 @@ const ALL_PROPERTIES = [
  * Subset of ALL_PROPERTIES that are currently used by powerplant.
  */
 const PP_PROPERTIES = [
+	'binomial',
+	'common',
 	'hardiness zone',
 	'soil texture',
 	'soil ph',
@@ -376,6 +378,14 @@ const ARRAY_PROPERTIES = [
 ];
 
 /*
+ * Subset of PP_PROPERTIES that have any kind of names for the crop.
+ */
+const NAME_PROPERTIES = [
+	'binomial',
+	'common'
+];
+
+/*
  * Values that appear in raw practicalplants.org data, and the corresponding
  * normalized values.
  */
@@ -394,7 +404,7 @@ const PP_SOIL_PH_VALUES = ALL_SOIL_PH_VALUES;
 const ALL_SOIL_WATER_RETENTION_VALUES = ['well drained', 'moist', 'wet'];
 const PP_SOIL_WATER_RETENTION_VALUES = ALL_SOIL_WATER_RETENTION_VALUES;
 
-const ALL_SHADE_VALUES = ['no shade', 'partial shade', 'light shade', 'permanent shade', 'permanent deep shade'];
+const ALL_SHADE_VALUES = ['no shade', 'light shade', 'partial shade', 'permanent shade', 'permanent deep shade'];
 const PP_SHADE_VALUES = ALL_SHADE_VALUES;
 
 const ALL_SUN_VALUES = ['indirect sun', 'partial sun', 'full sun'];

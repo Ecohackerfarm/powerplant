@@ -1,7 +1,7 @@
 const { assert } = require('chai');
 const practicalplants = require('../../db/practicalplants.js');
 
-describe.only('practicalplants.json', () => {
+describe('practicalplants.json', () => {
 	function updateMissingCountsAndCheckValues(missingCounts, object, property, allowedValues) {
 		const functionsProperty = (property == 'functions') && (allowedValues === practicalplants.ALL_FUNCTIONS_VALUES);
 		if ((!(property in object)) || (functionsProperty && (object[property]['function'] === undefined))) {
@@ -22,6 +22,12 @@ describe.only('practicalplants.json', () => {
 				assert.isTrue(allowedValues.includes(value), value);
 			}
 		}
+	}
+	
+	function assertArrayPropertyOfRangeHasAllValuesInBetween(arrayValue, allValues) {
+		const indices = arrayValue.map(value => allValues.findIndex(temp => (temp == value)));
+		indices.sort((a, b) => (a - b));
+		return indices.every((value, index) => ((index == indices.length) || ((value + 1) == indices[index + 1])));
 	}
 	
 	it('raw practicalplants.org data contains only analyzed properties and values', () => {
@@ -133,6 +139,18 @@ describe.only('practicalplants.json', () => {
 			updateMissingCountsAndCheckValues(missingCounts, object, 'cutting type', practicalplants.PP_CUTTING_TYPE_VALUES);
 			updateMissingCountsAndCheckValues(missingCounts, object, 'fertility', practicalplants.PP_FERTILITY_VALUES);
 			updateMissingCountsAndCheckValues(missingCounts, object, 'root zone', practicalplants.PP_ROOT_ZONE_VALUES);
+			
+			{
+				/*
+				 * Assert that some properties that describe a range of values (for
+				 * example soil ph, from acid to alkaline) also contain all of the
+				 * values in between. This quality is used by the companionship
+				 * algorithm.
+				 */
+				assertArrayPropertyOfRangeHasAllValuesInBetween(object['soil ph'], practicalplants.ALL_SOIL_PH_VALUES);
+				assertArrayPropertyOfRangeHasAllValuesInBetween(object['soil texture'], practicalplants.ALL_SOIL_TEXTURE_VALUES);
+				assertArrayPropertyOfRangeHasAllValuesInBetween(object['soil water retention'], practicalplants.ALL_SOIL_WATER_RETENTION_VALUES);
+			}
 		});
 		
 		assert.isTrue(Object.keys(missingCounts).length == 0);
