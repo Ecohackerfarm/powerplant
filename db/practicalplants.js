@@ -404,7 +404,7 @@ const PP_SOIL_PH_VALUES = ALL_SOIL_PH_VALUES;
 const ALL_SOIL_WATER_RETENTION_VALUES = ['well drained', 'moist', 'wet'];
 const PP_SOIL_WATER_RETENTION_VALUES = ALL_SOIL_WATER_RETENTION_VALUES;
 
-const ALL_SHADE_VALUES = ['no shade', 'partial shade', 'light shade', 'permanent shade', 'permanent deep shade'];
+const ALL_SHADE_VALUES = ['no shade', 'light shade', 'partial shade', 'permanent shade', 'permanent deep shade'];
 const PP_SHADE_VALUES = ALL_SHADE_VALUES;
 
 const ALL_SUN_VALUES = ['indirect sun', 'partial sun', 'full sun'];
