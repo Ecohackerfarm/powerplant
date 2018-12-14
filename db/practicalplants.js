@@ -110,7 +110,7 @@ function readCrops() {
 		replaceArrayValue(object['functions'], [''], []);
 		
 		PP_PROPERTIES.forEach(property => {
-			if (!NUMBER_PROPERTIES.concat(ARRAY_PROPERTIES, BOOLEAN_PROPERTIES).includes(property)) {
+			if (!NUMBER_PROPERTIES.concat(ARRAY_PROPERTIES, BOOLEAN_PROPERTIES, NAME_PROPERTIES).includes(property)) {
 				object[property] = object[property].toLowerCase();
 			}
 		});
@@ -311,6 +311,8 @@ const ALL_PROPERTIES = [
  * Subset of ALL_PROPERTIES that are currently used by powerplant.
  */
 const PP_PROPERTIES = [
+	'binomial',
+	'common',
 	'hardiness zone',
 	'soil texture',
 	'soil ph',
@@ -373,6 +375,14 @@ const ARRAY_PROPERTIES = [
 	'cutting type',
 	'fertility',
 	'functions'
+];
+
+/*
+ * Subset of PP_PROPERTIES that have any kind of names for the crop.
+ */
+const NAME_PROPERTIES = [
+	'binomial',
+	'common'
 ];
 
 /*
