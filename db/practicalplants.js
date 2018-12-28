@@ -342,6 +342,45 @@ const PP_PROPERTIES = [
 	'root zone',
 ];
 
+function toCamelCase(ppName){
+	return {
+		[ppName] : ppName
+		 	.replace(/( [a-zA-Z])/g,(match)=>match.toUpperCase())
+			.replace(/ /g,'')
+	}
+}
+
+const PP_MAPPINGS = {
+	'binomial' : 'binomialName',
+	'common' : 'commonName',
+	'poornutrition' : 'poorNutrition',
+	...toCamelCase('hardiness zone'),
+	...toCamelCase('soil texture'),
+	...toCamelCase('soil ph'),
+	...toCamelCase('soil water retention'),
+	...toCamelCase('shade'),
+	...toCamelCase('sun'),
+	...toCamelCase('water'),
+	...toCamelCase('drought'),
+	...toCamelCase('ecosystem niche'),
+	...toCamelCase('life cycle'),
+	...toCamelCase('herbaceous or woody'),
+	...toCamelCase('deciduous or evergreen'),
+	...toCamelCase('growth rate'),
+	...toCamelCase('mature measurement unit'),
+	...toCamelCase('mature height'),
+	...toCamelCase('mature width'),
+	...toCamelCase('flower type'),
+	...toCamelCase('pollinators'),
+	...toCamelCase('wind'),
+	...toCamelCase('maritime'),
+	...toCamelCase('pollution'),
+	...toCamelCase('functions'),
+	...toCamelCase('grow from'),
+	...toCamelCase('cutting type'),
+	...toCamelCase('fertility'),
+	...toCamelCase('root zone')
+};
 /*
  * Subset of PP_PROPERTIES that have boolean values.
  */
