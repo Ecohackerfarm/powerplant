@@ -1,6 +1,6 @@
 /**
  * Support code for the crop database exported from practicalplants.org wiki.
- * 
+ *
  * @namespace practicalplants
  * @memberof db
  */
@@ -11,7 +11,7 @@ const fs = require('fs');
 /**
  * Read the mongoexport file and normalize its contents to ease
  * processing.
- * 
+ *
  * @return {Array} Crop objects
  */
 function readCrops() {
@@ -23,14 +23,14 @@ function readCrops() {
 		PP_PROPERTIES.forEach(property => {
 			object[property] = inputObject[property];
 		});
-		
+
 		/*
 		 * Parse objects to strings.
 		 */
 		if (object['functions']) {
 			object['functions'] = object['functions']['function'];
 		}
-		
+
 		/*
 		 * Add defaults for missing values. Defaults are chosen with
 		 * the intention to make good companions with any other crop.
@@ -62,7 +62,7 @@ function readCrops() {
 		setDefaultValue(object, 'cutting type', DEFAULT_CUTTING_TYPE);
 		setDefaultValue(object, 'fertility', DEFAULT_FERTILITY);
 		setDefaultValue(object, 'root zone', DEFAULT_ROOT_ZONE);
-		
+
 		/*
 		 * Convert numeric properties from strings to actual numbers.
 		 *
@@ -72,17 +72,17 @@ function readCrops() {
 		NUMBER_PROPERTIES.forEach(property => {
 			object[property] = parseFloat(object[property]);
 		});
-		
+
 		/*
 		 * Values of these properties are sometimes arrays and
 		 * sometimes CSV strings. Normalize all of them to arrays.
-		 * 
+		 *
 		 * TODO Where does this come from? From original
 		 * practicalplants.org data, mediawiki_scraper, or the
 		 * code here?
 		 */
 		ARRAY_PROPERTIES.forEach(property => convertToArray(object, property));
-		
+
 		/*
 		 * Normalize values.
 		 */
@@ -90,7 +90,7 @@ function readCrops() {
 			replaceValue(object, property, ['No', 'False'], 'false');
 			replaceValue(object, property, ['Yes', 'True'], 'true');
 		});
-		
+
 		replaceArrayValue(object['pollinators'], ['bees. self'], ['bees', 'self']);
 		replaceArrayValue(object['pollinators'], ['hover-flies'], ['hoverflies']);
 		replaceArrayValue(object['pollinators'], ['apomyctic', 'apomixy'], ['apomictic']);
@@ -105,16 +105,16 @@ function readCrops() {
 		replaceArrayValue(object['pollinators'], ['insects? self'], ['insects', 'self']);
 		replaceArrayValue(object['pollinators'], ['self?'], ['self']);
 		replaceArrayValue(object['pollinators'], ['insect'], ['insects']);
-		
+
 		replaceArrayValue(object['functions'], ['biogenic decalcifier/pioneer species'], ['biogenic decalcifier', 'pioneer']);
 		replaceArrayValue(object['functions'], [''], []);
-		
+
 		PP_PROPERTIES.forEach(property => {
 			if (!NUMBER_PROPERTIES.concat(ARRAY_PROPERTIES, BOOLEAN_PROPERTIES, NAME_PROPERTIES).includes(property)) {
 				object[property] = object[property].toLowerCase();
 			}
 		});
-		
+
 		return object;
 	});
 }
@@ -167,7 +167,7 @@ function setDefaultValue(object, property, defaultValue) {
 
 /**
  * Read the whole mongoexport file to an array of crop objects.
- * 
+ *
  * @return {Array} Crop objects
  */
 function readCropsLower() {
@@ -655,14 +655,14 @@ const DEFAULT_ROOT_ZONE = 'shallow';
 module.exports = {
 	readCrops,
 	readCropsLower,
-	
+
 	getAsArray,
-	
+
 	ALL_PROPERTIES,
 	PP_PROPERTIES,
 	NUMBER_PROPERTIES,
 	ARRAY_PROPERTIES,
-	
+
 	ALL_BOOLEAN_VALUES,
 	ALL_HARDINESS_ZONE_VALUES,
 	ALL_SOIL_TEXTURE_VALUES,
@@ -687,7 +687,7 @@ module.exports = {
 	ALL_CUTTING_TYPE_VALUES,
 	ALL_FERTILITY_VALUES,
 	ALL_ROOT_ZONE_VALUES,
-	
+
 	PP_BOOLEAN_VALUES,
 	PP_HARDINESS_ZONE_VALUES,
 	PP_SOIL_TEXTURE_VALUES,
