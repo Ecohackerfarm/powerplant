@@ -1,11 +1,68 @@
 const mongoose = require('mongoose');
 
 /**
+ * PH range.
+ * It is used for specifying the range a
+ * crop can grow
+ *
+ * @constructor
+ * @alias PHRange
+ * @param { Object } crop
+ * @param { Number } crop.min
+ * @param { Number } crop.max
+ * @type { mongoose.Schema }
+ */
+const PHRange = new mongoose.Schema({
+	min : {
+		type : Number,
+		min : [0, "Minimum ph value to low"],
+		max : [15, "Maximum ph value to high"]
+	},
+	max : {
+		type : Number,
+		min : [0, "Minimum ph value to low"],
+		max : [15, "Maximum ph value to high"]
+	}
+});
+
+/**
+ * A Crop Model representing a plant or mushrooms species
+ * TODO: write documentation for params see practicalplants.org
+ *
  * @constructor
  * @alias Crop
- * @param {Object} crop
- * @param {String} crop.commonName
- * @param {String} crop.binomialName
+ * @param {Object} crop object holding the attributes
+ * @param {String} crop.commonName name the crop is commonly known
+ * @param {String} crop.binomialName latin unique binomial name,
+ *                                   note: sometimes names can change
+ * @param {String} crop.cuttingType
+ * @param {String} crop.deciduousOrEvergreen
+ * @param {String} crop.drought
+ * @param {String} crop.ecosystemNiche
+ * @param {String} crop.fertility
+ * @param {String} crop.flowerType
+ * @param {String} crop.functions
+ * @param {String} crop.growFrom
+ * @param {String} crop.growthRate
+ * @param {String} crop.averageMinTemperature
+ * @param {String} crop.herbaceousOrWoody
+ * @param {String} crop.lifeCycle
+ * @param {String} crop.maritime
+ * @param {String} crop.matureHeight
+ * @param {String} crop.matureMeasurementUnit
+ * @param {String} crop.matureWidth
+ * @param {String} crop.pollinators
+ * @param {String} crop.pollution
+ * @param {String} crop.poorNutrition
+ * @param {String} crop.rootZone
+ * @param {String} crop.shade
+ * @param {String} crop.soilPh
+ * @param {String} crop.soilTexture
+ * @param {String} crop.soilWaterRetention
+ * @param {String} crop.sun
+ * @param {String} crop.water
+ * @param {String} crop.wind
+ *
  */
 const cropSchema = new mongoose.Schema({
 	binomialName: { type: String, index: true, required: true },
@@ -140,19 +197,6 @@ const cropSchema = new mongoose.Schema({
   wind : {
   	type : Boolean
   }
-});
-
-const PHRange = new mongoose.Schema({
-	min : {
-		type : Number,
-		min : [0, "Minimum ph value to low"],
-		max : [15, "Maximum ph value to high"]
-	},
-	max : {
-		type : Number,
-		min : [0, "Minimum ph value to low"],
-		max : [15, "Maximum ph value to high"]
-	}
 });
 
 /**
