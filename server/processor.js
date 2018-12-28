@@ -1,6 +1,5 @@
 /**
  * @namespace processor
- * @namespace server
  */
 
 const mongoose = require('mongoose');
@@ -16,7 +15,7 @@ const { Combinations } = require('../shared/combinations.js');
 
 /**
  * Base class for exceptions that are thrown on the transaction level.
- * 
+ *
  * @extends Error
  */
 class ProcessorException extends Error {
@@ -72,7 +71,7 @@ function authorize(currentUser, documents) {
 
 /**
  * Get a set of documents.
- * 
+ *
  * @param {Object} session Session object
  * @param {Model} model Document type
  * @param {String[]} ids Document IDs
@@ -83,16 +82,16 @@ async function getDocuments(session, model, ids) {
 	validate(ids);
 	const path = model == CropRelationship ? 'crop0 crop1' : '';
 	const documents = await model.find({ _id: { $in: ids } }).session(session).populate(path).exec();
-	
+
 	const foundIds = documents.map(document => document._id.toString());
 	const allFound = ids.every(id => foundIds.includes(id));
-	
+
 	return allFound ? documents : null;
 }
 
 /**
  * Get one document.
- * 
+ *
  * @param {Object} session
  * @param {Model} model Document type
  * @param {String} id Document ID
@@ -105,7 +104,7 @@ async function getDocument(session, model, id) {
 
 /**
  * Get a set of authorized documents.
- * 
+ *
  * @param {Document} currentUser
  * @param {Model} model
  * @param {String[]} ids
@@ -124,7 +123,7 @@ async function getAuthorizedDocuments(session, currentUser, model, ids) {
 
 /**
  * Get one authorized document.
- * 
+ *
  * @param {Document} currentUser
  * @param {Model} model
  * @param {String} id
@@ -171,7 +170,7 @@ async function updateDocumentInternal(session, document, update) {
 
 /**
  * Save document to database.
- * 
+ *
  * @param {Object} session
  * @param {Model} model
  * @param {Object} object
@@ -210,7 +209,7 @@ async function saveDocument(session, model, object) {
 
 /**
  * Save authorized document to database.
- * 
+ *
  * @param {Object} session
  * @param {Document} currentUser
  * @param {Model} model
@@ -314,7 +313,7 @@ async function deleteAuthorizedDocument(session, currentUser, model, id) {
 
 /**
  * Get User document matching the authorization token.
- * 
+ *
  * @param {Object] session
  * @param {String} token
  * @return {Document}
@@ -334,7 +333,7 @@ async function getAuthenticatedUser(session, token) {
 
 /**
  * Get all documents of the given type.
- * 
+ *
  * @param {Object} session
  * @param {Model} model Document type
  * @return {Document[]}
@@ -347,7 +346,7 @@ async function getAllDocuments(session, model) {
  * Given all compatible combinations, get non-overlapping crop groups,
  * and update the Combinations object by removing the crops of these
  * groups.
- * 
+ *
  * @param {Combinations} combinations
  * @param {Number} maximumGroupSize
  * @return {Array}
@@ -372,7 +371,7 @@ function removeCropGroupsFromCombinations(combinations, maximumGroupSize) {
 /**
  * For each crop find all crop relationships and assign them to the
  * document.
- * 
+ *
  * @param {Object} session
  * @param {Crop[]} crops
  */
@@ -386,7 +385,7 @@ async function assignRelationships(session, crops) {
 /**
  * Assign isCompatible() for the given Crop documents for use with the
  * Combinations class.
- * 
+ *
  * @param {Crop[]} crops
  * @param {Function} isCompatibleFunction
  */
@@ -398,7 +397,7 @@ function assignIsCompatible(crops, isCompatibleFunction) {
 
 /**
  * Divide the given crops into groups of compatible crops.
- * 
+ *
  * @param {Object} Session object
  * @param {String[]} cropIds
  * @return {Array}
@@ -448,7 +447,7 @@ async function getCropGroups(session, cropIds) {
 /**
  * Get other crops that are compatible with the given set of crops.
  * The crops in the sum set are all compatible.
- * 
+ *
  * @param {Object} session
  * @param {String[]} cropIds
  * @return {Array}
@@ -476,7 +475,7 @@ async function getCompatibleCrops(session, cropIds) {
 /**
  * Convert a string into regex-friendly format, escaping all regex
  * special characters.
- * 
+ *
  * @param {String} text String to convert
  * @return {String} Escaped string
  */
@@ -486,11 +485,11 @@ function escapeRegEx(text) {
 
 /**
  * Get crops whose name matches the given regular expression.
- * 
- * @param {Object} session 
- * @param {String} regex 
- * @param {Number} index 
- * @param {Number} length 
+ *
+ * @param {Object} session
+ * @param {String} regex
+ * @param {Number} index
+ * @param {Number} length
  */
 async function getCropsByName(session, regex, index, length) {
 	const crops = await Crop.find().session(session).byName(escapeRegEx(regex)).exec();
@@ -501,7 +500,7 @@ async function getCropsByName(session, regex, index, length) {
 
 /**
  * Try to login with the given credentials.
- * 
+ *
  * @param {Object} session
  * @param {Object} credentials
  * @return {Object} Authorization token
@@ -534,7 +533,7 @@ async function login(session, credentials) {
 /**
  * Implements isCompatible() for Crop Combinations. Check if the given
  * other crop is compatible.
- * 
+ *
  * @param {Crop} crop
  * @return {Boolean}
  */
@@ -548,7 +547,7 @@ function isCompanion(crop) {
 /**
  * Implements isCompatible() for Crop Combinations. Check if the given
  * other crop is neutral but not incompatible.
- * 
+ *
  * @param {Crop} crop
  * @return {Boolean}
  */
@@ -575,7 +574,7 @@ module.exports = {
 	getCompatibleCrops,
 	getCropsByName,
 	login,
-	
+
 	VALIDATION_EXCEPTION,
 	AUTHORIZATION_EXCEPTION,
 	AUTHENTICATION_EXCEPTION

@@ -1,9 +1,9 @@
 /**
  * API client based on axios
- * 
+ *
  * Every api call should be able to call like this:
  * functionName({parameter}) => Promise
- * 
+ *
  * e.g.:
  * getCropsByName(
  *   {  name : "foo",
@@ -11,11 +11,11 @@
  *      length : 0,
  *   }
  * )
- * 
+ *
  * In addition to API calls there are functions that configure the axios
  * HTTP client.
- * 
- * @namespace combinations
+ *
+ * @namespace api-client
  * @memberof shared
  */
 
@@ -23,9 +23,9 @@ const axios = require('axios');
 
 /**
  * Set host and port of powerplant server for all future axios requests.
- * 
- * @param {String} host 
- * @param {Number} port 
+ *
+ * @param {String} host
+ * @param {Number} port
  */
 function setBaseUrl(host, port) {
 	axios.defaults.baseURL = 'http://' + host + (port ? (':' + port) : '');
@@ -33,7 +33,7 @@ function setBaseUrl(host, port) {
 
 /**
  * Set the authorization header for all future axios requests
- * 
+ *
  * @param {String} token - JSON web token
  */
 function setAuthorizationToken(token) {
@@ -46,7 +46,7 @@ function setAuthorizationToken(token) {
 
 /**
  * Gets crops by names
- * 
+ *
  * @param  {object} params parameter object
  * @param  {string} params.name part of the crops name
  * @param  {number} params.index=0 start index of the chunk of crops from found list
@@ -61,7 +61,7 @@ function getCropsByName(params) {
 
 /**
  * Get compatible crop groups from
- * 
+ *
  * @param  {Object} params parameter object
  * @param  {Array} params.cropIds array of ids of crops
  * @return {Promise} Promise
@@ -75,7 +75,7 @@ function getCropGroups(params) {
 
 /**
  * Get compatible crop groups from
- * 
+ *
  * @param  {Object} params parameter object
  * @param  {Array} params.cropIds array of ids of crops
  * @return {Promise} Promise
@@ -89,7 +89,7 @@ function getCompatibleCrops(params) {
 
 /**
  * Get locations from a specified user
- * 
+ *
  * @param  {object} params parameter object
  * @param  {object} params.id user id
  * @return {Promise} Promise
@@ -102,8 +102,8 @@ function getLocations(params) {
 
 /**
  * Get crops
- * 
- * @param  {Object} params 
+ *
+ * @param  {Object} params
  * @param  {String[]} params.ids Document IDs
  * @return {Promise}
  */
@@ -114,8 +114,8 @@ function getCrops(params) {
 
 /**
  * Get crop relationships
- * 
- * @param  {Object} params 
+ *
+ * @param  {Object} params
  * @param  {String[]} params.ids Document IDs
  * @return {Promise}
  */
@@ -126,8 +126,8 @@ function getCropRelationships(params) {
 
 /**
  * Get users
- * 
- * @param  {Object} params 
+ *
+ * @param  {Object} params
  * @param  {String[]} params.ids Document IDs
  * @return {Promise}
  */
@@ -138,8 +138,8 @@ function getUsers(params) {
 
 /**
  * Add crops
- * 
- * @param  {Object} params 
+ *
+ * @param  {Object} params
  * @param  {Object[]} params.documents Documents
  * @return {Promise}
  */
@@ -150,8 +150,8 @@ function addCrops(params) {
 
 /**
  * Add crop relationships
- * 
- * @param  {Object} params 
+ *
+ * @param  {Object} params
  * @param  {Object[]} params.documents Documents
  * @return {Promise}
  */
@@ -162,8 +162,8 @@ function addCropRelationships(params) {
 
 /**
  * Add users
- * 
- * @param  {Object} params 
+ *
+ * @param  {Object} params
  * @param  {Object[]} params.documents Documents
  * @return {Promise}
  */
@@ -174,8 +174,8 @@ function addUsers(params) {
 
 /**
  * Update crops
- * 
- * @param  {Object} params 
+ *
+ * @param  {Object} params
  * @param  {Object[]} params.documents Documents
  * @param  {String[]} params.ids Document IDs
  * @return {Promise}
@@ -187,8 +187,8 @@ function setCrops(params) {
 
 /**
  * Add crop relationships
- * 
- * @param  {Object} params 
+ *
+ * @param  {Object} params
  * @param  {Object[]} params.documents Documents
  * @return {Promise}
  */
@@ -199,8 +199,8 @@ function setCropRelationships(params) {
 
 /**
  * Add users
- * 
- * @param  {Object} params 
+ *
+ * @param  {Object} params
  * @param  {Object[]} params.documents Documents
  * @return {Promise}
  */
@@ -211,8 +211,8 @@ function setUsers(params) {
 
 /**
  * Delete crops
- * 
- * @param  {Object} params 
+ *
+ * @param  {Object} params
  * @param  {String[]} params.ids Document IDs
  * @return {Promise}
  */
@@ -223,8 +223,8 @@ function removeCrops(params) {
 
 /**
  * Delete crop relationships
- * 
- * @param  {Object} params 
+ *
+ * @param  {Object} params
  * @param  {String[]} params.ids Document IDs
  * @return {Promise}
  */
@@ -235,8 +235,8 @@ function removeCropRelationships(params) {
 
 /**
  * Delete users
- * 
- * @param  {Object} params 
+ *
+ * @param  {Object} params
  * @param  {String[]} params.ids Document IDs
  * @return {Promise}
  */
@@ -247,8 +247,8 @@ function removeUsers(params) {
 
 /**
  * Get all crop relationships
- * 
- * @param {Object} params 
+ *
+ * @param {Object} params
  */
 function getAllCropRelationships(params) {
 	return axios.get('/api/get-all-crop-relationships');
@@ -256,8 +256,8 @@ function getAllCropRelationships(params) {
 
 /**
  * Delete all crops
- * 
- * @param {Object} params 
+ *
+ * @param {Object} params
  */
 function removeAllCrops(params) {
 	return getCropsByName({ name: '', index: 0, length: 0 }).then(response => {
@@ -268,8 +268,8 @@ function removeAllCrops(params) {
 
 /**
  * Delete all crop relationships
- * 
- * @param {Object} params 
+ *
+ * @param {Object} params
  */
 function removeAllCropRelationships(params) {
 	return getAllCropRelationships().then(response => {
@@ -280,8 +280,8 @@ function removeAllCropRelationships(params) {
 
 /**
  * Get crop
- * 
- * @param  {Object} params 
+ *
+ * @param  {Object} params
  * @param  {Object} params.id Document ID
  * @return {Promise}
  */
@@ -291,8 +291,8 @@ function getCrop(params) {
 
 /**
  * Get crop relationship
- * 
- * @param  {Object} params 
+ *
+ * @param  {Object} params
  * @param  {Object} params.id
  * @return {Promise}
  */
@@ -302,8 +302,8 @@ function getCropRelationship(params) {
 
 /**
  * Get user
- * 
- * @param  {Object} params 
+ *
+ * @param  {Object} params
  * @param  {Object} params.id Document ID
  * @return {Promise}
  */
@@ -313,8 +313,8 @@ function getUser(params) {
 
 /**
  * Add crop
- * 
- * @param  {Object} params 
+ *
+ * @param  {Object} params
  * @param  {Object} params.id Document
  * @return {Promise}
  */
@@ -324,8 +324,8 @@ function addCrop(params) {
 
 /**
  * Add crop relationship
- * 
- * @param  {Object} params 
+ *
+ * @param  {Object} params
  * @param  {Object} params.id Document
  * @return {Promise}
  */
@@ -335,8 +335,8 @@ function addCropRelationship(params) {
 
 /**
  * Add user
- * 
- * @param  {Object} params 
+ *
+ * @param  {Object} params
  * @param  {Object} params.id Document
  * @return {Promise}
  */
@@ -346,8 +346,8 @@ function addUser(params) {
 
 /**
  * Update crop
- * 
- * @param  {Object} params 
+ *
+ * @param  {Object} params
  * @param  {Object} params.id Document ID
  * @param  {Object} params.document Document
  * @return {Promise}
@@ -358,8 +358,8 @@ function setCrop(params) {
 
 /**
  * Update crop relationship
- * 
- * @param  {Object} params 
+ *
+ * @param  {Object} params
  * @param  {Object} params.id Document ID
  * @param  {Object} params.document Document
  * @return {Promise}
@@ -370,8 +370,8 @@ function setCropRelationship(params) {
 
 /**
  * Update user
- * 
- * @param  {Object} params 
+ *
+ * @param  {Object} params
  * @param  {Object} params.id Document ID
  * @param  {Object} params.document Document
  * @return {Promise}
@@ -382,8 +382,8 @@ function setUser(params) {
 
 /**
  * Delete crop
- * 
- * @param  {Object} params 
+ *
+ * @param  {Object} params
  * @param  {Object} params.id Document ID
  * @return {Promise}
  */
@@ -393,8 +393,8 @@ function removeCrop(params) {
 
 /**
  * Delete crop relationship
- * 
- * @param  {Object} params 
+ *
+ * @param  {Object} params
  * @param  {Object} params.id Document ID
  * @return {Promise}
  */
@@ -404,8 +404,8 @@ function removeCropRelationship(params) {
 
 /**
  * Delete user
- * 
- * @param  {Object} params 
+ *
+ * @param  {Object} params
  * @param  {Object} params.id Document ID
  * @return {Promise}
  */
@@ -416,7 +416,7 @@ function removeUser(params) {
 module.exports = {
 	setAuthorizationToken,
 	setBaseUrl,
-	
+
 	getCropsByName,
 	getCropGroups,
 	getCompatibleCrops,
