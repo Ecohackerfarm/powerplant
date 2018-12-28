@@ -8,7 +8,7 @@
     "build_client": "babel webpack.config.babel.js -o webpack.config.js && webpack --config webpack.config.js",
     "cli": "node -- cli/cli.js",
     "doc": "jsdoc -c ./jsdoc.config.json -t ./node_modules/ink-docstrap/template -R ./docs/dev_docs.md",
-    "lint": "eslint cli client server shared test",
+    "lint": "eslint db cli client server shared test",
     "migrate": "npm run cli -- remove crop-relationship && npm run cli -- remove crop && npm run cli -- push-companions",
     "mongo": "docker run -p 27017:27017 --name pp_main -d mongo",
     "pretty": "find client server shared test cli -type f -name '*.js' | xargs ./node_modules/.bin/prettier --write",
