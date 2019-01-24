@@ -18,7 +18,7 @@
     "release": "rm -R .build/pp-$npm_package_version && mkdir .build/pp-$npm_package_version && npm run build_client && npm run build_server && cp -r dist .build/pp-$npm_package_version && cp LICENSE README.md package.json secrets.example.js .build/pp-$npm_package_version/",
     "setup_dev": "test -f ./.git_hooks/_init-hooks-path.sh && test -d ./.git && sh ./.git_hooks/_init-hooks-path.sh",
     "start": "bash -c \"NODE_ENV=development nodemon --watch server --exec node --inspect -- server/index.js\"",
-    "test": "mocha --compilers js:babel-register"
+    "test": "mocha"
   },
   "author": "Simon Ever-Hale",
   "contributors": [
@@ -76,7 +76,6 @@
     "babel-eslint": "^7.2.3",
     "babel-loader": "^7.1.1",
     "babel-preset-react": "^6.24.1",
-    "babel-register": "^6.24.1",
     "chai": "^4.0.2",
     "css-loader": "^1.0.0",
     "eslint": "^3.19.0",
