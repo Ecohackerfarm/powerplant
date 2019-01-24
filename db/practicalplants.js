@@ -17,51 +17,24 @@ const fs = require('fs');
 function readCrops() {
 	return readCropsLower().map(inputObject => {
 		/*
-		 * Select properties that are useful for powerplant.
+		 * Select properties that are useful for powerplant. Nulls or empty
+		 * arrays are used for missing values in normalized objects.
 		 */
 		object = {};
 		PP_PROPERTIES.forEach(property => {
-			object[property] = inputObject[property];
+			if ((!(property in inputObject)) || [undefined, null, '', '\n'].includes(inputObject[property])) {
+				object[property] = ARRAY_PROPERTIES.includes(property) ? [] : null;
+			} else {
+				object[property] = inputObject[property];
+			}
 		});
 
 		/*
 		 * Parse objects to strings.
 		 */
-		if (object['functions']) {
+		if (!Array.isArray(object['functions'])) {
 			object['functions'] = object['functions']['function'];
 		}
-
-		/*
-		 * Add defaults for missing values. Defaults are chosen with
-		 * the intention to make good companions with any other crop.
-		 */
-		setDefaultValue(object, 'hardiness zone', DEFAULT_HARDINESS_ZONE);
-		setDefaultValue(object, 'soil texture', DEFAULT_SOIL_TEXTURE);
-		setDefaultValue(object, 'soil ph', DEFAULT_SOIL_PH);
-		setDefaultValue(object, 'soil water retention', DEFAULT_SOIL_WATER_RETENTION);
-		setDefaultValue(object, 'shade', DEFAULT_SHADE);
-		setDefaultValue(object, 'sun', DEFAULT_SUN);
-		setDefaultValue(object, 'water', DEFAULT_WATER);
-		setDefaultValue(object, 'drought', DEFAULT_DROUGHT);
-		setDefaultValue(object, 'poornutrition', DEFAULT_POORNUTRITION);
-		setDefaultValue(object, 'ecosystem niche', DEFAULT_ECOSYSTEM_NICHE);
-		setDefaultValue(object, 'life cycle', DEFAULT_LIFE_CYCLE);
-		setDefaultValue(object, 'herbaceous or woody', DEFAULT_HERBACEOUS_OR_WOODY);
-		setDefaultValue(object, 'deciduous or evergreen', DEFAULT_DECIDUOUS_OR_EVERGREEN);
-		setDefaultValue(object, 'growth rate', DEFAULT_GROWTH_RATE);
-		setDefaultValue(object, 'mature measurement unit', DEFAULT_MATURE_MEASUREMENT_UNIT);
-		setDefaultValue(object, 'mature height', DEFAULT_MATURE_HEIGHT);
-		setDefaultValue(object, 'mature width', DEFAULT_MATURE_WIDTH);
-		setDefaultValue(object, 'flower type', DEFAULT_FLOWER_TYPE);
-		setDefaultValue(object, 'pollinators', DEFAULT_POLLINATORS);
-		setDefaultValue(object, 'wind', DEFAULT_WIND);
-		setDefaultValue(object, 'maritime', DEFAULT_MARITIME);
-		setDefaultValue(object, 'pollution', DEFAULT_POLLUTION);
-		setDefaultValue(object, 'functions', DEFAULT_FUNCTIONS);
-		setDefaultValue(object, 'grow from', DEFAULT_GROW_FROM);
-		setDefaultValue(object, 'cutting type', DEFAULT_CUTTING_TYPE);
-		setDefaultValue(object, 'fertility', DEFAULT_FERTILITY);
-		setDefaultValue(object, 'root zone', DEFAULT_ROOT_ZONE);
 
 		/*
 		 * Convert numeric properties from strings to actual numbers.
@@ -70,7 +43,7 @@ function readCrops() {
 		 * take average in such cases?
 		 */
 		NUMBER_PROPERTIES.forEach(property => {
-			object[property] = parseFloat(object[property]);
+			object[property] = object[property] ? parseFloat(object[property]) : null;
 		});
 
 		/*
@@ -110,7 +83,7 @@ function readCrops() {
 		replaceArrayValue(object['functions'], [''], []);
 
 		PP_PROPERTIES.forEach(property => {
-			if (!NUMBER_PROPERTIES.concat(ARRAY_PROPERTIES, BOOLEAN_PROPERTIES, NAME_PROPERTIES).includes(property)) {
+			if (object[property] && (!NUMBER_PROPERTIES.concat(ARRAY_PROPERTIES, BOOLEAN_PROPERTIES, NAME_PROPERTIES).includes(property))) {
 				object[property] = object[property].toLowerCase();
 			}
 		});
@@ -157,12 +130,6 @@ function getAsArray(value) {
 
 function parseCsvLine(line) {
 	return line.split(',').map(value => value.trim());
-}
-
-function setDefaultValue(object, property, defaultValue) {
-	if ((!(property in object)) || (object[property] === undefined)) {
-		object[property] = defaultValue;
-	}
 }
 
 /**
@@ -620,37 +587,6 @@ const PP_FERTILITY_VALUES = ALL_FERTILITY_VALUES;
 
 const ALL_ROOT_ZONE_VALUES = ['shallow', 'deep', 'surface'];
 const PP_ROOT_ZONE_VALUES = ALL_ROOT_ZONE_VALUES;
-
-/*
- * Defaults for missing values.
- */
-const DEFAULT_HARDINESS_ZONE = 0; // "Hardy to absolute zero temperature"
-const DEFAULT_SOIL_TEXTURE = PP_SOIL_TEXTURE_VALUES; // "Grows in stone and plasma"
-const DEFAULT_SOIL_PH = PP_SOIL_PH_VALUES;
-const DEFAULT_SOIL_WATER_RETENTION = PP_SOIL_WATER_RETENTION_VALUES;
-const DEFAULT_SHADE = 'permanent deep shade';
-const DEFAULT_SUN = 'indirect sun';
-const DEFAULT_WATER = 'low';
-const DEFAULT_DROUGHT = 'tolerant';
-const DEFAULT_POORNUTRITION = 'true';
-const DEFAULT_ECOSYSTEM_NICHE = PP_ECOSYSTEM_NICHE_VALUES;
-const DEFAULT_LIFE_CYCLE = PP_LIFE_CYCLE_VALUES;
-const DEFAULT_HERBACEOUS_OR_WOODY = '';
-const DEFAULT_DECIDUOUS_OR_EVERGREEN = '';
-const DEFAULT_GROWTH_RATE = 'moderate';
-const DEFAULT_MATURE_MEASUREMENT_UNIT = 'meters';
-const DEFAULT_MATURE_HEIGHT = 1;
-const DEFAULT_MATURE_WIDTH = 1;
-const DEFAULT_FLOWER_TYPE = 'monoecious';
-const DEFAULT_POLLINATORS = PP_POLLINATORS_VALUES;
-const DEFAULT_WIND = 'true';
-const DEFAULT_MARITIME = 'true';
-const DEFAULT_POLLUTION = 'true';
-const DEFAULT_FUNCTIONS = PP_FUNCTIONS_VALUES;
-const DEFAULT_GROW_FROM = PP_GROW_FROM_VALUES;
-const DEFAULT_CUTTING_TYPE = PP_CUTTING_TYPE_VALUES;
-const DEFAULT_FERTILITY = PP_FERTILITY_VALUES;
-const DEFAULT_ROOT_ZONE = 'shallow';
 
 module.exports = {
 	readCrops,

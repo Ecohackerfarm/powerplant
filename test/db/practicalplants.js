@@ -3,25 +3,39 @@ const practicalplants = require('../../db/practicalplants.js');
 
 describe('practicalplants.json', () => {
 	function updateMissingCountsAndCheckValues(missingCounts, object, property, allowedValues) {
-		const functionsProperty = (property == 'functions') && (allowedValues === practicalplants.ALL_FUNCTIONS_VALUES);
-		if ((!(property in object)) || (functionsProperty && (object[property]['function'] === undefined))) {
+		if ((!(property in object)) || (isFunctionsPropertyOfUnnormalizedObject(property, allowedValues) && (object[property]['function'] === undefined))) {
 			if (!(property in missingCounts)) {
 				missingCounts[property] = 0;
 			}
 			missingCounts[property]++;
 		} else {
-			if (practicalplants.ARRAY_PROPERTIES.includes(property)) {
-				const array = functionsProperty ? object[property]['function'] : object[property];
-				assert.isTrue(practicalplants.getAsArray(array).every(value => allowedValues.includes(value)), JSON.stringify(array));
-			} else if (practicalplants.NUMBER_PROPERTIES.includes(property)) {
-				const value = parseFloat(object[property]);
-				assert.isTrue(value >= 0);
-				assert.isTrue(value <= allowedValues);
-			} else {
-				const value = object[property];
-				assert.isTrue(allowedValues.includes(value), value);
-			}
+			assertValue(object, property, allowedValues);
 		}
+	}
+	
+	function assertValueOrMissing(object, property, allowedValues) {
+		const value = object[property];
+		if (!((value === null) || (Array.isArray(value) && (value.length === 0)))) {
+			assertValue(object, property, allowedValues);
+		}
+	}
+	
+	function assertValue(object, property, allowedValues) {
+		if (practicalplants.ARRAY_PROPERTIES.includes(property)) {
+			const array = isFunctionsPropertyOfUnnormalizedObject(property, allowedValues) ? object[property]['function'] : object[property];
+			assert.isTrue(practicalplants.getAsArray(array).every(value => allowedValues.includes(value)), JSON.stringify(array));
+		} else if (practicalplants.NUMBER_PROPERTIES.includes(property)) {
+			const value = parseFloat(object[property]);
+			assert.isTrue(value >= 0);
+			assert.isTrue(value <= allowedValues);
+		} else {
+			const value = object[property];
+			assert.isTrue(allowedValues.includes(value), value);
+		}
+	}
+	
+	function isFunctionsPropertyOfUnnormalizedObject(property, allowedValues) {
+		return (property == 'functions') && (allowedValues === practicalplants.ALL_FUNCTIONS_VALUES);
 	}
 	
 	function assertArrayPropertyOfRangeHasAllValuesInBetween(arrayValue, allValues) {
@@ -102,7 +116,6 @@ describe('practicalplants.json', () => {
 
 	it('normalized data passes integrity checks', () => {
 		const crops = practicalplants.readCrops();
-		let missingCounts = {};
 		
 		assert.equal(crops.length, 7416);
 		
@@ -112,33 +125,33 @@ describe('practicalplants.json', () => {
 			
 			Object.keys(object).forEach(property => assert.isTrue(practicalplants.PP_PROPERTIES.includes(property), 'Unknown property "' + property + '"'));
 			
-			updateMissingCountsAndCheckValues(missingCounts, object, 'hardiness zone', practicalplants.PP_HARDINESS_ZONE_VALUES);
-			updateMissingCountsAndCheckValues(missingCounts, object, 'soil texture', practicalplants.PP_SOIL_TEXTURE_VALUES);
-			updateMissingCountsAndCheckValues(missingCounts, object, 'soil ph', practicalplants.PP_SOIL_PH_VALUES);
-			updateMissingCountsAndCheckValues(missingCounts, object, 'soil water retention', practicalplants.PP_SOIL_WATER_RETENTION_VALUES);
-			updateMissingCountsAndCheckValues(missingCounts, object, 'shade', practicalplants.PP_SHADE_VALUES);
-			updateMissingCountsAndCheckValues(missingCounts, object, 'sun', practicalplants.PP_SUN_VALUES);
-			updateMissingCountsAndCheckValues(missingCounts, object, 'water', practicalplants.PP_WATER_VALUES);
-			updateMissingCountsAndCheckValues(missingCounts, object, 'drought', practicalplants.PP_DROUGHT_VALUES);
-			updateMissingCountsAndCheckValues(missingCounts, object, 'poornutrition', practicalplants.PP_BOOLEAN_VALUES);
-			updateMissingCountsAndCheckValues(missingCounts, object, 'wind', practicalplants.PP_BOOLEAN_VALUES);
-			updateMissingCountsAndCheckValues(missingCounts, object, 'maritime', practicalplants.PP_BOOLEAN_VALUES);
-			updateMissingCountsAndCheckValues(missingCounts, object, 'pollution', practicalplants.PP_BOOLEAN_VALUES);
-			updateMissingCountsAndCheckValues(missingCounts, object, 'ecosystem niche', practicalplants.PP_ECOSYSTEM_NICHE_VALUES);
-			updateMissingCountsAndCheckValues(missingCounts, object, 'life cycle', practicalplants.PP_LIFE_CYCLE_VALUES);
-			updateMissingCountsAndCheckValues(missingCounts, object, 'herbaceous or woody', practicalplants.PP_HERBACEOUS_OR_WOODY_VALUES);
-			updateMissingCountsAndCheckValues(missingCounts, object, 'deciduous or evergreen', practicalplants.PP_DECIDUOUS_OR_EVERGREEN_VALUES);
-			updateMissingCountsAndCheckValues(missingCounts, object, 'growth rate', practicalplants.PP_GROWTH_RATE_VALUES);
-			updateMissingCountsAndCheckValues(missingCounts, object, 'mature measurement unit', practicalplants.PP_MATURE_MEASUREMENT_UNIT_VALUES);
-			updateMissingCountsAndCheckValues(missingCounts, object, 'mature height', practicalplants.PP_MATURE_HEIGHT_VALUES);
-			updateMissingCountsAndCheckValues(missingCounts, object, 'mature width', practicalplants.PP_MATURE_WIDTH_VALUES);
-			updateMissingCountsAndCheckValues(missingCounts, object, 'flower type', practicalplants.PP_FLOWER_TYPE_VALUES);
-			updateMissingCountsAndCheckValues(missingCounts, object, 'pollinators', practicalplants.PP_POLLINATORS_VALUES);
-			updateMissingCountsAndCheckValues(missingCounts, object, 'functions', practicalplants.PP_FUNCTIONS_VALUES);
-			updateMissingCountsAndCheckValues(missingCounts, object, 'grow from', practicalplants.PP_GROW_FROM_VALUES);
-			updateMissingCountsAndCheckValues(missingCounts, object, 'cutting type', practicalplants.PP_CUTTING_TYPE_VALUES);
-			updateMissingCountsAndCheckValues(missingCounts, object, 'fertility', practicalplants.PP_FERTILITY_VALUES);
-			updateMissingCountsAndCheckValues(missingCounts, object, 'root zone', practicalplants.PP_ROOT_ZONE_VALUES);
+			assertValueOrMissing(object, 'hardiness zone', practicalplants.PP_HARDINESS_ZONE_VALUES);
+			assertValueOrMissing(object, 'soil texture', practicalplants.PP_SOIL_TEXTURE_VALUES);
+			assertValueOrMissing(object, 'soil ph', practicalplants.PP_SOIL_PH_VALUES);
+			assertValueOrMissing(object, 'soil water retention', practicalplants.PP_SOIL_WATER_RETENTION_VALUES);
+			assertValueOrMissing(object, 'shade', practicalplants.PP_SHADE_VALUES);
+			assertValueOrMissing(object, 'sun', practicalplants.PP_SUN_VALUES);
+			assertValueOrMissing(object, 'water', practicalplants.PP_WATER_VALUES);
+			assertValueOrMissing(object, 'drought', practicalplants.PP_DROUGHT_VALUES);
+			assertValueOrMissing(object, 'poornutrition', practicalplants.PP_BOOLEAN_VALUES);
+			assertValueOrMissing(object, 'wind', practicalplants.PP_BOOLEAN_VALUES);
+			assertValueOrMissing(object, 'maritime', practicalplants.PP_BOOLEAN_VALUES);
+			assertValueOrMissing(object, 'pollution', practicalplants.PP_BOOLEAN_VALUES);
+			assertValueOrMissing(object, 'ecosystem niche', practicalplants.PP_ECOSYSTEM_NICHE_VALUES);
+			assertValueOrMissing(object, 'life cycle', practicalplants.PP_LIFE_CYCLE_VALUES);
+			assertValueOrMissing(object, 'herbaceous or woody', practicalplants.PP_HERBACEOUS_OR_WOODY_VALUES);
+			assertValueOrMissing(object, 'deciduous or evergreen', practicalplants.PP_DECIDUOUS_OR_EVERGREEN_VALUES);
+			assertValueOrMissing(object, 'growth rate', practicalplants.PP_GROWTH_RATE_VALUES);
+			assertValueOrMissing(object, 'mature measurement unit', practicalplants.PP_MATURE_MEASUREMENT_UNIT_VALUES);
+			assertValueOrMissing(object, 'mature height', practicalplants.PP_MATURE_HEIGHT_VALUES);
+			assertValueOrMissing(object, 'mature width', practicalplants.PP_MATURE_WIDTH_VALUES);
+			assertValueOrMissing(object, 'flower type', practicalplants.PP_FLOWER_TYPE_VALUES);
+			assertValueOrMissing(object, 'pollinators', practicalplants.PP_POLLINATORS_VALUES);
+			assertValueOrMissing(object, 'functions', practicalplants.PP_FUNCTIONS_VALUES);
+			assertValueOrMissing(object, 'grow from', practicalplants.PP_GROW_FROM_VALUES);
+			assertValueOrMissing(object, 'cutting type', practicalplants.PP_CUTTING_TYPE_VALUES);
+			assertValueOrMissing(object, 'fertility', practicalplants.PP_FERTILITY_VALUES);
+			assertValueOrMissing(object, 'root zone', practicalplants.PP_ROOT_ZONE_VALUES);
 			
 			{
 				/*
@@ -152,7 +165,5 @@ describe('practicalplants.json', () => {
 				assertArrayPropertyOfRangeHasAllValuesInBetween(object['soil water retention'], practicalplants.ALL_SOIL_WATER_RETENTION_VALUES);
 			}
 		});
-		
-		assert.isTrue(Object.keys(missingCounts).length == 0);
 	}).timeout(0);
 });
