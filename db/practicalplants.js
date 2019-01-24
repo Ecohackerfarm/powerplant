@@ -415,10 +415,10 @@ const ALL_LIFE_CYCLE_VALUES = ['perennial', 'annual', 'biennial'];
 const PP_LIFE_CYCLE_VALUES = ALL_LIFE_CYCLE_VALUES;
 
 const ALL_HERBACEOUS_OR_WOODY_VALUES = ['herbaceous', 'woody', ''];
-const PP_HERBACEOUS_OR_WOODY_VALUES = ALL_HERBACEOUS_OR_WOODY_VALUES;
+const PP_HERBACEOUS_OR_WOODY_VALUES = ['herbaceous', 'woody'];
 
 const ALL_DECIDUOUS_OR_EVERGREEN_VALUES = ['deciduous', 'evergreen', ''];
-const PP_DECIDUOUS_OR_EVERGREEN_VALUES = ALL_DECIDUOUS_OR_EVERGREEN_VALUES;
+const PP_DECIDUOUS_OR_EVERGREEN_VALUES = ['deciduous', 'evergreen'];
 
 const ALL_GROWTH_RATE_VALUES = ['slow', 'moderate', 'vigorous'];
 const PP_GROWTH_RATE_VALUES = ALL_GROWTH_RATE_VALUES;
@@ -566,7 +566,7 @@ const ALL_GROW_FROM_VALUES = [
 const PP_GROW_FROM_VALUES = ALL_GROW_FROM_VALUES;
 
 const ALL_CUTTING_TYPE_VALUES = ['semi-ripe', 'soft wood', 'root', 'hard wood', ''];
-const PP_CUTTING_TYPE_VALUES = ALL_CUTTING_TYPE_VALUES;
+const PP_CUTTING_TYPE_VALUES = ['semi-ripe', 'soft wood', 'root', 'hard wood'];
 
 const ALL_FERTILITY_VALUES = ['self fertile', 'self sterile'];
 const PP_FERTILITY_VALUES = ALL_FERTILITY_VALUES;
