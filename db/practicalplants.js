@@ -89,7 +89,7 @@ function readCrops() {
 		});
 
 		return object;
-	});
+	}).filter(crop => (crop.binomialName !== null)); // TODO Add missing binomial names instead of filtering crops out.
 }
 
 function replaceArrayValue(array, from, to) {

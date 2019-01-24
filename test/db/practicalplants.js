@@ -3,14 +3,20 @@ const practicalplants = require('../../db/practicalplants.js');
 
 describe('practicalplants.json', () => {
 	function updateMissingCountsAndCheckValues(missingCounts, object, property, allowedValues) {
+		if (updateMissingCount(missingCounts, object, property, allowedValues)) {
+			assertValue(object, property, allowedValues);
+		}
+	}
+	
+	function updateMissingCount(missingCounts, object, property, allowedValues) {
 		if ((!(property in object)) || (isFunctionsPropertyOfUnnormalizedObject(property, allowedValues) && (object[property]['function'] === undefined))) {
 			if (!(property in missingCounts)) {
 				missingCounts[property] = 0;
 			}
 			missingCounts[property]++;
-		} else {
-			assertValue(object, property, allowedValues);
+			return false;
 		}
+		return true;
 	}
 	
 	function assertValueOrMissing(object, property, allowedValues) {
@@ -56,6 +62,8 @@ describe('practicalplants.json', () => {
 			
 			Object.keys(object).forEach(property => assert.isTrue(practicalplants.ALL_PROPERTIES.includes(property) || practicalplants.PP_PROPERTIES.includes(property), 'Unknown property "' + property + '"'));
 			
+			updateMissingCount(missingCounts, object, 'commonName');
+			updateMissingCount(missingCounts, object, 'binomialName');
 			updateMissingCountsAndCheckValues(missingCounts, object, 'hardinessZone', practicalplants.ALL_HARDINESS_ZONE_VALUES);
 			updateMissingCountsAndCheckValues(missingCounts, object, 'soilTexture', practicalplants.ALL_SOIL_TEXTURE_VALUES);
 			updateMissingCountsAndCheckValues(missingCounts, object, 'soilPh', practicalplants.ALL_SOIL_PH_VALUES);
@@ -85,6 +93,8 @@ describe('practicalplants.json', () => {
 			updateMissingCountsAndCheckValues(missingCounts, object, 'rootZone', practicalplants.ALL_ROOT_ZONE_VALUES);
 		});
 		
+		assert.equal(missingCounts['commonName'], 2884);
+		assert.equal(missingCounts['binomialName'], 6);
 		assert.equal(missingCounts['hardinessZone'], 2534);
 		assert.equal(missingCounts['soilTexture'], 3);
 		assert.equal(missingCounts['soilPh'], 2);
@@ -117,7 +127,7 @@ describe('practicalplants.json', () => {
 	it('normalized data passes integrity checks', () => {
 		const crops = practicalplants.readCrops();
 		
-		assert.equal(crops.length, 7416);
+		assert.equal(crops.length, 7410);
 		
 		crops.forEach(object => {
 			assert.isNotNull(object);
