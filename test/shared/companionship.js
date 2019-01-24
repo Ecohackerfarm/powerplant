@@ -24,13 +24,13 @@ describe('Companionship algorithm', () => {
   
   it('isSoilTextureCompatible()', () => {
     const crop0 = {
-      'soil texture': ['sandy', 'loamy', 'clay']
+      'soilTexture': ['sandy', 'loamy', 'clay']
     };
     const crop1 = {
-      'soil texture': ['clay', 'heavy clay']
+      'soilTexture': ['clay', 'heavy clay']
     };
     const crop2 = {
-      'soil texture': ['heavy clay']
+      'soilTexture': ['heavy clay']
     };
     
     assert.equal(companionship.isSoilTextureCompatible([crop0, crop1, crop2]), false);
@@ -44,13 +44,13 @@ describe('Companionship algorithm', () => {
   
   it('isSoilPhCompatible()', () => {
     const crop0 = {
-      'soil ph': ['very acid', 'acid', 'neutral']
+      'soilPh': ['very acid', 'acid', 'neutral']
     };
     const crop1 = {
-      'soil ph': ['neutral', 'alkaline', 'very alkaline']
+      'soilPh': ['neutral', 'alkaline', 'very alkaline']
     };
     const crop2 = {
-      'soil ph': ['very alkaline']
+      'soilPh': ['very alkaline']
     };
 
     assert.equal(companionship.isSoilPhCompatible([crop0, crop1, crop2]), false);
@@ -64,13 +64,13 @@ describe('Companionship algorithm', () => {
   
   it('isSoilWaterRetentionCompatible()', () => {
     const crop0 = {
-      'soil water retention': ['well drained', 'moist']
+      'soilWaterRetention': ['well drained', 'moist']
     };
     const crop1 = {
-      'soil water retention': ['moist', 'wet']
+      'soilWaterRetention': ['moist', 'wet']
     };
     const crop2 = {
-      'soil water retention': ['wet']
+      'soilWaterRetention': ['wet']
     };
 
     assert.equal(companionship.isSoilWaterRetentionCompatible([crop0, crop1, crop2]), false);
@@ -123,16 +123,16 @@ describe('Companionship algorithm', () => {
 
   it('isHardinessZoneCompatible()', () => {
     const crop0 = {
-      'hardiness zone': 0
+      'hardinessZone': 0
     };
     const crop1 = {
-      'hardiness zone': 6
+      'hardinessZone': 6
     };
     const crop2 = {
-      'hardiness zone': 7
+      'hardinessZone': 7
     };
     const crop3 = {
-      'hardiness zone': 8
+      'hardinessZone': 8
     };
     
     assert.equal(companionship.isHardinessZoneCompatible([crop0, crop0]), true);
@@ -171,10 +171,10 @@ describe('Companionship algorithm', () => {
 
   it('getFlowerTypeDiversity()', () => {
     const crop0 = {
-      'flower type': 'hermaphrodite'
+      'flowerType': 'hermaphrodite'
     };
     const crop1 = {
-      'flower type': 'hermaphrodite'
+      'flowerType': 'hermaphrodite'
     };
     
     assert.equal(companionship.getFlowerTypeDiversity([crop0, crop1]).toFixed(3), 0.333);

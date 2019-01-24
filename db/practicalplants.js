@@ -20,8 +20,8 @@ function readCrops() {
 		 * Select properties that are useful for powerplant. Nulls or empty
 		 * arrays are used for missing values in normalized objects.
 		 */
-		object = {};
-		PP_PROPERTIES.forEach(property => {
+		const object = {};
+		Object.values(PP_MAPPINGS).forEach(property => {
 			if ((!(property in inputObject)) || [undefined, null, '', '\n'].includes(inputObject[property])) {
 				object[property] = ARRAY_PROPERTIES.includes(property) ? [] : null;
 			} else {
@@ -139,7 +139,22 @@ function parseCsvLine(line) {
  */
 function readCropsLower() {
 	const lines = fs.readFileSync(__dirname + '/practicalplants.json', { encoding: 'latin1' }).split('\n');
-	return lines.splice(0, lines.length - 1).map(line => JSON.parse(line));
+	const crops = lines.splice(0, lines.length - 1).map(line => JSON.parse(line));
+	
+	/*
+	 * Rename property names to camelCase.
+	 */
+	crops.forEach(crop => {
+		Object.keys(PP_MAPPINGS).forEach(property => {
+			const renamedProperty = PP_MAPPINGS[property];
+			if ((renamedProperty != property) && (crop[property] !== undefined)) {
+				crop[renamedProperty] = crop[property];
+				delete crop[property];
+			}
+		});
+	});
+	
+	return crops;
 }
 
 /*
@@ -274,47 +289,12 @@ const ALL_PROPERTIES = [
 	''
 ];
 
-/*
- * Subset of ALL_PROPERTIES that are currently used by powerplant.
- */
-const PP_PROPERTIES = [
-	'binomial',
-	'common',
-	'hardiness zone',
-	'soil texture',
-	'soil ph',
-	'soil water retention',
-	'shade',
-	'sun',
-	'water',
-	'drought',
-	'poornutrition',
-	'ecosystem niche',
-	'life cycle',
-	'herbaceous or woody',
-	'deciduous or evergreen',
-	'growth rate',
-	'mature measurement unit',
-	'mature height',
-	'mature width',
-	'flower type',
-	'pollinators',
-	'wind',
-	'maritime',
-	'pollution',
-	'functions',
-	'grow from',
-	'cutting type',
-	'fertility',
-	'root zone',
-];
-
-function toCamelCase(ppName){
+function toCamelCase(property) {
 	return {
-		[ppName] : ppName
-		 	.replace(/( [a-zA-Z])/g,(match)=>match.toUpperCase())
-			.replace(/ /g,'')
-	}
+		[property]: property
+			.replace(/( [a-zA-Z])/g, (match) => match.toUpperCase())
+			.replace(/ /g, '')
+	};
 }
 
 const PP_MAPPINGS = {
@@ -348,11 +328,17 @@ const PP_MAPPINGS = {
 	...toCamelCase('fertility'),
 	...toCamelCase('root zone')
 };
+
+/*
+ * Subset of ALL_PROPERTIES that are currently used by powerplant.
+ */
+const PP_PROPERTIES = Object.values(PP_MAPPINGS);
+
 /*
  * Subset of PP_PROPERTIES that have boolean values.
  */
 const BOOLEAN_PROPERTIES = [
-	'poornutrition',
+	'poorNutrition',
 	'wind',
 	'maritime',
 	'pollution'
@@ -362,23 +348,23 @@ const BOOLEAN_PROPERTIES = [
  * Subset of PP_PROPERTIES that have numeric values.
  */
 const NUMBER_PROPERTIES = [
-	'hardiness zone',
-	'mature height',
-	'mature width'
+	'hardinessZone',
+	'matureHeight',
+	'matureWidth'
 ];
 
 /*
  * Subset of PP_PROPERTIES that have array values.
  */
 const ARRAY_PROPERTIES = [
-	'soil texture',
-	'soil ph',
-	'soil water retention',
-	'ecosystem niche',
-	'life cycle',
+	'soilTexture',
+	'soilPh',
+	'soilWaterRetention',
+	'ecosystemNiche',
+	'lifeCycle',
 	'pollinators',
-	'grow from',
-	'cutting type',
+	'growFrom',
+	'cuttingType',
 	'fertility',
 	'functions'
 ];
@@ -387,8 +373,8 @@ const ARRAY_PROPERTIES = [
  * Subset of PP_PROPERTIES that have any kind of names for the crop.
  */
 const NAME_PROPERTIES = [
-	'binomial',
-	'common'
+	'binomialName',
+	'commonName'
 ];
 
 /*
