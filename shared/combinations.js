@@ -41,8 +41,9 @@ class Combinations {
 	 * Construct the combinations.
 	 * 
 	 * @param {Array} elements
+	 * @param {Number} maximumCombinationSize
 	 */
-	constructor(elements) {
+	constructor(elements, maximumCombinationSize = 0) {
 		this.combinations = [];
 		this.combinations.push(null);
 		this.combinations.push(elements.map(element => [element]));
@@ -74,7 +75,7 @@ class Combinations {
 				});
 			});
 
-			if (newCombinations.length == 0) {
+			if ((newCombinations.length == 0) || ((maximumCombinationSize > 0) && (combinationSize >= maximumCombinationSize))) {
 				break;
 			}
 

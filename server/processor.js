@@ -458,7 +458,7 @@ async function getCompatibleCrops(session, cropIds) {
 	let allCrops = await getAllDocuments(session, Crop);
 	await assignRelationships(session, allCrops);
 	assignIsCompatible(allCrops, isCompanion);
-	const combinations = new Combinations(allCrops);
+	const combinations = new Combinations(allCrops, cropIds.length + 1);
 
 	const initialCrops = cropIds.map(id =>
 		allCrops.find(crop => crop._id == id)
