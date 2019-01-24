@@ -97,7 +97,7 @@ const goodnessValues = [
  * @return {Boolean}
  */
 function isSoilTextureCompatible(crops) {
-  return areArrayValuesMatching(crops, 'soil texture');
+  return areArrayValuesMatching(crops, 'soilTexture');
 }
 
 /**
@@ -105,7 +105,7 @@ function isSoilTextureCompatible(crops) {
  * @return {Boolean}
  */
 function isSoilPhCompatible(crops) {
-  return areArrayValuesMatching(crops, 'soil ph');
+  return areArrayValuesMatching(crops, 'soilPh');
 }
 
 /**
@@ -113,7 +113,7 @@ function isSoilPhCompatible(crops) {
  * @return {Boolean}
  */
 function isSoilWaterRetentionCompatible(crops) {
-  return areArrayValuesMatching(crops, 'soil water retention');
+  return areArrayValuesMatching(crops, 'soilWaterRetention');
 }
 
 /**
@@ -161,7 +161,7 @@ function isShadeCompatible(crops) {
  * @return {Boolean}
  */
 function isHardinessZoneCompatible(crops) {
-  const zones = crops.map(crop => crop['hardiness zone']);
+  const zones = crops.map(crop => crop['hardinessZone']);
   zones.sort((a, b) => (a - b));
   
   let first = zones.find(zone => (zone > 0));
@@ -197,7 +197,7 @@ function isExplicitCompanionshipStatusCompatible(crops) {
  * @return {Number}
  */
 function getEcosystemNicheDiversity(crops) {
-  return getNumberOfDifferentValuesInArrays(crops, 'ecosystem niche') / practicalplants.PP_ECOSYSTEM_NICHE_VALUES.length;
+  return getNumberOfDifferentValuesInArrays(crops, 'ecosystemNiche') / practicalplants.PP_ECOSYSTEM_NICHE_VALUES.length;
 }
 
 /**
@@ -205,7 +205,7 @@ function getEcosystemNicheDiversity(crops) {
  * @return {Number}
  */
 function getLifeCycleDiversity(crops) {
-  return getNumberOfDifferentValues(crops, 'life cycle') / practicalplants.PP_LIFE_CYCLE_VALUES.length;
+  return getNumberOfDifferentValues(crops, 'lifeCycle') / practicalplants.PP_LIFE_CYCLE_VALUES.length;
 }
 
 /**
@@ -213,7 +213,7 @@ function getLifeCycleDiversity(crops) {
  * @return {Number}
  */
 function getHerbaceousOrWoodyDiversity(crops) {
-  return getNumberOfDifferentValues(crops, 'herbaceous or woody') / practicalplants.PP_HERBACEOUS_OR_WOODY_VALUES.length;
+  return getNumberOfDifferentValues(crops, 'herbaceousOrWoody') / practicalplants.PP_HERBACEOUS_OR_WOODY_VALUES.length;
 }
 
 /**
@@ -221,7 +221,7 @@ function getHerbaceousOrWoodyDiversity(crops) {
  * @return {Number}
  */
 function getDeciduousOrEvergreenDiversity(crops) {
-  return getNumberOfDifferentValues(crops, 'deciduous or evergreen') / practicalplants.PP_DECIDUOUS_OR_EVERGREEN_VALUES.length;
+  return getNumberOfDifferentValues(crops, 'deciduousOrEvergreen') / practicalplants.PP_DECIDUOUS_OR_EVERGREEN_VALUES.length;
 }
 
 /**
@@ -229,7 +229,7 @@ function getDeciduousOrEvergreenDiversity(crops) {
  * @return {Number}
  */
 function getGrowthRateDiversity(crops) {
-  return getNumberOfDifferentValues(crops, 'growth rate') / practicalplants.PP_GROWTH_RATE_VALUES.length;
+  return getNumberOfDifferentValues(crops, 'growthRate') / practicalplants.PP_GROWTH_RATE_VALUES.length;
 }
 
 /**
@@ -237,7 +237,7 @@ function getGrowthRateDiversity(crops) {
  * @return {Number}
  */
 function getFlowerTypeDiversity(crops) {
-  return getNumberOfDifferentValues(crops, 'flower type') / practicalplants.PP_FLOWER_TYPE_VALUES.length;
+  return getNumberOfDifferentValues(crops, 'flowerType') / practicalplants.PP_FLOWER_TYPE_VALUES.length;
 }
 
 /**
@@ -280,7 +280,7 @@ function getFunctionsDiversity(crops) {
  * @return {Number}
  */
 function getGrowFromDiversity(crops) {
-  return getNumberOfDifferentValuesInArrays(crops, 'grow from') / practicalplants.PP_GROW_FROM_VALUES.length;;
+  return getNumberOfDifferentValuesInArrays(crops, 'growFrom') / practicalplants.PP_GROW_FROM_VALUES.length;;
 }
 
 /**
@@ -288,7 +288,7 @@ function getGrowFromDiversity(crops) {
  * @return {Number}
  */
 function getCuttingTypeDiversity(crops) {
-  return getNumberOfDifferentValuesInArrays(crops, 'cutting type') / practicalplants.PP_CUTTING_TYPE_VALUES.length;
+  return getNumberOfDifferentValuesInArrays(crops, 'cuttingType') / practicalplants.PP_CUTTING_TYPE_VALUES.length;
 }
 
 /**
@@ -304,7 +304,7 @@ function getFertilityDiversity(crops) {
  * @return {Number}
  */
 function getRootZoneDiversity(crops) {
-  return getNumberOfDifferentValues(crops, 'root zone') / practicalplants.PP_ROOT_ZONE_VALUES.length;
+  return getNumberOfDifferentValues(crops, 'rootZone') / practicalplants.PP_ROOT_ZONE_VALUES.length;
 }
 
 /**

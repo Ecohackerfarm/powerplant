@@ -1,29 +1,5 @@
 const mongoose = require('mongoose');
-
-/**
- * PH range.
- * It is used for specifying the range a
- * crop can grow
- *
- * @constructor
- * @alias PHRange
- * @param { Object } crop
- * @param { Number } crop.min
- * @param { Number } crop.max
- * @type { mongoose.Schema }
- */
-const PHRange = new mongoose.Schema({
-	min : {
-		type : Number,
-		min : [0, "Minimum ph value to low"],
-		max : [15, "Maximum ph value to high"]
-	},
-	max : {
-		type : Number,
-		min : [0, "Minimum ph value to low"],
-		max : [15, "Maximum ph value to high"]
-	}
-});
+const practicalplants = require('../../db/practicalplants.js');
 
 /**
  * A Crop Model representing a plant or mushrooms species
@@ -65,138 +41,114 @@ const PHRange = new mongoose.Schema({
  *
  */
 const cropSchema = new mongoose.Schema({
-	binomialName: { type: String, index: true, required: true },
-	commonName: { type: String},
-  cuttingType : {
-  	type : String,
-  	enum : ['semi-ripe', 'soft wood', 'root', 'hard wood', null]
-  },
-  deciduousOrEvergreen : {
-  	type: String,
-  	enum : ['deciduous', 'evergreen', null]
-  },
-  drought : {
-  	type: String,
-  	enum : ['dependent', 'tolerant', 'intolerant', null]
-  },
-  ecosystemNiche : {
-  	type: String,
-  	enum : ['canopy', 'climber', 'secondary canopy', 'soil surface', 'climber', 'shrub', 'herbaceous', 'rhizosphere', null]
-  },
-  fertility : {
-  	type: String,
-  	enum : ['self fertile', 'self sterile', null]
-  },
-  flowerType : {
-  	type: String,
-  	enum : ['hermaphrodite', 'monoecious', 'dioecious', null]
-  },
-  functions : {
-  	type: String,
-  	enum : [
-			'nitrogen fixer',
-			'ground cover',
-			'hedge',
-			'windbreak',
-			'pioneer',
-			'nitrogen fixer',
-			'earth stabiliser',
-			'green manure',
-			'repellant',
-			'soil builder',
-			'rootstock',
-			'biogenic decalcifier',
-			'phytoremediation',
-			'bee attractor',
-			'soil conditioner',
-			'pest repellent',
-			null
-		]
-  },
-  growFrom : {
-  	type: String,
-  	enum : [
-			'seed',
-			'cutting',
-			'layering',
-			'tuber',
-			'suckers',
-			'graft',
-			'bulb',
-			null
-		]
-  },
-  growthRate : {
-  	type: String,
-  	enum : ['slow', 'moderate', 'vigorous', null]
-  },
-  averageMinTemperature : {
-  	type: Number,
-  	min: [273.15, ""],
-  	max: 13
-  },
-  herbaceousOrWoody : {
-  	type: String,
-  	enum: ['herbaceous', 'woody', null]
-  },
-  lifeCycle : {
-  	type : String,
-  	enum : ['perennial', 'annual', 'biennial', null]
-  },
-  maritime : {
-  	type : Boolean,
-  },
-  matureHeight : {
-  	type : Number,
-  	min : 0
-  },
-  matureMeasurementUnit : {
-  	type : String,
-  	//TODO: enum supported types
-  },
-  matureWidth : {
-  	type: Number,
-  	min: 0
-  },
-  pollinators : {
-  	type: String
-  },
-  pollution : {
-  	type: Boolean
-  },
-  poorNutrition : {
-  	type: Boolean
-  },
-  rootZone : {
-  	type: String,
-  	enum: ['shallow', 'deep', 'surface', null]
-  },
-  shade : {
-  	type: String,
-  	enum: ['no shade', 'light shade', 'partial shade', 'permanent shade', 'permanent deep shade']
-  },
-  soilPh : {
-  	type: PHRange
-  },
-  soilTexture : {
-  	type : String,
-  	enum : ['sandy', 'loamy', 'clay', 'heavy clay', null]
-  },
-  soilWaterRetention : {
-  	type : String,
-  	enum : ['well drained', 'moist', 'wet',null]
-  },
-  sun : {
-  	type : String,
-  	enum : ['indirect sun', 'partial sun', 'full sun',null]
-  },
-  water : {
-  	type : String,
-  	enum : ['low', 'moderate', 'high', 'aquatic',null]
-  },
-  wind : {
-  	type : Boolean
-  }
+	binomialName: {
+		type: String,
+		index: true,
+		required: true
+	},
+	commonName: {
+		type: String
+	},
+	cuttingType: [{
+		type: String,
+		enum: practicalplants.PP_CUTTING_TYPE_VALUES.concat([null])
+	}],
+	deciduousOrEvergreen: {
+		type: String,
+		enum: practicalplants.PP_DECIDUOUS_OR_EVERGREEN_VALUES.concat([null])
+	},
+	drought: {
+		type: String,
+		enum: practicalplants.PP_DROUGHT_VALUES.concat([null])
+	},
+	ecosystemNiche: [{
+		type: String,
+		enum: practicalplants.PP_ECOSYSTEM_NICHE_VALUES.concat([null])
+	}],
+	fertility: [{
+		type: String,
+		enum: practicalplants.PP_FERTILITY_VALUES.concat([null])
+	}],
+	flowerType: {
+		type: String,
+		enum: practicalplants.PP_FLOWER_TYPE_VALUES.concat([null])
+	},
+	functions: [{
+		type: String,
+		enum: practicalplants.PP_FUNCTIONS_VALUES.concat([null])
+	}],
+	growFrom: [{
+		type: String,
+		enum: practicalplants.PP_GROW_FROM_VALUES.concat([null])
+	}],
+	growthRate: {
+		type: String,
+		enum: practicalplants.PP_GROWTH_RATE_VALUES.concat([null])
+	},
+	herbaceousOrWoody: {
+		type: String,
+		enum: practicalplants.PP_HERBACEOUS_OR_WOODY_VALUES.concat([null])
+	},
+	lifeCycle: [{
+		type: String,
+		enum: practicalplants.PP_LIFE_CYCLE_VALUES.concat([null])
+	}],
+	maritime: {
+		type: Boolean
+	},
+	matureHeight: {
+		type: Number,
+		min: 0
+	},
+	matureMeasurementUnit: {
+		type: String,
+		enum: practicalplants.PP_MATURE_MEASUREMENT_UNIT_VALUES.concat([null])
+	},
+	matureWidth: {
+		type: Number,
+		min: 0
+	},
+	pollinators: [{
+		type: String,
+		enum: practicalplants.PP_POLLINATORS_VALUES.concat([null]),
+	}],
+	pollution: {
+		type: Boolean
+	},
+	poorNutrition: {
+		type: Boolean
+	},
+	rootZone: {
+		type: String,
+		enum: practicalplants.PP_ROOT_ZONE_VALUES.concat([null])
+	},
+	shade: {
+		type: String,
+		enum: practicalplants.PP_SHADE_VALUES.concat([null])
+	},
+	soilPh: [{
+		type: String,
+		enum: practicalplants.PP_SOIL_PH_VALUES.concat([null])
+	}],
+	soilTexture: [{
+		type: String,
+		enum: practicalplants.PP_SOIL_TEXTURE_VALUES.concat([null])
+	}],
+	soilWaterRetention: [{
+		type: String,
+		enum: practicalplants.PP_SOIL_WATER_RETENTION_VALUES.concat([null])
+	}],
+	sun: {
+		type: String,
+		enum: practicalplants.PP_SUN_VALUES.concat([null])
+	},
+	water: {
+		type: String,
+		enum: practicalplants.PP_WATER_VALUES.concat([null])
+	},
+	wind: {
+		type: Boolean
+	}
 });
 
 /**

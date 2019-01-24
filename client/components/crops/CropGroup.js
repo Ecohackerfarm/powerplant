@@ -98,7 +98,7 @@ class CropGroup extends React.Component {
 						align='justify'
 						options={this.props.cropGroup}
 						defaultSelected={this.props.cropGroup}
-						labelKey='commonName'
+						labelKey={crop => ((crop.commonName !== null) ? crop.commonName : crop.binomialName)}
 						placeholder='Bed is empty, choose crop ...'
 						onChange={this.onChangeGroup}
 						disabled={this.props.disabled ? true : false}

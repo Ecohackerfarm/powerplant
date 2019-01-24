@@ -417,6 +417,8 @@ module.exports = {
 	setAuthorizationToken,
 	setBaseUrl,
 
+	addCrop,
+	addCropRelationship,
 	getCropsByName,
 	getCropGroups,
 	getCompatibleCrops,

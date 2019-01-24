@@ -97,7 +97,7 @@ class EditBedForm extends React.Component {
 			  			]
 			  		: this.props.crops.all
 			  	}
-			  	labelKey='commonName'
+			  	labelKey={crop => ((crop.commonName !== null) ? crop.commonName : crop.binomialName)}
 			  	placeholder='Bed is empty ...'
 			  	onChange={this.onChange}
 			  	isLoading={

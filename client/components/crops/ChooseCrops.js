@@ -32,7 +32,7 @@ class ChooseCrops extends React.Component {
 				clearButton
 				multiple
 				options={this.props.crops.all}
-				labelKey='commonName'
+				labelKey={crop => ((crop.commonName !== null) ? crop.commonName : crop.binomialName)}
 				placeholder='Choose a crop ...'
 				onChange={this.props.onChange}
 				isLoading={this.props.loading}
