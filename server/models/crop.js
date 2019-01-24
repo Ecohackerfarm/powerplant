@@ -1,31 +1,6 @@
 const mongoose = require('mongoose');
 
 /**
- * PH range.
- * It is used for specifying the range a
- * crop can grow
- *
- * @constructor
- * @alias PHRange
- * @param { Object } crop
- * @param { Number } crop.min
- * @param { Number } crop.max
- * @type { mongoose.Schema }
- */
-const PHRange = new mongoose.Schema({
-	min : {
-		type : Number,
-		min : [0, "Minimum ph value to low"],
-		max : [15, "Maximum ph value to high"]
-	},
-	max : {
-		type : Number,
-		min : [0, "Minimum ph value to low"],
-		max : [15, "Maximum ph value to high"]
-	}
-});
-
-/**
  * A Crop Model representing a plant or mushrooms species
  * TODO: write documentation for params see practicalplants.org
  *
@@ -182,7 +157,8 @@ const cropSchema = new mongoose.Schema({
 		enum: ['no shade', 'light shade', 'partial shade', 'permanent shade', 'permanent deep shade']
 	},
 	soilPh: {
-		type: PHRange
+		type: String,
+		enum: ['very acid', 'acid', 'neutral', 'alkaline', 'very alkaline', null]
 	},
 	soilTexture: {
 		type: String,
