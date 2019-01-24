@@ -12,6 +12,7 @@ const Location = require('./models/location');
 const validateUser = require('../shared/validation/userValidation');
 const validateCredentials = require('../shared/validation/loginValidation');
 const { Combinations } = require('../shared/combinations.js');
+const { debug } = require('./utils.js');
 
 /**
  * Base class for exceptions that are thrown on the transaction level.
@@ -159,6 +160,7 @@ async function updateDocumentInternal(session, document, update) {
 		await document.save({ session });
 	} catch (exception) {
 		if (exception instanceof mongoose.Error.ValidationError) {
+			debug(exception);
 			throw VALIDATION_EXCEPTION;
 		} else {
 			throw exception;

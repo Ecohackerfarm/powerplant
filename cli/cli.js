@@ -3,8 +3,8 @@
  * @memberof cli
  */
 
-const { setBaseUrl, getCropsByName, getCropGroups, getCompatibleCrops, getCrops, getCropRelationships, getUsers, addCrops, addCropRelationships, addUsers, setCrops, setCropRelationships, setUsers, removeCrops, removeCropRelationships, removeUsers, removeAllCrops, removeAllCropRelationships } = require('../shared/api-client.js');
-const mysql = require('mysql2/promise');
+const { setBaseUrl, getCropsByName, getCropGroups, getCompatibleCrops, getCrops, getCropRelationships, getUsers, addCrop, addCropRelationship, addCrops, addCropRelationships, addUsers, setCrops, setCropRelationships, setUsers, removeCrops, removeCropRelationships, removeUsers, removeAllCrops, removeAllCropRelationships } = require('../shared/api-client.js');
+const practicalplants = require('../db/practicalplants.js');
 const { plants, companions } = require('../db/companions.js');
 const { PP_PORT, API_HOST } = require('../secrets.js');
 
@@ -252,21 +252,23 @@ async function doGetCompatibleCrops() {
  * Push the companion plant database to powerplant server.
  */
 async function pushCompanions() {
-	const crops = [];
+	const crops = practicalplants.readCrops();
+	
 	const plantNameToCrop = {};
+	crops.forEach(crop => {
+		plantNameToCrop[crop.binomialName] = crop;
+	});
+	
 	plants.forEach(plant => {
-		let crop = {
-			commonName: plant,
-			binomialName: plant
-		};
-		crops.push(crop);
-		plantNameToCrop[plant] = crop;
+		if (plantNameToCrop[plant] === undefined) {
+			log(plant + ' from companion db does not exist in practicalplants db');
+		}
 	});
-
-	responses = await addCrops({ documents: crops });
-	responses.forEach((response, index) => {
+	
+	for (let index = 0; index < crops.length; index++) {
+		const response = await addCrop({ document: crops[index] });
 		Object.assign(crops[index], response.data);
-	});
+	}
 
 	const relationships = companions.map(companion => ({
 		crop0: plantNameToCrop[companion.plant0]._id,
@@ -274,7 +276,9 @@ async function pushCompanions() {
 		compatibility: ((companion.companion == 1) ? 1 : -1)
 	}));
 
-	debug(await addCropRelationships({ documents: relationships }));
+	for (let index = 0; index < relationships.length; index++) {
+		await addCropRelationship({ document: relationships[index] });
+	}
 }
 
 /*
