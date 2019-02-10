@@ -51,7 +51,7 @@ const cropSchema = new mongoose.Schema({
 	},
 	cuttingType: [{
 		type: String,
-		enum: practicalplants.PP_CUTTING_TYPE_VALUES.concat([null])
+		enum: practicalplants.PP_CUTTING_TYPE_VALUES
 	}],
 	deciduousOrEvergreen: {
 		type: String,
@@ -63,11 +63,11 @@ const cropSchema = new mongoose.Schema({
 	},
 	ecosystemNiche: [{
 		type: String,
-		enum: practicalplants.PP_ECOSYSTEM_NICHE_VALUES.concat([null])
+		enum: practicalplants.PP_ECOSYSTEM_NICHE_VALUES
 	}],
 	fertility: [{
 		type: String,
-		enum: practicalplants.PP_FERTILITY_VALUES.concat([null])
+		enum: practicalplants.PP_FERTILITY_VALUES
 	}],
 	flowerType: {
 		type: String,
@@ -75,11 +75,11 @@ const cropSchema = new mongoose.Schema({
 	},
 	functions: [{
 		type: String,
-		enum: practicalplants.PP_FUNCTIONS_VALUES.concat([null])
+		enum: practicalplants.PP_FUNCTIONS_VALUES
 	}],
 	growFrom: [{
 		type: String,
-		enum: practicalplants.PP_GROW_FROM_VALUES.concat([null])
+		enum: practicalplants.PP_GROW_FROM_VALUES
 	}],
 	growthRate: {
 		type: String,
@@ -91,7 +91,7 @@ const cropSchema = new mongoose.Schema({
 	},
 	lifeCycle: [{
 		type: String,
-		enum: practicalplants.PP_LIFE_CYCLE_VALUES.concat([null])
+		enum: practicalplants.PP_LIFE_CYCLE_VALUES
 	}],
 	maritime: {
 		type: Boolean
@@ -110,7 +110,7 @@ const cropSchema = new mongoose.Schema({
 	},
 	pollinators: [{
 		type: String,
-		enum: practicalplants.PP_POLLINATORS_VALUES.concat([null]),
+		enum: practicalplants.PP_POLLINATORS_VALUES
 	}],
 	pollution: {
 		type: Boolean
@@ -128,15 +128,15 @@ const cropSchema = new mongoose.Schema({
 	},
 	soilPh: [{
 		type: String,
-		enum: practicalplants.PP_SOIL_PH_VALUES.concat([null])
+		enum: practicalplants.PP_SOIL_PH_VALUES
 	}],
 	soilTexture: [{
 		type: String,
-		enum: practicalplants.PP_SOIL_TEXTURE_VALUES.concat([null])
+		enum: practicalplants.PP_SOIL_TEXTURE_VALUES
 	}],
 	soilWaterRetention: [{
 		type: String,
-		enum: practicalplants.PP_SOIL_WATER_RETENTION_VALUES.concat([null])
+		enum: practicalplants.PP_SOIL_WATER_RETENTION_VALUES
 	}],
 	sun: {
 		type: String,
