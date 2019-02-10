@@ -166,7 +166,7 @@ describe('Companionship algorithm', () => {
       'functions': ['windbreak', 'pioneer', 'earth stabilizer']
     };
     
-    assert.equal(companionship.getFunctionsDiversity([crop0, crop1]), 0.375);
+    assert.equal(companionship.getFunctionsDiversity([crop0, crop1]), 0.4);
   });
 
   it('getFlowerTypeDiversity()', () => {

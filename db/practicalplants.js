@@ -409,7 +409,7 @@ const ALL_DROUGHT_VALUES = ['dependent', 'tolerant', 'intolerant'];
 const PP_DROUGHT_VALUES = ALL_DROUGHT_VALUES;
 
 const ALL_ECOSYSTEM_NICHE_VALUES = ['Canopy', 'Climber', 'Secondary canopy', 'Soil surface', 'Climber', 'Shrub', 'Herbaceous', 'Rhizosphere'];
-const PP_ECOSYSTEM_NICHE_VALUES = ['canopy', 'climber', 'secondary canopy', 'soil surface', 'climber', 'shrub', 'herbaceous', 'rhizosphere'];
+const PP_ECOSYSTEM_NICHE_VALUES = ['canopy', 'climber', 'secondary canopy', 'soil surface', 'shrub', 'herbaceous', 'rhizosphere'];
 
 const ALL_LIFE_CYCLE_VALUES = ['perennial', 'annual', 'biennial'];
 const PP_LIFE_CYCLE_VALUES = ALL_LIFE_CYCLE_VALUES;
@@ -504,7 +504,6 @@ const PP_POLLINATORS_VALUES = [
 	'wasps',
 	'water',
 	'midges',
-	'birds',
 	'diptera',
 	'butterflies',
 	'apomixy',
@@ -541,7 +540,6 @@ const PP_FUNCTIONS_VALUES = [
 	'hedge',
 	'windbreak',
 	'pioneer',
-	'nitrogen fixer',
 	'earth stabiliser',
 	'green manure',
 	'repellant',

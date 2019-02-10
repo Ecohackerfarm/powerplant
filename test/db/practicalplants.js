@@ -50,6 +50,10 @@ describe('practicalplants.json', () => {
 		return indices.every((value, index) => ((index == indices.length) || ((value + 1) == indices[index + 1])));
 	}
 	
+	function assertNoDuplicates(values) {
+		assert.isTrue(values.every(value => (values.indexOf(value) == values.lastIndexOf(value))));
+	}
+	
 	it('raw practicalplants.org data contains only analyzed properties and values', () => {
 		const crops = practicalplants.readCropsLower();
 		let missingCounts = {};
@@ -176,4 +180,28 @@ describe('practicalplants.json', () => {
 			}
 		});
 	}).timeout(0);
+	
+	it('no duplicates in enum definitions', () => {
+		assertNoDuplicates(practicalplants.PP_BOOLEAN_VALUES);
+		assertNoDuplicates(practicalplants.PP_SOIL_TEXTURE_VALUES);
+		assertNoDuplicates(practicalplants.PP_SOIL_WATER_RETENTION_VALUES);
+		assertNoDuplicates(practicalplants.PP_SHADE_VALUES);
+		assertNoDuplicates(practicalplants.PP_SUN_VALUES);
+		assertNoDuplicates(practicalplants.PP_WATER_VALUES);
+		assertNoDuplicates(practicalplants.PP_DROUGHT_VALUES);
+		assertNoDuplicates(practicalplants.PP_ECOSYSTEM_NICHE_VALUES);
+		assertNoDuplicates(practicalplants.PP_LIFE_CYCLE_VALUES);
+		assertNoDuplicates(practicalplants.PP_HERBACEOUS_OR_WOODY_VALUES);
+		assertNoDuplicates(practicalplants.PP_DECIDUOUS_OR_EVERGREEN_VALUES);
+		assertNoDuplicates(practicalplants.PP_GROWTH_RATE_VALUES);
+		assertNoDuplicates(practicalplants.PP_MATURE_MEASUREMENT_UNIT_VALUES);
+		assertNoDuplicates(practicalplants.PP_FLOWER_TYPE_VALUES);
+		assertNoDuplicates(practicalplants.PP_POLLINATORS_VALUES);
+		assertNoDuplicates(practicalplants.PP_FUNCTIONS_VALUES);
+		assertNoDuplicates(practicalplants.PP_FUNCTIONS_VALUES);
+		assertNoDuplicates(practicalplants.PP_GROW_FROM_VALUES);
+		assertNoDuplicates(practicalplants.PP_CUTTING_TYPE_VALUES);
+		assertNoDuplicates(practicalplants.PP_FERTILITY_VALUES);
+		assertNoDuplicates(practicalplants.PP_ROOT_ZONE_VALUES);
+	});
 });
