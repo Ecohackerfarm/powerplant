@@ -91,7 +91,7 @@ add('Allium porrum', 'Origanum majorana', 1);
 add('Allium porrum', 'Allium cepa', 1);
 add('Allium sativum', 'Lavandula angustifolia', 1);
 add('Allium sativum', 'Pisum sativum', 0);
-//add('Allium sativum', 'Rosmarinus officinalis', 1); TODO Rosmarinus officinalis is missing binomial name in the practicalplants db.
+add('Allium sativum', 'Rosmarinus officinalis', 1);
 add('Allium sativum', 'Rosa sericea', 1);
 add('Allium sativum', 'Fragaria x ananassa', 0);
 add('Allium sativum', 'Helianthus annuus', 0);
@@ -157,7 +157,7 @@ add('Brassica oleracea', 'Mentha spicata', 1);
 add('Brassica oleracea', 'Allium cepa', 1);
 add('Brassica oleracea', 'Pisum sativum', 1);
 add('Brassica oleracea', 'Solanum tuberosum', 1);
-//add('Brassica oleracea', 'Rosmarinus officinalis', 1); TODO Rosmarinus officinalis is missing binomial name in the practicalplants db.
+add('Brassica oleracea', 'Rosmarinus officinalis', 1);
 add('Brassica oleracea', 'Salvia officinalis', 1);
 add('Brassica oleracea', 'Tanacetum vulgare', 1);
 add('Brassica oleracea', 'Thymus vulgaris', 1);
@@ -198,7 +198,7 @@ add('Daucus carota', 'Allium cepa', 1);
 add('Daucus carota', 'Pastinaca sativa', 0);
 add('Daucus carota', 'Pisum sativum', 1);
 add('Daucus carota', 'Raphanus landra', 1);
-//add('Daucus carota', 'Rosmarinus officinalis', 1); TODO Rosmarinus officinalis is missing binomial name in the practicalplants db.
+add('Daucus carota', 'Rosmarinus officinalis', 1);
 add('Daucus carota', 'Ruta graveolens', 1);
 add('Daucus carota', 'Salvia officinalis', 1);
 add('Daucus carota', 'Solanum esculentum', 1);
@@ -252,7 +252,7 @@ add('Pastinaca sativa', 'Solanum tuberosum', 1);
 add('Pastinaca sativa', 'Raphanus landra', 1);
 add('Pastinaca sativa', 'Salvia officinalis', 1);
 add('Pastinaca sativa', 'Solanum esculentum', 1);
-//add('Petroselinum crispum', 'Rosmarinus officinalis', 1); TODO Rosmarinus officinalis is missing binomial name in the practicalplants db.
+add('Petroselinum crispum', 'Rosmarinus officinalis', 1);
 add('Petroselinum crispum', 'Rosa sericea', 1);
 add('Petroselinum crispum', 'Solanum esculentum', 1);
 add('Phaseolus vulgaris', 'Apium graveolens dulce', 1);
@@ -269,39 +269,39 @@ add('Phaseolus vulgaris', 'Raphanus landra', 1);
 add('Pisum sativum', 'Solanum tuberosum', 1);
 add('Pisum sativum', 'Rubus idaeus', 1);
 add('Pisum sativum', 'Allium cepa ascalonicum', 0);
-//add('Prunus armeniaca', 'Ocimum basilicum', 1); TODO Apricot is missing binomial name in the practicalplants db.
-//add('Prunus armeniaca', 'Allium sativum', 1); TODO Apricot is missing binomial name in the practicalplants db.
-//add('Prunus armeniaca', 'Armoracia rusticana', 1); TODO Apricot is missing binomial name in the practicalplants db.
-//add('Prunus armeniaca', 'Citrus limon', 1); TODO Apricot is missing binomial name in the practicalplants db.
-//add('Prunus armeniaca', 'Calendula officinalis', 1); TODO Apricot is missing binomial name in the practicalplants db.
-//add('Prunus armeniaca', 'Sinapis alba', 1); TODO Apricot is missing binomial name in the practicalplants db.
-//add('Prunus armeniaca', 'Tropaeolum majus', 1); TODO Apricot is missing binomial name in the practicalplants db.
-//add('Prunus armeniaca', 'Spinacia oleracea', 1); TODO Apricot is missing binomial name in the practicalplants db.
-//add('Prunus armeniaca', 'Helianthus annuus', 1); TODO Apricot is missing binomial name in the practicalplants db.
-//add('Prunus armeniaca', 'Tanacetum vulgare', 1); TODO Apricot is missing binomial name in the practicalplants db.
-//add('Prunus armeniaca', 'Solanum esculentum', 0); TODO Apricot is missing binomial name in the practicalplants db.
-//add('Prunus armeniaca', 'Achillea millefolium', 1); TODO Apricot is missing binomial name in the practicalplants db.
-//add('Prunus avium', 'Allium schoenoprasum', 1); TODO Cherry is missing binomial name in the practicalplants db.
-//add('Prunus avium', 'Allium sativum', 1); TODO Cherry is missing binomial name in the practicalplants db.
-//add('Prunus avium', 'Armoracia rusticana', 1); TODO Cherry is missing binomial name in the practicalplants db.
-//add('Prunus avium', 'Citrus limon', 1); TODO Cherry is missing binomial name in the practicalplants db.
-//add('Prunus avium', 'Lactuca sativa', 1); TODO Cherry is missing binomial name in the practicalplants db.
-//add('Prunus avium', 'Calendula officinalis', 1); TODO Cherry is missing binomial name in the practicalplants db.
-//add('Prunus avium', 'Sinapis alba', 1); TODO Cherry is missing binomial name in the practicalplants db.
-//add('Prunus avium', 'Tropaeolum majus', 1); TODO Cherry is missing binomial name in the practicalplants db.
-//add('Prunus avium', 'Solanum tuberosum', 0); TODO Cherry is missing binomial name in the practicalplants db.
-//add('Prunus avium', 'Beta vulgaris cicla', 1); TODO Cherry is missing binomial name in the practicalplants db.
-//add('Prunus avium', 'Spinacia oleracea', 1); TODO Cherry is missing binomial name in the practicalplants db.
-//add('Prunus avium', 'Tanacetum vulgare', 1); TODO Cherry is missing binomial name in the practicalplants db.
-//add('Prunus avium', 'Achillea millefolium', 1); TODO Cherry is missing binomial name in the practicalplants db.
+add('Prunus armeniaca', 'Ocimum basilicum', 1);
+add('Prunus armeniaca', 'Allium sativum', 1);
+add('Prunus armeniaca', 'Armoracia rusticana', 1);
+add('Prunus armeniaca', 'Citrus limon', 1);
+add('Prunus armeniaca', 'Calendula officinalis', 1);
+add('Prunus armeniaca', 'Sinapis alba', 1);
+add('Prunus armeniaca', 'Tropaeolum majus', 1);
+add('Prunus armeniaca', 'Spinacia oleracea', 1);
+add('Prunus armeniaca', 'Helianthus annuus', 1);
+add('Prunus armeniaca', 'Tanacetum vulgare', 1);
+add('Prunus armeniaca', 'Solanum esculentum', 0);
+add('Prunus armeniaca', 'Achillea millefolium', 1);
+add('Prunus avium', 'Allium schoenoprasum', 1);
+add('Prunus avium', 'Allium sativum', 1);
+add('Prunus avium', 'Armoracia rusticana', 1);
+add('Prunus avium', 'Citrus limon', 1);
+add('Prunus avium', 'Lactuca sativa', 1);
+add('Prunus avium', 'Calendula officinalis', 1);
+add('Prunus avium', 'Sinapis alba', 1);
+add('Prunus avium', 'Tropaeolum majus', 1);
+add('Prunus avium', 'Solanum tuberosum', 0);
+add('Prunus avium', 'Beta vulgaris cicla', 1);
+add('Prunus avium', 'Spinacia oleracea', 1);
+add('Prunus avium', 'Tanacetum vulgare', 1);
+add('Prunus avium', 'Achillea millefolium', 1);
 add('Ribes uva-crispa', 'Solanum esculentum', 1);
 add('Rosa sericea', 'Ruta graveolens', 1);
 add('Rosa sericea', 'Salvia officinalis', 1);
 add('Rosa sericea', 'Brassica oleracea', 1);
 add('Rosa sericea', 'Tanacetum vulgare', 1);
 add('Rosa sericea', 'Thymus vulgaris', 1);
-//add('Rosmarinus officinalis', 'Salvia officinalis', 0); TODO Rosmarinus officinalis is missing binomial name in the practicalplants db.
-//add('Rosmarinus officinalis', 'Solanum esculentum', 1); TODO Rosmarinus officinalis is missing binomial name in the practicalplants db.
+add('Rosmarinus officinalis', 'Salvia officinalis', 0);
+add('Rosmarinus officinalis', 'Solanum esculentum', 1);
 add('Rubus idaeus', 'Ruta graveolens', 1);
 add('Ruta graveolens', 'Salvia officinalis', 0);
 add('Salvia officinalis', 'Fragaria x ananassa', 1);
@@ -309,7 +309,7 @@ add('Solanum melongena', 'Origanum majorana', 1);
 add('Solanum melongena', 'Solanum tuberosum', 1);
 add('Solanum tuberosum', 'Cucurbita moschata', 0);
 add('Solanum tuberosum', 'Rubus idaeus', 0);
-//add('Solanum tuberosum', 'Rosmarinus officinalis', 1); TODO Rosmarinus officinalis is missing binomial name in the practicalplants db.
+add('Solanum tuberosum', 'Rosmarinus officinalis', 1);
 add('Solanum tuberosum', 'Helianthus annuus', 0);
 add('Solanum tuberosum', 'Solanum esculentum', 0);
 add('Spinacia oleracea', 'Fragaria x ananassa', 1);
@@ -336,7 +336,7 @@ add('Vicia faba equina', 'Petroselinum crispum', 1);
 add('Vicia faba equina', 'Pastinaca sativa', 1);
 add('Vicia faba equina', 'Pisum sativum', 1);
 add('Vicia faba equina', 'Solanum tuberosum', 1);
-//add('Vicia faba equina', 'Rosmarinus officinalis', 1); TODO Rosmarinus officinalis is missing binomial name in the practicalplants db.
+add('Vicia faba equina', 'Rosmarinus officinalis', 1);
 add('Vicia faba equina', 'Salvia officinalis', 1);
 add('Vicia faba equina', 'Allium cepa ascalonicum', 1);
 add('Vicia faba equina', 'Allium schoenoprasum', 0);
