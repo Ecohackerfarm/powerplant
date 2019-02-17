@@ -3,7 +3,32 @@
  * @memberof cli
  */
 
-const { setBaseUrl, getCropsByName, getCropGroups, getCompatibleCrops, getCrops, getCropRelationships, getUsers, addCrop, addCropRelationship, addCrops, addCropRelationships, addUsers, setCrops, setCropRelationships, setUsers, removeCrops, removeCropRelationships, removeUsers, removeAllCrops, removeAllCropRelationships } = require('../shared/api-client.js');
+const {
+	setBaseUrl,
+	getCropsByName,
+	getCropGroups,
+	getCompatibleCrops,
+	getCrops,
+	getCropRelationships,
+	getCropTags,
+	getUsers,
+	addCrop,
+	addCropRelationship,
+	addCrops,
+	addCropRelationships,
+	addCropTags,
+	addUsers,
+	setCrops,
+	setCropRelationships,
+	setCropTags,
+	setUsers,
+	removeCrops,
+	removeCropRelationships,
+	removeCropTags,
+	removeUsers,
+	removeAllCrops,
+	removeAllCropRelationships
+} = require('../shared/api-client.js');
 const practicalplants = require('../db/practicalplants.js');
 const { plants, companions } = require('../db/companions.js');
 const { PP_PORT, API_HOST } = require('../secrets.js');
@@ -113,6 +138,10 @@ async function doShow() {
 			responses = await getCropRelationships(params);
 			break;
 		}
+		case 'crop-tag': {
+			responses = await getCropTags(params);
+			break;
+		}
 		case 'user': {
 			responses = await getUsers(params);
 			break;
@@ -143,6 +172,10 @@ async function doAdd() {
 			await addCropRelationships(params);
 			break;
 		}
+		case 'crop-tag': {
+			await addCropTags(params);
+			break;
+		}
 		case 'user': {
 			await addUsers(params);
 			break;
@@ -170,6 +203,10 @@ async function doUpdate() {
 		}
 		case 'crop-relationship': {
 			await setCropRelationships(params);
+			break;
+		}
+		case 'crop-tag': {
+			await setCropTags(params);
 			break;
 		}
 		case 'user': {
@@ -204,6 +241,10 @@ async function doRemove() {
 			} else {
 				await removeAllCropRelationships();
 			}
+			break;
+		}
+		case 'crop-tag': {
+			await removeCropTags(params);
 			break;
 		}
 		case 'user': {
