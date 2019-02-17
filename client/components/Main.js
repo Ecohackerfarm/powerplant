@@ -10,6 +10,7 @@ const Register = require('./register/RegisterPage');
 const Recover = require('./recover/Recover');
 const LocationsPage = require('./locations/LocationsPage');
 const AboutPage = require('./about/AboutPage');
+const CropsPage = require('./crops/CropsPage');
 const { saveLocationRequest } = require('../actions/locationActions');
 const { connect } = require('react-redux');
 
@@ -63,6 +64,7 @@ class Main extends React.Component {
 						<Route path="/recover" component={Recover} />
 						<Route path="/locations" component={LocationsPage} />
 						<Route path="/about" component={AboutPage} />
+						<Route path="/crops" component={CropsPage} />
 					</Switch>
 				</div>
 			);

@@ -525,6 +525,7 @@ module.exports = {
 	addCropRelationships,
 	addCropTags,
 	addUsers,
+	setCrop,
 	setCrops,
 	setCropRelationships,
 	setCropTags,
