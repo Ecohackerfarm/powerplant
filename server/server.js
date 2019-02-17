@@ -23,6 +23,7 @@ const {
 } = require('./middleware');
 const Crop = require('./models/crop');
 const CropRelationship = require('./models/crop-relationship');
+const CropTag = require('./models/crop-tag');
 const Location = require('./models/location');
 const User = require('./models/user');
 const {
@@ -89,6 +90,7 @@ function buildApiRouter() {
 	 */
 	router.use('/crops', buildDocumentApiRouter(Crop));
 	router.use('/crop-relationships', buildDocumentApiRouter(CropRelationship));
+	router.use('/crop-tags', buildDocumentApiRouter(CropTag));
 	router.use('/users', buildDocumentApiRouter(User));
 	router.use('/locations', buildDocumentApiRouter(Location));
 

@@ -1,6 +1,8 @@
 const mongoose = require('mongoose');
 const practicalplants = require('../../db/practicalplants.js');
 
+const ObjectId = mongoose.Schema.Types.ObjectId;
+
 /**
  * A Crop Model representing a plant or mushrooms species
  * TODO: write documentation for params see practicalplants.org
@@ -49,6 +51,10 @@ const cropSchema = new mongoose.Schema({
 	commonName: {
 		type: String
 	},
+	tags: [{
+		type: ObjectId,
+		ref: 'CropTag'
+	}],
 	cuttingType: [{
 		type: String,
 		enum: practicalplants.PP_CUTTING_TYPE_VALUES

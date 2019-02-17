@@ -81,7 +81,16 @@ function authorize(currentUser, documents) {
  */
 async function getDocuments(session, model, ids) {
 	validate(ids);
-	const path = model == CropRelationship ? 'crop0 crop1' : '';
+	
+	let path;
+	if (model == CropRelationship) {
+		path = 'crop0 crop1';
+	} else if (model == Crop) {
+		path = 'tags';
+	} else {
+		path = '';
+	}
+	
 	const documents = await model.find({ _id: { $in: ids } }).session(session).populate(path).exec();
 
 	const foundIds = documents.map(document => document._id.toString());
@@ -494,7 +503,7 @@ function escapeRegEx(text) {
  * @param {Number} length
  */
 async function getCropsByName(session, regex, index, length) {
-	const crops = await Crop.find().session(session).byName(escapeRegEx(regex)).exec();
+	const crops = await Crop.find().session(session).byName(escapeRegEx(regex)).populate('tags').exec();
 	return length === 0
 		? crops.slice(index)
 		: crops.slice(index, index + length);
