@@ -186,7 +186,7 @@ function setCrops(params) {
 }
 
 /**
- * Add crop relationships
+ * Update crop relationships
  *
  * @param  {Object} params
  * @param  {Object[]} params.documents Documents
@@ -353,7 +353,7 @@ function addUser(params) {
  * @return {Promise}
  */
 function setCrop(params) {
-	return axios.post('/api/crops/' + params.id, params.document);
+	return axios.put('/api/crops/' + params.id, params.document);
 }
 
 /**
@@ -365,7 +365,7 @@ function setCrop(params) {
  * @return {Promise}
  */
 function setCropRelationship(params) {
-	return axios.post('/api/crop-relationships/' + params.id, params.document);
+	return axios.put('/api/crop-relationships/' + params.id, params.document);
 }
 
 /**
@@ -377,7 +377,7 @@ function setCropRelationship(params) {
  * @return {Promise}
  */
 function setUser(params) {
-	return axios.post('/api/users/' + params.id, params.document);
+	return axios.put('/api/users/' + params.id, params.document);
 }
 
 /**
