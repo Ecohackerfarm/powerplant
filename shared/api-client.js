@@ -125,6 +125,18 @@ function getCropRelationships(params) {
 }
 
 /**
+ * Get crop tags
+ *
+ * @param  {Object} params
+ * @param  {String[]} params.ids Document IDs
+ * @return {Promise}
+ */
+function getCropTags(params) {
+	let promises = params.ids.map(id => getCropTag({ id: id }));
+	return Promise.all(promises);
+}
+
+/**
  * Get users
  *
  * @param  {Object} params
@@ -157,6 +169,18 @@ function addCrops(params) {
  */
 function addCropRelationships(params) {
 	let promises = params.documents.map(document => addCropRelationship({ document: document }));
+	return Promise.all(promises);
+}
+
+/**
+ * Add crop tags
+ *
+ * @param  {Object} params
+ * @param  {Object[]} params.documents Documents
+ * @return {Promise}
+ */
+function addCropTags(params) {
+	let promises = params.documents.map(document => addCropTag({ document: document }));
 	return Promise.all(promises);
 }
 
@@ -198,6 +222,18 @@ function setCropRelationships(params) {
 }
 
 /**
+ * Update crop tags
+ *
+ * @param  {Object} params
+ * @param  {Object[]} params.documents Documents
+ * @return {Promise}
+ */
+function setCropTags(params) {
+	let promises = params.documents.map((document, index) => setCropTag({ document: document, id: params.ids[index] }));
+	return Promise.all(promises);
+}
+
+/**
  * Add users
  *
  * @param  {Object} params
@@ -230,6 +266,18 @@ function removeCrops(params) {
  */
 function removeCropRelationships(params) {
 	let promises = params.ids.map(id => removeCropRelationship({ id: id }));
+	return Promise.all(promises);
+}
+
+/**
+ * Delete crop tags
+ *
+ * @param  {Object} params
+ * @param  {String[]} params.ids Document IDs
+ * @return {Promise}
+ */
+function removeCropTags(params) {
+	let promises = params.ids.map(id => removeCropTag({ id: id }));
 	return Promise.all(promises);
 }
 
@@ -301,6 +349,17 @@ function getCropRelationship(params) {
 }
 
 /**
+ * Get crop tag
+ *
+ * @param  {Object} params
+ * @param  {Object} params.id
+ * @return {Promise}
+ */
+function getCropTag(params) {
+	return axios.get('/api/crop-tags/' + params.id);
+}
+
+/**
  * Get user
  *
  * @param  {Object} params
@@ -331,6 +390,17 @@ function addCrop(params) {
  */
 function addCropRelationship(params) {
 	return axios.post('/api/crop-relationships/', params.document);
+}
+
+/**
+ * Add crop tag
+ *
+ * @param  {Object} params
+ * @param  {Object} params.id Document
+ * @return {Promise}
+ */
+function addCropTag(params) {
+	return axios.post('/api/crop-tags/', params.document);
 }
 
 /**
@@ -369,6 +439,18 @@ function setCropRelationship(params) {
 }
 
 /**
+ * Update crop tag
+ *
+ * @param  {Object} params
+ * @param  {Object} params.id Document ID
+ * @param  {Object} params.document Document
+ * @return {Promise}
+ */
+function setCropTag(params) {
+	return axios.put('/api/crop-tags/' + params.id, params.document);
+}
+
+/**
  * Update user
  *
  * @param  {Object} params
@@ -403,6 +485,17 @@ function removeCropRelationship(params) {
 }
 
 /**
+ * Delete crop tag
+ *
+ * @param  {Object} params
+ * @param  {Object} params.id Document ID
+ * @return {Promise}
+ */
+function removeCropTag(params) {
+	return axios.delete('/api/crop-tags/' + params.id);
+}
+
+/**
  * Delete user
  *
  * @param  {Object} params
@@ -419,21 +512,26 @@ module.exports = {
 
 	addCrop,
 	addCropRelationship,
+	addCropTag,
 	getCropsByName,
 	getCropGroups,
 	getCompatibleCrops,
 	getLocations,
 	getCrops,
 	getCropRelationships,
+	getCropTags,
 	getUsers,
 	addCrops,
 	addCropRelationships,
+	addCropTags,
 	addUsers,
 	setCrops,
 	setCropRelationships,
+	setCropTags,
 	setUsers,
 	removeCrops,
 	removeCropRelationships,
+	removeCropTags,
 	removeUsers,
 	removeAllCrops,
 	removeAllCropRelationships,
