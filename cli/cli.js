@@ -163,28 +163,29 @@ async function doAdd() {
 	const documents = parseOptionArray('document');
 	const params = { documents: documents };
 
+	let createdDocuments;
 	switch (model) {
 		case 'crop': {
-			await addCrops(params);
+			createdDocuments = await addCrops(params);
 			break;
 		}
 		case 'crop-relationship': {
-			await addCropRelationships(params);
+			createdDocuments = await addCropRelationships(params);
 			break;
 		}
 		case 'crop-tag': {
-			await addCropTags(params);
+			createdDocuments = await addCropTags(params);
 			break;
 		}
 		case 'user': {
-			await addUsers(params);
+			createdDocuments = await addUsers(params);
 			break;
 		}
 		default:
 		break;
 	}
 
-	console.log(documents);
+	console.log(createdDocuments.map(document => document.data));
 }
 
 /**
