@@ -88,9 +88,15 @@ async function endSessionAndTransaction(session) {
 /**
  * Start session and transaction.
  *
+ * @param {Model} model Mongoose collection to be created
  * @return {Object} Session object
  */
-async function startSessionAndTransaction() {
+async function startSessionAndTransaction(model) {
+	if (model) {
+		// Initialize collection.
+		await model.createCollection();
+	}
+	
 	const session = await mongoose.startSession();
 	startTransaction(session);
 	return session;
@@ -147,7 +153,7 @@ async function documentGet(req, res, next, model) {
 	try {
 		const id = req.params.id;
 
-		const session = await startSessionAndTransaction();
+		const session = await startSessionAndTransaction(model);
 		let document;
 		if (authorizedModels.includes(model)) {
 			const authenticatedUser = await getAuthenticatedUser(req, next, session);
@@ -184,8 +190,8 @@ async function documentPut(req, res, next, model) {
 	try {
 		const id = req.params.id;
 		const update = req.body;
-
-		const session = await startSessionAndTransaction();
+		
+		const session = await startSessionAndTransaction(model);
 		let document;
 		if (authorizedModels.includes(model)) {
 			const authenticatedUser = await getAuthenticatedUser(req, next, session);
@@ -221,7 +227,7 @@ async function documentPut(req, res, next, model) {
  */
 async function documentPost(req, res, next, model) {
 	try {
-		const session = await startSessionAndTransaction();
+		const session = await startSessionAndTransaction(model);
 		let document;
 		if (authorizedModels.includes(model)) {
 			const authenticatedUser = await getAuthenticatedUser(req, next, session);
@@ -254,7 +260,7 @@ async function documentDelete(req, res, next, model) {
 	try {
 		const id = req.params.id;
 
-		const session = await startSessionAndTransaction();
+		const session = await startSessionAndTransaction(model);
 		if (authorizedModels.includes(model)) {
 			const authenticatedUser = await getAuthenticatedUser(req, next, session);
 			await processor.deleteAuthorizedDocument(session, authenticatedUser, model, id);
@@ -282,7 +288,7 @@ async function documentDelete(req, res, next, model) {
  */
 async function getAllCropRelationships(req, res, next) {
 	try {
-		const session = await startSessionAndTransaction();
+		const session = await startSessionAndTransaction(null);
 		const relationships = await processor.getAllDocuments(session, CropRelationship);
 		await endSessionAndTransaction(session);
 		
@@ -314,7 +320,7 @@ async function getCropsByName(req, res, next) {
 			0
 		);
 
-		const session = await startSessionAndTransaction();
+		const session = await startSessionAndTransaction(null);
 		const crops = await processor.getCropsByName(session, name, index, length);
 		await endSessionAndTransaction(session);
 
@@ -338,7 +344,7 @@ async function getCropsByName(req, res, next) {
  */
 async function getCropGroups(req, res, next) {
 	try {
-		const session = await startSessionAndTransaction();
+		const session = await startSessionAndTransaction(null);
 		const groups = await processor.getCropGroups(session, req.body.cropIds);
 		await endSessionAndTransaction(session);
 
@@ -362,7 +368,7 @@ async function getCropGroups(req, res, next) {
  */
 async function getCompatibleCrops(req, res, next) {
 	try {
-		const session = await startSessionAndTransaction();
+		const session = await startSessionAndTransaction(null);
 		const crops = await processor.getCompatibleCrops(session, req.body.cropIds);
 		await endSessionAndTransaction(session);
 
@@ -384,7 +390,7 @@ async function getCompatibleCrops(req, res, next) {
  */
 async function getLocations(req, res, next) {
 	try {
-		const session = await startSessionAndTransaction();
+		const session = await startSessionAndTransaction(null);
 		const user = await getAuthenticatedUser(req, next, session);
 		await endSessionAndTransaction(session);
 		
@@ -404,7 +410,7 @@ async function getLocations(req, res, next) {
  */
 async function login(req, res, next) {
 	try {
-		const session = await startSessionAndTransaction();
+		const session = await startSessionAndTransaction(null);
 		const result = await processor.login(session, req.body);
 		await endSessionAndTransaction(session);
 		res.json(result);
