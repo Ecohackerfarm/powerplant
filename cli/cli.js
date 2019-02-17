@@ -297,6 +297,7 @@ async function pushCompanions() {
 	
 	const plantNameToCrop = {};
 	crops.forEach(crop => {
+		crop.tags = [];
 		plantNameToCrop[crop.binomialName] = crop;
 	});
 	
