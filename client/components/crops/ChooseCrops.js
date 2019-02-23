@@ -8,8 +8,7 @@ require('react-bootstrap-typeahead/css/Typeahead.css');
 const React = require('react');
 const PropTypes = require('prop-types');
 const {
-	fetchCrops,
-	fetchCombinations
+	fetchCrops
 } = require('../../actions/cropActions');
 const { connect } = require('react-redux');
 
@@ -49,8 +48,7 @@ ChooseCrops.propTypes = {
 }
 
 const mapDispatchToProps = (dispatch) => ({
-	fetchCrops: () => dispatch(fetchCrops()),
-	fetchCombinations: () => dispatch(fetchCombinations())
+	fetchCrops: () => dispatch(fetchCrops())
 });
 
 const mapStateToProps = (state) => ({

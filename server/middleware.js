@@ -401,6 +401,25 @@ async function getLocations(req, res, next) {
 }
 
 /**
+ * Check version information and get updates if necessary.
+ *
+ * @param {Object} req
+ * @param {Object} res
+ * @param {Function} next
+ */
+async function getUpdates(req, res, next) {
+	try {
+		const session = await startSessionAndTransaction(null);
+		const updates = await processor.getUpdates(session, req.body);
+		await endSessionAndTransaction(session);
+		
+		res.json(updates);
+	} catch (exception) {
+		handleError(next, exception);
+	}
+}
+
+/**
  * Login with username and password, and respond with
  * authorization token.
  * 
@@ -429,5 +448,6 @@ module.exports = {
 	getCropGroups,
 	getCompatibleCrops,
 	getLocations,
+	getUpdates,
 	login
 };

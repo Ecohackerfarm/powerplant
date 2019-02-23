@@ -28,6 +28,7 @@ const { currLocation } = require('./currLocation');
 const { locations } = require('./locations');
 const { crops } = require('./crops');
 const { app } = require('./app');
+const { version } = require('./version');
 
 module.exports = combineReducers({
     title,
@@ -35,5 +36,6 @@ module.exports = combineReducers({
     currLocation,
     locations,
     crops,
-    app
+    app,
+    version
 });

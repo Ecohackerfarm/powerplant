@@ -19,6 +19,7 @@ const {
 	getAllCropRelationships,
 	getCropsByName,
 	getLocations,
+	getUpdates,
 	login
 } = require('./middleware');
 const Crop = require('./models/crop');
@@ -27,15 +28,9 @@ const CropTag = require('./models/crop-tag');
 const Location = require('./models/location');
 const User = require('./models/user');
 const {
-	DATABASE_USERNAME,
-	DATABASE_PASSWORD,
-	DATABASE_PROTOCOLL,
-	DATABASE_HOST,
-	DATABASE_PORT,
-	DATABASE_DB,
 	PP_PORT
 } = require('../secrets.js');
-const { isDevelopmentMode } = require('./utils');
+const { getDatabaseURL, isDevelopmentMode } = require('./utils');
 
 /**
  * Build router for a document API.
@@ -103,6 +98,7 @@ function buildApiRouter() {
 	router.post('/get-compatible-crops', getCompatibleCrops);
 	router.get('/get-all-crop-relationships', getAllCropRelationships);
 	router.get('/get-locations', getLocations);
+	router.post('/get-updates', getUpdates);
 
 	router.get('*', (req, res, next) => {
 		next({ status: 404, message: 'No such route' });
@@ -176,23 +172,6 @@ function buildApp(development) {
 	});
 
 	return app;
-}
-
-/**
- * @return {String}
- */
-const getDatabaseURL = () => {
-	let urlString = DATABASE_PROTOCOLL;
-	// Add username and password
-	if (DATABASE_USERNAME.length > 0 && DATABASE_PASSWORD.length > 0) {
-		urlString += DATABASE_USERNAME + ':' + DATABASE_PASSWORD + '@';
-	}
-	urlString += DATABASE_HOST;
-	if (DATABASE_PORT.length > 0) {
-		urlString += ':' + DATABASE_PORT;
-	}
-	urlString += '/' + DATABASE_DB;
-	return urlString;
 }
 
 /**
