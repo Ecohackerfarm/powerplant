@@ -33,6 +33,8 @@ const CROP_RELATIONSHIPS_UPDATED = 'CROP_RELATIONSHIPS_UPDATED';
 const CROPS_LOADING_ERROR = 'CROPS_LOADING_ERROR';
 const CROP_RELATIONSHIPS_LOADING_ERROR = 'CROP_RELATIONSHIPS_LOADING_ERROR';
 
+const VERSION_UPDATED = 'VERSION_UPDATED';
+
 /**
  * Indicate that the persisted Redux store has been loaded.
  * 
@@ -258,6 +260,18 @@ const setCurrentUser = (user) => ({
 	user
 });
 
+/**
+ * Update version information.
+ *
+ * @function
+ * @param {Object} version
+ * @return {Object} Action object
+ */
+const versionUpdated = (version) => ({
+	type: VERSION_UPDATED,
+	version
+});
+
 module.exports = {
 	STORE_LOADED,
 	SET_HEADER_TITLE,
@@ -278,6 +292,7 @@ module.exports = {
 	CROP_RELATIONSHIPS_UPDATED,
 	CROPS_LOADING_ERROR,
 	CROP_RELATIONSHIPS_LOADING_ERROR,
+	VERSION_UPDATED,
 	storeLoaded,
 	setHeaderTitle,
 	setTitle,
@@ -295,5 +310,6 @@ module.exports = {
 	cropsUpdated,
 	cropRelationshipsUpdated,
 	cropsLoadingError,
-	cropRelationshipsLoadingError
+	cropRelationshipsLoadingError,
+	versionUpdated
 };
