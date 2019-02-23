@@ -3,7 +3,7 @@
  * @memberof client.actions
  */
 
-const { getCropsByName, getAllCropRelationships } = require('../../shared/api-client.js');
+const { getCropsByName } = require('../../shared/api-client.js');
 const {
 	cropsLoading,
 	cropsUpdated,
@@ -54,27 +54,6 @@ const fetchCrops = () => {
 	};
 };
 
-/**
- * Fetches Relationship from server if not existent or old data
- * @return {function} function for dispatch
- */
-const fetchRelationships = () => {
-	return (dispatch, getState) => {
-		if (updateNeeded(getState().crops.companionships.updated)) {
-			dispatch(cropRelationshipsLoading(true));
-			return getAllCropRelationships().then(res => {
-				if (res.status === 200) {
-					dispatch(cropRelationshipsUpdated(res.data));
-				} else {
-					dispatch(cropRelationshipsLoadingError(res));
-				}
-				dispatch(cropRelationshipsLoading(false));
-			});
-		}
-	};
-};
-
 module.exports = {
-	fetchCrops,
-	fetchRelationships
+	fetchCrops
 };
