@@ -101,6 +101,14 @@ function getLocations(params) {
 }
 
 /**
+ * @param {Object} params
+ * @return {Promise}
+ */
+function getUpdates(params) {
+	return axios.post('/api/get-updates', params);
+}
+
+/**
  * Get crops
  *
  * @param  {Object} params
@@ -517,6 +525,7 @@ module.exports = {
 	getCropGroups,
 	getCompatibleCrops,
 	getLocations,
+	getUpdates,
 	getCrops,
 	getCropRelationships,
 	getCropTags,
