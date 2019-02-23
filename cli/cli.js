@@ -3,11 +3,13 @@
  * @memberof cli
  */
 
+const mongoose = require('mongoose');
 const {
 	setBaseUrl,
 	getCropsByName,
 	getCropGroups,
 	getCompatibleCrops,
+	getUpdates,
 	getCrops,
 	getCropRelationships,
 	getCropTags,
@@ -32,6 +34,8 @@ const {
 const practicalplants = require('../db/practicalplants.js');
 const { plants, companions } = require('../db/companions.js');
 const { PP_PORT, API_HOST } = require('../secrets.js');
+const { getDatabaseURL } = require('../server/utils.js');
+const Version = require('../server/models/version.js');
 
 /**
  * Print a message to console.
@@ -291,6 +295,21 @@ async function doGetCompatibleCrops() {
 }
 
 /**
+ * Get updates from server.
+ */
+async function doGetUpdates() {
+	const crops = parseInt(parseOption('crops'), 10);
+	
+	const version = {
+		crops: crops
+	};
+	
+	const updates = await getUpdates(version);
+	
+	log(updates);
+}
+
+/**
  * Push the companion plant database to powerplant server.
  */
 async function pushCompanions() {
@@ -324,6 +343,24 @@ async function pushCompanions() {
 	}
 }
 
+/**
+ * 
+ */
+async function dbResetVersion() {
+	const mongooseOptions = {
+		replicaSet: 'rs',
+		useNewUrlParser: true
+	};
+	mongoose.connect(getDatabaseURL(), mongooseOptions);
+	
+	await Version.createCollection();
+	await Version.deleteMany({}).exec();
+	const document = new Version();
+	document.crops = 0; // Force update to clients
+	await document.save();
+	console.log('Reset version information');
+}
+
 /*
  * Global options
  */
@@ -345,7 +382,9 @@ const commands = {
 	'get-crops-by-name': doGetCropsByName,
 	'get-crop-groups': doGetCropGroups,
 	'get-compatible-crops': doGetCompatibleCrops,
-	'push-companions': pushCompanions
+	'get-updates': doGetUpdates,
+	'push-companions': pushCompanions,
+	'db-reset-version': dbResetVersion,
 };
 
 const commandLineArguments = process.argv.slice(2);
