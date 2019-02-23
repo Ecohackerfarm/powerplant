@@ -19,6 +19,7 @@ const {
 	getAllCropRelationships,
 	getCropsByName,
 	getLocations,
+	getUpdates,
 	login
 } = require('./middleware');
 const Crop = require('./models/crop');
@@ -97,6 +98,7 @@ function buildApiRouter() {
 	router.post('/get-compatible-crops', getCompatibleCrops);
 	router.get('/get-all-crop-relationships', getAllCropRelationships);
 	router.get('/get-locations', getLocations);
+	router.post('/get-updates', getUpdates);
 
 	router.get('*', (req, res, next) => {
 		next({ status: 404, message: 'No such route' });

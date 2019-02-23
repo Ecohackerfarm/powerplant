@@ -9,6 +9,7 @@ const User = require('./models/user');
 const CropRelationship = require('./models/crop-relationship');
 const Crop = require('./models/crop');
 const Location = require('./models/location');
+const Version = require('./models/version');
 const validateUser = require('../shared/validation/userValidation');
 const validateCredentials = require('../shared/validation/loginValidation');
 const { Combinations } = require('../shared/combinations.js');
@@ -153,11 +154,12 @@ async function getAuthorizedDocument(session, currentUser, model, id) {
  * Assign an update to the given document and save the updated document.
  *
  * @param {Object} session
+ * @param {Model} model
  * @param {Document} document
  * @param {Object} update Update for the document
  * @return {Document}
  */
-async function updateDocumentInternal(session, document, update) {
+async function updateDocumentInternal(session, model, document, update) {
 	if (!document) {
 		return null;
 	}
@@ -174,6 +176,10 @@ async function updateDocumentInternal(session, document, update) {
 		} else {
 			throw exception;
 		}
+	}
+
+	if (model == Crop) {
+		await incrementCropsVersion(session);
 	}
 
 	return document;
@@ -209,7 +215,7 @@ async function saveDocument(session, model, object) {
 	}
 
 	let document = new model();
-	document = await updateDocumentInternal(session, document, object);
+	document = await updateDocumentInternal(session, model, document, object);
 
 	if (model == User) {
 		delete document.password;
@@ -253,7 +259,7 @@ async function saveAuthorizedDocument(session, currentUser, model, object) {
  */
 async function updateDocument(session, model, id, update) {
 	const document = await getDocument(session, model, id);
-	return await updateDocumentInternal(session, document, update);
+	return await updateDocumentInternal(session, model, document, update);
 }
 
 /**
@@ -273,7 +279,7 @@ async function updateAuthorizedDocument(session, currentUser, model, id, update)
 		model,
 		id
 	);
-	return await updateDocumentInternal(session, document, update);
+	return await updateDocumentInternal(session, model, document, update);
 }
 
 /**
@@ -288,6 +294,8 @@ async function deleteDocumentInternal(session, model, document) {
 		await CropRelationship.find().session(session)
 			.byCrop(document._id)
 			.remove();
+		
+		await incrementCropsVersion(session);
 	}
 
 	await document.remove({ session });
@@ -510,6 +518,51 @@ async function getCropsByName(session, regex, index, length) {
 }
 
 /**
+ * @param {Object} session
+ * @param {Object} clientVersion
+ */
+async function getUpdates(session, clientVersion) {
+	const serverVersion = await getVersion(session);
+	const forceCropsUpdate = serverVersion.crops === 0;
+
+	const updates = {};
+	if (forceCropsUpdate || (clientVersion.crops !== serverVersion.crops)) {
+		if (forceCropsUpdate) {
+			serverVersion.crops = 1;
+		}
+		
+		const crops = await Crop.find().session(session).byName(escapeRegEx('')).populate('tags').exec();
+		updates.crops = {
+			version: serverVersion.crops,
+			crops: crops
+		};
+
+		if (forceCropsUpdate) {
+			await serverVersion.save({ session });
+		}
+	}
+	
+	return updates;
+}
+
+/**
+ * @param {Object} session
+ */
+async function incrementCropsVersion(session) {
+	const version = await getVersion(session);
+	version.crops++;
+	await version.save({ session });
+}
+
+/**
+ * @param {Object} session
+ * @return {Version}
+ */
+async function getVersion(session) {
+	return (await Version.find().session(session))[0];
+}
+
+/**
  * Try to login with the given credentials.
  *
  * @param {Object} session
@@ -584,6 +637,7 @@ module.exports = {
 	getCropGroups,
 	getCompatibleCrops,
 	getCropsByName,
+	getUpdates,
 	login,
 
 	VALIDATION_EXCEPTION,
