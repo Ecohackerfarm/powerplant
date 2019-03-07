@@ -335,53 +335,6 @@ async function getCropsByName(req, res, next) {
 }
 
 /**
- * Given a set of crop IDs, divide the set into groups that contain
- * compatible crops.
- * 
- * @param {Object} req
- * @param {Object} res
- * @param {Function} next
- */
-async function getCropGroups(req, res, next) {
-	try {
-		const session = await startSessionAndTransaction(null);
-		const groups = await processor.getCropGroups(session, req.body.cropIds);
-		await endSessionAndTransaction(session);
-
-		debug('getCropGroups():');
-		debug(groups);
-
-		res.json(groups);
-	} catch (exception) {
-		handleError(next, exception);
-	}
-}
-
-/**
- * Given a set of crop IDs, find all other crops that are compatible
- * with the given crops. All crops in the sum group are compatible with
- * each other.
- * 
- * @param {Object} req
- * @param {Object} res
- * @param {Function} next
- */
-async function getCompatibleCrops(req, res, next) {
-	try {
-		const session = await startSessionAndTransaction(null);
-		const crops = await processor.getCompatibleCrops(session, req.body.cropIds);
-		await endSessionAndTransaction(session);
-
-		debug('getCompatibleCrops():');
-		debug(crops);
-
-		res.json(crops);
-	} catch (exception) {
-		handleError(next, exception);
-	}
-}
-
-/**
  * Get the user's locations.
  * 
  * @param {Object} req
@@ -445,8 +398,6 @@ module.exports = {
 	documentDelete,
 	getAllCropRelationships,
 	getCropsByName,
-	getCropGroups,
-	getCompatibleCrops,
 	getLocations,
 	getUpdates,
 	login

@@ -369,136 +369,6 @@ async function getAllDocuments(session, model) {
 }
 
 /**
- * Given all compatible combinations, get non-overlapping crop groups,
- * and update the Combinations object by removing the crops of these
- * groups.
- *
- * @param {Combinations} combinations
- * @param {Number} maximumGroupSize
- * @return {Array}
- */
-function removeCropGroupsFromCombinations(combinations, maximumGroupSize) {
-	const groups = [];
-
-	while (maximumGroupSize >= 2) {
-		const cursorCombinations = combinations.getCombinations(maximumGroupSize);
-		if (cursorCombinations.length > 0) {
-			const combination = cursorCombinations[0];
-			combinations.removeElements(combination);
-			groups.push(combination);
-		} else {
-			maximumGroupSize--;
-		}
-	}
-
-	return groups;
-}
-
-/**
- * For each crop find all crop relationships and assign them to the
- * document.
- *
- * @param {Object} session
- * @param {Crop[]} crops
- */
-async function assignRelationships(session, crops) {
-	for (let index = 0; index < crops.length; index++) {
-		const crop = (crops[index] = crops[index].toObject());
-		crop.relationships = await CropRelationship.find().session(session).byCrop(crop._id).exec();
-	}
-}
-
-/**
- * Assign isCompatible() for the given Crop documents for use with the
- * Combinations class.
- *
- * @param {Crop[]} crops
- * @param {Function} isCompatibleFunction
- */
-function assignIsCompatible(crops, isCompatibleFunction) {
-	crops.forEach(crop => {
-		crop.isCompatible = isCompatibleFunction;
-	});
-}
-
-/**
- * Divide the given crops into groups of compatible crops.
- *
- * @param {Object} Session object
- * @param {String[]} cropIds
- * @return {Array}
- */
-async function getCropGroups(session, cropIds) {
-	let crops = await getDocuments(session, Crop, cropIds);
-	if (!crops) {
-		throw VALIDATION_EXCEPTION;
-	}
-
-	await assignRelationships(session, crops);
-
-	let groups = [];
-
-	// Create groups of companion crops
-	assignIsCompatible(crops, isCompanion);
-	const companionCombinations = new Combinations(crops);
-	groups = groups.concat(
-			removeCropGroupsFromCombinations(
-					companionCombinations,
-					companionCombinations.getLargestCombinationSize()
-			)
-	);
-
-	// From the remaining crops, create small groups of neutral crops
-	const remainingCrops = companionCombinations.getElements();
-	assignIsCompatible(remainingCrops, isNeutral);
-	const neutralCombinations = new Combinations(remainingCrops);
-	if (neutralCombinations.getLargestCombinationSize() >= 2) {
-			groups = groups.concat(
-					removeCropGroupsFromCombinations(neutralCombinations, 2)
-			);
-	}
-
-	// From the remaining crops, create single crop groups
-	groups = groups.concat(neutralCombinations.getCombinations(1));
-
-	groups.forEach(group =>
-			group.forEach(crop => {
-					delete crop.relationships;
-					delete crop.isCompatible;
-			})
-	);
-	return groups;
-}
-
-/**
- * Get other crops that are compatible with the given set of crops.
- * The crops in the sum set are all compatible.
- *
- * @param {Object} session
- * @param {String[]} cropIds
- * @return {Array}
- */
-async function getCompatibleCrops(session, cropIds) {
-	let allCrops = await getAllDocuments(session, Crop);
-	await assignRelationships(session, allCrops);
-	assignIsCompatible(allCrops, isCompanion);
-	const combinations = new Combinations(allCrops, cropIds.length + 1);
-
-	const initialCrops = cropIds.map(id =>
-		allCrops.find(crop => crop._id == id)
-	);
-	const compatibleCrops = combinations
-		.getLargestCombinationWithElements(initialCrops)
-		.filter(crop => !initialCrops.includes(crop));
-
-	compatibleCrops.forEach(crop => {
-		delete crop.relationships;
-		delete crop.isCompatible;
-	});
-	return compatibleCrops;
-}
-
-/**
  * Convert a string into regex-friendly format, escaping all regex
  * special characters.
  *
@@ -637,35 +507,6 @@ async function login(session, credentials) {
 	return { token };
 }
 
-/**
- * Implements isCompatible() for Crop Combinations. Check if the given
- * other crop is compatible.
- *
- * @param {Crop} crop
- * @return {Boolean}
- */
-function isCompanion(crop) {
-	return this.relationships.some(
-		(relationship) =>
-			(relationship.containsCrop(crop) && (relationship.compatibility > 0))
-	);
-}
-
-/**
- * Implements isCompatible() for Crop Combinations. Check if the given
- * other crop is neutral but not incompatible.
- *
- * @param {Crop} crop
- * @return {Boolean}
- */
-function isNeutral(crop) {
-	return this.relationships.some(
-		(relationship) =>
-			!relationship.containsCrop(crop) ||
-			(relationship.containsCrop(crop) && (relationship.compatibility == 0))
-	);
-}
-
 module.exports = {
 	getDocument,
 	getAuthorizedDocument,
@@ -677,8 +518,6 @@ module.exports = {
 	deleteAuthorizedDocument,
 	getAuthenticatedUser,
 	getAllDocuments,
-	getCropGroups,
-	getCompatibleCrops,
 	getCropsByName,
 	getUpdates,
 	login,
