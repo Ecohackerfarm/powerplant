@@ -14,8 +14,6 @@ const {
 	documentPut,
 	documentDelete,
 	documentPost,
-	getCropGroups,
-	getCompatibleCrops,
 	getAllCropRelationships,
 	getCropsByName,
 	getLocations,
