@@ -357,6 +357,7 @@ async function dbResetVersion() {
 	await Version.deleteMany({}).exec();
 	const document = new Version();
 	document.crops = 0; // Force update to clients
+	document.cropRelationships = 0; // Force update to clients
 	await document.save();
 	console.log('Reset version information');
 }
