@@ -60,34 +60,6 @@ function getCropsByName(params) {
 }
 
 /**
- * Get compatible crop groups from
- *
- * @param  {Object} params parameter object
- * @param  {Array} params.cropIds array of ids of crops
- * @return {Promise} Promise
- */
-function getCropGroups(params) {
-	return axios.post(
-		'/api/get-crop-groups',
-		params
-	);
-}
-
-/**
- * Get compatible crop groups from
- *
- * @param  {Object} params parameter object
- * @param  {Array} params.cropIds array of ids of crops
- * @return {Promise} Promise
- */
-function getCompatibleCrops(params) {
-	return axios.post(
-		'/api/get-compatible-crops',
-		params
-	);
-}
-
-/**
  * Get locations from a specified user
  *
  * @param  {object} params parameter object
@@ -522,8 +494,6 @@ module.exports = {
 	addCropRelationship,
 	addCropTag,
 	getCropsByName,
-	getCropGroups,
-	getCompatibleCrops,
 	getLocations,
 	getUpdates,
 	getCrops,

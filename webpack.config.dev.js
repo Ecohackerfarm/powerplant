@@ -11,7 +11,8 @@ module.exports = {
   output: {
     path: path.join(__dirname, "dist"),
     filename: "bundle.js",
-    publicPath: '/'
+    publicPath: '/',
+    globalObject: 'this'
   },
   plugins: [
     new webpack.NoEmitOnErrorsPlugin(),

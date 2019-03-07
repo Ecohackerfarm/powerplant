@@ -180,6 +180,8 @@ async function updateDocumentInternal(session, model, document, update) {
 
 	if (model == Crop) {
 		await incrementCropsVersion(session);
+	} else if (model == CropRelationship) {
+		await incrementCropRelationshipsVersion(session);
 	}
 
 	return document;
@@ -291,11 +293,16 @@ async function updateAuthorizedDocument(session, currentUser, model, id, update)
  */
 async function deleteDocumentInternal(session, model, document) {
 	if (model == Crop) {
-		await CropRelationship.find().session(session)
+		const result = await CropRelationship.find().session(session)
 			.byCrop(document._id)
 			.remove();
+		if (result.deletedCount > 0) {
+			await incrementCropRelationshipsVersion(session);
+		}
 		
 		await incrementCropsVersion(session);
+	} else if (model == CropRelationship) {
+		await incrementCropRelationshipsVersion(session);
 	}
 
 	await document.remove({ session });
@@ -362,136 +369,6 @@ async function getAllDocuments(session, model) {
 }
 
 /**
- * Given all compatible combinations, get non-overlapping crop groups,
- * and update the Combinations object by removing the crops of these
- * groups.
- *
- * @param {Combinations} combinations
- * @param {Number} maximumGroupSize
- * @return {Array}
- */
-function removeCropGroupsFromCombinations(combinations, maximumGroupSize) {
-	const groups = [];
-
-	while (maximumGroupSize >= 2) {
-		const cursorCombinations = combinations.getCombinations(maximumGroupSize);
-		if (cursorCombinations.length > 0) {
-			const combination = cursorCombinations[0];
-			combinations.removeElements(combination);
-			groups.push(combination);
-		} else {
-			maximumGroupSize--;
-		}
-	}
-
-	return groups;
-}
-
-/**
- * For each crop find all crop relationships and assign them to the
- * document.
- *
- * @param {Object} session
- * @param {Crop[]} crops
- */
-async function assignRelationships(session, crops) {
-	for (let index = 0; index < crops.length; index++) {
-		const crop = (crops[index] = crops[index].toObject());
-		crop.relationships = await CropRelationship.find().session(session).byCrop(crop._id).exec();
-	}
-}
-
-/**
- * Assign isCompatible() for the given Crop documents for use with the
- * Combinations class.
- *
- * @param {Crop[]} crops
- * @param {Function} isCompatibleFunction
- */
-function assignIsCompatible(crops, isCompatibleFunction) {
-	crops.forEach(crop => {
-		crop.isCompatible = isCompatibleFunction;
-	});
-}
-
-/**
- * Divide the given crops into groups of compatible crops.
- *
- * @param {Object} Session object
- * @param {String[]} cropIds
- * @return {Array}
- */
-async function getCropGroups(session, cropIds) {
-	let crops = await getDocuments(session, Crop, cropIds);
-	if (!crops) {
-		throw VALIDATION_EXCEPTION;
-	}
-
-	await assignRelationships(session, crops);
-
-	let groups = [];
-
-	// Create groups of companion crops
-	assignIsCompatible(crops, isCompanion);
-	const companionCombinations = new Combinations(crops);
-	groups = groups.concat(
-			removeCropGroupsFromCombinations(
-					companionCombinations,
-					companionCombinations.getLargestCombinationSize()
-			)
-	);
-
-	// From the remaining crops, create small groups of neutral crops
-	const remainingCrops = companionCombinations.getElements();
-	assignIsCompatible(remainingCrops, isNeutral);
-	const neutralCombinations = new Combinations(remainingCrops);
-	if (neutralCombinations.getLargestCombinationSize() >= 2) {
-			groups = groups.concat(
-					removeCropGroupsFromCombinations(neutralCombinations, 2)
-			);
-	}
-
-	// From the remaining crops, create single crop groups
-	groups = groups.concat(neutralCombinations.getCombinations(1));
-
-	groups.forEach(group =>
-			group.forEach(crop => {
-					delete crop.relationships;
-					delete crop.isCompatible;
-			})
-	);
-	return groups;
-}
-
-/**
- * Get other crops that are compatible with the given set of crops.
- * The crops in the sum set are all compatible.
- *
- * @param {Object} session
- * @param {String[]} cropIds
- * @return {Array}
- */
-async function getCompatibleCrops(session, cropIds) {
-	let allCrops = await getAllDocuments(session, Crop);
-	await assignRelationships(session, allCrops);
-	assignIsCompatible(allCrops, isCompanion);
-	const combinations = new Combinations(allCrops, cropIds.length + 1);
-
-	const initialCrops = cropIds.map(id =>
-		allCrops.find(crop => crop._id == id)
-	);
-	const compatibleCrops = combinations
-		.getLargestCombinationWithElements(initialCrops)
-		.filter(crop => !initialCrops.includes(crop));
-
-	compatibleCrops.forEach(crop => {
-		delete crop.relationships;
-		delete crop.isCompatible;
-	});
-	return compatibleCrops;
-}
-
-/**
  * Convert a string into regex-friendly format, escaping all regex
  * special characters.
  *
@@ -523,34 +400,70 @@ async function getCropsByName(session, regex, index, length) {
  */
 async function getUpdates(session, clientVersion) {
 	const serverVersion = await getVersion(session);
-	const forceCropsUpdate = serverVersion.crops === 0;
 
 	const updates = {};
-	if (forceCropsUpdate || (clientVersion.crops !== serverVersion.crops)) {
-		if (forceCropsUpdate) {
-			serverVersion.crops = 1;
-		}
-		
+	if (await needsUpdate(session, clientVersion, serverVersion, 'crops')) {
 		const crops = await Crop.find().session(session).byName(escapeRegEx('')).populate('tags').exec();
+		const trimmedCrops = crops.map(crop => ({
+			_id: crop._id,
+			commonName: crop.commonName,
+			binomialName: crop.binomialName,
+			tags: crop.tags
+		}));
+		
 		updates.crops = {
 			version: serverVersion.crops,
-			crops: crops
+			data: trimmedCrops
 		};
-
-		if (forceCropsUpdate) {
-			await serverVersion.save({ session });
-		}
+	}
+	if (await needsUpdate(session, clientVersion, serverVersion, 'cropRelationships')) {
+		const cropRelationships = await getAllDocuments(session, CropRelationship);
+		updates.cropRelationships = {
+			version: serverVersion.cropRelationships,
+			data: cropRelationships
+		};
 	}
 	
 	return updates;
 }
 
 /**
+ * @param {Version} clientVersion
+ * @param {Version} serverVersion
+ * @param {String} target
+ * @return {Boolean}
+ */
+async function needsUpdate(session, clientVersion, serverVersion, target) {
+	const forceUpdate = serverVersion[target] === 0;
+	
+	if (forceUpdate) {
+		await incrementTargetVersion(session, serverVersion, target);
+	}
+	
+	return forceUpdate || (clientVersion[target] !== serverVersion[target]);
+}
+
+/**
+ * @param {Object} session
+ */
+async function incrementCropRelationshipsVersion(session) {
+	await incrementTargetVersion(session, await getVersion(session), 'cropRelationships');
+}
+
+/**
  * @param {Object} session
  */
 async function incrementCropsVersion(session) {
-	const version = await getVersion(session);
-	version.crops++;
+	await incrementTargetVersion(session, await getVersion(session), 'crops');
+}
+
+/**
+ * @param {Object} session
+ * @param {Version} version
+ * @param {String} target
+ */
+async function incrementTargetVersion(session, version, target) {
+	version[target]++;
 	await version.save({ session });
 }
 
@@ -594,35 +507,6 @@ async function login(session, credentials) {
 	return { token };
 }
 
-/**
- * Implements isCompatible() for Crop Combinations. Check if the given
- * other crop is compatible.
- *
- * @param {Crop} crop
- * @return {Boolean}
- */
-function isCompanion(crop) {
-	return this.relationships.some(
-		(relationship) =>
-			(relationship.containsCrop(crop) && (relationship.compatibility > 0))
-	);
-}
-
-/**
- * Implements isCompatible() for Crop Combinations. Check if the given
- * other crop is neutral but not incompatible.
- *
- * @param {Crop} crop
- * @return {Boolean}
- */
-function isNeutral(crop) {
-	return this.relationships.some(
-		(relationship) =>
-			!relationship.containsCrop(crop) ||
-			(relationship.containsCrop(crop) && (relationship.compatibility == 0))
-	);
-}
-
 module.exports = {
 	getDocument,
 	getAuthorizedDocument,
@@ -634,8 +518,6 @@ module.exports = {
 	deleteAuthorizedDocument,
 	getAuthenticatedUser,
 	getAllDocuments,
-	getCropGroups,
-	getCompatibleCrops,
 	getCropsByName,
 	getUpdates,
 	login,

@@ -7,8 +7,9 @@ const React = require('react');
 const ChooseCrops = require('../crops/ChooseCrops');
 const CropGroups = require('../crops/CropGroups');
 const { Button } = require('react-bootstrap');
-const { getCropGroups } = require('../../../shared/api-client.js');
 const { withRouter } = require('react-router-dom');
+const { connect } = require('react-redux');
+const { workerManager } = require('../../globals.js');
 
 /**
  * @extends Component
@@ -35,20 +36,21 @@ class AddBedForm extends React.Component {
 	}
 
 	/**
-	 * @param {String[]} cropIds 
+	 * @param {Object[]} crops
 	 */
-	getGroups(cropIds) {
+	getGroups(crops) {
 		this.setState({
 			loadingGroups: true
 		});
-		getCropGroups({ cropIds }).then((response) => {
+		workerManager.delegate('getCropGroups', this.props.crops.relationships, crops).then((response) => {
 			this.setState({
-				groups: response.data,
+				groups: response,
 				loadingGroups: false
 			});
 		}).catch((error) => {
 			this.setState({
-				groupsError: response,
+				groups: [],
+				groupsError: error,
 				loadingGroups: false
 			});
 		});
@@ -85,9 +87,8 @@ class AddBedForm extends React.Component {
 	 */
 	onChangeChooseCrop(chosenCrops) {
 		this.setState({ chosenCrops });
-		const cropIds = chosenCrops.map((crop) => crop._id);
 		if (chosenCrops.length >= this.props.minNumberOfCrops) {
-			this.getGroups(cropIds);
+			this.getGroups(chosenCrops);
 		}
 	}
 
@@ -143,4 +144,11 @@ AddBedForm.defaultProps = {
 	explanation: "Please choose the crops you want to add in your garden. We will suggest you which plants should go together into the same bed."
 };
 
-module.exports = withRouter(AddBedForm);
+const mapDispatchToProps = (dispatch) => ({
+});
+
+const mapStateToProps = (state) => ({
+	crops: state.crops
+});
+
+module.exports = withRouter(connect(mapStateToProps, mapDispatchToProps)(AddBedForm));

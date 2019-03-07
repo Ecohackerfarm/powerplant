@@ -7,10 +7,10 @@ const React = require('react');
 const { Col, Button } = require('react-bootstrap');
 const Proptypes = require('prop-types');
 const { connect } = require('react-redux');
-const { getCompatibleCrops } = require('../../../shared/api-client.js');
 const { Typeahead } = require('react-bootstrap-typeahead');
 const { withRouter } = require('react-router-dom');
 const { fetchCrops } = require('../../actions/cropActions');
+const { workerManager } = require('../../globals.js');
 
 /**
  * @extends Component
@@ -42,11 +42,9 @@ class EditBedForm extends React.Component {
 		this.callApi = window.setTimeout(() => {
 			if (this.state.cropsInBed.length > 0) {
 				this.setState({ loading: true });
-				getCompatibleCrops({
-					cropIds: this.state.cropsInBed.map((crop) => crop._id)
-				}).then((response) => {
+				workerManager.delegate('getCompatibleCrops', this.props.crops.all, this.props.crops.relationships, this.state.cropsInBed).then((response) => {
 					this.setState({
-						compatibleCrops: response.data,
+						compatibleCrops: response,
 						loading: false
 					});
 				}).catch((error) => {

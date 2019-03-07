@@ -26,8 +26,12 @@ const fetchCrops = () => {
 			.then(result => {
 				const updates = result.data;
 				if (updates.hasOwnProperty('crops')) {
-					dispatch(cropsUpdated(updates.crops.crops));
+					dispatch(cropsUpdated(updates.crops.data));
 					dispatch(versionUpdated({ crops: updates.crops.version }));
+				}
+				if (updates.hasOwnProperty('cropRelationships')) {
+					dispatch(cropRelationshipsUpdated(updates.cropRelationships.data));
+					dispatch(versionUpdated({ cropRelationships: updates.cropRelationships.version }));
 				}
 				dispatch(cropsLoading(false));
 			}).catch(error => {

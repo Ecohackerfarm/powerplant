@@ -14,8 +14,6 @@ const {
 	documentPut,
 	documentDelete,
 	documentPost,
-	getCropGroups,
-	getCompatibleCrops,
 	getAllCropRelationships,
 	getCropsByName,
 	getLocations,
@@ -94,8 +92,6 @@ function buildApiRouter() {
 	 */
 	router.post('/login', login);
 	router.get('/get-crops-by-name', getCropsByName);
-	router.post('/get-crop-groups', getCropGroups);
-	router.post('/get-compatible-crops', getCompatibleCrops);
 	router.get('/get-all-crop-relationships', getAllCropRelationships);
 	router.get('/get-locations', getLocations);
 	router.post('/get-updates', getUpdates);

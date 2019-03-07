@@ -7,8 +7,6 @@ const mongoose = require('mongoose');
 const {
 	setBaseUrl,
 	getCropsByName,
-	getCropGroups,
-	getCompatibleCrops,
 	getUpdates,
 	getCrops,
 	getCropRelationships,
@@ -275,26 +273,6 @@ async function doGetCropsByName() {
 }
 
 /**
- * Get crop groups.
- */
-async function doGetCropGroups() {
-	const ids = parseOptionArray('crop');
-
-	const groups = await getCropGroups({ cropIds: ids });
-	log(groups.data);
-}
-
-/**
- * Get compatible crops.
- */
-async function doGetCompatibleCrops() {
-	const ids = parseOptionArray('crop');
-
-	const crops = await getCompatibleCrops({ cropIds: ids });
-	log(crops.data);
-}
-
-/**
  * Get updates from server.
  */
 async function doGetUpdates() {
@@ -357,6 +335,7 @@ async function dbResetVersion() {
 	await Version.deleteMany({}).exec();
 	const document = new Version();
 	document.crops = 0; // Force update to clients
+	document.cropRelationships = 0; // Force update to clients
 	await document.save();
 	console.log('Reset version information');
 }
@@ -380,8 +359,6 @@ const commands = {
 	update: doUpdate,
 	show: doShow,
 	'get-crops-by-name': doGetCropsByName,
-	'get-crop-groups': doGetCropGroups,
-	'get-compatible-crops': doGetCompatibleCrops,
 	'get-updates': doGetUpdates,
 	'push-companions': pushCompanions,
 	'db-reset-version': dbResetVersion,
