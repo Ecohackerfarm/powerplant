@@ -180,6 +180,8 @@ async function updateDocumentInternal(session, model, document, update) {
 
 	if (model == Crop) {
 		await incrementCropsVersion(session);
+	} else if (model == CropRelationship) {
+		await incrementCropRelationshipsVersion(session);
 	}
 
 	return document;
@@ -291,11 +293,16 @@ async function updateAuthorizedDocument(session, currentUser, model, id, update)
  */
 async function deleteDocumentInternal(session, model, document) {
 	if (model == Crop) {
-		await CropRelationship.find().session(session)
+		const result = await CropRelationship.find().session(session)
 			.byCrop(document._id)
 			.remove();
+		if (result.deletedCount > 0) {
+			await incrementCropRelationshipsVersion(session);
+		}
 		
 		await incrementCropsVersion(session);
+	} else if (model == CropRelationship) {
+		await incrementCropRelationshipsVersion(session);
 	}
 
 	await document.remove({ session });
@@ -523,14 +530,9 @@ async function getCropsByName(session, regex, index, length) {
  */
 async function getUpdates(session, clientVersion) {
 	const serverVersion = await getVersion(session);
-	const forceCropsUpdate = serverVersion.crops === 0;
 
 	const updates = {};
-	if (forceCropsUpdate || (clientVersion.crops !== serverVersion.crops)) {
-		if (forceCropsUpdate) {
-			serverVersion.crops = 1;
-		}
-		
+	if (await needsUpdate(session, clientVersion, serverVersion, 'crops')) {
 		const crops = await Crop.find().session(session).byName(escapeRegEx('')).populate('tags').exec();
 		const trimmedCrops = crops.map(crop => ({
 			_id: crop._id,
@@ -541,23 +543,57 @@ async function getUpdates(session, clientVersion) {
 		
 		updates.crops = {
 			version: serverVersion.crops,
-			crops: trimmedCrops
+			data: trimmedCrops
 		};
-
-		if (forceCropsUpdate) {
-			await serverVersion.save({ session });
-		}
+	}
+	if (await needsUpdate(session, clientVersion, serverVersion, 'cropRelationships')) {
+		const cropRelationships = await getAllDocuments(session, CropRelationship);
+		updates.cropRelationships = {
+			version: serverVersion.cropRelationships,
+			data: cropRelationships
+		};
 	}
 	
 	return updates;
 }
 
 /**
+ * @param {Version} clientVersion
+ * @param {Version} serverVersion
+ * @param {String} target
+ * @return {Boolean}
+ */
+async function needsUpdate(session, clientVersion, serverVersion, target) {
+	const forceUpdate = serverVersion[target] === 0;
+	
+	if (forceUpdate) {
+		await incrementTargetVersion(session, serverVersion, target);
+	}
+	
+	return forceUpdate || (clientVersion[target] !== serverVersion[target]);
+}
+
+/**
+ * @param {Object} session
+ */
+async function incrementCropRelationshipsVersion(session) {
+	await incrementTargetVersion(session, await getVersion(session), 'cropRelationships');
+}
+
+/**
  * @param {Object} session
  */
 async function incrementCropsVersion(session) {
-	const version = await getVersion(session);
-	version.crops++;
+	await incrementTargetVersion(session, await getVersion(session), 'crops');
+}
+
+/**
+ * @param {Object} session
+ * @param {Version} version
+ * @param {String} target
+ */
+async function incrementTargetVersion(session, version, target) {
+	version[target]++;
 	await version.save({ session });
 }
 

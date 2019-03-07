@@ -8,6 +8,10 @@ const versionSchema = new mongoose.Schema({
   crops: {
     type: Number,
     required: true
+  },
+  cropRelationships: {
+    type: Number,
+    required: true
   }
 });
 
