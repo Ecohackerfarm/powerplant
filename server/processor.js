@@ -532,9 +532,16 @@ async function getUpdates(session, clientVersion) {
 		}
 		
 		const crops = await Crop.find().session(session).byName(escapeRegEx('')).populate('tags').exec();
+		const trimmedCrops = crops.map(crop => ({
+			_id: crop._id,
+			commonName: crop.commonName,
+			binomialName: crop.binomialName,
+			tags: crop.tags
+		}));
+		
 		updates.crops = {
 			version: serverVersion.crops,
-			crops: crops
+			crops: trimmedCrops
 		};
 
 		if (forceCropsUpdate) {
