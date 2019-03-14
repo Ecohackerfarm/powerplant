@@ -33,6 +33,9 @@ const practicalplants = require('../db/practicalplants.js');
 const { plants, companions } = require('../db/companions.js');
 const { PP_PORT, API_HOST } = require('../secrets.js');
 const { getDatabaseURL } = require('../server/utils.js');
+const Crop = require('../server/models/crop.js');
+const CropRelationship = require('../server/models/crop-relationship.js');
+const CropTag = require('../server/models/crop-tag.js');
 const Version = require('../server/models/version.js');
 
 /**
@@ -288,9 +291,11 @@ async function doGetUpdates() {
 }
 
 /**
- * Push the companion plant database to powerplant server.
+ * Migrate initial database through HTTP for stress testing the powerplant
+ * server. The migration process may not be complete here, if you just want
+ * to cleanly migrate the database, use the 'db-migrate' command.
  */
-async function pushCompanions() {
+async function migrate() {
 	const crops = practicalplants.readCrops();
 	
 	const plantNameToCrop = {};
@@ -298,23 +303,15 @@ async function pushCompanions() {
 		crop.tags = [];
 		plantNameToCrop[crop.binomialName] = crop;
 	});
-	
-	plants.forEach(plant => {
-		if (plantNameToCrop[plant] === undefined) {
-			log(plant + ' from companion db does not exist in practicalplants db');
-		}
-	});
+
+	checkCompanionDatabaseIntegrity(plantNameToCrop);
 	
 	for (let index = 0; index < crops.length; index++) {
 		const response = await addCrop({ document: crops[index] });
 		Object.assign(crops[index], response.data);
 	}
 
-	const relationships = companions.map(companion => ({
-		crop0: plantNameToCrop[companion.plant0]._id,
-		crop1: plantNameToCrop[companion.plant1]._id,
-		compatibility: ((companion.companion == 1) ? 1 : -1)
-	}));
+	const relationships = convertCompanionDatabaseToCropRelationships(plantNameToCrop);
 
 	for (let index = 0; index < relationships.length; index++) {
 		await addCropRelationship({ document: relationships[index] });
@@ -322,22 +319,126 @@ async function pushCompanions() {
 }
 
 /**
- * 
+ * Migrate the initial database directly to MongoDB.
+ */
+async function dbMigrate() {
+	openMongooseConnection();
+
+	/*
+	 * Drop old collections and create new empty ones.
+	 */
+	await dropCollection('croprelationships');
+	await dropCollection('croptags');
+	await dropCollection('crops');
+	await dropCollection('versions');
+
+	await Crop.createCollection();
+	await CropRelationship.createCollection();
+	await CropTag.createCollection();
+	await Version.createCollection();
+
+	/*
+	 * Migrate crops.
+	 */
+	const crops = practicalplants.readCrops();
+
+	crops.forEach(crop => {
+		crop.tags = [];
+	});
+
+	const cropDocuments = await Crop.insertMany(crops);
+
+	/*
+	 * Migrate crop relationships.
+	 */
+	const binomialNameToCropDocument = {};
+	cropDocuments.forEach(crop => {
+		binomialNameToCropDocument[crop.binomialName] = crop;
+	});
+
+	checkCompanionDatabaseIntegrity(binomialNameToCropDocument);
+
+	const relationships = convertCompanionDatabaseToCropRelationships(binomialNameToCropDocument);
+
+	const cropRelationshipDocuments = await CropRelationship.insertMany(relationships);
+
+	/*
+	 * Reset version information.
+	 */
+	await resetVersionCollection();
+
+	mongoose.connection.close();
+}
+
+/**
+ * Reset version information. This forces the server to send updates to
+ * clients.
  */
 async function dbResetVersion() {
-	const mongooseOptions = {
-		replicaSet: 'rs',
-		useNewUrlParser: true
-	};
-	mongoose.connect(getDatabaseURL(), mongooseOptions);
-	
+	openMongooseConnection();
+
 	await Version.createCollection();
+	await resetVersionCollection();
+	console.log('Reset version information');
+
+	mongoose.connection.close();
+}
+
+/**
+ *
+ */
+async function resetVersionCollection() {
 	await Version.deleteMany({}).exec();
 	const document = new Version();
 	document.crops = 0; // Force update to clients
 	document.cropRelationships = 0; // Force update to clients
 	await document.save();
-	console.log('Reset version information');
+}
+
+/**
+ * @param {Object} binomialNameToCropDocument
+ * @return {Object[]}
+ */
+function convertCompanionDatabaseToCropRelationships(binomialNameToCropDocument) {
+	const relationships = companions.map(companion => ({
+		crop0: binomialNameToCropDocument[companion.plant0]._id,
+		crop1: binomialNameToCropDocument[companion.plant1]._id,
+		compatibility: ((companion.companion == 1) ? 1 : -1)
+	}));
+	return relationships;
+}
+
+/**
+ * @param {Object} binomialNameToCrop
+ */
+function checkCompanionDatabaseIntegrity(binomialNameToCrop) {
+	plants.forEach(plant => {
+		if (binomialNameToCrop[plant] === undefined) {
+			log(plant + ' from companion db does not exist in practicalplants db');
+		}
+	});
+}
+
+/**
+ * @param name
+ */
+async function dropCollection(name) {
+	try {
+		await mongoose.connection.dropCollection(name);
+	} catch (exception) {
+		// There'll be an exception if a collection doesn't exist.
+	}
+}
+
+/**
+ *
+ */
+function openMongooseConnection() {
+	const mongooseOptions = {
+		replicaSet: 'rs',
+		useNewUrlParser: true
+	};
+	mongoose.connect(getDatabaseURL(), mongooseOptions);
 }
 
 /*
@@ -360,7 +461,8 @@ const commands = {
 	show: doShow,
 	'get-crops-by-name': doGetCropsByName,
 	'get-updates': doGetUpdates,
-	'push-companions': pushCompanions,
+	'migrate': migrate,
+	'db-migrate': dbMigrate,
 	'db-reset-version': dbResetVersion,
 };
 
