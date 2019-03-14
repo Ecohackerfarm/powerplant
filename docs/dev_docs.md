@@ -35,8 +35,8 @@ To start, you need to set up the development environment.
 6. Clone the [git repository](https://github.com/Ecohackerfarm/powerplant.git)
 7. Run `npm install` to get all packages installed
 8. Generate a private key in secrets.js (see secrets.example.js)
-9. Run `npm start` to start the server
-10. Run `npm run migrate` to migrate crop data from Firebase database
+9. Run `npm run migrate` to migrate the initial database to MongoDB.
+10. Run `npm start` to start the server
 11. At this point everything should be set up. Run `npm test` to make sure
    everything is working.
 12. Done!
@@ -134,9 +134,8 @@ means that the website can be used offline if the page is loaded first.
 
 ## CLI
 
-The CLI is used for migrating crop data and for administration tasks. To keep
-everything properly synchronized the database is never modified directly, but
-always through the server even for administration tasks.
+CLI is used for migrating the initial database to MongoDB, for testing, and
+for administration tasks.
 
 The CLI and the UI are using common client functions (`shared/api-client.js`)
 that are based on the Axios HTTP client.
@@ -176,6 +175,20 @@ crop0:ObjectId(Crop)
 crop1:ObjectId(Crop)
 compatibility:Number
 ```
+
+# Initial database
+
+We have a large initial database based on the practicalplants.org database
+(which is a fork of the PFAF database). The main purpose of the initial
+database is to be able to easily set up an environment where the application
+can be tested. The CLI includes a script (`npm run cli -- db-migrate`) that
+migrates the initial database to MongoDB and sets up additional structures
+that are needed by the application.
+
+Because the nature of the crop and the companion plant data is quite static,
+it can also also be used to verify its own integrity and the integrity of
+any additional databases compared to it. Tests could be written for this
+purpose.
 
 # Coding style
 
