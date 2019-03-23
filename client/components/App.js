@@ -4,38 +4,72 @@
  */
 
 const React = require('react');
-const Header = require('./header/Header');
-const Main = require('./Main');
-const PropTypes = require('prop-types');
 const { connect } = require('react-redux');
-const { withRouter } = require('react-router-dom');
+const { withRouter, Link, Switch, Route, Redirect } = require('react-router-dom');
+const LinkContainer = require('./LinkContainer.js');
+const { Container, Row, Col, Card, Navbar, Nav } = require('react-bootstrap');
+const CropsPage = require('./CropsPage.js');
+const AboutPage = require('./AboutPage.js');
+const LocationsPage = require('./locations/LocationsPage.js');
+const { addLocation } = require('../actions/index.js');
 
 /**
- * Represents the main page.
- * 
- * @extends Component
+ *
  */
 class App extends React.Component {
+	componentWillMount() {
+		if (typeof this.props.locations[0] === 'undefined') {
+			/*
+			 * To make LocationsPage work.
+			 */
+			this.props.addLocation({
+				'name': 'Minimal Viable Product',
+				'loc': {
+					'address': '1015 15th St NW #750, Washington, DC 20005, USA',
+					'coordinates': [-77.0340315,38.9031004]
+				},
+				'beds': {}
+			});
+		}
+	}
+
 	render() {
 		if (!this.props.storeLoaded) {
 			return (<div>Loading...</div>);
 		} else {
 			return (
 				<div>
-					<Header />
-					<Main />
+					<Navbar bg="light" collapseOnSelect="true" expand="lg">
+						<Navbar.Brand>powerplant</Navbar.Brand>
+						<Navbar.Collapse>
+							<Nav>
+								<LinkContainer to="/locations/0/beds/add"><Nav.Link>Home</Nav.Link></LinkContainer>
+								<LinkContainer to="/crops"><Nav.Link>Crops</Nav.Link></LinkContainer>
+								<LinkContainer to="/about"><Nav.Link>About</Nav.Link></LinkContainer>
+							</Nav>
+						</Navbar.Collapse>
+					</Navbar>
+					<div>
+						<Switch>
+							<Route path="/" exact={true} render={() => <Redirect to="/locations/0/beds/add" />} />
+							<Route path="/locations" component={LocationsPage} />
+							<Route path="/crops" component={CropsPage} />
+							<Route path="/about" component={AboutPage} />
+						</Switch>
+					</div>
 				</div>
 			);
-	  	}
+		}
 	}
 }
 
-App.propTypes = {
-	storeLoaded: PropTypes.bool.isRequired
-};
-
-const mapStateToProps = ({ app }) => ({
-	storeLoaded: app.storeLoaded
+const mapDispatchToProps = dispatch => ({
+	addLocation: (location) => dispatch(addLocation(location))
 });
 
-module.exports = withRouter(connect(mapStateToProps)(App));
+const mapStateToProps = state => ({
+	locations: state.locations,
+	storeLoaded: state.app.storeLoaded
+});
+
+module.exports = withRouter(connect(mapStateToProps, mapDispatchToProps)(App));

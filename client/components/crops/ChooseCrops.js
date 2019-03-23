@@ -6,7 +6,6 @@
 const { Typeahead } = require('react-bootstrap-typeahead');
 require('react-bootstrap-typeahead/css/Typeahead.css');
 const React = require('react');
-const PropTypes = require('prop-types');
 const {
 	fetchCrops
 } = require('../../actions/cropActions');
@@ -38,13 +37,6 @@ class ChooseCrops extends React.Component {
 			/>
 		);
 	}
-}
-
-ChooseCrops.propTypes = {
-	onChange : PropTypes.func.isRequired,
-	crops : PropTypes.object.isRequired,
-	loading : PropTypes.bool.isRequired,
-	error : PropTypes.bool.isRequired,
 }
 
 const mapDispatchToProps = (dispatch) => ({

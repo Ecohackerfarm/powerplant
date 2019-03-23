@@ -1,7 +1,6 @@
 const React = require('react');
 const { Redirect } = require('react-router-dom');
-const PropTypes = require('prop-types');
-const { Grid, Row, Col } = require('react-bootstrap');
+const { Container, Row, Col } = require('react-bootstrap');
 
 /**
  * @namespace AddItemPage
@@ -28,9 +27,9 @@ class AddItemPage extends React.Component {
 		} else {
 			const AddItemForm = this.props.AddItemForm;
 			return (
-				<Grid>
+				<Container>
 					<Row>
-						<Col md={6} mdOffset={3}>
+						<Col md={6}>
 							<AddItemForm
 								onSuccess={this.onSuccess.bind(this)}
 								onSubmit={this.props.onSubmit}
@@ -38,18 +37,10 @@ class AddItemPage extends React.Component {
 							/>
 						</Col>
 					</Row>
-				</Grid>
+				</Container>
 			);
 		}
 	}
 }
-
-AddItemPage.propTypes = {
-	onSubmit: PropTypes.func.isRequired,
-	itemName: PropTypes.string.isRequired,
-	AddItemForm: PropTypes.func.isRequired,
-	homeUrl: PropTypes.string.isRequired,
-	itemToEdit: PropTypes.object
-};
 
 module.exports = AddItemPage;

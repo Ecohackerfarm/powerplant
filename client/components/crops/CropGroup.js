@@ -4,7 +4,6 @@
  */
 
 const React = require('react');
-const PropTypes = require('prop-types');
 const { Typeahead } = require('react-bootstrap-typeahead');
 const style = require('react-bootstrap-typeahead/css/Typeahead.css');
 const { ToggleButton, ToggleButtonGroup, Row, Col} = require('react-bootstrap');
@@ -107,10 +106,6 @@ class CropGroup extends React.Component {
 			</Row>
 		);
 	}
-}
-
-CropGroup.propTypes = {
-	cropGroup: PropTypes.array.isRequired,
 }
 
 module.exports = CropGroup;
