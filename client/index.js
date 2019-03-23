@@ -7,7 +7,7 @@
 const React = require('react');
 const { render } = require('react-dom');
 const { Provider } = require('react-redux');
-const { addAllStyles } = require('./styles');
+//const { addAllStyles } = require('./styles');
 const App = require('./components/App');
 const { createLogger } = require('redux-logger');
 const thunk = require('redux-thunk').default;
@@ -68,6 +68,6 @@ function createReduxStore() {
 const store = createReduxStore();
 
 // Add custom styles for React-Bootstrap components
-addAllStyles();
+//addAllStyles();
 
 render(<AppProvider />, document.getElementById('app'));

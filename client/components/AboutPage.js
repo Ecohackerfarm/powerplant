@@ -4,8 +4,8 @@
  */
 
 const React = require('react');
-const { Grid, Row, Col } = require('react-bootstrap');
-require('../../styles/AboutPage.scss');
+const { Container, Row, Col } = require('react-bootstrap');
+require('../styles/AboutPage.scss');
 
 /**
  * About page
@@ -16,7 +16,7 @@ class AboutPage extends React.Component {
 	render() {
 		return (
 			<div className="about">
-				<Grid>
+				<Container>
 					<Row>
 						<Col id="imageTitle" sm={12}>
 						</Col>
@@ -25,15 +25,15 @@ class AboutPage extends React.Component {
 						</Col>
 					</Row>
 					<Row className="textBody">
-						<h4>An <a href="https://ecohackerfarm.org">Eco Hacker Farm</a> OpenSource Project under MIT license</h4>
+						<h4>An <a href="https://ecohackerfarm.org">Eco Hacker Farm</a> open-source project under MIT license</h4>
 					</Row>
 					<Row className="textBody">
 						<a href="https://powerplant.ecohackerfarm.org"><h4>powerplant.ecohackerfarm.org</h4></a>
 					</Row>
 					<Row className="textBody">
-						<h4>Copyright (c) 2017 Ecohackerfarm</h4>
+						<h4>Copyright (c) 2017-2019 Ecohackerfarm</h4>
 					</Row>
-				</Grid>
+				</Container>
 			</div>
 		);
 	};

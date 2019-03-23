@@ -4,7 +4,7 @@
  */
 
 const React = require('react');
-const { Col, Panel } = require('react-bootstrap');
+const { Col, Card } = require('react-bootstrap');
 
 /**
  * @extends Component
@@ -12,12 +12,15 @@ const { Col, Panel } = require('react-bootstrap');
 class BedItem extends React.Component {
 	render() {
 		return (
-			<Col sm={12} md={6} lg={3}>
-				<Panel className="panel-custom panel-crudablelist" header={this.props.header}>
+			<Col>
+				<Card>
+					<Card.Header>{this.props.header}</Card.Header>
+					<Card.Body>
 					{Object.entries(this.props.item.crops).map(([key, crop]) => {
-						return <li key={key}>{crop.commonName}</li>;
+						return <li key={key}>{crop.commonName ? crop.commonName : crop.binomialName}</li>;
 					})}
-				</Panel>
+					</Card.Body>
+				</Card>
 			</Col>
 		);
 	}

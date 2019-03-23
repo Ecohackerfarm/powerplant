@@ -9,7 +9,7 @@ const CrudableList = require('../shared/CrudableList');
 const AddBedForm = require('./AddBedForm');
 const BedItem = require('./BedItem');
 const BedPage = require('./BedPage');
-const { Grid } = require('react-bootstrap');
+const { Container } = require('react-bootstrap');
 const { createBed } = require('../../actions/bedActions');
 const { deleteBed, editBed } = require('../../actions');
 
@@ -25,7 +25,7 @@ class BedsPage extends React.Component {
 		return (
 			<div className="yourBeds">
 				<h3>Your Beds</h3>
-				<Grid>
+				<Container>
 					<CrudableList
 						actions={actionsWithLocationId}
 						items={this.props.beds}
@@ -35,7 +35,7 @@ class BedsPage extends React.Component {
 						DetailPage={BedPage}
 						match={this.props.match}
 					/>
-				</Grid>
+				</Container>
 			</div>
 		);
 	}

@@ -5,7 +5,6 @@
 
 const React = require('react');
 const { Col, Button } = require('react-bootstrap');
-const Proptypes = require('prop-types');
 const { connect } = require('react-redux');
 const { Typeahead } = require('react-bootstrap-typeahead');
 const { withRouter } = require('react-router-dom');
@@ -112,7 +111,7 @@ class EditBedForm extends React.Component {
 			  	emptyLabel="No compatible crops found."
 			  	/>
 			  </div>
-			  <Col xs={3} mdOffset={2} md={2} >
+			  <Col xs={3} md={2} >
 					<Button
 						type="submit"
 						className="btn btn-primary"

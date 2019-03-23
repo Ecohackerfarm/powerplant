@@ -4,7 +4,6 @@
  */
 
 const React = require('react');
-const PropTypes = require('prop-types');
 const validateLocation = require('../../../shared/validation/locationValidation');
 const {
 	Button,
@@ -229,7 +228,7 @@ class AddLocationForm extends React.Component {
 
 				{locationResults.length > 0 && (
 					<ListGroup>
-						<ListGroupItem bsStyle="info">Select your location</ListGroupItem>
+						<ListGroupItem>Select your location</ListGroupItem>
 						{locationResults.map(({ loc }, index) => (
 							<ListGroupItem
 								key={index}
@@ -258,16 +257,5 @@ class AddLocationForm extends React.Component {
 		);
 	}
 }
-
-AddLocationForm.propTypes = {
-	// both will be passed in by the Crudable AddItemPage
-	onSuccess: PropTypes.func.isRequired,
-	onSubmit: PropTypes.func.isRequired,
-	itemToEdit: PropTypes.object // shit, this is an antipattern isn't it
-	// I shouldn't set state = require(props
-	// ok, it works fine, so I won't change it BUT
-	// TODO: store form state in CrudableList/AddItemPage,
-	// pass in to this form as property rather than storing state in the form
-};
 
 module.exports = AddLocationForm;

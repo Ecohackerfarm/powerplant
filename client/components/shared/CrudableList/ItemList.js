@@ -1,7 +1,6 @@
 const React = require('react');
 const { Link } = require('react-router-dom');
-const PropTypes = require('prop-types');
-const { HelpBlock, Col, Row } = require('react-bootstrap');
+const { Col, Row } = require('react-bootstrap');
 const ItemHeader = require('./ItemHeader');
 
 const ItemList = ({ deleteAction, match, items, ItemView, itemName }) => {
@@ -30,19 +29,11 @@ const ItemList = ({ deleteAction, match, items, ItemView, itemName }) => {
 				))
 			) : (
 				<Col>
-					<HelpBlock>No {itemName}s yet</HelpBlock>
+					<div>No {itemName}s yet</div>
 				</Col>
 			)}
 		</Row>
 	);
 }
-
-ItemList.propTypes = {
-	match: PropTypes.object.isRequired,
-	deleteAction: PropTypes.func,
-	items: PropTypes.object.isRequired,
-	ItemView: PropTypes.func.isRequired,
-	itemName: PropTypes.string.isRequired
-};
 
 module.exports = ItemList;

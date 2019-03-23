@@ -66,7 +66,8 @@ class AddBedForm extends React.Component {
 		this.chosenBeds.forEach((crops, index) => {
 			let generatedName = '';
 			crops.forEach((crop) => {
-				generatedName += crop.commonName.slice(0, 2);
+				const name = crop.commonName ? crop.commonName : crop.binomialName;
+				generatedName += name.slice(0, 2);
 			});
 			//create beds from
 			createPromises.push(this.props.onSubmit({
