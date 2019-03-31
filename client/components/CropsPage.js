@@ -1,82 +1,50 @@
 const React = require('react');
 const { connect } = require('react-redux');
 const { Badge } = require('react-bootstrap');
-const ListView = require('./ListView.js');
-const ListItem = require('./ListItem.js');
-const TagsInput = require('react-tagsinput');
-require('react-tagsinput/react-tagsinput.css');
+const PaginatedList = require('./PaginatedList.js');
+const CropListItem = require('./CropListItem.js');
 const { fetchCrops } = require('../actions/cropActions.js');
 const { cropsUpdated } = require('../actions/index.js');
+const utils = require('../../shared/utils.js');
 
+/**
+ * CropsPage lists crops and lets the user to edit them.
+ */
 class CropsPage extends React.Component {
+  constructor(props) {
+    super(props);
+
+    this.onRenderItem = this.onRenderItem.bind(this);
+    this.onSaveCrop   = this.onSaveCrop.bind(this);
+  }
+
   componentWillMount() {
     this.props.fetchCrops();
   }
 
   render() {
-    const allTags = this.findAllTags();
-    const tagBadges = allTags.map(tag => <Badge variant="info">{tag.name}</Badge>);
+    const tagSet = utils.findTagSet(this.props.crops);
+    const tagBadges = tagSet.map(tag => <Badge variant="info">{tag}</Badge>);
 
     return (
       <div>
         <div>{tagBadges}</div>
-        <ListView items={this.props.crops} rows={5} columns={2} vertical={true} itemComponent={this.createItemComponent()} />
+        <PaginatedList items={this.props.crops} columns={3} rows={5} vertical={true} renderItem={this.onRenderItem} />
       </div>
     );
   }
 
-  createItemComponent() {
-    return (
-      props => {
-        const crop = props.item;
-        let tagNames = crop.tags.map(tag => tag.name);
-        
-        return (
-          <ListItem
-            item={crop}
-            contentComponent={({item}) => (item.commonName ? item.commonName : item.binomialName)}
-            editComponent={this.createItemEditComponent(tagNames)}
-            onSave={item => this.onSaveCrop(item, tagNames)}
-          />
-        );
-      }
-    );
+  onRenderItem(item) {
+    return <CropListItem crop={item} handleSave={this.onSaveCrop} />;
   }
 
-  createItemEditComponent(tagNames) {
-    return (
-      ({item}) => (
-        <div>
-          <p>{item.commonName ? item.commonName : item.binomialName}</p>
-          <TagsInput value={tagNames} onChange={tags => tagNames.splice(0, tagNames.length, ...tags)} />
-        </div>
-      )
-    );
-  }
+  onSaveCrop(crop) {
+    const newCrops = this.props.crops.concat([]);
 
-  onSaveCrop(crop, tagNames) {
-    crop.tags = tagNames.map(tagName => ({ name: tagName }));
-    
-    this.props.updateCrops(this.props.crops);
-    this.forceUpdate(); // TODO Why the above is not triggering a render?
-  }
+    const index = newCrops.findIndex(temp => (temp._id == crop._id));
+    newCrops[index] = crop;
 
-  findAllTags() {
-		const tagNames = [];
-		const tags = [];
-		
-		this.props.crops.forEach(crop => {
-			if (crop.tags) {
-				crop.tags.forEach(tag => {
-					if (!tagNames.includes(tag.name)) {
-						tagNames.push(tag.name);
-						tags.push(tag);
-					}
-				});
-			}
-		});
-		
-		return tags;
+    this.props.updateCrops(newCrops);
   }
 }
 
