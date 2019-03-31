@@ -1,6 +1,6 @@
 const React = require('react');
 const DropdownView = require('./DropdownView.js');
-const { effectItemSelected, getSelectableItems } = require('./select-dropdown.js');
+const { effectItemSelected, getSelectableItems } = require('./logic/select-dropdown.js');
 
 /**
  * SelectDropdown is a component that is used for selecting items from a list.

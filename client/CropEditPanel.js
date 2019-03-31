@@ -1,8 +1,8 @@
 const React = require('react');
 const { connect } = require('react-redux');
-const SelectDropdownWithSearch = require('./SelectDropdownWithSearch.js');
-const EditPanel = require('./EditPanel.js');
-const utils = require('../../shared/utils.js');
+const SelectDropdownWithSearch = require('./shared/SelectDropdownWithSearch.js');
+const EditPanel = require('./shared/EditPanel.js');
+const utils = require('../shared/utils.js');
 
 /**
  * CropEditPanel is an editor for Crop objects.

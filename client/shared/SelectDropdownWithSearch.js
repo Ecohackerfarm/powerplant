@@ -1,9 +1,9 @@
 const React = require('react');
 const { InputGroup } = require('react-bootstrap');
 const DropdownView = require('./DropdownView.js');
-const { effectItemSelected, getSelectableItems } = require('./select-dropdown.js');
+const { effectItemSelected, getSelectableItems } = require('./logic/select-dropdown.js');
 const InputField = require('./InputField.js');
-const { TAB, ENTER, ESCAPE } = require('./input-field.js');
+const { TAB, ENTER, ESCAPE } = require('./logic/input-field.js');
 
 /**
  * SelectDropdownWithSearch is a component that is used for selecting items from a list. The

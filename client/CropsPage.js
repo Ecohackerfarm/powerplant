@@ -1,11 +1,11 @@
 const React = require('react');
 const { connect } = require('react-redux');
 const { Badge } = require('react-bootstrap');
-const PaginatedList = require('./PaginatedList.js');
+const PaginatedList = require('./shared/PaginatedList.js');
 const CropListItem = require('./CropListItem.js');
-const { fetchCrops } = require('../actions/cropActions.js');
-const { cropsUpdated } = require('../actions/index.js');
-const utils = require('../../shared/utils.js');
+const { fetchCrops } = require('./actions/cropActions.js');
+const { cropsUpdated } = require('./actions/index.js');
+const utils = require('../shared/utils.js');
 
 /**
  * CropsPage lists crops and lets the user to edit them.

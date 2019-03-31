@@ -1,6 +1,6 @@
 const React = require('react');
 const { Form } = require('react-bootstrap');
-const { TAB, ENTER, ESCAPE } = require('./input-field.js');
+const { TAB, ENTER, ESCAPE } = require('./logic/input-field.js');
 
 /**
  * @param {String}   props.value

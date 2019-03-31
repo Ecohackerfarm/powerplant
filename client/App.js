@@ -10,8 +10,8 @@ const LinkContainer = require('./LinkContainer.js');
 const { Container, Row, Col, Card, Navbar, Nav } = require('react-bootstrap');
 const CropsPage = require('./CropsPage.js');
 const AboutPage = require('./AboutPage.js');
-const LocationsPage = require('./locations/LocationsPage.js');
-const { addLocation } = require('../actions/index.js');
+const LocationsPage = require('./components/locations/LocationsPage.js');
+const { addLocation } = require('./actions/index.js');
 
 /**
  *
