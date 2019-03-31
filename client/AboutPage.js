@@ -5,7 +5,7 @@
 
 const React = require('react');
 const { Container, Row, Col } = require('react-bootstrap');
-require('../styles/AboutPage.scss');
+require('./styles/AboutPage.scss');
 
 /**
  * About page

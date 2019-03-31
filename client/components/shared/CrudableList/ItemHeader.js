@@ -1,5 +1,5 @@
 const React = require('react');
-const LinkContainer = require('../../LinkContainer.js');
+const LinkContainer = require('../../../LinkContainer.js');
 const { Row, Col, ButtonGroup, Button } = require('react-bootstrap');
 
 const ItemHeader = ({ name, editLink, refreshLink, deleteAction }) => (
