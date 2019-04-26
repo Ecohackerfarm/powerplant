@@ -1,5 +1,6 @@
 /**
  * @namespace shared
+ * @memberof utils
  */
 
 /**
@@ -33,8 +34,17 @@ function getCropDisplayName(crop) {
   return crop.commonName ? (crop.commonName + ' (' + crop.binomialName + ')') : crop.binomialName;
 }
 
+/**
+ * @param {String} name
+ * @return {String}
+ */
+function toCamelCase(name) {
+  return name.toLowerCase().replace(/( [a-zA-Z])/g, match => match.toUpperCase()).replace(/ /g, '');
+}
+
 module.exports = {
   findTagSet,
   getCropTagNames,
-  getCropDisplayName
+  getCropDisplayName,
+  toCamelCase,
 };

@@ -6,7 +6,7 @@
 const React = require('react');
 const { connect } = require('react-redux');
 const { withRouter, Link, Switch, Route, Redirect } = require('react-router-dom');
-const LinkContainer = require('./LinkContainer.js');
+const { LinkContainer } = require('react-router-bootstrap');
 const { Container, Row, Col, Card, Navbar, Nav } = require('react-bootstrap');
 const CropsPage = require('./CropsPage.js');
 const AboutPage = require('./AboutPage.js');
