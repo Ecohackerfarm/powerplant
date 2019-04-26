@@ -3,6 +3,9 @@ const { Form } = require('react-bootstrap');
 const { TAB, ENTER, ESCAPE } = require('./logic/input-field.js');
 
 /**
+ * Input field with enhanced event handling and programmatic control of the value. Can be used to
+ * implement things like tab completion.
+ *
  * @param {String}   props.value
  * @param {Function} props.handleChange
  * @param {Function} props.handleEnter
@@ -17,9 +20,8 @@ class InputField extends React.Component {
   }
 
   render() {
-    const { value, handleChange, handleEnter, handleFocus } = this.props;
-
-    return <Form.Control value={value} onChange={this.onChange} onKeyDown={this.onKeyDown} onFocus={() => handleFocus(true)} onBlur={() => handleFocus(false)} />;
+    const { value } = this.props;
+    return <Form.Control value={value} onChange={this.onChange} onKeyDown={this.onKeyDown} onFocus={() => this.onFocusChange(true)} onBlur={() => this.onFocusChange(false)} />;
   }
 
   onChange(event) {
@@ -27,11 +29,20 @@ class InputField extends React.Component {
   }
 
   onKeyDown(event) {
+    const { handleFunctionKey } = this.props;
     const key = event.keyCode;
 
-    if (FORWARDED_KEYS.includes(key)) {
-      this.props.handleFunctionKey(key);
+    if (handleFunctionKey && FORWARDED_KEYS.includes(key)) {
+      handleFunctionKey(key);
       event.preventDefault();
+    }
+  }
+
+  onFocusChange(focus) {
+    const { handleFocus } = this.props;
+
+    if (handleFocus) {
+      handleFocus(focus);
     }
   }
 }
