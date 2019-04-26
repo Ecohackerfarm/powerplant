@@ -1,6 +1,6 @@
 const React = require('react');
 const { Switch, Route } = require('react-router-dom');
-const LinkContainer = require('../../../LinkContainer.js');
+const { LinkContainer } = require('react-router-bootstrap');
 const { Container, Button } = require('react-bootstrap');
 const ItemList = require('./ItemList');
 const AddItemPage = require('./AddItemPage');
