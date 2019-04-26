@@ -7,6 +7,7 @@
 
 const readline = require('readline');
 const fs = require('fs');
+const utils = require('../shared/utils.js');
 
 /**
  * Read the mongoexport file and normalize its contents to ease
@@ -290,11 +291,7 @@ const ALL_PROPERTIES = [
 ];
 
 function toCamelCase(property) {
-	return {
-		[property]: property
-			.replace(/( [a-zA-Z])/g, (match) => match.toUpperCase())
-			.replace(/ /g, '')
-	};
+	return { [property]: utils.toCamelCase(property) };
 }
 
 const PP_MAPPINGS = {
