@@ -7,6 +7,7 @@
 
 const readline = require('readline');
 const fs = require('fs');
+const shared = require('../shared/practicalplants.js');
 const utils = require('../shared/utils.js');
 
 /**
@@ -379,58 +380,58 @@ const NAME_PROPERTIES = [
  * normalized values.
  */
 const ALL_BOOLEAN_VALUES = ['No', 'False', 'Yes', 'True'];
-const PP_BOOLEAN_VALUES = ['false', 'true'];
+const PP_BOOLEAN_VALUES = shared.PP_BOOLEAN_VALUES;
 
 const ALL_HARDINESS_ZONE_VALUES = 12;
-const PP_HARDINESS_ZONE_VALUES = ALL_HARDINESS_ZONE_VALUES;
+const PP_HARDINESS_ZONE_VALUES = shared.PP_HARDINESS_ZONE_VALUES;
 
 const ALL_SOIL_TEXTURE_VALUES = ['sandy', 'loamy', 'clay', 'heavy clay'];
-const PP_SOIL_TEXTURE_VALUES = ALL_SOIL_TEXTURE_VALUES;
+const PP_SOIL_TEXTURE_VALUES = shared.PP_SOIL_TEXTURE_VALUES;
 
 const ALL_SOIL_PH_VALUES = ['very acid', 'acid', 'neutral', 'alkaline', 'very alkaline'];
-const PP_SOIL_PH_VALUES = ALL_SOIL_PH_VALUES;
+const PP_SOIL_PH_VALUES = shared.PP_SOIL_PH_VALUES;
 
 const ALL_SOIL_WATER_RETENTION_VALUES = ['well drained', 'moist', 'wet'];
-const PP_SOIL_WATER_RETENTION_VALUES = ALL_SOIL_WATER_RETENTION_VALUES;
+const PP_SOIL_WATER_RETENTION_VALUES = shared.PP_SOIL_WATER_RETENTION_VALUES;
 
 const ALL_SHADE_VALUES = ['no shade', 'light shade', 'partial shade', 'permanent shade', 'permanent deep shade'];
-const PP_SHADE_VALUES = ALL_SHADE_VALUES;
+const PP_SHADE_VALUES = shared.PP_SHADE_VALUES;
 
 const ALL_SUN_VALUES = ['indirect sun', 'partial sun', 'full sun'];
-const PP_SUN_VALUES = ALL_SUN_VALUES;
+const PP_SUN_VALUES = shared.PP_SUN_VALUES;
 
 const ALL_WATER_VALUES = ['low', 'moderate', 'high', 'aquatic'];
-const PP_WATER_VALUES = ALL_WATER_VALUES;
+const PP_WATER_VALUES = shared.PP_WATER_VALUES;
 
 const ALL_DROUGHT_VALUES = ['dependent', 'tolerant', 'intolerant'];
-const PP_DROUGHT_VALUES = ALL_DROUGHT_VALUES;
+const PP_DROUGHT_VALUES = shared.PP_DROUGHT_VALUES;
 
 const ALL_ECOSYSTEM_NICHE_VALUES = ['Canopy', 'Climber', 'Secondary canopy', 'Soil surface', 'Climber', 'Shrub', 'Herbaceous', 'Rhizosphere'];
-const PP_ECOSYSTEM_NICHE_VALUES = ['canopy', 'climber', 'secondary canopy', 'soil surface', 'shrub', 'herbaceous', 'rhizosphere'];
+const PP_ECOSYSTEM_NICHE_VALUES = shared.PP_ECOSYSTEM_NICHE_VALUES;
 
 const ALL_LIFE_CYCLE_VALUES = ['perennial', 'annual', 'biennial'];
-const PP_LIFE_CYCLE_VALUES = ALL_LIFE_CYCLE_VALUES;
+const PP_LIFE_CYCLE_VALUES = shared.PP_LIFE_CYCLE_VALUES;
 
 const ALL_HERBACEOUS_OR_WOODY_VALUES = ['herbaceous', 'woody', ''];
-const PP_HERBACEOUS_OR_WOODY_VALUES = ['herbaceous', 'woody'];
+const PP_HERBACEOUS_OR_WOODY_VALUES = shared.PP_HERBACEOUS_OR_WOODY_VALUES;
 
 const ALL_DECIDUOUS_OR_EVERGREEN_VALUES = ['deciduous', 'evergreen', ''];
-const PP_DECIDUOUS_OR_EVERGREEN_VALUES = ['deciduous', 'evergreen'];
+const PP_DECIDUOUS_OR_EVERGREEN_VALUES = shared.PP_DECIDUOUS_OR_EVERGREEN_VALUES;
 
 const ALL_GROWTH_RATE_VALUES = ['slow', 'moderate', 'vigorous'];
-const PP_GROWTH_RATE_VALUES = ALL_GROWTH_RATE_VALUES;
+const PP_GROWTH_RATE_VALUES = shared.PP_GROWTH_RATE_VALUES;
 
 const ALL_MATURE_MEASUREMENT_UNIT_VALUES = ['meters', 'metres', 'feet'];
-const PP_MATURE_MEASUREMENT_UNIT_VALUES = ALL_MATURE_MEASUREMENT_UNIT_VALUES;
+const PP_MATURE_MEASUREMENT_UNIT_VALUES = shared.PP_MATURE_MEASUREMENT_UNIT_VALUES;
 
 const ALL_MATURE_HEIGHT_VALUES = 110;
-const PP_MATURE_HEIGHT_VALUES = ALL_MATURE_HEIGHT_VALUES;
+const PP_MATURE_HEIGHT_VALUES = shared.PP_MATURE_HEIGHT_VALUES;
 
 const ALL_MATURE_WIDTH_VALUES = 30;
-const PP_MATURE_WIDTH_VALUES = ALL_MATURE_WIDTH_VALUES;
+const PP_MATURE_WIDTH_VALUES = shared.PP_MATURE_WIDTH_VALUES;
 
 const ALL_FLOWER_TYPE_VALUES = ['hermaphrodite', 'monoecious', 'dioecious'];
-const PP_FLOWER_TYPE_VALUES = ALL_FLOWER_TYPE_VALUES;
+const PP_FLOWER_TYPE_VALUES = shared.PP_FLOWER_TYPE_VALUES;
 
 const ALL_POLLINATORS_VALUES = [
 	'Insects',
@@ -482,36 +483,7 @@ const ALL_POLLINATORS_VALUES = [
 	'Dryoptera',
 	'Hymenoptera'
 ];
-const PP_POLLINATORS_VALUES = [
-	'insects',
-	'wind',
-	'bees',
-	'flies',
-	'self',
-	'beetles',
-	'lepidoptera',
-	'bats',
-	'moths',
-	'birds',
-	'apomictic',
-	'slugs',
-	'snails',
-	'hoverflies',
-	'cleistogamous',
-	'wasps',
-	'water',
-	'midges',
-	'diptera',
-	'butterflies',
-	'apomixy',
-	'bumblebees',
-	'wind-blown sand',
-	'sunbirds',
-	'carrion flies',
-	'hand',
-	'dryoptera',
-	'hymenoptera'
-];
+const PP_POLLINATORS_VALUES = shared.PP_POLLINATORS_VALUES;
 
 const ALL_FUNCTIONS_VALUES = [
 	'Nitrogen fixer',
@@ -531,23 +503,7 @@ const ALL_FUNCTIONS_VALUES = [
 	'Soil conditioner',
 	'Pest Repellent'
 ];
-const PP_FUNCTIONS_VALUES = [
-	'nitrogen fixer',
-	'ground cover',
-	'hedge',
-	'windbreak',
-	'pioneer',
-	'earth stabiliser',
-	'green manure',
-	'repellant',
-	'soil builder',
-	'rootstock',
-	'biogenic decalcifier',
-	'phytoremediation',
-	'bee attractor',
-	'soil conditioner',
-	'pest repellent'
-];
+const PP_FUNCTIONS_VALUES = shared.PP_FUNCTIONS_VALUES;
 
 const ALL_GROW_FROM_VALUES = [
 	'seed',
@@ -558,16 +514,16 @@ const ALL_GROW_FROM_VALUES = [
 	'graft',
 	'bulb'
 ];
-const PP_GROW_FROM_VALUES = ALL_GROW_FROM_VALUES;
+const PP_GROW_FROM_VALUES = shared.PP_GROW_FROM_VALUES;
 
 const ALL_CUTTING_TYPE_VALUES = ['semi-ripe', 'soft wood', 'root', 'hard wood', ''];
-const PP_CUTTING_TYPE_VALUES = ['semi-ripe', 'soft wood', 'root', 'hard wood'];
+const PP_CUTTING_TYPE_VALUES = shared.PP_CUTTING_TYPE_VALUES;
 
 const ALL_FERTILITY_VALUES = ['self fertile', 'self sterile'];
-const PP_FERTILITY_VALUES = ALL_FERTILITY_VALUES;
+const PP_FERTILITY_VALUES = shared.PP_FERTILITY_VALUES;
 
 const ALL_ROOT_ZONE_VALUES = ['shallow', 'deep', 'surface'];
-const PP_ROOT_ZONE_VALUES = ALL_ROOT_ZONE_VALUES;
+const PP_ROOT_ZONE_VALUES = shared.PP_ROOT_ZONE_VALUES;
 
 module.exports = {
 	readCrops,
