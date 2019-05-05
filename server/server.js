@@ -6,6 +6,7 @@
  */
 
 const express = require('express');
+const PouchDB = require('pouchdb');
 const mongoose = require('mongoose');
 const path = require('path');
 const bodyParser = require('body-parser');
@@ -161,6 +162,7 @@ function buildApp(development) {
 
 	// Set up our routers
 	app.use('/api', buildApiRouter());
+	app.use('/db', require('express-pouchdb')(PouchDB));
 
 	// Thank the LORD this works correctly
 	app.get('*', function (req, res) {

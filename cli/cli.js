@@ -4,6 +4,7 @@
  */
 
 const mongoose = require('mongoose');
+const PouchDB = require('pouchdb');
 const {
 	setBaseUrl,
 	getCropsByName,
@@ -340,12 +341,7 @@ async function dbMigrate() {
 	/*
 	 * Migrate crops.
 	 */
-	const crops = practicalplants.readCrops();
-
-	crops.forEach(crop => {
-		crop.tags = [];
-	});
-
+	const crops = readCrops();
 	const cropDocuments = await Crop.insertMany(crops);
 
 	/*
@@ -368,6 +364,130 @@ async function dbMigrate() {
 	await resetVersionCollection();
 
 	mongoose.connection.close();
+}
+
+async function pouchMigrate() {
+	try {
+		let local = new PouchDB('crops-local');
+		let remote = new PouchDB('http://127.0.0.1:8080/db/crops');
+
+		console.log(await local.info());
+		console.log(await remote.info());
+
+		await local.destroy();
+		await remote.destroy();
+		local = new PouchDB('crops-local');
+		remote = new PouchDB('http://127.0.0.1:8080/db/crops');
+
+		console.log(await local.info());
+		console.log(await remote.info());
+
+		const crops = readCrops();
+		const documents = await local.bulkDocs(crops);
+		console.log(documents);
+
+		await pouchSync();
+	} catch (exception) {
+		console.log(exception);
+	}
+}
+
+async function pouchSync() {
+	try {
+		let local = new PouchDB('crops-local');
+		let remote = new PouchDB('http://127.0.0.1:8080/db/crops');
+
+		console.log(await remote.info());
+		console.log(await local.info());
+
+		console.log(await local.sync(remote));
+
+		console.log(await remote.info());
+		console.log(await local.info());
+	} catch (exception) {
+		console.log(exception);
+	}
+}
+
+async function pouchClone() {
+	let local = new PouchDB('crops-local');
+	await local.destroy();
+
+	await pouchSync();
+}
+
+async function pouchRemove() {
+	const ids = nonOptionArguments.slice(1);
+
+	const local = new PouchDB('crops-local');
+
+	ids.forEach(async id => {
+		try {
+			console.log(await local.remove(await local.get(id)));
+		} catch (exception) {
+			console.log(exception);
+		}
+	});
+}
+
+async function pouchAdd() {
+	const documents = parseOptionArray('document');
+
+	const local = new PouchDB('crops-local');
+
+	documents.forEach(async document => {
+		try {
+			console.log(await local.post(document));
+		} catch (exception) {
+			console.log(exception);
+		}
+	});
+}
+
+async function pouchUpdate() {
+	const ids = nonOptionArguments.slice(1);
+	const documents = parseOptionArray('document');
+
+	const local = new PouchDB('crops-local');
+
+	for (let index = 0; index < ids.length; index++) {
+		const id = ids[index];
+		const document = documents[index];
+
+		console.log(document);
+
+		try {
+			const existing = await local.get(id);
+
+			console.log(await local.put(Object.assign({}, existing, document, { _id: id, _rev: existing._rev })));
+		} catch (exception) {
+			console.log(exception);
+		}
+	}
+}
+
+async function pouchShow() {
+	const ids = nonOptionArguments.slice(1);
+
+	const local = new PouchDB('crops-local');
+
+	ids.forEach(async id => {
+		try {
+			console.log(await local.get(id));
+		} catch (exception) {
+			console.log(exception);
+		}
+	});
+}
+
+function readCrops() {
+	const crops = practicalplants.readCrops();
+
+	crops.forEach(crop => {
+		crop.tags = [];
+	});
+
+	return crops;
 }
 
 /**
@@ -464,6 +584,13 @@ const commands = {
 	'migrate': migrate,
 	'db-migrate': dbMigrate,
 	'db-reset-version': dbResetVersion,
+	'pouch-migrate': pouchMigrate,
+	'pouch-sync': pouchSync,
+	'pouch-clone': pouchClone,
+	'pouch-remove': pouchRemove,
+	'pouch-add': pouchAdd,
+	'pouch-update': pouchUpdate,
+	'pouch-show': pouchShow,
 };
 
 const commandLineArguments = process.argv.slice(2);
