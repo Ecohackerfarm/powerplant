@@ -468,16 +468,42 @@ async function pouchUpdate() {
 
 async function pouchShow() {
 	const ids = nonOptionArguments.slice(1);
+	const revs = parseOptionArray('rev');
 
 	const local = new PouchDB('crops-local');
 
-	ids.forEach(async id => {
+	for (let index = 0; index < ids.length; index++) {
+		const id = ids[index];
+		const rev = (index < revs.length) ? revs[index] : null;
+
+		let options = { revs: true };
+		if (rev) {
+			Object.assign(options, { rev: rev });
+		}
+
 		try {
-			console.log(await local.get(id));
+			console.log(await local.get(id, options));
 		} catch (exception) {
 			console.log(exception);
 		}
-	});
+	}
+}
+
+async function pouchFind() {
+	const search = nonOptionArguments[1];
+
+	const local = new PouchDB('crops-local');
+
+	try {
+		const documents = (await local.allDocs({ include_docs: true })).rows.map(row => row.doc);
+		documents.forEach(document => {
+			if (document.binomialName.toLowerCase().includes(search) || (document.commonName && document.commonName.toLowerCase().includes(search))) {
+				console.log(document);
+			}
+		});
+	} catch (exception) {
+		console.log(exception);
+	}
 }
 
 function readCrops() {
@@ -591,6 +617,7 @@ const commands = {
 	'pouch-add': pouchAdd,
 	'pouch-update': pouchUpdate,
 	'pouch-show': pouchShow,
+	'pouch-find': pouchFind,
 };
 
 const commandLineArguments = process.argv.slice(2);
