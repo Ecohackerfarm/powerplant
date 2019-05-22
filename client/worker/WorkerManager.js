@@ -1,5 +1,6 @@
 /**
- * @namespace client
+ * @namespace WorkerManager
+ * @memberof worker
  */
 
 const Worker = require('worker-loader!./worker.js');
@@ -49,4 +50,8 @@ class WorkerManager {
   }
 }
 
-module.exports = WorkerManager;
+const workerManager = new WorkerManager();
+
+module.exports = {
+  workerManager
+};

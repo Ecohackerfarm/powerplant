@@ -1,8 +1,9 @@
 /**
- * @namespace client
+ * @namespace worker
+ * @memberof worker
  */
 
-const { getCropGroups, getCompatibleCrops } = require('../shared/companions.js');
+const { getCropGroups, getCompatibleCrops } = require('../../shared/companions.js');
 
 onmessage = function(e) {
   const method = e.data.method;

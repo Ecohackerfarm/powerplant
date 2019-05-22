@@ -9,7 +9,7 @@ const { connect } = require('react-redux');
 const { Typeahead } = require('react-bootstrap-typeahead');
 const { withRouter } = require('react-router-dom');
 const { fetchCrops } = require('../../actions/cropActions');
-const { workerManager } = require('../../globals.js');
+const { workerManager } = require('../../worker/WorkerManager.js');
 
 /**
  * @extends Component

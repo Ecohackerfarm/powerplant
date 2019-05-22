@@ -9,7 +9,7 @@ const CropGroups = require('../crops/CropGroups');
 const { Button } = require('react-bootstrap');
 const { withRouter } = require('react-router-dom');
 const { connect } = require('react-redux');
-const { workerManager } = require('../../globals.js');
+const { workerManager } = require('../../worker/WorkerManager.js');
 
 /**
  * @extends Component
