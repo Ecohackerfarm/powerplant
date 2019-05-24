@@ -1,4 +1,4 @@
 /**
- * @namespace components
+ * @namespace worker
  * @memberof client
  */

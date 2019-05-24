@@ -6,6 +6,8 @@
  */
 
 const express = require('express');
+const cors = require('cors');
+const PouchDB = require('pouchdb');
 const mongoose = require('mongoose');
 const path = require('path');
 const bodyParser = require('body-parser');
@@ -66,17 +68,6 @@ function buildDocumentApiRouter(model) {
  */
 function buildApiRouter() {
 	const router = express.Router();
-
-	/*
-	 * Adding headers to allow cross-origin requests. This means it's a publicly
-	 * available API!
-	 */
-	router.all('*', (req, res, next) => {
-		res.header('Access-Control-Allow-Origin', '*');
-		res.header('Access-Control-Allow-Methods', 'GET');
-		res.header('Access-Control-Allow-Headers', 'Content-Type');
-		next();
-	});
 
 	/*
 	 * API document points that allow the low-level editing of database documents.
@@ -160,7 +151,8 @@ function buildApp(development) {
 	);
 
 	// Set up our routers
-	app.use('/api', buildApiRouter());
+	app.use('/api', cors(), buildApiRouter());
+	app.use('/db', cors(), require('express-pouchdb')(PouchDB));
 
 	// Thank the LORD this works correctly
 	app.get('*', function (req, res) {

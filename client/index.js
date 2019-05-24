@@ -9,14 +9,10 @@ const { render } = require('react-dom');
 const { Provider } = require('react-redux');
 //const { addAllStyles } = require('./styles');
 const App = require('./App');
-const { createLogger } = require('redux-logger');
-const thunk = require('redux-thunk').default;
-const reducer = require('./reducers');
-const { createStore, compose, applyMiddleware } = require('redux');
-const { persistStore, autoRehydrate } = require('redux-persist');
-const { storeLoaded } = require('./actions');
 const { BrowserRouter } = require('react-router-dom');
+const store = require('./redux/store.js');
 require('./styles/main.scss');
+require('./worker/WorkerManager.js');
 
 /**
  * The root component of the application. Everything unfolds from here.
@@ -36,36 +32,6 @@ class AppProvider extends React.Component {
 		);
 	}
 }
-
-/**
- * Create the Redux store.
- * 
- * @return {Object} Redux store
- */
-function createReduxStore() {
-	const logger = createLogger();
-	const store = createStore(
-		reducer,
-		undefined,
-		compose(
-			// Thunk allows for asynchronous actions
-			applyMiddleware(thunk),
-			// Adding redux-persist functionality
-			autoRehydrate(),
-			// Adding logging functionality
-			applyMiddleware(logger),
-		)
-	);
-
-	persistStore(store, {}, () => {
-		store.dispatch(storeLoaded());
-	});
-
-	return store;
-}
-
-// Create the Redux store
-const store = createReduxStore();
 
 // Add custom styles for React-Bootstrap components
 //addAllStyles();
