@@ -1,0 +1,4 @@
+/**
+ * @namespace worker
+ * @memberof client
+ */

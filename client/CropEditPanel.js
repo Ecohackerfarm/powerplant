@@ -164,7 +164,7 @@ function getControlId(label) {
 }
 
 const mapStateToProps = state => ({
-  crops: state.crops.all,
+  crops: Object.values(state.crops),
 });
 
 module.exports = connect(mapStateToProps, null)(CropEditPanel);
