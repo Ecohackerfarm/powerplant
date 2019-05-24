@@ -1,4 +1,0 @@
-/**
- * @namespace components
- * @memberof client
- */
