@@ -57,8 +57,6 @@ class WorkerManager {
    * PouchDB synchronization.
    */
   generateId() {
-    this.idCounter++;
-
     while ((this.idCounter == 0) || this.queue[this.idCounter]) {
       this.idCounter++;
     }
