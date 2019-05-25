@@ -18,13 +18,21 @@ class CropsPage extends React.Component {
   }
 
   render() {
-    const tagSet = utils.findTagSet(this.props.crops);
+    const { crops } = this.props;
+
+    const sortedCrops = crops.sort((crop0, crop1) => {
+      const name0 = utils.getCropDisplayName(crop0);
+      const name1 = utils.getCropDisplayName(crop1);
+      return name0.localeCompare(name1);
+    });
+
+    const tagSet = utils.findTagSet(crops);
     const tagBadges = tagSet.map(tag => <Badge variant="info">{tag}</Badge>);
 
     return (
       <div>
         <div>{tagBadges}</div>
-        <PaginatedList items={this.props.crops} columns={3} rows={5} vertical={true} renderItem={this.onRenderItem} />
+        <PaginatedList items={sortedCrops} columns={3} rows={5} vertical={true} renderItem={this.onRenderItem} />
       </div>
     );
   }

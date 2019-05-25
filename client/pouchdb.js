@@ -14,39 +14,31 @@ const actions = require('./redux/actions.js');
  */
 function run(dispatch) {
   const local  = new PouchDB('crops-local');
-  const remote = new PouchDB('http://127.0.0.1:8080/db/crops');
+  const remote = new PouchDB('http://185.117.118.9:8080/db/crops');
 
-  /*
-   * NOTE For some reason a sync operation alone is very slow for the initial clone, this is
-   * why a replicate operation is done before that.
-   */
-  local.replicate.from(remote).on('change', (info) => {
-    dispatchChanges(info.docs, dispatch);
+  local.sync(remote, {
+    live:         true,
+    retry:        true,
+    include_docs: true,
+  }).on('change', (info) => {
+    console.log('pouchdb change');
+    console.log(info);
+
+    dispatchChanges(info.change.docs, dispatch);
+  }).on('paused', (err) => {
+    console.log('pouchdb paused');
+    console.log(err);
+  }).on('active', () => {
+    console.log('pouchdb active');
+  }).on('denied', (err) => {
+    console.log('pouchdb denied');
+    console.log(err);
   }).on('complete', (info) => {
-    local.sync(remote, {
-      live:         true,
-      retry:        true,
-      include_docs: true,
-    }).on('change', (info) => {
-      console.log('pouchdb change');
-      console.log(info);
-
-      dispatchChanges(info.change.docs, dispatch);
-    }).on('paused', (err) => {
-      console.log('pouchdb paused');
-      console.log(err);
-    }).on('active', () => {
-      console.log('pouchdb active');
-    }).on('denied', (err) => {
-      console.log('pouchdb denied');
-      console.log(err);
-    }).on('complete', (info) => {
-      console.log('pouchdb complete');
-      console.log(info);
-    }).on('error', (err) => {
-      console.log('pouchdb error');
-      console.log(err);
-    });
+    console.log('pouchdb complete');
+    console.log(info);
+  }).on('error', (err) => {
+    console.log('pouchdb error');
+    console.log(err);
   });
 
   return local;
