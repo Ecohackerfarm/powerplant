@@ -8,13 +8,14 @@
 
 const PouchDB = require('pouchdb').default;
 const actions = require('./redux/actions.js');
+const utils   = require('../shared/utils.js');
 
 /**
  * @param {Function} dispatch  Function that dispatches an action to Redux store.
  */
 function run(dispatch) {
   const local  = new PouchDB('crops-local');
-  const remote = new PouchDB('http://185.117.118.9:8080/db/crops');
+  const remote = new PouchDB(utils.getPouchDatabaseUrl('crops'));
 
   local.sync(remote, {
     live:         true,

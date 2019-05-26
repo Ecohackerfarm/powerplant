@@ -28,9 +28,10 @@ const CropTag = require('./models/crop-tag');
 const Location = require('./models/location');
 const User = require('./models/user');
 const {
-	PP_PORT
+	HTTP_SERVER_PORT
 } = require('../secrets.js');
-const { getDatabaseURL, isDevelopmentMode } = require('./utils');
+const { isDevelopmentMode } = require('./utils');
+const { getDatabaseUrl } = require('../shared/utils.js');
 
 /**
  * Build router for a document API.
@@ -178,12 +179,12 @@ function startServer(testMode) {
 	if (process.env.DATABASEURL) {
 		mongoose.connect(process.env.DATABASEURL, options);
 	} else {
-		mongoose.connect(getDatabaseURL(), options);
+		mongoose.connect(getDatabaseUrl(), options);
 	}
 
 	mongoose.Promise = global.Promise;
 
-	const port = process.env.PORT || PP_PORT;
+	const port = process.env.PORT || HTTP_SERVER_PORT;
 	const localhostArgs = ['127.0.0.1', 511];
 
 	const serverStarted = (event) => {

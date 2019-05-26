@@ -21,6 +21,6 @@ exports.DATABASE_PORT = ''; // e.g. '27018'
 // database name
 exports.DATABASE_DB = 'pp_main'; // e.g. 'powerplant'
 // API port
-exports.PP_PORT = '8080';
+exports.HTTP_SERVER_PORT = '8080';
 // host address of the api / address of the server
-exports.API_HOST = 'localhost';
+exports.HTTP_SERVER_HOST = 'localhost';
