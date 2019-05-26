@@ -33,7 +33,7 @@ const {
 const practicalplants = require('../db/practicalplants.js');
 const { plants, companions } = require('../db/companions.js');
 const { HTTP_SERVER_PORT, HTTP_SERVER_HOST } = require('../secrets.js');
-const { getDatabaseUrl, getHttpServerUrl } = require('../shared/utils.js');
+const { getDatabaseUrl, getHttpServerUrl, getPouchDatabaseUrl } = require('../shared/utils.js');
 const Crop = require('../server/models/crop.js');
 const CropRelationship = require('../server/models/crop-relationship.js');
 const CropTag = require('../server/models/crop-tag.js');
@@ -368,25 +368,18 @@ async function dbMigrate() {
 
 async function pouchMigrate() {
 	try {
-		let local = new PouchDB('crops-local');
 		let remote = new PouchDB(getPouchDatabaseUrl('crops'));
 
-		console.log(await local.info());
 		console.log(await remote.info());
 
-		await local.destroy();
 		await remote.destroy();
-		local = new PouchDB('crops-local');
-		remote = new PouchDB('http://127.0.0.1:8080/db/crops');
+		remote = new PouchDB(getPouchDatabaseUrl('crops'));
 
-		console.log(await local.info());
 		console.log(await remote.info());
 
 		const crops = readCrops();
 		const documents = await local.bulkDocs(crops);
 		console.log(documents);
-
-		await pouchSync();
 	} catch (exception) {
 		console.log(exception);
 	}
