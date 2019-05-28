@@ -54,9 +54,13 @@ function buildApp(development) {
 
 	app.use(
 		bodyParser.urlencoded({
+			limit: '50mb',
 			extended: true
 		}),
-		bodyParser.json()
+		bodyParser.json({
+			limit: '50mb',
+			extended: true
+		})
 	);
 
 	// Set up our routers
