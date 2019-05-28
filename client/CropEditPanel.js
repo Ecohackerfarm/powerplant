@@ -53,6 +53,8 @@ class CropEditPanel extends React.Component {
     const initialSoilTexture = crop.soilTexture ? crop.soilTexture : [];
     const initialSoilWaterRetention = crop.soilWaterRetention ? crop.soilWaterRetention : [];
 
+    const initialMatureMeasurementUnit = practicalplants.PP_MATURE_MEASUREMENT_UNIT_VALUES.includes(crop.matureMeasurementUnit) ? [crop.matureMeasurementUnit] : [];
+
     const tagSet = utils.findTagSet(crops);
 
     return (
@@ -63,6 +65,14 @@ class CropEditPanel extends React.Component {
           {[
             this.getNameInputElement(crop, 'Binomial name'),
             this.getNameInputElement(crop, 'Common name'),
+          ]}
+          {[
+            this.getNumberInputElement(crop, 'Hardiness zone')
+          ]}
+          {[
+            this.getNumberInputElement(crop, 'Mature height'),
+            this.getNumberInputElement(crop, 'Mature width'),
+            this.getSingleDropdownElement('Mature measurement unit', practicalplants.PP_MATURE_MEASUREMENT_UNIT_VALUES, initialMatureMeasurementUnit),
           ]}
           <SelectDropdownWithSearch items={tagSet} initialSelection={initialTags} title={'Tags'} multi={true} allowNewItems={true} handleChange={this.onTagsChange} />
           {[
@@ -89,21 +99,21 @@ class CropEditPanel extends React.Component {
             this.getMultiDropdownElement('Soil water retention', practicalplants.PP_SOIL_WATER_RETENTION_VALUES, initialSoilWaterRetention),
           ]}
           {[
-            this.getCheckboxElement('maritime resistant', 'maritime'), // TODO save
-            this.getCheckboxElement('pollution resistant', 'pollution'), // TODO save
-            this.getCheckboxElement('poor nutrition resistant', 'poorNutrition'), // TODO save
-            this.getCheckboxElement('wind resistant', 'wind'), // TODO save
+            this.getCheckboxElement('maritime resistant', 'maritime', crop.maritime),
+            this.getCheckboxElement('pollution resistant', 'pollution', crop.pollution),
+            this.getCheckboxElement('poor nutrition resistant', 'poorNutrition', crop.poorNutrition),
+            this.getCheckboxElement('wind resistant', 'wind', crop.wind),
           ]}
       </EditPanel>
     );
   }
 
-  getCheckboxElement(label, property) {
+  getCheckboxElement(label, property, initialChecked) {
     const controlId = getControlId(label);
 
     return (
       <Form.Group as={Row} controlId={controlId}>
-        <Col><Form.Check type={'checkbox'} label={label} /></Col>
+        <Col><Form.Check type={'checkbox'} label={label} defaultChecked={initialChecked} onChange={event => this.onCheckboxChange(event, property)} /></Col>
       </Form.Group>
     );
   }
@@ -128,20 +138,43 @@ class CropEditPanel extends React.Component {
     );
   }
 
+  getNumberInputElement(crop, label) {
+    return this.getInputElement(crop, label, this.onNumberChange);
+  }
+
   getNameInputElement(crop, label) {
-    const property = utils.toCamelCase(label);
+    return this.getInputElement(crop, label, this.onNameChange);
+  }
+
+  getInputElement(crop, label, handler) {
+    const property  = utils.toCamelCase(label);
     const controlId = getControlId(label);
 
     return (
       <Form.Group as={Row} controlId={controlId}>
         <Form.Label column={true}>{label}</Form.Label>
-        <Col><InputField value={crop[property]} handleChange={(name) => this.onNameChange(name, property)} /></Col>
+        <Col><InputField value={crop[property]} handleChange={(name) => handler.bind(this)(name, property)} /></Col>
       </Form.Group>
     );
   }
 
+  onNumberChange(name, property) {
+    // TODO Proper validation with user warnings
+    for (let index = 0; index < name.length; index++) {
+      if (!['0', '1', '2', '3', '4', '5', '6', '7', '8', '9', '.'].includes(name.charAt(index))) {
+        return;
+      }
+    }
+
+    this.setCrop({ [property]: name });
+  }
+
   onNameChange(name, property) {
     this.setCrop({ [property]: name });
+  }
+
+  onCheckboxChange(event, property) {
+    this.setCrop({ [property]: event.target.checked });
   }
 
   onDropdownChange(selected, property, multi) {

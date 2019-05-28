@@ -8,104 +8,12 @@
 const express = require('express');
 const cors = require('cors');
 const PouchDB = require('pouchdb');
-const mongoose = require('mongoose');
 const path = require('path');
 const bodyParser = require('body-parser');
-const {
-	documentGet,
-	documentPut,
-	documentDelete,
-	documentPost,
-	getAllCropRelationships,
-	getCropsByName,
-	getLocations,
-	getUpdates,
-	login
-} = require('./middleware');
-const Crop = require('./models/crop');
-const CropRelationship = require('./models/crop-relationship');
-const CropTag = require('./models/crop-tag');
-const Location = require('./models/location');
-const User = require('./models/user');
 const {
 	HTTP_SERVER_PORT
 } = require('../secrets.js');
 const { isDevelopmentMode } = require('./utils');
-const { getDatabaseUrl } = require('../shared/utils.js');
-
-/**
- * Build router for a document API.
- *
- * @param {Model} model
- * @return {Router}
- */
-function buildDocumentApiRouter(model) {
-	const router = express.Router();
-
-	router.route('/').post((req, res, next) => {
-		documentPost(req, res, next, model);
-	});
-	router.route('/:id').get((req, res, next) => {
-		documentGet(req, res, next, model);
-	});
-	if (model != User) {
-		router
-			.route('/:id')
-			.put((req, res, next) => {
-				documentPut(req, res, next, model);
-			})
-			.delete((req, res, next) => {
-				documentDelete(req, res, next, model);
-			});
-	}
-
-	return router;
-}
-
-/**
- * Build router for the API.
- *
- * @return {Router}
- */
-function buildApiRouter() {
-	const router = express.Router();
-
-	/*
-	 * API document points that allow the low-level editing of database documents.
-	 */
-	router.use('/crops', buildDocumentApiRouter(Crop));
-	router.use('/crop-relationships', buildDocumentApiRouter(CropRelationship));
-	router.use('/crop-tags', buildDocumentApiRouter(CropTag));
-	router.use('/users', buildDocumentApiRouter(User));
-	router.use('/locations', buildDocumentApiRouter(Location));
-
-	/*
-	 * API function points for more complex calculations.
-	 */
-	router.post('/login', login);
-	router.get('/get-crops-by-name', getCropsByName);
-	router.get('/get-all-crop-relationships', getAllCropRelationships);
-	router.get('/get-locations', getLocations);
-	router.post('/get-updates', getUpdates);
-
-	router.get('*', (req, res, next) => {
-		next({ status: 404, message: 'No such route' });
-	});
-
-	/*
-	 * Error handling middleware. Error responses should look different if they are
-	 * in the API vs. in the front end so we want separate middleware for it.
-	 */
-	router.use((err, req, res, next) => {
-		if (err) {
-			res.status(err.status).json(err);
-		} else {
-			next();
-		}
-	});
-
-	return router;
-}
 
 /**
  * Build the Express application with all middleware.
@@ -146,13 +54,16 @@ function buildApp(development) {
 
 	app.use(
 		bodyParser.urlencoded({
+			limit: '50mb',
 			extended: true
 		}),
-		bodyParser.json()
+		bodyParser.json({
+			limit: '50mb',
+			extended: true
+		})
 	);
 
 	// Set up our routers
-	app.use('/api', cors(), buildApiRouter());
 	app.use('/db', cors(), require('express-pouchdb')(PouchDB));
 
 	// Thank the LORD this works correctly
@@ -171,18 +82,6 @@ function buildApp(development) {
  */
 function startServer(testMode) {
 	const developmentMode = isDevelopmentMode() && (!testMode);
-
-	const options = {
-		replicaSet: 'rs',
-		useNewUrlParser: true,
-	};
-	if (process.env.DATABASEURL) {
-		mongoose.connect(process.env.DATABASEURL, options);
-	} else {
-		mongoose.connect(getDatabaseUrl(), options);
-	}
-
-	mongoose.Promise = global.Promise;
 
 	const port = process.env.PORT || HTTP_SERVER_PORT;
 	const localhostArgs = ['127.0.0.1', 511];

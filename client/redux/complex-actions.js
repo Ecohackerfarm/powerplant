@@ -10,8 +10,6 @@ const actions = require('./actions.js');
 
 function updateCropAndSynchronize(crop) {
   return (dispatch, getState) => {
-    console.info('updateCropAndSynchronize');
-    console.info(crop);
     workerManager.delegate('pouchdb.put', crop).then((doc) => {
       dispatch(actions.updateCrop(crop));
     });

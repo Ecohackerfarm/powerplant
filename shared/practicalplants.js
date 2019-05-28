@@ -20,7 +20,7 @@ module.exports = {
 	PP_HERBACEOUS_OR_WOODY_VALUES: ['herbaceous', 'woody'],
 	PP_DECIDUOUS_OR_EVERGREEN_VALUES: ['deciduous', 'evergreen'],
 	PP_GROWTH_RATE_VALUES: ['slow', 'moderate', 'vigorous'],
-	PP_MATURE_MEASUREMENT_UNIT_VALUES: ['meters', 'metres', 'feet'],
+	PP_MATURE_MEASUREMENT_UNIT_VALUES: ['meters', 'feet'],
 	PP_MATURE_HEIGHT_VALUES: 110,
 	PP_MATURE_WIDTH_VALUES: 30,
 	PP_FLOWER_TYPE_VALUES: ['hermaphrodite', 'monoecious', 'dioecious'],

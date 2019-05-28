@@ -23,6 +23,13 @@ class CropsPage extends React.Component {
     const sortedCrops = crops.sort((crop0, crop1) => {
       const name0 = utils.getCropDisplayName(crop0);
       const name1 = utils.getCropDisplayName(crop1);
+
+      if (crop0.commonName && !crop1.commonName) {
+        return -1;
+      } else if (!crop0.commonName && crop1.commonName) {
+        return 1;
+      }
+
       return name0.localeCompare(name1);
     });
 
@@ -42,8 +49,17 @@ class CropsPage extends React.Component {
   }
 
   onSaveCrop(crop) {
+    sanitizeNumberField(crop, 'hardinessZone');
+    sanitizeNumberField(crop, 'matureHeight');
+    sanitizeNumberField(crop, 'matureWidth');
+
     this.props.updateCrop(crop);
   }
+}
+
+function sanitizeNumberField(crop, property) {
+  const number = parseFloat(crop[property]);
+  crop[property] = (number !== NaN) ? number : 0;
 }
 
 const mapDispatchToProps = (dispatch) => ({

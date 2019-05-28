@@ -66,6 +66,8 @@ function readCrops() {
 			replaceValue(object, property, ['Yes', 'True'], 'true');
 		});
 
+		replaceValue(object, 'matureMeasurementUnit', ['metres'], 'meters');
+
 		replaceArrayValue(object['pollinators'], ['bees. self'], ['bees', 'self']);
 		replaceArrayValue(object['pollinators'], ['hover-flies'], ['hoverflies']);
 		replaceArrayValue(object['pollinators'], ['apomyctic', 'apomixy'], ['apomictic']);
