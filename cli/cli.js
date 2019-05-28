@@ -108,7 +108,7 @@ async function pouchMigrate() {
 		console.log(await remote.info());
 
 		const crops = readCrops();
-		const documents = await local.bulkDocs(crops);
+		const documents = await remote.bulkDocs(crops);
 		console.log(documents);
 	} catch (exception) {
 		console.log(exception);
