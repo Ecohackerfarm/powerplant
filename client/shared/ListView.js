@@ -17,21 +17,21 @@ class ListView extends React.Component {
     const { renderItem } = this.props;
 
     const [effectiveColumns, effectiveRows] = this.getEffectiveDimensions();
-    const effectiveItems = this.getEffectiveItems();
+    const effectiveItems = this.getItemsInDisplayOrder();
 
     const columnWidth = 12 / effectiveColumns;
 
     const elements = [];
 
     for (; effectiveItems.length > 0;) {
-      const rowElements = effectiveItems.splice(0, effectiveColumns).map(item => <Col md={columnWidth}>{renderItem(item)}</Col>);
+      const rowElements = effectiveItems.splice(0, effectiveColumns).filter(item => item).map(item => <Col md={columnWidth}>{renderItem(item)}</Col>);
       elements.push(rowElements);
     }
 
     return <Container>{elements.map(rowElements => <Row>{rowElements}</Row>)}</Container>;
   }
 
-  getEffectiveItems() {
+  getItemsInDisplayOrder() {
     const { items, vertical } = this.props;
 
     let effectiveItems = [];
@@ -39,10 +39,10 @@ class ListView extends React.Component {
       const [effectiveColumns, effectiveRows] = this.getEffectiveDimensions();
 
       for (let index = 0; index < effectiveColumns * effectiveRows; index++) {
-        const x = Math.floor(index / effectiveRows);
-        const y = index % effectiveRows;
+        const x = index % effectiveColumns;
+        const y = Math.floor(index / effectiveColumns);
 
-        const verticalIndex = (y * effectiveColumns) + x;
+        const verticalIndex = (x * effectiveRows) + y;
         const item = (verticalIndex < items.length) ? items[verticalIndex] : null;
 
         effectiveItems.push(item);
