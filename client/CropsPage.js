@@ -42,8 +42,17 @@ class CropsPage extends React.Component {
   }
 
   onSaveCrop(crop) {
+    sanitizeNumberField(crop, 'hardinessZone');
+    sanitizeNumberField(crop, 'matureHeight');
+    sanitizeNumberField(crop, 'matureWidth');
+
     this.props.updateCrop(crop);
   }
+}
+
+function sanitizeNumberField(crop, property) {
+  const number = parseFloat(crop[property]);
+  crop[property] = (number !== NaN) ? number : 0;
 }
 
 const mapDispatchToProps = (dispatch) => ({
