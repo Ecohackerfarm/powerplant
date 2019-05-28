@@ -23,6 +23,13 @@ class CropsPage extends React.Component {
     const sortedCrops = crops.sort((crop0, crop1) => {
       const name0 = utils.getCropDisplayName(crop0);
       const name1 = utils.getCropDisplayName(crop1);
+
+      if (crop0.commonName && !crop1.commonName) {
+        return -1;
+      } else if (!crop0.commonName && crop1.commonName) {
+        return 1;
+      }
+
       return name0.localeCompare(name1);
     });
 
