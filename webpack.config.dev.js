@@ -27,7 +27,7 @@ module.exports = {
           path.join(__dirname, 'client'),
           path.join(__dirname, 'shared')
         ],
-        use: [ 'react-hot-loader', 'babel-loader' ]
+        use: [ 'react-hot-loader/webpack', 'babel-loader' ]
       },
       {
         test: /\.scss$/,
