@@ -1,6 +1,6 @@
 /**
  * Client-side code
- * 
+ *
  * @namespace client
  */
 
@@ -18,22 +18,27 @@ require('./worker/WorkerManager.js');
  * The root component of the application. Everything unfolds from here.
  * Main job of this component is to make the Redux store available for
  * connect() calls.
- * 
+ *
  * @extends Component
  */
 class AppProvider extends React.Component {
-	render() {
-		return (
-			<Provider store={store}>
-				<BrowserRouter>
-   					<App storeLoaded={false} />
-   				</BrowserRouter>
-			</Provider>
-		);
-	}
+  render() {
+    return (
+      <Provider store={store}>
+        <BrowserRouter>
+          <App storeLoaded={false} />
+        </BrowserRouter>
+      </Provider>
+    );
+  }
 }
 
 // Add custom styles for React-Bootstrap components
 //addAllStyles();
 
 render(<AppProvider />, document.getElementById('app'));
+if (module.hot) {
+  module.hot.accept('./App', () => {
+    render(<AppProvider />, document.getElementById('app'));
+  });
+}

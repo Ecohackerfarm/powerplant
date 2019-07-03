@@ -23,7 +23,7 @@ function createReduxStore() {
 	}, reducer);
 	const store = createStore(
 		persistedReducer,
-		undefined,
+		window.__REDUX_DEVTOOLS_EXTENSION__ && window.__REDUX_DEVTOOLS_EXTENSION__(),
 		compose(
 			// Thunk allows for asynchronous actions
 			applyMiddleware(thunk),

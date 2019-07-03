@@ -12,85 +12,110 @@ const ListView = require('./ListView.js');
  * @param {Function} props.renderItem
  */
 class PaginatedList extends React.Component {
-  constructor(props) {
-    super(props);
+	constructor(props) {
+		super(props);
 
-    this.state = {
-      currentPage: 0,
-    };
-  }
+		this.state = {
+			currentPage: 0
+		};
+		this._key = 0;
+	}
 
-  render() {
-    const { currentPage } = this.state;
-    const { columns, rows, vertical, renderItem } = this.props;
+	render() {
+		const { currentPage } = this.state;
+		const { columns, rows, vertical, renderItem } = this.props;
 
-    const pageItems = this.getItemsForPage(currentPage);
+		const pageItems = this.getItemsForPage(currentPage);
 
-    return (
-      <div>
-        <ListView items={pageItems} columns={columns} rows={rows} vertical={vertical} renderItem={renderItem} />
-        <Pagination>{this.getPaginationElements()}</Pagination>
-      </div>
-    );
-  }
+		return (
+			<div>
+				<ListView
+					items={pageItems}
+					columns={columns}
+					rows={rows}
+					vertical={vertical}
+					renderItem={renderItem}
+				/>
+				<Pagination>{this.getPaginationElements()}</Pagination>
+			</div>
+		);
+	}
 
-  getPaginationElements() {
-    const { currentPage } = this.state;
+	getPaginationElements() {
+		const { currentPage } = this.state;
 
-    const pageCount = this.getPageCount();
+		const pageCount = this.getPageCount();
 
-    const paginationElements = [];
+		const paginationElements = [];
 
-    if ((pageCount > 1) && (pageCount <= 10)) {
-      for (let index = 0; index < pageCount; index++) {
-        paginationElements.push(this.getPaginationItemElement(index));
-      }
-    } else if (pageCount > 10) {
-      if (currentPage >= 3) {
-        paginationElements.push(this.getPaginationElement(Pagination.First, 0));
-        paginationElements.push(this.getPaginationElement(Pagination.Prev, currentPage - 3));
-      }
+		if (pageCount > 1 && pageCount <= 10) {
+			for (let index = 0; index < pageCount; index++) {
+				paginationElements.push(this.getPaginationItemElement(index));
+			}
+		} else if (pageCount > 10) {
+			if (currentPage >= 3) {
+				paginationElements.push(this.getPaginationElement(Pagination.First, 0));
+				paginationElements.push(
+					this.getPaginationElement(Pagination.Prev, currentPage - 3)
+				);
+			}
 
-      let firstIndex = (currentPage < 3) ? 0 : ((currentPage >= (pageCount - 3)) ? (pageCount - 5) : (currentPage - 2));
-      for (let index = 0; index < 5; index++) {
-        paginationElements.push(this.getPaginationItemElement(firstIndex + index));
-      }
+			let firstIndex =
+				currentPage < 3
+					? 0
+					: currentPage >= pageCount - 3
+					? pageCount - 5
+					: currentPage - 2;
+			for (let index = 0; index < 5; index++) {
+				paginationElements.push(
+					this.getPaginationItemElement(firstIndex + index)
+				);
+			}
 
-      if (currentPage < (pageCount - 3)) {
-        paginationElements.push(this.getPaginationElement(Pagination.Next, currentPage + 3));
-        paginationElements.push(this.getPaginationElement(Pagination.Last, pageCount - 1));
-      }
-    }
+			if (currentPage < pageCount - 3) {
+				paginationElements.push(
+					this.getPaginationElement(Pagination.Next, currentPage + 3)
+				);
+				paginationElements.push(
+					this.getPaginationElement(Pagination.Last, pageCount - 1)
+				);
+			}
+		}
 
-    return paginationElements;
-  }
+		return paginationElements;
+	}
 
-  getPaginationItemElement(pageNumber) {
-    return this.getPaginationElement(Pagination.Item, pageNumber, true);
-  }
+	getPaginationItemElement(pageNumber) {
+		return this.getPaginationElement(Pagination.Item, pageNumber, true);
+	}
 
-  getPaginationElement(component, pageNumber, showPageNumber = false) {
-    return React.createElement(component,
-      { onClick: () => this.onSelectPage(pageNumber) },
-      showPageNumber ? new Number(pageNumber + 1).toString() : undefined);
-  }
+	getPaginationElement(component, pageNumber, showPageNumber = false) {
+		return React.createElement(
+			component,
+			{ key: this._key++, onClick: () => this.onSelectPage(pageNumber) },
+			showPageNumber ? new Number(pageNumber + 1).toString() : undefined
+		);
+	}
 
-  getItemsForPage(pageNumber) {
-    const pageBaseIndex = pageNumber * this.getPageSize();
-    return this.props.items.slice(pageBaseIndex, pageBaseIndex + this.getPageSize());
-  }
+	getItemsForPage(pageNumber) {
+		const pageBaseIndex = pageNumber * this.getPageSize();
+		return this.props.items.slice(
+			pageBaseIndex,
+			pageBaseIndex + this.getPageSize()
+		);
+	}
 
-  getPageCount() {
-    return Math.floor(this.props.items.length / this.getPageSize()) + 1;
-  }
+	getPageCount() {
+		return Math.floor(this.props.items.length / this.getPageSize()) + 1;
+	}
 
-  getPageSize() {
-    return this.props.columns * this.props.rows;
-  }
+	getPageSize() {
+		return this.props.columns * this.props.rows;
+	}
 
-  onSelectPage(pageNumber) {
-    this.setState({ currentPage: pageNumber });
-  }
+	onSelectPage(pageNumber) {
+		this.setState({ currentPage: pageNumber });
+	}
 }
 
 module.exports = PaginatedList;
