@@ -13,3 +13,4 @@ pouch__all_dbs__
 crops
 _users
 _replicator
+dist/*.worker.js
