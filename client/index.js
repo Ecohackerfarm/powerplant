@@ -37,7 +37,7 @@ class AppProvider extends React.Component {
 //addAllStyles();
 
 render(<AppProvider />, document.getElementById('app'));
-if (process.env.NODE_ENV === 'development' && module.hot) {
+if (module.hot) {
 	module.hot.accept('./App', () => {
 		render(<AppProvider />, document.getElementById('app'));
 	});
