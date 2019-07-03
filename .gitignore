@@ -7,3 +7,9 @@ npm-debug.log
 secrets.js
 /webpack.config.js
 /dist/bundle.js
+
+log.txt
+pouch__all_dbs__
+crops
+_users
+_replicator

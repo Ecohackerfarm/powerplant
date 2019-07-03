@@ -1,11 +1,10 @@
 const React = require('react');
-const { connect } = require('react-redux');
+const { connect } = require('react-redux');
 const { Badge } = require('react-bootstrap');
 const PaginatedList = require('./shared/PaginatedList.js');
 const CropListItem = require('./CropListItem.js');
-const { updateCropAndSynchronize } = require('./redux/complex-actions.js');
+const { updateCropAndSynchronize } = require('./redux/complex-actions.js');
 const utils = require('../shared/utils.js');
-
 /**
  * CropsPage lists crops and lets the user to edit them.
  */
@@ -14,7 +13,7 @@ class CropsPage extends React.Component {
     super(props);
 
     this.onRenderItem = this.onRenderItem.bind(this);
-    this.onSaveCrop   = this.onSaveCrop.bind(this);
+    this.onSaveCrop = this.onSaveCrop.bind(this);
   }
 
   render() {
@@ -39,7 +38,13 @@ class CropsPage extends React.Component {
     return (
       <div>
         <div>{tagBadges}</div>
-        <PaginatedList items={sortedCrops} columns={3} rows={5} vertical={true} renderItem={this.onRenderItem} />
+        <PaginatedList
+          items={sortedCrops}
+          columns={3}
+          rows={5}
+          vertical={true}
+          renderItem={this.onRenderItem}
+        />
       </div>
     );
   }
@@ -59,15 +64,18 @@ class CropsPage extends React.Component {
 
 function sanitizeNumberField(crop, property) {
   const number = parseFloat(crop[property]);
-  crop[property] = (number !== NaN) ? number : 0;
+  crop[property] = number !== NaN ? number : 0;
 }
 
-const mapDispatchToProps = (dispatch) => ({
-  updateCrop: (crop) => dispatch(updateCropAndSynchronize(crop))
+const mapDispatchToProps = dispatch => ({
+  updateCrop: crop => dispatch(updateCropAndSynchronize(crop))
 });
 
-const mapStateToProps = (state) => ({
-  crops: Object.values(state.crops),
+const mapStateToProps = state => ({
+  crops: Object.values(state.crops)
 });
 
-module.exports = connect(mapStateToProps, mapDispatchToProps)(CropsPage);
+module.exports = connect(
+  mapStateToProps,
+  mapDispatchToProps
+)(CropsPage);
