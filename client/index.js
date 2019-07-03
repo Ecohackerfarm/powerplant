@@ -22,15 +22,15 @@ require('./worker/WorkerManager.js');
  * @extends Component
  */
 class AppProvider extends React.Component {
-	render() {
-		return (
-			<Provider store={store}>
-				<BrowserRouter>
-					<App storeLoaded={false} />
-				</BrowserRouter>
-			</Provider>
-		);
-	}
+  render() {
+    return (
+      <Provider store={store}>
+        <BrowserRouter>
+          <App storeLoaded={false} />
+        </BrowserRouter>
+      </Provider>
+    );
+  }
 }
 
 // Add custom styles for React-Bootstrap components
@@ -38,7 +38,7 @@ class AppProvider extends React.Component {
 
 render(<AppProvider />, document.getElementById('app'));
 if (module.hot) {
-	module.hot.accept('./App', () => {
-		render(<AppProvider />, document.getElementById('app'));
-	});
+  module.hot.accept('./App', () => {
+    render(<AppProvider />, document.getElementById('app'));
+  });
 }
