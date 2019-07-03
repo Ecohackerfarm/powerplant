@@ -1,10 +1,17 @@
 {
-  "extends": [
-    "react-app"
+  "extends": "react-app",
+  "plugins": [
+    "mocha",
+    "chai-friendly"
   ],
-  "env": {
-    "es6": true
-   },
+  "rules": {
+    "mocha/no-exclusive-tests": "error",
+    "no-unused-expressions": 0,
+    "chai-friendly/no-unused-expressions": 1
+  },
+  "globals": {
+    "before": false
+  },
   "parserOptions": {
     "ecmaVersion": 6,
     "sourceType": "module",
