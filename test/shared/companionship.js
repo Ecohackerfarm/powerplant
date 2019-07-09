@@ -1,12 +1,44 @@
 const { assert } = require('chai');
 const practicalplants = require('../../db/practicalplants.js');
+const { companions } = require('../../db/companions.js');
 const companionship = require('../../shared/companionship.js');
 
 describe('Companionship algorithm', () => {
   let crops;
+  let binomialNameToCrop = {};
 
   before(() => {
     crops = practicalplants.readCrops();
+    crops.forEach(crop => {
+      binomialNameToCrop[crop.binomialName] = crop;
+    });
+  });
+
+  it('is compatible with the companion plant matrix', () => {
+    let count = 0;
+    companions.forEach(entry => {
+      if (entry.companion > 0) {
+        /* Crops that are marked as companions in the companion plant
+         * matrix should also be determined as compatible by the
+         * companionship algorithm, on the other hand incompatibility in
+         * the matrix doesn't imply incompatibility in the algorithm. */
+        cropNames = [entry.plant0, entry.plant1];
+        cropObjects = cropNames.map(name => binomialNameToCrop[name]);
+
+        if (!companionship.areCompatible(cropObjects)) {
+          count++;
+
+          console.log(cropNames);
+          console.log(cropObjects[0]);
+          console.log(cropObjects[1]);
+        }
+      }
+    });
+    assert.equal(
+      count,
+      0,
+      count + '/' + companions.length + ' incompatible pairs found'
+    );
   });
 
   it('compatibility values all return boolean', () => {
