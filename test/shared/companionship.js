@@ -192,6 +192,9 @@ describe('Companionship algorithm', () => {
     const crop3 = {
       hardinessZone: 8
     };
+    const crop4 = {
+      hardinessZone: 1
+    };
 
     assert.equal(companionship.isHardinessZoneCompatible([crop0, crop0]), true);
     assert.equal(
@@ -204,6 +207,10 @@ describe('Companionship algorithm', () => {
     );
     assert.equal(
       companionship.isHardinessZoneCompatible([crop0, crop1, crop3]),
+      true
+    );
+    assert.equal(
+      companionship.isHardinessZoneCompatible([crop3, crop4]),
       false
     );
   });
@@ -220,9 +227,9 @@ describe('Companionship algorithm', () => {
     };
 
     assert.equal(companionship.isDroughtCompatible([crop0, crop0]), true);
-    assert.equal(companionship.isDroughtCompatible([crop0, crop1]), false);
+    assert.equal(companionship.isDroughtCompatible([crop0, crop1]), true);
     assert.equal(companionship.isDroughtCompatible([crop0, crop2]), false);
-    assert.equal(companionship.isDroughtCompatible([crop1, crop2]), false);
+    assert.equal(companionship.isDroughtCompatible([crop1, crop2]), true);
   });
 
   it('getFunctionsDiversity()', () => {

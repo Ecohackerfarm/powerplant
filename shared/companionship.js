@@ -159,13 +159,21 @@ function isShadeCompatible(crops) {
 }
 
 /**
- * Check that the hardiness zones span the maximum of two consecutive values.
+ * Check that the hardiness zones are in a small range.
  *
  * @param {Array} crops
  * @return {Boolean}
  */
 function isHardinessZoneCompatible(crops) {
-  const zones = crops.map(crop => crop['hardinessZone']);
+  const zones = crops
+    .map(crop => crop['hardinessZone'])
+    .filter(zone => zone !== null);
+
+  if (zones.length <= 1) {
+    /* Unspecified zone means that it's compatible with anything. */
+    return true;
+  }
+
   zones.sort((a, b) => a - b);
 
   let first = zones.find(zone => zone > 0);
@@ -173,7 +181,7 @@ function isHardinessZoneCompatible(crops) {
 
   const last = zones[zones.length - 1];
 
-  return last - first <= 1;
+  return last - first <= 6;
 }
 
 /**
@@ -181,7 +189,8 @@ function isHardinessZoneCompatible(crops) {
  * @return {Boolean}
  */
 function isDroughtCompatible(crops) {
-  return areValuesMatching(crops, 'drought');
+  const values = crops.map(crop => crop.drought);
+  return !(values.includes('intolerant') && values.includes('dependent'));
 }
 
 /**
@@ -396,9 +405,16 @@ function haveValue(crops, property, value) {
  * @return {Boolean}
  */
 function areArrayValuesMatching(crops, property) {
+  const cropsWithValues = crops.filter(crop => crop[property].length);
+
+  if (cropsWithValues.length <= 1) {
+    /* Unspecified value means that it's compatible with anything. */
+    return true;
+  }
+
   return (
-    crops[0][property].filter(value =>
-      crops.every(crop => crop[property].includes(value))
+    cropsWithValues[0][property].filter(value =>
+      cropsWithValues.every(crop => crop[property].includes(value))
     ).length > 0
   );
 }
@@ -414,6 +430,7 @@ function areValuesMatching(crops, property) {
 
 module.exports = {
   calculateCompanionshipScore,
+  areCompatible,
 
   compatibilityValues,
   goodnessValues,
