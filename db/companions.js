@@ -1,80 +1,84 @@
 /**
  * Companion plant database.
- * 
+ *
  * @namespace companions
  * @memberof db
  */
 
 /**
  * Used internally to add entries to the list of companions.
- * 
+ *
  * @param {String} plant0
  * @param {String} plant1
  * @param {Number} companion 0 for incompatible, 1 for companion
  */
 function add(plant0, plant1, companion) {
-	if (plant0 == plant1) {
-		console.log('companions.js: plant is always companion with itself');
-		return;
-	}
+  if (plant0 == plant1) {
+    console.log('companions.js: plant is always companion with itself');
+    return;
+  }
 
-	addPlant(plant0);
-	addPlant(plant1);
+  addPlant(plant0);
+  addPlant(plant1);
 
-	if (getCompanionValue(plant0, plant1) !== undefined) {
-		console.log('companions.js: duplicate companion entry ' + plant0 + ', ' + plant1);
-	} else {
-		companions.push({
-			plant0: plant0,
-			plant1: plant1,
-			companion: companion
-		});
-	}
+  if (getCompanionValue(plant0, plant1) !== undefined) {
+    console.log(
+      'companions.js: duplicate companion entry ' + plant0 + ', ' + plant1
+    );
+  } else {
+    companions.push({
+      plant0: plant0,
+      plant1: plant1,
+      companion: companion
+    });
+  }
 }
 
 /**
  * Get companionship value of two plants.
- * 
- * @param {String} plant0 
- * @param {String} plant1 
+ *
+ * @param {String} plant0
+ * @param {String} plant1
  * @return {Number} 0 for incompatible, 1 for companion, undefined for neutral.
  */
 function getCompanionValue(plant0, plant1) {
-	if ((!plants.includes(plant0)) || (!plants.includes(plant1))) {
-		return undefined;
-	}
-	if (plant0 == plant1) {
-		return 1;
-	}
+  if (!plants.includes(plant0) || !plants.includes(plant1)) {
+    return undefined;
+  }
+  if (plant0 == plant1) {
+    return 1;
+  }
 
-	let value = getCompanionValueWithExactOrder(plant0, plant1);
-	if (value === undefined) {
-		value = getCompanionValueWithExactOrder(plant1, plant0);
-	}
-	return value;
+  let value = getCompanionValueWithExactOrder(plant0, plant1);
+  if (value === undefined) {
+    value = getCompanionValueWithExactOrder(plant1, plant0);
+  }
+  return value;
 }
 
 /**
  * Helper for getting a companionship value.
- * 
- * @param {String} plant0 
- * @param {String} plant1 
+ *
+ * @param {String} plant0
+ * @param {String} plant1
  * @return {Number}
  */
 function getCompanionValueWithExactOrder(plant0, plant1) {
-	let entry = companions.find(entry => ((entry.plant0 == plant0) && (entry.plant1 == plant1)));
-	return entry ? entry.companion : entry;
+  let entry = companions.find(
+    entry => entry.plant0 == plant0 && entry.plant1 == plant1
+  );
+  return entry ? entry.companion : entry;
 }
 
 /**
  * Helper for adding entries.
- * 
- * @param {String} plant 
+ *
+ * @param {String} plant
  */
 function addPlant(plant) {
-	if (!plants.includes(plant)) {
-		plants.push(plant);
-	}
+  if (!plants.includes(plant)) {
+    plants.push(plant);
+  }
 }
 
 let plants = [];
@@ -356,7 +360,7 @@ add('Zea mays', 'Raphanus landra', 1);
 add('Zea mays', 'Cucurbita pepo', 1);
 
 module.exports = {
-	plants,
-	companions,
-	getCompanionValue
+  plants,
+  companions,
+  getCompanionValue
 };
