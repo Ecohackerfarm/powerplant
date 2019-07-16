@@ -6,6 +6,7 @@
  */
 
 const practicalplants = require('../db/practicalplants.js');
+const { getCompanionValue } = require('../db/companions.js');
 
 /**
  * Calculate a companionship score that represents something like "overall
@@ -50,7 +51,7 @@ const compatibilityValues = [
   isShadeCompatible,
   isHardinessZoneCompatible,
   isDroughtCompatible,
-  isExplicitCompanionshipStatusCompatible
+  areNotIncompatibleInMatrix
 ];
 
 /**
@@ -197,11 +198,16 @@ function isDroughtCompatible(crops) {
  * @param {Array} crops
  * @return {Boolean}
  */
-function isExplicitCompanionshipStatusCompatible(crops) {
-  /*
-   * TODO Check that the crops are either companions or neutral in our
-   * companionship database (db/companions.js).
-   */
+function areNotIncompatibleInMatrix(crops) {
+  for (let i = 0; i < crops.length; i++) {
+    for (let k = 0; k < crops.length; k++) {
+      if (
+        getCompanionValue(crops[i].binomialName, crops[k].binomialName) === 0
+      ) {
+        return false;
+      }
+    }
+  }
   return true;
 }
 
@@ -443,7 +449,7 @@ module.exports = {
   isShadeCompatible,
   isHardinessZoneCompatible,
   isDroughtCompatible,
-  isExplicitCompanionshipStatusCompatible,
+  areNotIncompatibleInMatrix,
 
   getFunctionsDiversity,
   getFlowerTypeDiversity
