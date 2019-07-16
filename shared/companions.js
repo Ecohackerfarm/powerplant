@@ -20,20 +20,20 @@ const { Combinations } = require('./combinations.js');
  */
 function getCompatibleCrops(allCrops, relationships, crops) {
   assignRelationships(relationships, allCrops);
-	assignIsCompatible(allCrops, isCompanion);
-	const combinations = new Combinations(allCrops, crops.length + 1);
+  assignIsCompatible(allCrops, isCompanion);
+  const combinations = new Combinations(allCrops, crops.length + 1);
 
-	const initialCrops = crops.map(a => allCrops.find(b => a._id == b._id));
+  const initialCrops = crops.map(a => allCrops.find(b => a._id == b._id));
 
-	const compatibleCrops = combinations
-		.getLargestCombinationWithElements(initialCrops)
-		.filter(crop => !initialCrops.includes(crop));
+  const compatibleCrops = combinations
+    .getLargestCombinationWithElements(initialCrops)
+    .filter(crop => !initialCrops.includes(crop));
 
-	compatibleCrops.forEach(crop => {
-		delete crop.relationships;
-		delete crop.isCompatible;
-	});
-	return compatibleCrops;
+  compatibleCrops.forEach(crop => {
+    delete crop.relationships;
+    delete crop.isCompatible;
+  });
+  return compatibleCrops;
 }
 
 /**
@@ -45,39 +45,39 @@ function getCompatibleCrops(allCrops, relationships, crops) {
  */
 function getCropGroups(relationships, crops) {
   assignRelationships(relationships, crops);
-  
-	let groups = [];
 
-	// Create groups of companion crops
-	assignIsCompatible(crops, isCompanion);
-	const companionCombinations = new Combinations(crops);
-	groups = groups.concat(
-			removeCropGroupsFromCombinations(
-					companionCombinations,
-					companionCombinations.getLargestCombinationSize()
-			)
-	);
+  let groups = [];
 
-	// From the remaining crops, create small groups of neutral crops
-	const remainingCrops = companionCombinations.getElements();
-	assignIsCompatible(remainingCrops, isNeutral);
-	const neutralCombinations = new Combinations(remainingCrops);
-	if (neutralCombinations.getLargestCombinationSize() >= 2) {
-			groups = groups.concat(
-					removeCropGroupsFromCombinations(neutralCombinations, 2)
-			);
-	}
+  // Create groups of companion crops
+  assignIsCompatible(crops, isCompanion);
+  const companionCombinations = new Combinations(crops);
+  groups = groups.concat(
+    removeCropGroupsFromCombinations(
+      companionCombinations,
+      companionCombinations.getLargestCombinationSize()
+    )
+  );
 
-	// From the remaining crops, create single crop groups
-	groups = groups.concat(neutralCombinations.getCombinations(1));
+  // From the remaining crops, create small groups of neutral crops
+  const remainingCrops = companionCombinations.getElements();
+  assignIsCompatible(remainingCrops, isNeutral);
+  const neutralCombinations = new Combinations(remainingCrops);
+  if (neutralCombinations.getLargestCombinationSize() >= 2) {
+    groups = groups.concat(
+      removeCropGroupsFromCombinations(neutralCombinations, 2)
+    );
+  }
 
-	groups.forEach(group =>
-			group.forEach(crop => {
-					delete crop.relationships;
-					delete crop.isCompatible;
-			})
-	);
-	return groups;
+  // From the remaining crops, create single crop groups
+  groups = groups.concat(neutralCombinations.getCombinations(1));
+
+  groups.forEach(group =>
+    group.forEach(crop => {
+      delete crop.relationships;
+      delete crop.isCompatible;
+    })
+  );
+  return groups;
 }
 
 /**
@@ -90,26 +90,28 @@ function getCropGroups(relationships, crops) {
  * @return {Array}
  */
 function removeCropGroupsFromCombinations(combinations, maximumGroupSize) {
-	const groups = [];
+  const groups = [];
 
-	while (maximumGroupSize >= 2) {
-		const cursorCombinations = combinations.getCombinations(maximumGroupSize);
-		if (cursorCombinations.length > 0) {
-			const combination = cursorCombinations[0];
-			combinations.removeElements(combination);
-			groups.push(combination);
-		} else {
-			maximumGroupSize--;
-		}
-	}
+  while (maximumGroupSize >= 2) {
+    const cursorCombinations = combinations.getCombinations(maximumGroupSize);
+    if (cursorCombinations.length > 0) {
+      const combination = cursorCombinations[0];
+      combinations.removeElements(combination);
+      groups.push(combination);
+    } else {
+      maximumGroupSize--;
+    }
+  }
 
-	return groups;
+  return groups;
 }
 
 function assignRelationships(relationships, crops) {
   for (let index = 0; index < crops.length; index++) {
     const crop = crops[index];
-    crop.relationships = relationships.filter(relationship => containsCrop(relationship, crop));
+    crop.relationships = relationships.filter(relationship =>
+      containsCrop(relationship, crop)
+    );
   }
 }
 
@@ -121,9 +123,9 @@ function assignRelationships(relationships, crops) {
  * @param {Function} isCompatibleFunction
  */
 function assignIsCompatible(crops, isCompatibleFunction) {
-	crops.forEach(crop => {
-		crop.isCompatible = isCompatibleFunction;
-	});
+  crops.forEach(crop => {
+    crop.isCompatible = isCompatibleFunction;
+  });
 }
 
 /**
@@ -134,10 +136,10 @@ function assignIsCompatible(crops, isCompatibleFunction) {
  * @return {Boolean}
  */
 function isCompanion(crop) {
-	return this.relationships.some(
-		(relationship) =>
-			(containsCrop(relationship, crop) && (relationship.compatibility > 0))
-	);
+  return this.relationships.some(
+    relationship =>
+      containsCrop(relationship, crop) && relationship.compatibility > 0
+  );
 }
 
 /**
@@ -148,11 +150,11 @@ function isCompanion(crop) {
  * @return {Boolean}
  */
 function isNeutral(crop) {
-	return this.relationships.some(
-		(relationship) =>
-			!containsCrop(relationship, crop) ||
-			(containsCrop(relationship, crop) && (relationship.compatibility == 0))
-	);
+  return this.relationships.some(
+    relationship =>
+      !containsCrop(relationship, crop) ||
+      (containsCrop(relationship, crop) && relationship.compatibility == 0)
+  );
 }
 
 /**
@@ -161,8 +163,8 @@ function isNeutral(crop) {
  * @return {Boolean}
  */
 function containsCrop(relationship, crop) {
-	const id = crop._id;
-	return (relationship.crop0 == id) || (relationship.crop1 == id);
+  const id = crop._id;
+  return relationship.crop0 == id || relationship.crop1 == id;
 }
 
 module.exports = {
