@@ -1,6 +1,6 @@
 const { assert } = require('chai');
 const practicalplants = require('../../db/practicalplants.js');
-const { companions } = require('../../db/companions.js');
+const { companions } = require('../../db/matrix.js');
 const companionship = require('../../shared/companionship.js');
 
 describe('Companionship algorithm', () => {

@@ -6,7 +6,7 @@
  */
 
 const practicalplants = require('../db/practicalplants.js');
-const { getCompanionValue } = require('../db/companions.js');
+const { getCompanionValue } = require('../db/matrix.js');
 
 /**
  * Calculate a companionship score that represents something like "overall

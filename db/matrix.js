@@ -1,7 +1,7 @@
 /**
- * Companion plant database.
+ * Companion plant matrix
  *
- * @namespace companions
+ * @namespace matrix
  * @memberof db
  */
 
