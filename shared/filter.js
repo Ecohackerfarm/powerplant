@@ -121,5 +121,6 @@ function choose(crop, filters) {
 }
 
 module.exports = {
-  filterAndSort
+  filterAndSort,
+  filter
 };
