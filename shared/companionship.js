@@ -437,6 +437,7 @@ function areValuesMatching(crops, property) {
 module.exports = {
   calculateCompanionshipScore,
   areCompatible,
+  calculateGoodness,
 
   compatibilityValues,
   goodnessValues,
