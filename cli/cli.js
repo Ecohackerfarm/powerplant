@@ -8,6 +8,7 @@ const practicalplants = require('../db/practicalplants.js');
 const { plants, companions } = require('../db/matrix.js');
 const { HTTP_SERVER_PORT, HTTP_SERVER_HOST } = require('../secrets.js');
 const { getHttpServerUrl, getPouchDatabaseUrl } = require('../shared/utils.js');
+const { filter } = require('../shared/filter.js');
 
 /**
  * Print a message to console.
@@ -228,15 +229,11 @@ async function pouchFind() {
     const documents = (await local.allDocs({ include_docs: true })).rows.map(
       row => row.doc
     );
-    documents.forEach(document => {
-      if (
-        document.binomialName.toLowerCase().includes(search) ||
-        (document.commonName &&
-          document.commonName.toLowerCase().includes(search))
-      ) {
-        console.log(document);
-      }
-    });
+    const filteredDocuments = filter(documents, [
+      { property: 'binomialName', search: search },
+      { property: 'commonName', search: search }
+    ]);
+    console.log(filteredDocuments);
   } catch (exception) {
     console.log(exception);
   }
