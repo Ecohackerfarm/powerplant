@@ -1,3 +1,8 @@
+/**
+ * @namespace Header
+ * @memberof client.views
+ */
+
 const React = require('react');
 const { LinkContainer } = require('react-router-bootstrap');
 const { Navbar, Nav } = require('react-bootstrap');

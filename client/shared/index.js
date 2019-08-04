@@ -1,0 +1,4 @@
+/**
+ * @namespace shared
+ * @memberof client
+ */

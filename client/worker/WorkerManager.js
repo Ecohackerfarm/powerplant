@@ -1,6 +1,6 @@
 /**
  * @namespace WorkerManager
- * @memberof worker
+ * @memberof client.worker
  */
 
 const Worker = require('worker-loader!./worker.js');
@@ -9,8 +9,8 @@ const store = require('../redux/store.js');
 class WorkerManager {
   constructor() {
     this.worker = new Worker();
-    this.worker.onmessage = (e) => {
-      const { id, method, result } = e.data;
+    this.worker.onmessage = e => {
+      const { id, method, result } = e.data;
 
       if (id) {
         const entry = this.queue[id];
@@ -42,7 +42,7 @@ class WorkerManager {
     entry.message = message;
     entry.promise = new Promise((resolve, reject) => {
       entry.resolve = resolve;
-      entry.reject  = reject;
+      entry.reject = reject;
     });
 
     this.queue[message.id] = entry;
@@ -57,7 +57,7 @@ class WorkerManager {
    * PouchDB synchronization.
    */
   generateId() {
-    while ((this.idCounter == 0) || this.queue[this.idCounter]) {
+    while (this.idCounter == 0 || this.queue[this.idCounter]) {
       this.idCounter++;
     }
 

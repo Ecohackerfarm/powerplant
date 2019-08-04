@@ -1,6 +1,6 @@
 /**
  * @namespace reducers
- * @memberof redux
+ * @memberof client.redux
  */
 
 const { combineReducers } = require('redux');
@@ -17,7 +17,7 @@ const initialAppState = {
  * @return {Object} Next state
  */
 function crops(state = initialCropsState, action) {
-  const { type, document } = action;
+  const { type, document } = action;
   const newState = Object.assign({}, state);
 
   switch (type) {
@@ -25,7 +25,7 @@ function crops(state = initialCropsState, action) {
     case actions.UPDATE_CROP:
       if (Array.isArray(document)) {
         const newObjects = {};
-        document.forEach((doc) => {
+        document.forEach(doc => {
           newObjects[doc._id] = doc;
         });
 
@@ -37,7 +37,7 @@ function crops(state = initialCropsState, action) {
       }
     case actions.REMOVE_CROP:
       if (Array.isArray(document)) {
-        document.forEach((doc) => {
+        document.forEach(doc => {
           delete newState[doc._id];
         });
       } else {
@@ -67,5 +67,5 @@ function app(state = initialAppState, action) {
 
 module.exports = combineReducers({
   crops,
-  app,
+  app
 });

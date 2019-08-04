@@ -1,0 +1,4 @@
+/**
+ * @namespace views
+ * @memberof client
+ */

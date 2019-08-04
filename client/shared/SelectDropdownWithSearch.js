@@ -1,7 +1,15 @@
+/**
+ * @namespace SelectDropdownWithSearch
+ * @memberof client.shared
+ */
+
 const React = require('react');
 const { InputGroup } = require('react-bootstrap');
 const DropdownView = require('./DropdownView.js');
-const { effectItemSelected, getSelectableItems } = require('./logic/select-dropdown.js');
+const {
+  effectItemSelected,
+  getSelectableItems
+} = require('./logic/select-dropdown.js');
 const InputField = require('./InputField.js');
 const { TAB, ENTER, ESCAPE } = require('./logic/input-field.js');
 
@@ -26,19 +34,19 @@ class SelectDropdownWithSearch extends React.Component {
     this.mode = {
       items: items,
       multi: multi,
-      allowNewItems: allowNewItems,
+      allowNewItems: allowNewItems
     };
 
     this.state = {
       selected: initialSelection ? initialSelection : [],
-      filter: '',
+      filter: ''
     };
 
     this.dropdownView = React.createRef();
 
-    this.onSelect           = this.onSelect.bind(this);
+    this.onSelect = this.onSelect.bind(this);
     this.onInputValueChange = this.onInputValueChange.bind(this);
-    this.onFunctionKey      = this.onFunctionKey.bind(this);
+    this.onFunctionKey = this.onFunctionKey.bind(this);
     this.onInputFocusChange = this.onInputFocusChange.bind(this);
   }
 
@@ -51,8 +59,21 @@ class SelectDropdownWithSearch extends React.Component {
 
     return (
       <InputGroup>
-        <DropdownView ref={this.dropdownView} title={title} multi={multi} selectable={selectable} selected={selected} filter={filter} handleSelect={this.onSelect} />
-        <InputField value={filter} handleChange={this.onInputValueChange} handleFunctionKey={this.onFunctionKey} handleFocus={this.onInputFocusChange} />
+        <DropdownView
+          ref={this.dropdownView}
+          title={title}
+          multi={multi}
+          selectable={selectable}
+          selected={selected}
+          filter={filter}
+          handleSelect={this.onSelect}
+        />
+        <InputField
+          value={filter}
+          handleChange={this.onInputValueChange}
+          handleFunctionKey={this.onFunctionKey}
+          handleFocus={this.onInputFocusChange}
+        />
       </InputGroup>
     );
   }
@@ -76,7 +97,9 @@ class SelectDropdownWithSearch extends React.Component {
       case TAB: {
         const filteredItems = getFilteredSelectableItems(this.state, this.mode);
         if (filteredItems.length > 0) {
-          this.setState(effectFilterChange(this.state, this.mode, filteredItems[0]));
+          this.setState(
+            effectFilterChange(this.state, this.mode, filteredItems[0])
+          );
         }
         break;
       }
@@ -84,7 +107,10 @@ class SelectDropdownWithSearch extends React.Component {
         const filteredItems = getFilteredSelectableItems(this.state, this.mode);
 
         if (this.mode.allowNewItems) {
-          if ((filteredItems.length > 0) && (filteredItems[0] == this.state.filter)) {
+          if (
+            filteredItems.length > 0 &&
+            filteredItems[0] == this.state.filter
+          ) {
             this.onSelect(filteredItems[0]);
           } else if (this.state.filter.length > 0) {
             this.onSelect(this.state.filter);
@@ -111,7 +137,9 @@ class SelectDropdownWithSearch extends React.Component {
 }
 
 function getFilteredSelectableItems(state, mode) {
-  return getSelectableItems(state, mode).filter(item => item.includes(state.filter));
+  return getSelectableItems(state, mode).filter(item =>
+    item.includes(state.filter)
+  );
 }
 
 function effectFilterChange(state, mode, filter) {

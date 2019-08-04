@@ -1,3 +1,8 @@
+/**
+ * @namespace CropListItem
+ * @memberof client
+ */
+
 const React = require('react');
 const ListItem = require('./shared/ListItem.js');
 const CropEditPanel = require('./CropEditPanel.js');
@@ -15,7 +20,7 @@ class CropListItem extends React.Component {
 
     this.listItem = React.createRef();
 
-    this.onSave   = this.onSave.bind(this);
+    this.onSave = this.onSave.bind(this);
     this.onCancel = this.onCancel.bind(this);
   }
 
@@ -23,7 +28,16 @@ class CropListItem extends React.Component {
     const { crop } = this.props;
 
     return (
-      <ListItem ref={this.listItem} modal={<CropEditPanel crop={crop} handleSave={this.onSave} handleCancel={this.onCancel} />}>
+      <ListItem
+        ref={this.listItem}
+        modal={
+          <CropEditPanel
+            crop={crop}
+            handleSave={this.onSave}
+            handleCancel={this.onCancel}
+          />
+        }
+      >
         {utils.getCropDisplayName(crop)}
       </ListItem>
     );

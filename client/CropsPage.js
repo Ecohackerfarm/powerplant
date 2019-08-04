@@ -1,3 +1,8 @@
+/**
+ * @namespace CropsPage
+ * @memberof client
+ */
+
 const React = require('react');
 const { connect } = require('react-redux');
 const { Badge } = require('react-bootstrap');

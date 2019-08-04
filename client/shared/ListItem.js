@@ -1,3 +1,8 @@
+/**
+ * @namespace ListItem
+ * @memberof client.shared
+ */
+
 const React = require('react');
 const { Card, Button, Modal } = require('react-bootstrap');
 
@@ -26,8 +31,12 @@ class ListItem extends React.Component {
       <div>
         <Card>
           <Card.Header>
-            <Button size="sm" onClick={handleDelete}>Delete</Button>
-            <Button size="sm" onClick={() => this.showModal()}>Edit</Button>
+            <Button size="sm" onClick={handleDelete}>
+              Delete
+            </Button>
+            <Button size="sm" onClick={() => this.showModal()}>
+              Edit
+            </Button>
           </Card.Header>
           <Card.Body>{children}</Card.Body>
         </Card>
