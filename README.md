@@ -1,6 +1,6 @@
 # powerplant
 
-<img style="float: right;" src="/dist/images/logo/logo.svg">
+<img align="right" src="/dist/images/logo/logo.svg">
 
 Optimize your garden plan, and learn about permaculture in the process! powerplant provides intelligent planting suggestions which maximize positive crop interaction for the mutual benefit of all your crops. It also helps you track the progress of your garden with planting schedules and customizable tasks.
 
