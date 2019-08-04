@@ -11,10 +11,43 @@ const shared = require('../shared/practicalplants.js');
 const utils = require('../shared/utils.js');
 
 /**
+ * @typedef {Object} Crop
+ * @property {String} binomialName Binomial name. This exists for each crop.
+ * @property {String} commonName Common name. May not exist for each crop.
+ * @property {Boolean} poorNutrition
+ * @property {Number} hardinessZone TODO define range
+ * @property {Array} soilTexture TODO define enum values
+ * @property {Array} soilPh TODO define enum values
+ * @property {Array} soilWaterRetention TODO define enum values
+ * @property {Array} shade TODO define enum values
+ * @property {Array} sun TODO define enum values
+ * @property {Array} water TODO define enum values
+ * @property {Array} drought TODO define enum values
+ * @property {Array} ecosystemNiche TODO define enum values
+ * @property {Array} lifeCycle TODO define enum values
+ * @property {String} herbaceousOrWoody
+ * @property {String} deciduousOrEvergreen
+ * @property {String} growthRate
+ * @property {String} matureMeasurementUnit TODO remove from processed output
+ * @property {Number} matureHeight TODO convert always to meters
+ * @property {Number} matureWidth TODO convert always to meters
+ * @property {String} flowerType
+ * @property {Array} pollinators TODO define enum values
+ * @property {Boolean} wind Wind resistant
+ * @property {Boolean} maritime Maritime resistant
+ * @property {Boolean} pollution Pollution resistant
+ * @property {Array} functions TODO define enum values
+ * @property {String} growFrom
+ * @property {String} cuttingType
+ * @property {String} fertility
+ * @property {String} rootZone
+ */
+
+/**
  * Read the mongoexport file and normalize its contents to ease
  * processing.
  *
- * @return {Array} Crop objects
+ * @return {Crop[]} Crop objects
  */
 function readCrops() {
   return readCropsLower().map(inputObject => {
