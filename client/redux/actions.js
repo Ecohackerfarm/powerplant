@@ -2,7 +2,7 @@
  * Redux action types and basic action creators.
  *
  * @namespace actions
- * @memberof client
+ * @memberof client.redux
  */
 
 function addCrop(crop) {
@@ -28,7 +28,7 @@ function removeCrop(crop) {
 
 /**
  * Indicate that the persisted Redux store has been loaded.
- * 
+ *
  * @return {Object} Action object
  */
 function storeLoaded() {
@@ -41,12 +41,11 @@ function storeLoaded() {
 /*
  * Action types
  */
-const ADD_CROP    = 'ADD_CROP';
+const ADD_CROP = 'ADD_CROP';
 const UPDATE_CROP = 'EDIT_CROP';
 const REMOVE_CROP = 'REMOVE_CROP';
 
 const STORE_LOADED = 'STORE_LOADED';
-
 
 module.exports = {
   addCrop,
@@ -57,5 +56,5 @@ module.exports = {
   ADD_CROP,
   UPDATE_CROP,
   REMOVE_CROP,
-  STORE_LOADED,
+  STORE_LOADED
 };

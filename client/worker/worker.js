@@ -1,9 +1,12 @@
 /**
  * @namespace worker
- * @memberof worker
+ * @memberof client.worker
  */
 
-const { getCropGroups, getCompatibleCrops } = require('../../shared/companions.js');
+const {
+  getCropGroups,
+  getCompatibleCrops
+} = require('../../shared/companions.js');
 const pouchdb = require('../pouchdb.js');
 
 onmessage = function(e) {
@@ -26,16 +29,19 @@ onmessage = function(e) {
       break;
     case 'pouchdb.put':
       const crop = parameters[0];
-      local.get(crop._id).then((response) => {
-        local.put(Object.assign({}, response, crop, { _rev: response._rev })).then((response) => {
-          postMessage(result);
-        }).catch((error) => {
-          console.info(error);
-        });
+      local.get(crop._id).then(response => {
+        local
+          .put(Object.assign({}, response, crop, { _rev: response._rev }))
+          .then(response => {
+            postMessage(result);
+          })
+          .catch(error => {
+            console.info(error);
+          });
       });
       break;
   }
-}
+};
 
 function postReduxAction(action) {
   const message = {

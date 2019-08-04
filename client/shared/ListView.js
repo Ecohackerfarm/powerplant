@@ -1,3 +1,8 @@
+/**
+ * @namespace ListView
+ * @memberof client.shared
+ */
+
 const React = require('react');
 const { Container, Row, Col } = require('react-bootstrap');
 
@@ -13,80 +18,80 @@ const { Container, Row, Col } = require('react-bootstrap');
  * @param {Function} props.renderItem
  */
 class ListView extends React.Component {
-	render() {
-		const { renderItem } = this.props;
+  render() {
+    const { renderItem } = this.props;
 
-		const [effectiveColumns, effectiveRows] = this.getEffectiveDimensions();
-		const effectiveItems = this.getItemsInDisplayOrder();
+    const [effectiveColumns, effectiveRows] = this.getEffectiveDimensions();
+    const effectiveItems = this.getItemsInDisplayOrder();
 
-		const columnWidth = 12 / effectiveColumns;
+    const columnWidth = 12 / effectiveColumns;
 
-		const elements = [];
+    const elements = [];
 
-		let key = 0;
-		for (; effectiveItems.length > 0; ) {
-			const rowElements = effectiveItems
-				.splice(0, effectiveColumns)
-				.filter(item => item)
-				.map(item => (
-					<Col key={key++} md={columnWidth}>
-						{renderItem(item)}
-					</Col>
-				));
-			elements.push(rowElements);
-		}
+    let key = 0;
+    for (; effectiveItems.length > 0; ) {
+      const rowElements = effectiveItems
+        .splice(0, effectiveColumns)
+        .filter(item => item)
+        .map(item => (
+          <Col key={key++} md={columnWidth}>
+            {renderItem(item)}
+          </Col>
+        ));
+      elements.push(rowElements);
+    }
 
-		return (
-			<Container>
-				{elements.map((rowElements, index) => (
-					<Row key={index}>{rowElements}</Row>
-				))}
-			</Container>
-		);
-	}
+    return (
+      <Container>
+        {elements.map((rowElements, index) => (
+          <Row key={index}>{rowElements}</Row>
+        ))}
+      </Container>
+    );
+  }
 
-	getItemsInDisplayOrder() {
-		const { items, vertical } = this.props;
+  getItemsInDisplayOrder() {
+    const { items, vertical } = this.props;
 
-		let effectiveItems = [];
-		if (vertical) {
-			const [effectiveColumns, effectiveRows] = this.getEffectiveDimensions();
+    let effectiveItems = [];
+    if (vertical) {
+      const [effectiveColumns, effectiveRows] = this.getEffectiveDimensions();
 
-			for (let index = 0; index < effectiveColumns * effectiveRows; index++) {
-				const x = index % effectiveColumns;
-				const y = Math.floor(index / effectiveColumns);
+      for (let index = 0; index < effectiveColumns * effectiveRows; index++) {
+        const x = index % effectiveColumns;
+        const y = Math.floor(index / effectiveColumns);
 
-				const verticalIndex = x * effectiveRows + y;
-				const item = verticalIndex < items.length ? items[verticalIndex] : null;
+        const verticalIndex = x * effectiveRows + y;
+        const item = verticalIndex < items.length ? items[verticalIndex] : null;
 
-				effectiveItems.push(item);
-			}
-		} else {
-			effectiveItems = items;
-		}
+        effectiveItems.push(item);
+      }
+    } else {
+      effectiveItems = items;
+    }
 
-		return effectiveItems;
-	}
+    return effectiveItems;
+  }
 
-	getEffectiveDimensions() {
-		const { items, columns, rows } = this.props;
+  getEffectiveDimensions() {
+    const { items, columns, rows } = this.props;
 
-		let effectiveColumns;
-		let effectiveRows;
+    let effectiveColumns;
+    let effectiveRows;
 
-		if (columns && rows) {
-			effectiveColumns = columns;
-			effectiveRows = rows;
-		} else if (columns) {
-			effectiveColumns = vertical ? 1 : columns;
-			effectiveRows = Math.floor(items.length / effectiveColumns);
-		} else {
-			effectiveRows = vertical ? rows : 1;
-			effectiveColumns = Math.floor(items.length / effectiveRows);
-		}
+    if (columns && rows) {
+      effectiveColumns = columns;
+      effectiveRows = rows;
+    } else if (columns) {
+      effectiveColumns = vertical ? 1 : columns;
+      effectiveRows = Math.floor(items.length / effectiveColumns);
+    } else {
+      effectiveRows = vertical ? rows : 1;
+      effectiveColumns = Math.floor(items.length / effectiveRows);
+    }
 
-		return [effectiveColumns, effectiveRows];
-	}
+    return [effectiveColumns, effectiveRows];
+  }
 }
 
 module.exports = ListView;

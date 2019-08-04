@@ -1,6 +1,14 @@
+/**
+ * @namespace SelectDropdown
+ * @memberof client.shared
+ */
+
 const React = require('react');
 const DropdownView = require('./DropdownView.js');
-const { effectItemSelected, getSelectableItems } = require('./logic/select-dropdown.js');
+const {
+  effectItemSelected,
+  getSelectableItems
+} = require('./logic/select-dropdown.js');
 
 /**
  * SelectDropdown is a component that is used for selecting items from a list.
@@ -19,11 +27,11 @@ class SelectDropdown extends React.Component {
 
     this.mode = {
       items: items,
-      multi: multi,
+      multi: multi
     };
 
     this.state = {
-      selected: initialSelection ? initialSelection : [],
+      selected: initialSelection ? initialSelection : []
     };
 
     this.onSelect = this.onSelect.bind(this);
@@ -31,12 +39,21 @@ class SelectDropdown extends React.Component {
 
   render() {
     const { multi } = this.mode;
-    const { selected } = this.state;
-    const { title } = this.props;
+    const { selected } = this.state;
+    const { title } = this.props;
 
     const selectable = getSelectableItems(this.state, this.mode);
 
-    return <DropdownView selectable={selectable} selected={selected} title={title} multi={multi} show={false} handleSelect={this.onSelect} />;
+    return (
+      <DropdownView
+        selectable={selectable}
+        selected={selected}
+        title={title}
+        multi={multi}
+        show={false}
+        handleSelect={this.onSelect}
+      />
+    );
   }
 
   onSelect(item) {

@@ -1,6 +1,6 @@
 /**
- * @namespace shared
- * @memberof utils
+ * @namespace utils
+ * @memberof shared
  */
 
 const secrets = require('../secrets.js');
@@ -12,7 +12,7 @@ const secrets = require('../secrets.js');
 function findTagSet(crops) {
   let tagSet = [];
   crops.forEach(crop => {
-    const newTags = getCropTagNames(crop).filter(tag => (!tagSet.includes(tag)));
+    const newTags = getCropTagNames(crop).filter(tag => !tagSet.includes(tag));
     tagSet = tagSet.concat(newTags);
   });
   return tagSet;
@@ -33,7 +33,9 @@ function getCropTagNames(crop) {
  * @return {String}
  */
 function getCropDisplayName(crop) {
-  return crop.commonName ? (crop.commonName + ' (' + crop.binomialName + ')') : crop.binomialName;
+  return crop.commonName
+    ? crop.commonName + ' (' + crop.binomialName + ')'
+    : crop.binomialName;
 }
 
 /**
@@ -41,7 +43,10 @@ function getCropDisplayName(crop) {
  * @return {String}
  */
 function toCamelCase(name) {
-  return name.toLowerCase().replace(/( [a-zA-Z])/g, match => match.toUpperCase()).replace(/ /g, '');
+  return name
+    .toLowerCase()
+    .replace(/( [a-zA-Z])/g, match => match.toUpperCase())
+    .replace(/ /g, '');
 }
 
 /**
@@ -56,7 +61,9 @@ function getPouchDatabaseUrl(database) {
  * @return {String}
  */
 function getHttpServerUrl() {
-  return 'http://' + secrets.HTTP_SERVER_HOST + ':' + secrets.HTTP_SERVER_PORT + '/';
+  return (
+    'http://' + secrets.HTTP_SERVER_HOST + ':' + secrets.HTTP_SERVER_PORT + '/'
+  );
 }
 
 module.exports = {
@@ -65,5 +72,5 @@ module.exports = {
   getCropDisplayName,
   toCamelCase,
   getPouchDatabaseUrl,
-  getHttpServerUrl,
+  getHttpServerUrl
 };

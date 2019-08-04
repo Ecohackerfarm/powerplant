@@ -1,3 +1,8 @@
+/**
+ * @namespace DropdownView
+ * @memberof client.shared
+ */
+
 const React = require('react');
 const { Dropdown } = require('react-bootstrap');
 
@@ -17,14 +22,14 @@ class DropdownView extends React.Component {
     super(props);
 
     this.state = {
-      show: false,
+      show: false
     };
 
     this.onToggle = this.onToggle.bind(this);
   }
 
   render() {
-    const { show } = this.state;
+    const { show } = this.state;
     const { selectable, selected, title, multi } = this.props;
 
     let effectiveTitle;
@@ -37,7 +42,7 @@ class DropdownView extends React.Component {
       elements.push(<Dropdown.Divider />);
       this.pushItemElements(elements, selectable);
     } else {
-      effectiveTitle = (selected.length > 0) ? selected[0] : title;
+      effectiveTitle = selected.length > 0 ? selected[0] : title;
       this.pushItemElements(elements, selectable);
     }
 
@@ -50,8 +55,8 @@ class DropdownView extends React.Component {
   }
 
   onToggle(isOpen, event, metadata) {
-    const { show } = this.state;
-    const { multi } = this.props;
+    const { show } = this.state;
+    const { multi } = this.props;
 
     const ignoredSources = [undefined];
     if (multi) {
@@ -69,7 +74,11 @@ class DropdownView extends React.Component {
 
   pushItemElements(elements, items) {
     items.forEach(item => {
-      const element = <Dropdown.Item eventKey={item} onSelect={this.props.handleSelect}>{item}</Dropdown.Item>;
+      const element = (
+        <Dropdown.Item eventKey={item} onSelect={this.props.handleSelect}>
+          {item}
+        </Dropdown.Item>
+      );
       elements.push(element);
     });
   }
