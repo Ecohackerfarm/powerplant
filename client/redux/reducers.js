@@ -26,14 +26,22 @@ function crops(state = initialCropsState, action) {
       if (Array.isArray(document)) {
         const newObjects = {};
         document.forEach(doc => {
-          newObjects[doc._id] = doc;
+          if (doc.binomialName) {
+            /* TODO proper validation */
+            newObjects[doc._id] = doc;
+          }
         });
 
         return Object.assign(newState, newObjects);
       } else {
-        return Object.assign(newState, {
-          [document._id]: document
-        });
+        if (document.binomialName) {
+          /* TODO proper validation */
+          return Object.assign(newState, {
+            [document._id]: document
+          });
+        } else {
+          return state;
+        }
       }
     case actions.REMOVE_CROP:
       if (Array.isArray(document)) {

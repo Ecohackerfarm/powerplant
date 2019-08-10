@@ -8,3 +8,6 @@ Object.defineProperty(exports, '__esModule', {
 exports.HTTP_SERVER_PORT = '8080';
 // host address of the api / address of the server
 exports.HTTP_SERVER_HOST = 'localhost';
+// PouchDB admin
+exports.ADMIN_USERNAME = 'admin';
+exports.ADMIN_PASSWORD = 'admin';
