@@ -7,8 +7,12 @@ const PouchDB = require('pouchdb');
 const practicalplants = require('../db/practicalplants.js');
 const { plants, companions } = require('../db/matrix.js');
 const { HTTP_SERVER_PORT, HTTP_SERVER_HOST } = require('../secrets.js');
-const { getHttpServerUrl, getPouchDatabaseUrl } = require('../shared/utils.js');
+const {
+  getHttpServerUrl,
+  getPouchAdminDatabaseUrl
+} = require('../shared/utils.js');
 const { filter } = require('../shared/filter.js');
+const axios = require('axios');
 
 /**
  * Print a message to console.
@@ -99,12 +103,13 @@ function getOptionArguments() {
 
 async function pouchMigrate() {
   try {
-    let remote = new PouchDB(getPouchDatabaseUrl('crops'));
+    let remote = new PouchDB(getPouchAdminDatabaseUrl('crops'));
 
     console.log(await remote.info());
 
     await remote.destroy();
-    remote = new PouchDB(getPouchDatabaseUrl('crops'));
+
+    remote = new PouchDB(getPouchAdminDatabaseUrl('crops'));
 
     console.log(await remote.info());
 
@@ -114,12 +119,19 @@ async function pouchMigrate() {
   } catch (exception) {
     console.log(exception);
   }
+
+  const response = await axios.post(getPouchAdminDatabaseUrl('crops'), {
+    _id: '_design/admin_only',
+    validate_doc_update:
+      'function (newDoc, oldDoc, userCtx) {if (!userCtx.roles.includes("_admin")) {throw({forbidden: "Not authorized"});}}'
+  });
+  console.log(response);
 }
 
 async function pouchSync() {
   try {
     let local = new PouchDB('crops-local');
-    let remote = new PouchDB(getPouchDatabaseUrl('crops'));
+    let remote = new PouchDB(getPouchAdminDatabaseUrl('crops'));
 
     console.log(await remote.info());
     console.log(await local.info());

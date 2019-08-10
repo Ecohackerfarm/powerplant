@@ -53,6 +53,17 @@ function toCamelCase(name) {
  * @param {String} database
  * @return {String}
  */
+function getPouchAdminDatabaseUrl(database) {
+  return getPouchDatabaseUrl(database).replace(
+    'http://',
+    'http://' + secrets.ADMIN_USERNAME + ':' + secrets.ADMIN_PASSWORD + '@'
+  );
+}
+
+/**
+ * @param {String} database
+ * @return {String}
+ */
 function getPouchDatabaseUrl(database) {
   return getHttpServerUrl() + 'db/' + database;
 }
@@ -72,5 +83,6 @@ module.exports = {
   getCropDisplayName,
   toCamelCase,
   getPouchDatabaseUrl,
+  getPouchAdminDatabaseUrl,
   getHttpServerUrl
 };
