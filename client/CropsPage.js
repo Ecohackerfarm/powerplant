@@ -8,8 +8,10 @@ const { connect } = require('react-redux');
 const { Badge } = require('react-bootstrap');
 const PaginatedList = require('./shared/PaginatedList.js');
 const CropListItem = require('./CropListItem.js');
+const InputField = require('./shared/InputField.js');
 const { updateCropAndSynchronize } = require('./redux/complex-actions.js');
 const utils = require('../shared/utils.js');
+
 /**
  * CropsPage lists crops and lets the user to edit them.
  */
@@ -17,14 +19,21 @@ class CropsPage extends React.Component {
   constructor(props) {
     super(props);
 
+    this.state = {
+      cropFilter: '',
+      filteredCrops: this.props.crops
+    };
+
     this.onRenderItem = this.onRenderItem.bind(this);
     this.onSaveCrop = this.onSaveCrop.bind(this);
+    this.onSearchFieldChange = this.onSearchFieldChange.bind(this);
   }
 
   render() {
     const { crops } = this.props;
+    const { cropFilter, filteredCrops } = this.state;
 
-    const sortedCrops = crops.sort((crop0, crop1) => {
+    const sortedCrops = filteredCrops.sort((crop0, crop1) => {
       const name0 = utils.getCropDisplayName(crop0);
       const name1 = utils.getCropDisplayName(crop1);
 
@@ -43,6 +52,12 @@ class CropsPage extends React.Component {
     return (
       <div>
         <div>{tagBadges}</div>
+        <InputField
+          value={cropFilter}
+          handleChange={this.onSearchFieldChange}
+          handleEnter={() => {}}
+          handleFocus={() => {}}
+        />
         <PaginatedList
           items={sortedCrops}
           columns={3}
@@ -64,6 +79,19 @@ class CropsPage extends React.Component {
     sanitizeNumberField(crop, 'matureWidth');
 
     this.props.updateCrop(crop);
+  }
+
+  onSearchFieldChange(value) {
+    const state = Object.assign({}, this.state, {
+      cropFilter: value,
+      filteredCrops: this.props.crops.filter(crop =>
+        utils
+          .getCropDisplayName(crop)
+          .toLowerCase()
+          .includes(value.toLowerCase())
+      )
+    });
+    this.setState(state);
   }
 }
 
