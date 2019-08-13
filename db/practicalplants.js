@@ -41,6 +41,7 @@ const utils = require('../shared/utils.js');
  * @property {String} cuttingType
  * @property {String} fertility
  * @property {String} rootZone
+ * @property {String} family
  */
 
 /**
@@ -411,7 +412,8 @@ const PP_MAPPINGS = {
   ...toCamelCase('grow from'),
   ...toCamelCase('cutting type'),
   ...toCamelCase('fertility'),
-  ...toCamelCase('root zone')
+  ...toCamelCase('root zone'),
+  ...toCamelCase('family')
 };
 
 /*
@@ -629,6 +631,11 @@ const PP_FERTILITY_VALUES = shared.PP_FERTILITY_VALUES;
 const ALL_ROOT_ZONE_VALUES = ['shallow', 'deep', 'surface'];
 const PP_ROOT_ZONE_VALUES = shared.PP_ROOT_ZONE_VALUES;
 
+const ALL_FAMILY_VALUES = [
+  'Acanthaceae','Aceraceae','Actinidiaceae','Agavaceae','Aizoaceae','Alangiaceae','Alismataceae','Alliaceae','Aloeaceae','Alstroemeriaceae','Amaranthaceae','Amaryllidaceae','Anacardiaceae','Annonaceae','Apocynaceae','Aponogetonaceae','Aquifoliaceae','Araceae','Araliaceae','Araucariaceae','Aristolochiaceae','Asclepiadaceae','Asparagaceae','Asphodelaceae','Asteliaceae','Asteraceae','Atherospermataceae','Balsaminaceae','Basellaceae','Begoniaceae','Berberidaceae','Betulaceae','Bignoniaceae','Blechnaceae','Boraginaceae','Brassicaceae','Bromeliaceae','Buddleiaceae','Burseraceae','Butomaceae','Buxaceae','Cabombaceae','Cactaceae','Callitrichaceae','Calochortaceae','Calycanthaceae','Calyceraceae','Campanulaceae','Cannabidaceae','Cannaceae','Capparidaceae','Caprifoliaceae','Caryophyllaceae','Casuarinaceae','Celastraceae','Cephalotaxaceae','Ceratophyllaceae','Cercidiphyllaceae','Chenopodiaceae','Chloranthaceae','Cistaceae','Clethraceae','Cneoraceae','Colchicaceae','Commelinaceae','Compositae','Convallariaceae','Convolvulaceae','Coriariaceae','Cornaceae','Corynocarpaceae','Crassulaceae','Cucurbitaceae','Cunoniaceae','Cupressaceae','Cyatheaceae','Cycadaceae','Cynocrambaceae','Cyperaceae','Cyrillaceae','Daphniphyllaceae','Datiscaceae','Diapensiaceae','Dicksoniaceae','Dioscoreaceae','Dipsacaceae','Droseraceae','Dryopteridaceae','Ebenaceae','Ehretiaceae','Elaeagnaceae','Elaeocarpaceae','Empetraceae','Epacridaceae','Ephedraceae','Equisetaceae','Ericaceae','Eriocaulaceae','Escalloniaceae','Eucommiaceae','Eucryphiaceae','Euphorbiaceae','Eupomatiaceae','Eupteleaceae','Euryalaceae','Fagaceae','Flacourtiaceae','Fumariaceae','Funkiaceae','Garryaceae','Gentianaceae','Geraniaceae','Gesneriaceae','Ginkgoaceae','Gleicheniaceae','Globulariaceae','Goodeniaceae','Gramineae','Grossulariaceae','Gunneraceae','Haemodoraceae','Haloragidaceae','Hamamelidaceae','Hemerocallidaceae','Hippocastanaceae','Hippuridaceae','Hyacinthaceae','Hydrangeaceae','Hydrocharitaceae','Hydrophyllaceae','Hypericaceae','Hypoxidaceae','Illiciaceae','Iridaceae','Juglandaceae','Juncaceae','Juncaginaceae','Labiatae','Lamiaceae','Lardizabalaceae','Lauraceae','Leguminosae','Leitneriaceae','Lemnaceae','Lentibulariaceae','Liliaceae','Limnanthaceae','Linaceae','Loasaceae','Loganiaceae','Lomandraceae','Loranthaceae','Lycopodiaceae','Lythraceae','Magnoliaceae','Malpighiaceae','Malvaceae','Marrattiaceae','Marsileaceae','Martyniaceae','Melanthiaceae','Melastomataceae','Meliaceae','Melianthaceae','Menispermaceae','Menyanthaceae','Misodendraceae','Molluginaceae','Monimiaceae','Moraceae','Morinaceae','Musaceae','Myoporaceae','Myricaceae','Myrsinaceae','Myrtaceae','Najadaceae','Nelumbonaceae','Nyctaginaceae','Nymphaeaceae','Nyssaceae','Oenotheraceae','Oleaceae','Onagraceae','Onocleaceae','Ophioglossaceae','Orchidaceae','Orobanchaceae','Osmundaceae','Oxalidaceae','Paeoniaceae','Palmae','Papaveraceae','Parmeliaceae','Parnassiaceae','Passifloraceae','Pedaliaceae','Philesiaceae','Phormiaceae','Phrymaceae','Phytolaccaceae','Pinaceae','Pistaciaceae','Pittosporaceae','Plantaginaceae','Platanaceae','Plumbaginaceae','Podocarpaceae','Podophyllaceae','Polemoniaceae','Polygalaceae','Polygonaceae','Polypodiaceae','Polytrichaceae','Pontederiaceae','Portulacaceae','Potamogetonaceae','Primulaceae','Proteaceae','Pteridaceae','Punicaceae','Pyrolaceae','Rafflesiaceae','Ranunculaceae','Resedaceae','Restoniaceae','Rhamnaceae','Rosaceae','Rubiaceae','Ruscaceae','Rutaceae','Salicaceae','Santalaceae','Sapindaceae','Sapotaceae','Sargentodoxaceae','Sarraceniaceae','Saururaceae','Saxifragaceae','Schisandraceae','Sciadoptyaceae','Scrophulariaceae','Selaginellaceae','Simaroubaceae','Smilacaceae','Solanaceae','Sparganiaceae','Sphagnaceae','Staphyleaceae','Sterculiaceae','Styracaceae','Symplocaceae','Tamaricaceae','Taxaceae','Taxodiaceae','Tecophilaeaceae','Theaceae','Thelypteridaceae','Thymelaeaceae','Tiliaceae','Trapaceae','Tricyrtidaceae','Trilliaceae','Tropaeolaceae','Turneraceae','Typhaceae','Ulmaceae','Umbelliferae','Urticaceae','Uvulariaceae','Valerianaceae','Verbenaceae','Violaceae','Viscaceae','Vitaceae','Winteraceae','Xanthorrhoeaceae','Xyridaceae','Zannichelliaceae','Zingiberaceae','Zosteraceae','Zygophyllaceae'
+];
+const PP_FAMILY_VALUES = shared.PP_FAMILY_VALUES;
+
 module.exports = {
   readCrops,
   readCropsLower,
@@ -664,6 +671,7 @@ module.exports = {
   ALL_CUTTING_TYPE_VALUES,
   ALL_FERTILITY_VALUES,
   ALL_ROOT_ZONE_VALUES,
+  ALL_FAMILY_VALUES,
 
   PP_BOOLEAN_VALUES,
   PP_HARDINESS_ZONE_VALUES,
@@ -688,5 +696,6 @@ module.exports = {
   PP_GROW_FROM_VALUES,
   PP_CUTTING_TYPE_VALUES,
   PP_FERTILITY_VALUES,
-  PP_ROOT_ZONE_VALUES
+  PP_ROOT_ZONE_VALUES,
+  PP_FAMILY_VALUES
 };
