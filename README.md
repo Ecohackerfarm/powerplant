@@ -14,4 +14,4 @@ Basically you need to have [Node.js](https://nodejs.org/en/) installed, then fol
 
 ## Contributing
 
-See the [wiki](https://wiki.ecohackerfarm.org/powerplant:start) for information on how to communicate with us, and/or do a PR on [github](https://github.com/Ecohackerfarm/powerplant).
+Join [github](https://github.com/Ecohackerfarm/powerplant) and do a PR or create an issue. Developers can be reached from #powerplant @ freenode. For other communication options see the [wiki](https://wiki.ecohackerfarm.org/powerplant:start).
