@@ -43,6 +43,7 @@ const utils = require('../shared/utils.js');
  * @property {String} rootZone
  * @property {String} family
  * @property {String} genus
+ * @property {String} salinity
  */
 
 /**
@@ -332,7 +333,7 @@ const ALL_PROPERTIES = [
   'cutting type',
   'cutting details',
   'problem notes',
-  'salinity', // TODO Looks useful, little used
+  'salinity',
   'fertility',
   'propagation',
   'common use description',
@@ -415,7 +416,8 @@ const PP_MAPPINGS = {
   ...toCamelCase('fertility'),
   ...toCamelCase('root zone'),
   ...toCamelCase('family'),
-  ...toCamelCase('genus')
+  ...toCamelCase('genus'),
+  ...toCamelCase('salinity')
 };
 
 /*
@@ -644,6 +646,9 @@ const ALL_GENUS_VALUES = [
 
 const PP_GENUS_VALUES = shared.PP_GENUS_VALUES;
 
+const ALL_SALINITY_VALUES = ['tolerant', 'intolerant'];
+const PP_SALINITY_VALUES = shared.PP_SALINITY_VALUES;
+
 module.exports = {
   readCrops,
   readCropsLower,
@@ -681,6 +686,7 @@ module.exports = {
   ALL_ROOT_ZONE_VALUES,
   ALL_FAMILY_VALUES,
   ALL_GENUS_VALUES,
+  ALL_SALINITY_VALUES,
 
   PP_BOOLEAN_VALUES,
   PP_HARDINESS_ZONE_VALUES,
@@ -707,5 +713,6 @@ module.exports = {
   PP_FERTILITY_VALUES,
   PP_ROOT_ZONE_VALUES,
   PP_FAMILY_VALUES,
-  PP_GENUS_VALUES
+  PP_GENUS_VALUES,
+  PP_SALINITY_VALUES
 };
