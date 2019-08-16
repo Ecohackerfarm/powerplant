@@ -268,6 +268,18 @@ describe('practicalplants.json', () => {
         'rootZone',
         practicalplants.ALL_ROOT_ZONE_VALUES
       );
+      updateMissingCountsAndCheckValues(
+        missingCounts,
+        object,
+        'family',
+        practicalplants.ALL_FAMILY_VALUES
+      );
+      updateMissingCountsAndCheckValues(
+        missingCounts,
+        object,
+        'genus',
+        practicalplants.ALL_GENUS_VALUES
+      );
     });
 
     assert.equal(missingCounts['commonName'], 2884);
@@ -299,6 +311,8 @@ describe('practicalplants.json', () => {
     assert.equal(missingCounts['cuttingType'], 7385);
     assert.equal(missingCounts['fertility'], 5337);
     assert.equal(missingCounts['rootZone'], 7405);
+    assert.equal(missingCounts['family'], 5);
+    assert.equal(missingCounts['genus'], 6);
   }).timeout(0);
 
   it('normalized data passes integrity checks', () => {
@@ -432,6 +446,8 @@ describe('practicalplants.json', () => {
         'rootZone',
         practicalplants.PP_ROOT_ZONE_VALUES
       );
+      assertValueOrMissing(object, 'family', practicalplants.PP_FAMILY_VALUES);
+      assertValueOrMissing(object, 'genus', practicalplants.PP_GENUS_VALUES);
 
       {
         /*
@@ -478,5 +494,7 @@ describe('practicalplants.json', () => {
     assertNoDuplicates(practicalplants.PP_CUTTING_TYPE_VALUES);
     assertNoDuplicates(practicalplants.PP_FERTILITY_VALUES);
     assertNoDuplicates(practicalplants.PP_ROOT_ZONE_VALUES);
+    assertNoDuplicates(practicalplants.PP_FAMILY_VALUES);
+    assertNoDuplicates(practicalplants.PP_GENUS_VALUES);
   });
 });

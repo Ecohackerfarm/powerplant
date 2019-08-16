@@ -51,6 +51,8 @@ class CropEditPanel extends React.Component {
     const initialShade = crop.shade ? [crop.shade] : [];
     const initialSun = crop.sun ? [crop.sun] : [];
     const initialWater = crop.water ? [crop.water] : [];
+    const initialFamily = crop.family ? [crop.family] : [];
+    const initialGenus = crop.genus ? [crop.genus] : [];
 
     const initialEcosystemNiche = crop.ecosystemNiche
       ? crop.ecosystemNiche
@@ -82,7 +84,17 @@ class CropEditPanel extends React.Component {
       >
         {[
           this.getNameInputElement(crop, 'Binomial name'),
-          this.getNameInputElement(crop, 'Common name')
+          this.getNameInputElement(crop, 'Common name'),
+          this.getSingleDropdownElement(
+            'Family',
+            practicalplants.PP_FAMILY_VALUES,
+            initialFamily
+          ),
+          this.getSingleDropdownElement(
+            'Genus',
+            practicalplants.PP_GENUS_VALUES,
+            initialGenus
+          )
         ]}
         {[this.getNumberInputElement(crop, 'Hardiness zone')]}
         {[
