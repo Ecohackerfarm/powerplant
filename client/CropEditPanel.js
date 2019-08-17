@@ -53,6 +53,7 @@ class CropEditPanel extends React.Component {
     const initialWater = crop.water ? [crop.water] : [];
     const initialFamily = crop.family ? [crop.family] : [];
     const initialGenus = crop.genus ? [crop.genus] : [];
+    const initialSalinity = crop.salinity ? [crop.salinity] : [];
 
     const initialEcosystemNiche = crop.ecosystemNiche
       ? crop.ecosystemNiche
@@ -164,6 +165,11 @@ class CropEditPanel extends React.Component {
             'Water',
             practicalplants.PP_WATER_VALUES,
             initialWater
+          ),
+          this.getSingleDropdownElement(
+            'Salinity',
+            practicalplants.PP_SALINITY_VALUES,
+            initialSalinity
           )
         ]}
         {[

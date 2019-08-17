@@ -103,6 +103,7 @@ module.exports = {
   PP_CUTTING_TYPE_VALUES: ['semi-ripe', 'soft wood', 'root', 'hard wood'],
   PP_FERTILITY_VALUES: ['self fertile', 'self sterile'],
   PP_ROOT_ZONE_VALUES: ['shallow', 'deep', 'surface'],
+  PP_SALINITY_VALUES: ['tolerant', 'intolerant'],
   PP_FAMILY_VALUES: [
     'Acanthaceae',
     'Aceraceae',
