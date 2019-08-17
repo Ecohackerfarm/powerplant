@@ -85,7 +85,17 @@ class CropEditPanel extends React.Component {
       >
         {[
           this.getNameInputElement(crop, 'Binomial name'),
-          this.getNameInputElement(crop, 'Common name')
+          this.getNameInputElement(crop, 'Common name'),
+          this.getSingleDropdownElement(
+            'Family',
+            practicalplants.PP_FAMILY_VALUES,
+            initialFamily
+          ),
+          this.getSingleDropdownElement(
+            'Genus',
+            practicalplants.PP_GENUS_VALUES,
+            initialGenus
+          )
         ]}
         {[this.getNumberInputElement(crop, 'Hardiness zone')]}
         {[
@@ -156,17 +166,6 @@ class CropEditPanel extends React.Component {
             practicalplants.PP_WATER_VALUES,
             initialWater
           ),
-          this.getSingleDropdownElement(
-            'Family',
-            practicalplants.PP_FAMILY_VALUES,
-            initialFamily
-          ),
-          this.getSingleDropdownElement(
-            'Genus',
-            practicalplants.PP_GENUS_VALUES,
-            initialGenus
-          )
-          ,
           this.getSingleDropdownElement(
             'Salinity',
             practicalplants.PP_SALINITY_VALUES,

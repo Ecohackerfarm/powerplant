@@ -453,21 +453,8 @@ describe('practicalplants.json', () => {
         'rootZone',
         practicalplants.PP_ROOT_ZONE_VALUES
       );
-      assertValueOrMissing(
-        object,
-        'family',
-        practicalplants.PP_FAMILY_VALUES
-      );
-      assertValueOrMissing(
-        object,
-        'genus',
-        practicalplants.PP_GENUS_VALUES
-      );
-      assertValueOrMissing(
-        object,
-        'salinity',
-        practicalplants.PP_SALINITY_VALUES
-      );
+      assertValueOrMissing(object, 'family', practicalplants.PP_FAMILY_VALUES);
+      assertValueOrMissing(object, 'genus', practicalplants.PP_GENUS_VALUES);
 
       {
         /*
