@@ -86,13 +86,281 @@ describe('practicalplants.json', () => {
     );
   }
 
+  let cropsLower;
+  let crops;
+
+  before(() => {
+    cropsLower = practicalplants.readCropsLower();
+    crops = practicalplants.readCrops();
+  });
+
+  it('set of crops that have salinity is analyzed', () => {
+    const expectedCropsThatHaveSalinity = [
+      'Acacia farnesiana', // Sweet Acacia
+      'Acacia longifolia', // Sidney Golden Wattle
+      'Acacia mucronata', // undefined
+      'Acacia retinodes', // Swamp Wattle
+      'Acacia saligna', // Blue-Leaved Wattle
+      'Agropyron elongatum', // Tall Wheatgrass
+      'Albizia julibrissin', // Mimosa, Persian silk tree, Silk tree, Nemunoki
+      'Alhagi maurorum', // Camel Thorn
+      'Alnus maritima', // Seaside Alder
+      'Althaea officinalis', // Marsh Mallow
+      'Amaranthus caudatus', // Love Lies Bleeding
+      'Anemopsis californica', // Yerba Mansa
+      'Apium australe', // undefined
+      'Apium graveolens', // Wild Celery
+      'Apium prostratum', // Sea Celery
+      'Armeria maritima', // Sea Thrift
+      'Artemisia maritima', // Sea Wormwood
+      'Arthrocnemum fruticosum', // Glasswort
+      'Asparagus officinalis', // Asparagus
+      'Aster tripolium', // Sea Aster
+      'Atriplex arenaria', // undefined
+      'Atriplex argentea', // Silvery Orach
+      'Atriplex argentea expansa', // Silverscale Saltbush
+      'Atriplex californica', // undefined
+      'Atriplex canescens', // Grey Sage Brush
+      'Atriplex carnosa', // undefined
+      'Atriplex confertifolia', // Shadscale
+      'Atriplex coronata', // Crownscale
+      'Atriplex dimorphostegia', // undefined
+      'Atriplex elegans', // Wheelscale Saltbush
+      'Atriplex glabriuscula', // undefined
+      'Atriplex gmelinii', // undefined
+      'Atriplex halimus', // Saltbush, Sea Orach
+      'Atriplex hastata', // Hastate Orach
+      'Atriplex hortensis', // Orach
+      'Atriplex lapathifolia', // undefined
+      'Atriplex lentiformis', // Quail Bush
+      'Atriplex maximowicziana', // undefined
+      'Atriplex nummularia', // Giant Saltbush
+      'Atriplex nuttallii', // Nuttall's Saltbush
+      'Atriplex patula', // Spreading Orach
+      'Atriplex powellii', // Powell's Saltweed
+      'Atriplex saccaria', // Sack Saltbush
+      'Atriplex serenana', // Bractscale
+      'Atriplex subcordata', // undefined
+      'Atriplex tatarica', // undefined
+      'Atriplex truncata', // Wedgescale Saltbush
+      'Avena byzantina', // Red Oat
+      'Baccharis halimifolia', // Bush Groundsel
+      'Baccharis patagonica', // undefined
+      'Beckmannia eruciformis', // Sloughgrass
+      'Beckmannia syzigachne', // American Sloughgrass
+      'Beta lomatogona', // undefined
+      'Beta trigyna', // undefined
+      'Beta vulgaris altissima', // Sugar Beet
+      'Beta vulgaris cicla', // Spinach Beet
+      'Beta vulgaris craca', // Beetroot
+      'Beta vulgaris flavescens', // Swiss Chard
+      'Beta vulgaris maritima', // Sea Beet
+      'Bumelia lanuginosa', // Chittamwood
+      'Bumelia lycioides', // Shittamwood
+      'Bumelia tenax', // Ironwood
+      'Calandrinia balonensis', // undefined
+      'Calandrinia polyandra', // undefined
+      'Calandrinia remota', // undefined
+      'Callitris columellaris', // White Cypress-Pine
+      'Callitris endlicheri', // Red Cypress-Pine
+      'Camphorosma monspeliaca', // undefined
+      'Capsella bursa-pastoris', // Shepherd's Purse
+      'Carex acutiformis', // Swamp Sedge
+      'Carpobrotus acinaciformis', // Hottentot Fig
+      'Carpobrotus aequilaterus', // Sea Fig
+      'Carpobrotus deliciosus', // Sweet Hottentot Fig
+      'Carpobrotus edulis', // Hottentot Fig
+      'Casuarina glauca', // Swamp Oak
+      'Casuarina verticillata', // undefined
+      'Chenopodium fremontii', // Goosefoot
+      'Chenopodium pallidicaule', // Caï¿½ihua
+      'Chenopodium quinoa', // Quinoa
+      'Chenopodium vulvaria', // Stinking Goosefoot
+      'Chrysothamnus nauseosus', // Rubber Rabbitbrush
+      'Cichorium intybus', // Chicory
+      'Cochlearia anglica', // Long Leaved Scurvy Grass
+      'Cochlearia danica', // Danish Scurvy Grass
+      'Cochlearia officinalis', // Scurvy Grass
+      'Cochlearia scotica', // undefined
+      'Conioselinum pacificum', // Pacific Hemlock-Parsley
+      'Correa alba', // Cape Barren Tea
+      'Crambe maritima', // Seacale
+      'Crithmum maritimum', // Rock Samphire
+      'Cynara scolymus', // Globe Artichoke
+      'Cynodon dactylon', // Bermuda Grass
+      'Cyperus tegetiformis', // undefined
+      'Descurainia antarctica', // undefined
+      'Dianthus caryophyllus', // Carnation
+      'Elaeagnus angustifolia', // Oleaster
+      'Eleusine coracana', // Finger Millet
+      'Elytrigia juncea', // Sand Couch
+      'Enchylaena tomentosa', // Ruby Saltbush
+      'Eryngium maritimum', // Sea Holly
+      'Eucalyptus camaldulensis', // Red River Gum
+      'Eucalyptus gummifera', // Red Bloodwood
+      'Eucalyptus largiflorens', // Black Box
+      'Ferula caspica', // undefined
+      'Ferula szowitziana', // undefined
+      'Fritillaria camschatcensis', // Kamchatka Lily
+      'Glaux maritima', // Black Saltwort
+      'Gleditsia triacanthos', // Honey Locust
+      'Glehnia littoralis', // Bei Sha Shen
+      'Grindelia humilis', // Hairy Gumweed
+      'Grindelia robusta', // Great Valley Gumweed
+      'Gymnocladus dioica', // Kentucky Coffee Tree
+      'Halimione portulacoides', // Sea Purslane
+      'Halimodendron halodendron', // Salt Tree
+      'Haloxylon ammodendron', // undefined
+      'Haloxylon persicum', // Salt Tree
+      'Inula crithmoides', // Golden Samphire
+      'Iris setosa', // Beachhead Iris
+      'Juncus acutus', // Sharp Rush
+      'Juncus balticus', // Baltic Rush
+      'Juncus procerus', // undefined
+      'Juniperus horizontalis', // Creeping Juniper
+      'Lavandula angustifolia', // Lavender
+      'Lavandula latifolia', // Spike Lavender
+      'Lavandula x intermedia', // Lavender
+      'Leitneria floridana', // Corkwood
+      'Lepidium latifolium', // Dittander
+      'Leymus condensatus', // Giant Wild Rye
+      'Leymus triticoides', // Squaw Grass
+      'Limonium carolinianum', // Sea Lavender
+      'Limonium vulgare', // Sea Lavender
+      'Lolium perenne', // Perennial Ryegrass
+      'Lycium ruthenicum', // undefined
+      'Matricaria recutita', // German Camomile
+      'Megacarpaea megalocarpa', // undefined
+      'Melilotus officinalis', // Melilot
+      'Melilotus wolgicus', // undefined
+      'Mesembryanthemum crystallinum', // Ice Plant
+      'Microseris nutans', // Yam Daisy
+      'Microseris procera', // Yam Daisy
+      'Microseris scapigera', // Yam Daisy
+      'Monolepis nuttalliana', // Poverty Weed
+      'Myoporum laetum', // Ngaio
+      'Myrica pensylvanica', // Northern Bayberry
+      'Najas flexilis', // undefined
+      'Najas marina', // Spiny Naiad
+      'Nitraria schoberi', // undefined
+      'Peganum harmala', // Syrian Rue
+      'Peucedanum officinale', // Hog's Fennel
+      'Phormium tenax', // New Zealand Flax
+      'Phragmites australis', // Common Reed
+      'Phyllospadix scouleri', // Surf Grass
+      'Phyllospadix torreyi', // Sea Grass
+      'Pinus muricata', // Bishop's Pine
+      'Plantago crassifolia', // undefined
+      'Plantago decipiens', // undefined
+      'Plantago maritima', // Sea Plantain
+      'Plantago oliganthus', // undefined
+      'Podolepis jaceoides', // Copperwire Daisy
+      'Polygonum equisetiforme', // undefined
+      'Polygonum sibiricum', // undefined
+      'Potamogeton crispus', // Curly Pondweed
+      'Potentilla hippiana', // Woolly Cinquefoil
+      'Prunus avium', // Sweet Cherry, Wild Cherry
+      'Psoralea macrostachya', // Large Leather Root
+      'Puccinellia distans', // Sweet Grass
+      'Quercus virginiana', // Live Oak
+      'Rhagodia candolleana', // Coastal Saltbush
+      'Rohdea japonica', // Nippon Lily, Sacred Lily, Omoto
+      'Rumex mexicanus', // Mexican Dock
+      'Sagittaria rigida', // undefined
+      'Salicornia ambigua', // undefined
+      'Salicornia bigelovii', // Dwarf Glasswort
+      'Salicornia europaea', // Glasswort
+      'Salicornia quinqueflora', // Chicken Claws
+      'Salix hookeriana', // Dune Willow
+      'Salix purpurea', // Purple Osier
+      'Salix purpurea lambertiana', // Purple Osier
+      'Salsola asparagoides', // undefined
+      'Salsola collina', // Tumbleweed
+      'Salsola kali', // Saltwort
+      'Salsola kali ruthenica', // Prickly Russian Thistle
+      'Salsola komarovi', // undefined
+      'Salsola soda', // Barilla Plant
+      'Sapium sebiferum', // Vegetable Tallow
+      'Sarcobatus vermiculatus', // Greasewood
+      'Scirpus affinis', // undefined
+      'Scirpus fluviatilis', // River Bulrush
+      'Scirpus maritimus', // Seaside Bulrush
+      'Scirpus paludosus', // Bayonet Grass
+      'Scorzonera mongolica', // undefined
+      'Scorzonera parviflora', // undefined
+      'Serenoa repens', // Saw Palmetto
+      'Sonchus arvensis', // Field Milk Thistle
+      'Spartina anglica', // Cord Grass
+      'Spartina pectinata', // Prairie Cord Grass
+      'Spartina x townsendii', // Townsend's Cord Grass
+      'Sporobolus airoides', // Alkali Sakaton
+      'Sporobolus pallidus', // undefined
+      'Suaeda australis', // Seablite
+      'Suaeda californica', // undefined
+      'Suaeda corniculata', // undefined
+      'Suaeda depressa', // undefined
+      'Suaeda fruticosa', // Shrubby Seablite
+      'Suaeda glauca', // undefined
+      'Suaeda heterotropa', // undefined
+      'Suaeda japonica', // undefined
+      'Suaeda linearis', // undefined
+      'Suaeda maritima', // Sea Blite
+      'Suaeda occidentalis', // undefined
+      'Suaeda palmeri', // undefined
+      'Suaeda ramosissima', // undefined
+      'Suaeda salsa', // undefined
+      'Suaeda suffrutescens', // Desert Seepweed
+      'Succisa pratensis', // Devil's Bit Scabious
+      'Tamarix africana', // undefined
+      'Tamarix anglica', // English Tree
+      'Tamarix aphylla', // Athel Tamarisk
+      'Tamarix canariensis', // Tamarisk
+      'Tamarix chinensis', // Chinese Tamarisk
+      'Tamarix gallica', // Manna Plant
+      'Tamarix hispida', // Kashgar Tree
+      'Tamarix juniperina', // undefined
+      'Tamarix ramosissima', // Tamarisk
+      'Taraxacum hybernum', // undefined
+      'Taxodium distichum', // Swamp Cypress
+      'Tetragonia tetragonoides', // New Zealand Spinach
+      'Triglochin maritima', // Sea Arrow Grass
+      'Triglochin palustris', // Marsh Arrow Grass
+      'Triglochin procera', // Water Ribbons
+      'Typha domingensis', // Southern Cattail
+      'Uniola paniculata', // Sea Oats
+      'Valeriana obovata', // Tobacco Root
+      'Washingtonia filifera', // Desert Fan Palm
+      'Zannichellia palustris', // Horned Pondweed
+      'Zostera marina' // Eel Grass
+    ];
+
+    const actualCropsThatHaveSalinity = [];
+    cropsLower.forEach(crop => {
+      if (crop.salinity) {
+        actualCropsThatHaveSalinity.push(crop);
+      }
+    });
+
+    assert.equal(expectedCropsThatHaveSalinity.length, 236);
+    assert.equal(
+      actualCropsThatHaveSalinity.length,
+      expectedCropsThatHaveSalinity.length
+    );
+
+    actualCropsThatHaveSalinity.forEach(crop => {
+      assert.equal(
+        expectedCropsThatHaveSalinity.includes(crop.binomialName),
+        true
+      );
+    });
+  });
+
   it('raw practicalplants.org data contains only analyzed properties and values', () => {
-    const crops = practicalplants.readCropsLower();
     let missingCounts = {};
 
-    assert.equal(crops.length, 7416);
+    assert.equal(cropsLower.length, 7416);
 
-    crops.forEach(object => {
+    cropsLower.forEach(object => {
       assert.isNotNull(object);
       assert.equal(typeof object, 'object');
 
@@ -323,8 +591,6 @@ describe('practicalplants.json', () => {
   }).timeout(0);
 
   it('normalized data passes integrity checks', () => {
-    const crops = practicalplants.readCrops();
-
     assert.equal(crops.length, 7416);
 
     crops.forEach(object => {
