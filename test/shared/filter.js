@@ -5,16 +5,15 @@
 const { assert } = require('chai');
 const { filterAndSort } = require('../../shared/filter.js');
 const { readCrops } = require('../../db/practicalplants.js');
+const utils = require('../../shared/utils.js');
 
 describe('Crop filtering', () => {
   let crops;
-  let nameToCrop = {};
+  let nameToCrop;
 
   before(() => {
     crops = readCrops();
-    crops.forEach(crop => {
-      nameToCrop[crop.binomialName] = crop;
-    });
+    nameToCrop = utils.mapCropsByBinomialName(crops);
   });
 
   it('number of crops for elementary filtering operations', () => {
