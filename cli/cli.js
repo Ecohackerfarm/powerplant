@@ -8,6 +8,7 @@ const practicalplants = require('../db/practicalplants.js');
 const { plants, companions } = require('../db/matrix.js');
 const { HTTP_SERVER_PORT, HTTP_SERVER_HOST } = require('../secrets.js');
 const {
+  mapCropsByBinomialName,
   getHttpServerUrl,
   getPouchAdminDatabaseUrl
 } = require('../shared/utils.js');
@@ -107,25 +108,41 @@ async function pouchMigrate() {
 
     console.log(await remote.info());
 
-    await remote.destroy();
+    const documents = await remote.allDocs({ include_docs: true });
+    const crops = documents.rows.map(document => document.doc);
+    const binomialNameToCrop = mapCropsByBinomialName(crops);
 
-    remote = new PouchDB(getPouchAdminDatabaseUrl('crops'));
+    readCrops().forEach(crop => {
+      const existingCrop = binomialNameToCrop[crop.binomialName];
+      if (existingCrop) {
+        Object.assign(existingCrop, crop);
+      } else {
+        crops.push(crop);
+      }
+    });
+
+    await remote.bulkDocs(crops);
 
     console.log(await remote.info());
-
-    const crops = readCrops();
-    const documents = await remote.bulkDocs(crops);
-    console.log(documents);
   } catch (exception) {
     console.log(exception);
   }
 
-  const response = await axios.post(getPouchAdminDatabaseUrl('crops'), {
-    _id: '_design/admin_only',
-    validate_doc_update:
-      'function (newDoc, oldDoc, userCtx) {if (!userCtx.roles.includes("_admin")) {throw({forbidden: "Not authorized"});}}'
-  });
-  console.log(response);
+  try {
+    const response = await axios.post(getPouchAdminDatabaseUrl('crops'), {
+      _id: '_design/admin_only',
+      validate_doc_update:
+        'function (newDoc, oldDoc, userCtx) {if (!userCtx.roles.includes("_admin")) {throw({forbidden: "Not authorized"});}}'
+    });
+    console.log(response);
+  } catch (exception) {
+    if (
+      exception.data &&
+      exception.data.reason !== 'Document update conflict'
+    ) {
+      console.log(exception);
+    }
+  }
 }
 
 async function pouchSync() {
