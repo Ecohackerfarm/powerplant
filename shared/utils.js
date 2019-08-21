@@ -7,6 +7,18 @@ const secrets = require('../secrets.js');
 
 /**
  * @param {Crop[]} crops
+ * @return {Object}
+ */
+function mapCropsByBinomialName(crops) {
+  const binomialNameToCrop = {};
+  crops.forEach(crop => {
+    binomialNameToCrop[crop.binomialName] = crop;
+  });
+  return binomialNameToCrop;
+}
+
+/**
+ * @param {Crop[]} crops
  * @return {String[]}
  */
 function findTagSet(crops) {
@@ -78,6 +90,7 @@ function getHttpServerUrl() {
 }
 
 module.exports = {
+  mapCropsByBinomialName,
   findTagSet,
   getCropTagNames,
   getCropDisplayName,
