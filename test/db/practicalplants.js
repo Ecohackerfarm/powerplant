@@ -86,6 +86,15 @@ describe('practicalplants.json', () => {
     );
   }
 
+  function assertNamedPropertyCase(object) {
+    for (const property of practicalplants.NAME_PROPERTIES) {
+      if(object[property]) {
+        assert.isTrue(/[a-zA-Z]/.test(object[property][0]), object[property]);
+        assert.isTrue(object[property][0] === object[property][0].toUpperCase(), object[property]); 
+      }
+    }
+  }
+
   let cropsLower;
   let crops;
 
@@ -721,6 +730,8 @@ describe('practicalplants.json', () => {
       );
       assertValueOrMissing(object, 'family', practicalplants.PP_FAMILY_VALUES);
       assertValueOrMissing(object, 'genus', practicalplants.PP_GENUS_VALUES);
+
+      assertNamedPropertyCase(object);
 
       {
         /*
