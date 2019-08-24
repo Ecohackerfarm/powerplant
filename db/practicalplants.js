@@ -108,6 +108,7 @@ function readCrops() {
     for (const property of NAME_PROPERTIES) {
       if (object[property]) {
         if (/[a-z]/.test(object[property][0])) {
+          console.error(JSON.stringify(object));
           replaceValue(
             object,
             property,
