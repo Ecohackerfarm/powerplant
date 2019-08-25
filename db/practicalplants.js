@@ -105,6 +105,20 @@ function readCrops() {
       replaceValue(object, property, ['Yes', 'True'], 'true');
     });
 
+    for (const property of NAME_PROPERTIES) {
+      if (object[property]) {
+        if (/[a-z]/.test(object[property][0])) {
+          console.error(JSON.stringify(object), '\n');
+          replaceValue(
+            object,
+            property,
+            [object[property]],
+            object[property][0].toUpperCase() + object[property].slice(1)
+          );
+        }
+      }
+    }
+
     replaceValue(object, 'matureMeasurementUnit', ['metres'], 'meters');
 
     replaceArrayValue(object['pollinators'], ['bees. self'], ['bees', 'self']);
