@@ -242,10 +242,7 @@ function parseCsvLine(line) {
  * @return {Array} Crop objects
  */
 function readCropsLower() {
-  const lines = fs
-    .readFileSync(__dirname + '/practicalplants.json', { encoding: 'latin1' })
-    .split('\n');
-  const crops = lines.splice(0, lines.length - 1).map(line => JSON.parse(line));
+  const crops = require('./practicalplants-data.js');
 
   /*
    * Rename property names to camelCase.
