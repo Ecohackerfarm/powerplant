@@ -264,7 +264,6 @@ function readCropsLower() {
  * All possible properties that may appear in raw practicalplants.org data.
  */
 const ALL_PROPERTIES = [
-  '_id',
   'append to article summary',
   'article summary',
   'primary image',
