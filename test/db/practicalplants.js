@@ -2,17 +2,6 @@ const { assert } = require('chai');
 const practicalplants = require('../../db/practicalplants.js');
 
 describe('practicalplants.json', () => {
-  function updateMissingCountsAndCheckValues(
-    missingCounts,
-    object,
-    property,
-    allowedValues
-  ) {
-    if (updateMissingCount(missingCounts, object, property, allowedValues)) {
-      assertValue(object, property, allowedValues);
-    }
-  }
-
   function updateMissingCount(missingCounts, object, property, allowedValues) {
     if (
       !(property in object) ||
@@ -98,11 +87,11 @@ describe('practicalplants.json', () => {
     }
   }
 
-  let cropsLower;
+  let practicalplantsCrops;
   let crops;
 
   before(() => {
-    cropsLower = practicalplants.readCropsLower();
+    practicalplantsCrops = require('../../db/practicalplants-data.js');
     crops = practicalplants.readCrops();
   });
 
@@ -347,7 +336,7 @@ describe('practicalplants.json', () => {
     ];
 
     const actualCropsThatHaveSalinity = [];
-    cropsLower.forEach(crop => {
+    practicalplantsCrops.forEach(crop => {
       if (crop.salinity) {
         actualCropsThatHaveSalinity.push(crop);
       }
@@ -360,243 +349,102 @@ describe('practicalplants.json', () => {
     );
 
     actualCropsThatHaveSalinity.forEach(crop => {
-      assert.equal(
-        expectedCropsThatHaveSalinity.includes(crop.binomialName),
-        true
+      assert.equal(expectedCropsThatHaveSalinity.includes(crop.binomial), true);
+    });
+  });
+
+  it('basic checks', () => {
+    assert.equal(practicalplantsCrops.length, 7416);
+
+    practicalplantsCrops.forEach(crop => {
+      assert.isNotNull(crop);
+      assert.equal(typeof crop, 'object');
+
+      Object.keys(crop).forEach(property =>
+        assert.isTrue(
+          practicalplants.ALL_PROPERTIES.includes(property),
+          'Unknown property: ' + property
+        )
       );
     });
   });
 
-  it('raw practicalplants.org data contains only analyzed properties and values', () => {
+  it('missing counts', () => {
+    /*
+     * TODO Assert counts instead of missing counts.
+     * TODO Assert counts for every property.
+     */
     let missingCounts = {};
 
-    assert.equal(cropsLower.length, 7416);
-
-    cropsLower.forEach(object => {
-      assert.isNotNull(object);
-      assert.equal(typeof object, 'object');
-
-      Object.keys(object).forEach(property =>
-        assert.isTrue(
-          practicalplants.ALL_PROPERTIES.includes(property) ||
-            practicalplants.PP_PROPERTIES.includes(property),
-          'Unknown property "' + property + '"'
-        )
-      );
-
-      updateMissingCount(missingCounts, object, 'commonName');
-      updateMissingCount(missingCounts, object, 'binomialName');
-      updateMissingCountsAndCheckValues(
-        missingCounts,
-        object,
-        'hardinessZone',
-        practicalplants.ALL_HARDINESS_ZONE_VALUES
-      );
-      updateMissingCountsAndCheckValues(
-        missingCounts,
-        object,
-        'soilTexture',
-        practicalplants.ALL_SOIL_TEXTURE_VALUES
-      );
-      updateMissingCountsAndCheckValues(
-        missingCounts,
-        object,
-        'soilPh',
-        practicalplants.ALL_SOIL_PH_VALUES
-      );
-      updateMissingCountsAndCheckValues(
-        missingCounts,
-        object,
-        'soilWaterRetention',
-        practicalplants.ALL_SOIL_WATER_RETENTION_VALUES
-      );
-      updateMissingCountsAndCheckValues(
-        missingCounts,
-        object,
-        'shade',
-        practicalplants.ALL_SHADE_VALUES
-      );
-      updateMissingCountsAndCheckValues(
-        missingCounts,
-        object,
-        'sun',
-        practicalplants.ALL_SUN_VALUES
-      );
-      updateMissingCountsAndCheckValues(
-        missingCounts,
-        object,
-        'water',
-        practicalplants.ALL_WATER_VALUES
-      );
-      updateMissingCountsAndCheckValues(
-        missingCounts,
-        object,
-        'drought',
-        practicalplants.ALL_DROUGHT_VALUES
-      );
-      updateMissingCountsAndCheckValues(
-        missingCounts,
-        object,
-        'poorNutrition',
-        practicalplants.ALL_BOOLEAN_VALUES
-      );
-      updateMissingCountsAndCheckValues(
-        missingCounts,
-        object,
-        'ecosystemNiche',
-        practicalplants.ALL_ECOSYSTEM_NICHE_VALUES
-      );
-      updateMissingCountsAndCheckValues(
-        missingCounts,
-        object,
-        'lifeCycle',
-        practicalplants.ALL_LIFE_CYCLE_VALUES
-      );
-      updateMissingCountsAndCheckValues(
-        missingCounts,
-        object,
-        'herbaceousOrWoody',
-        practicalplants.ALL_HERBACEOUS_OR_WOODY_VALUES
-      );
-      updateMissingCountsAndCheckValues(
-        missingCounts,
-        object,
-        'deciduousOrEvergreen',
-        practicalplants.ALL_DECIDUOUS_OR_EVERGREEN_VALUES
-      );
-      updateMissingCountsAndCheckValues(
-        missingCounts,
-        object,
-        'growthRate',
-        practicalplants.ALL_GROWTH_RATE_VALUES
-      );
-      updateMissingCountsAndCheckValues(
-        missingCounts,
-        object,
-        'matureMeasurementUnit',
-        practicalplants.ALL_MATURE_MEASUREMENT_UNIT_VALUES
-      );
-      updateMissingCountsAndCheckValues(
-        missingCounts,
-        object,
-        'matureHeight',
-        practicalplants.ALL_MATURE_HEIGHT_VALUES
-      );
-      updateMissingCountsAndCheckValues(
-        missingCounts,
-        object,
-        'matureWidth',
-        practicalplants.ALL_MATURE_WIDTH_VALUES
-      );
-      updateMissingCountsAndCheckValues(
-        missingCounts,
-        object,
-        'flowerType',
-        practicalplants.ALL_FLOWER_TYPE_VALUES
-      );
-      updateMissingCountsAndCheckValues(
-        missingCounts,
-        object,
-        'pollinators',
-        practicalplants.ALL_POLLINATORS_VALUES
-      );
-      updateMissingCountsAndCheckValues(
-        missingCounts,
-        object,
-        'wind',
-        practicalplants.ALL_BOOLEAN_VALUES
-      );
-      updateMissingCountsAndCheckValues(
-        missingCounts,
-        object,
-        'maritime',
-        practicalplants.ALL_BOOLEAN_VALUES
-      );
-      updateMissingCountsAndCheckValues(
-        missingCounts,
-        object,
-        'pollution',
-        practicalplants.ALL_BOOLEAN_VALUES
-      );
-      updateMissingCountsAndCheckValues(
+    practicalplantsCrops.forEach(object => {
+      updateMissingCount(missingCounts, object, 'common');
+      updateMissingCount(missingCounts, object, 'binomial');
+      updateMissingCount(missingCounts, object, 'hardiness zone');
+      updateMissingCount(missingCounts, object, 'soil texture');
+      updateMissingCount(missingCounts, object, 'soil ph');
+      updateMissingCount(missingCounts, object, 'soil water retention');
+      updateMissingCount(missingCounts, object, 'shade');
+      updateMissingCount(missingCounts, object, 'sun');
+      updateMissingCount(missingCounts, object, 'water');
+      updateMissingCount(missingCounts, object, 'drought');
+      updateMissingCount(missingCounts, object, 'poornutrition');
+      updateMissingCount(missingCounts, object, 'ecosystem niche');
+      updateMissingCount(missingCounts, object, 'life cycle');
+      updateMissingCount(missingCounts, object, 'herbaceous or woody');
+      updateMissingCount(missingCounts, object, 'deciduous or evergreen');
+      updateMissingCount(missingCounts, object, 'growth rate');
+      updateMissingCount(missingCounts, object, 'mature measurement unit');
+      updateMissingCount(missingCounts, object, 'mature height');
+      updateMissingCount(missingCounts, object, 'mature width');
+      updateMissingCount(missingCounts, object, 'flower type');
+      updateMissingCount(missingCounts, object, 'pollinators');
+      updateMissingCount(missingCounts, object, 'wind');
+      updateMissingCount(missingCounts, object, 'maritime');
+      updateMissingCount(missingCounts, object, 'pollution');
+      updateMissingCount(
         missingCounts,
         object,
         'functions',
         practicalplants.ALL_FUNCTIONS_VALUES
       );
-      updateMissingCountsAndCheckValues(
-        missingCounts,
-        object,
-        'growFrom',
-        practicalplants.ALL_GROW_FROM_VALUES
-      );
-      updateMissingCountsAndCheckValues(
-        missingCounts,
-        object,
-        'cuttingType',
-        practicalplants.ALL_CUTTING_TYPE_VALUES
-      );
-      updateMissingCountsAndCheckValues(
-        missingCounts,
-        object,
-        'fertility',
-        practicalplants.ALL_FERTILITY_VALUES
-      );
-      updateMissingCountsAndCheckValues(
-        missingCounts,
-        object,
-        'rootZone',
-        practicalplants.ALL_ROOT_ZONE_VALUES
-      );
-      updateMissingCountsAndCheckValues(
-        missingCounts,
-        object,
-        'family',
-        practicalplants.ALL_FAMILY_VALUES
-      );
-      updateMissingCountsAndCheckValues(
-        missingCounts,
-        object,
-        'genus',
-        practicalplants.ALL_GENUS_VALUES
-      );
-      updateMissingCountsAndCheckValues(
-        missingCounts,
-        object,
-        'salinity',
-        practicalplants.ALL_SALINITY_VALUES
-      );
+      updateMissingCount(missingCounts, object, 'grow from');
+      updateMissingCount(missingCounts, object, 'cutting type');
+      updateMissingCount(missingCounts, object, 'fertility');
+      updateMissingCount(missingCounts, object, 'root zone');
+      updateMissingCount(missingCounts, object, 'family');
+      updateMissingCount(missingCounts, object, 'genus');
+      updateMissingCount(missingCounts, object, 'salinity');
     });
 
-    assert.equal(missingCounts['commonName'], 2884);
-    assert.equal(missingCounts['binomialName'], undefined);
-    assert.equal(missingCounts['hardinessZone'], 2534);
-    assert.equal(missingCounts['soilTexture'], 3);
-    assert.equal(missingCounts['soilPh'], 2);
-    assert.equal(missingCounts['soilWaterRetention'], 2997);
+    assert.equal(missingCounts['common'], 2884);
+    assert.equal(missingCounts['binomial'], undefined);
+    assert.equal(missingCounts['hardiness zone'], 2534);
+    assert.equal(missingCounts['soil texture'], 3);
+    assert.equal(missingCounts['soil ph'], 2);
+    assert.equal(missingCounts['soil water retention'], 2997);
     assert.equal(missingCounts['shade'], 2);
     assert.equal(missingCounts['sun'], 280);
     assert.equal(missingCounts['water'], 1);
     assert.equal(missingCounts['drought'], 2);
-    assert.equal(missingCounts['poorNutrition'], 6);
-    assert.equal(missingCounts['ecosystemNiche'], 5699);
-    assert.equal(missingCounts['lifeCycle'], 752);
-    assert.equal(missingCounts['herbaceousOrWoody'], 4306);
-    assert.equal(missingCounts['deciduousOrEvergreen'], 3924);
-    assert.equal(missingCounts['growthRate'], 6177);
-    assert.equal(missingCounts['matureMeasurementUnit'], 141);
-    assert.equal(missingCounts['matureHeight'], 1005);
-    assert.equal(missingCounts['matureWidth'], 4898);
-    assert.equal(missingCounts['flowerType'], 127);
+    assert.equal(missingCounts['poornutrition'], 6);
+    assert.equal(missingCounts['ecosystem niche'], 5699);
+    assert.equal(missingCounts['life cycle'], 752);
+    assert.equal(missingCounts['herbaceous or woody'], 4306);
+    assert.equal(missingCounts['deciduous or evergreen'], 3924);
+    assert.equal(missingCounts['growth rate'], 6177);
+    assert.equal(missingCounts['mature measurement unit'], 141);
+    assert.equal(missingCounts['mature height'], 1005);
+    assert.equal(missingCounts['mature width'], 4898);
+    assert.equal(missingCounts['flower type'], 127);
     assert.equal(missingCounts['pollinators'], 1878);
     assert.equal(missingCounts['wind'], 6237);
     assert.equal(missingCounts['maritime'], 6767);
     assert.equal(missingCounts['pollution'], 7257);
     assert.equal(missingCounts['functions'], 6964);
-    assert.equal(missingCounts['growFrom'], 7354);
-    assert.equal(missingCounts['cuttingType'], 7385);
+    assert.equal(missingCounts['grow from'], 7354);
+    assert.equal(missingCounts['cutting type'], 7385);
     assert.equal(missingCounts['fertility'], 5337);
-    assert.equal(missingCounts['rootZone'], 7405);
+    assert.equal(missingCounts['root zone'], 7405);
     assert.equal(missingCounts['family'], 5);
     assert.equal(missingCounts['genus'], 6);
     assert.equal(missingCounts['salinity'], 7180);
