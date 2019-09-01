@@ -247,17 +247,17 @@ function readCropsLower() {
   /*
    * Rename property names to camelCase.
    */
-  crops.forEach(crop => {
+  return crops.map(crop => {
+    const newCrop = Object.assign({}, crop);
     Object.keys(PP_MAPPINGS).forEach(property => {
       const renamedProperty = PP_MAPPINGS[property];
       if (renamedProperty != property && crop[property] !== undefined) {
-        crop[renamedProperty] = crop[property];
-        delete crop[property];
+        newCrop[renamedProperty] = crop[property];
+        delete newCrop[property];
       }
     });
+    return newCrop;
   });
-
-  return crops;
 }
 
 /*
@@ -2602,7 +2602,6 @@ const PP_SALINITY_VALUES = shared.PP_SALINITY_VALUES;
 
 module.exports = {
   readCrops,
-  readCropsLower,
 
   getAsArray,
 
