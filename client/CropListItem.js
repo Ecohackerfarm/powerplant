@@ -6,7 +6,7 @@
 const React = require('react');
 const ListItem = require('./shared/ListItem.js');
 const CropEditPanel = require('./CropEditPanel.js');
-const utils = require('../shared/utils.js');
+const Crop = require('../shared/crop.js');
 
 /**
  * CropListItem is a component for displaying a Crop object in a list.
@@ -38,7 +38,7 @@ class CropListItem extends React.Component {
           />
         }
       >
-        {utils.getCropDisplayName(crop)}
+        {Crop.getDisplayName(crop)}
       </ListItem>
     );
   }

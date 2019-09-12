@@ -5,7 +5,7 @@
 const { assert } = require('chai');
 const { filterAndSort } = require('../../shared/filter.js');
 const { readCrops } = require('../../db/practicalplants.js');
-const utils = require('../../shared/utils.js');
+const Crop = require('../../shared/crop.js');
 
 describe('Crop filtering', () => {
   let crops;
@@ -13,7 +13,7 @@ describe('Crop filtering', () => {
 
   before(() => {
     crops = readCrops();
-    nameToCrop = utils.mapCropsByBinomialName(crops);
+    nameToCrop = Crop.mapCropsByBinomialName(crops);
   });
 
   it('number of crops for elementary filtering operations', () => {

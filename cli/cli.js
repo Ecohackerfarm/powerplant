@@ -8,10 +8,10 @@ const practicalplants = require('../db/practicalplants.js');
 const { plants, companions } = require('../db/matrix.js');
 const { HTTP_SERVER_PORT, HTTP_SERVER_HOST } = require('../secrets.js');
 const {
-  mapCropsByBinomialName,
   getHttpServerUrl,
   getPouchAdminDatabaseUrl
 } = require('../shared/utils.js');
+const { mapCropsByBinomialName } = require('../shared/crop.js');
 const { filter } = require('../shared/filter.js');
 const axios = require('axios');
 

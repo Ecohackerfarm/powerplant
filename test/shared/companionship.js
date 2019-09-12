@@ -2,7 +2,7 @@ const { assert } = require('chai');
 const practicalplants = require('../../db/practicalplants.js');
 const { companions } = require('../../db/matrix.js');
 const companionship = require('../../shared/companionship.js');
-const utils = require('../../shared/utils.js');
+const Crop = require('../../shared/crop.js');
 
 describe('Companionship algorithm', () => {
   let crops;
@@ -10,7 +10,7 @@ describe('Companionship algorithm', () => {
 
   before(() => {
     crops = practicalplants.readCrops();
-    binomialNameToCrop = utils.mapCropsByBinomialName(crops);
+    binomialNameToCrop = Crop.mapCropsByBinomialName(crops);
   });
 
   it('is compatible with the companion plant matrix', () => {

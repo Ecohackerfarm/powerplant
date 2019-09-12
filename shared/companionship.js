@@ -5,7 +5,7 @@
  * @memberof shared
  */
 
-const practicalplants = require('../db/practicalplants.js');
+const Crop = require('./crop.js');
 const { getCompanionValue } = require('../db/matrix.js');
 
 /**
@@ -218,7 +218,7 @@ function areNotIncompatibleInMatrix(crops) {
 function getEcosystemNicheDiversity(crops) {
   return (
     getNumberOfDifferentValuesInArrays(crops, 'ecosystemNiche') /
-    practicalplants.PP_ECOSYSTEM_NICHE_VALUES.length
+    Crop.ECOSYSTEM_NICHE_VALUES.length
   );
 }
 
@@ -229,7 +229,7 @@ function getEcosystemNicheDiversity(crops) {
 function getLifeCycleDiversity(crops) {
   return (
     getNumberOfDifferentValues(crops, 'lifeCycle') /
-    practicalplants.PP_LIFE_CYCLE_VALUES.length
+    Crop.LIFE_CYCLE_VALUES.length
   );
 }
 
@@ -240,7 +240,7 @@ function getLifeCycleDiversity(crops) {
 function getHerbaceousOrWoodyDiversity(crops) {
   return (
     getNumberOfDifferentValues(crops, 'herbaceousOrWoody') /
-    practicalplants.PP_HERBACEOUS_OR_WOODY_VALUES.length
+    Crop.HERBACEOUS_OR_WOODY_VALUES.length
   );
 }
 
@@ -251,7 +251,7 @@ function getHerbaceousOrWoodyDiversity(crops) {
 function getDeciduousOrEvergreenDiversity(crops) {
   return (
     getNumberOfDifferentValues(crops, 'deciduousOrEvergreen') /
-    practicalplants.PP_DECIDUOUS_OR_EVERGREEN_VALUES.length
+    Crop.DECIDUOUS_OR_EVERGREEN_VALUES.length
   );
 }
 
@@ -262,7 +262,7 @@ function getDeciduousOrEvergreenDiversity(crops) {
 function getGrowthRateDiversity(crops) {
   return (
     getNumberOfDifferentValues(crops, 'growthRate') /
-    practicalplants.PP_GROWTH_RATE_VALUES.length
+    Crop.GROWTH_RATE_VALUES.length
   );
 }
 
@@ -273,7 +273,7 @@ function getGrowthRateDiversity(crops) {
 function getFlowerTypeDiversity(crops) {
   return (
     getNumberOfDifferentValues(crops, 'flowerType') /
-    practicalplants.PP_FLOWER_TYPE_VALUES.length
+    Crop.FLOWER_TYPE_VALUES.length
   );
 }
 
@@ -303,7 +303,7 @@ function getMatureWidthDiversity(crops) {
 function getPollinatorsDiversity(crops) {
   return (
     getNumberOfDifferentValuesInArrays(crops, 'pollinators') /
-    practicalplants.PP_POLLINATORS_VALUES.length
+    Crop.POLLINATORS_VALUES.length
   );
 }
 
@@ -314,7 +314,7 @@ function getPollinatorsDiversity(crops) {
 function getFunctionsDiversity(crops) {
   return (
     getNumberOfDifferentValuesInArrays(crops, 'functions') /
-    practicalplants.PP_FUNCTIONS_VALUES.length
+    Crop.FUNCTIONS_VALUES.length
   );
 }
 
@@ -325,7 +325,7 @@ function getFunctionsDiversity(crops) {
 function getGrowFromDiversity(crops) {
   return (
     getNumberOfDifferentValuesInArrays(crops, 'growFrom') /
-    practicalplants.PP_GROW_FROM_VALUES.length
+    Crop.GROW_FROM_VALUES.length
   );
 }
 
@@ -336,7 +336,7 @@ function getGrowFromDiversity(crops) {
 function getCuttingTypeDiversity(crops) {
   return (
     getNumberOfDifferentValuesInArrays(crops, 'cuttingType') /
-    practicalplants.PP_CUTTING_TYPE_VALUES.length
+    Crop.CUTTING_TYPE_VALUES.length
   );
 }
 
@@ -347,7 +347,7 @@ function getCuttingTypeDiversity(crops) {
 function getFertilityDiversity(crops) {
   return (
     getNumberOfDifferentValuesInArrays(crops, 'fertility') /
-    practicalplants.PP_FERTILITY_VALUES.length
+    Crop.FERTILITY_VALUES.length
   );
 }
 
@@ -358,7 +358,7 @@ function getFertilityDiversity(crops) {
 function getRootZoneDiversity(crops) {
   return (
     getNumberOfDifferentValues(crops, 'rootZone') /
-    practicalplants.PP_ROOT_ZONE_VALUES.length
+    Crop.ROOT_ZONE_VALUES.length
   );
 }
 

@@ -1,5 +1,6 @@
 const { assert } = require('chai');
 const practicalplants = require('../../db/practicalplants.js');
+const Crop = require('../../shared/crop.js');
 
 describe('practicalplants.json', () => {
   function updateMissingCount(missingCounts, object, property, allowedValues) {
@@ -25,7 +26,7 @@ describe('practicalplants.json', () => {
   }
 
   function assertValue(object, property, allowedValues) {
-    if (practicalplants.ARRAY_PROPERTIES.includes(property)) {
+    if (Crop.ARRAY_PROPERTIES.includes(property)) {
       const array = isFunctionsPropertyOfUnnormalizedObject(
         property,
         allowedValues
@@ -38,7 +39,7 @@ describe('practicalplants.json', () => {
           .every(value => allowedValues.includes(value)),
         JSON.stringify(array)
       );
-    } else if (practicalplants.NUMBER_PROPERTIES.includes(property)) {
+    } else if (Crop.NUMBER_PROPERTIES.includes(property)) {
       const value = parseFloat(object[property]);
       assert.isTrue(value >= 0);
       assert.isTrue(value <= allowedValues);
@@ -76,7 +77,7 @@ describe('practicalplants.json', () => {
   }
 
   function assertNamedPropertyStartsWithUpperCase(object) {
-    for (const property of practicalplants.NAME_PROPERTIES) {
+    for (const property of Crop.NAME_PROPERTIES) {
       if (object[property]) {
         assert.isTrue(/[a-zA-Z]/.test(object[property][0]), object[property]);
         assert.isTrue(
@@ -459,7 +460,7 @@ describe('practicalplants.json', () => {
 
       Object.keys(object).forEach(property =>
         assert.isTrue(
-          practicalplants.PP_PROPERTIES.includes(property),
+          Crop.PROPERTIES.includes(property),
           'Unknown property "' + property + '"'
         )
       );
@@ -467,120 +468,120 @@ describe('practicalplants.json', () => {
       assertValueOrMissing(
         object,
         'hardinessZone',
-        practicalplants.PP_HARDINESS_ZONE_VALUES
+        Crop.HARDINESS_ZONE_VALUES
       );
       assertValueOrMissing(
         object,
         'soilTexture',
-        practicalplants.PP_SOIL_TEXTURE_VALUES
+        Crop.SOIL_TEXTURE_VALUES
       );
-      assertValueOrMissing(object, 'soilPh', practicalplants.PP_SOIL_PH_VALUES);
+      assertValueOrMissing(object, 'soilPh', Crop.SOIL_PH_VALUES);
       assertValueOrMissing(
         object,
         'soilWaterRetention',
-        practicalplants.PP_SOIL_WATER_RETENTION_VALUES
+        Crop.SOIL_WATER_RETENTION_VALUES
       );
-      assertValueOrMissing(object, 'shade', practicalplants.PP_SHADE_VALUES);
-      assertValueOrMissing(object, 'sun', practicalplants.PP_SUN_VALUES);
-      assertValueOrMissing(object, 'water', practicalplants.PP_WATER_VALUES);
+      assertValueOrMissing(object, 'shade', Crop.SHADE_VALUES);
+      assertValueOrMissing(object, 'sun', Crop.SUN_VALUES);
+      assertValueOrMissing(object, 'water', Crop.WATER_VALUES);
       assertValueOrMissing(
         object,
         'drought',
-        practicalplants.PP_DROUGHT_VALUES
+        Crop.DROUGHT_VALUES
       );
       assertValueOrMissing(
         object,
         'poorNutrition',
-        practicalplants.PP_BOOLEAN_VALUES
+        Crop.BOOLEAN_VALUES
       );
-      assertValueOrMissing(object, 'wind', practicalplants.PP_BOOLEAN_VALUES);
+      assertValueOrMissing(object, 'wind', Crop.BOOLEAN_VALUES);
       assertValueOrMissing(
         object,
         'maritime',
-        practicalplants.PP_BOOLEAN_VALUES
+        Crop.BOOLEAN_VALUES
       );
       assertValueOrMissing(
         object,
         'pollution',
-        practicalplants.PP_BOOLEAN_VALUES
+        Crop.BOOLEAN_VALUES
       );
       assertValueOrMissing(
         object,
         'ecosystemNiche',
-        practicalplants.PP_ECOSYSTEM_NICHE_VALUES
+        Crop.ECOSYSTEM_NICHE_VALUES
       );
       assertValueOrMissing(
         object,
         'lifeCycle',
-        practicalplants.PP_LIFE_CYCLE_VALUES
+        Crop.LIFE_CYCLE_VALUES
       );
       assertValueOrMissing(
         object,
         'herbaceousOrWoody',
-        practicalplants.PP_HERBACEOUS_OR_WOODY_VALUES
+        Crop.HERBACEOUS_OR_WOODY_VALUES
       );
       assertValueOrMissing(
         object,
         'deciduousOrEvergreen',
-        practicalplants.PP_DECIDUOUS_OR_EVERGREEN_VALUES
+        Crop.DECIDUOUS_OR_EVERGREEN_VALUES
       );
       assertValueOrMissing(
         object,
         'growthRate',
-        practicalplants.PP_GROWTH_RATE_VALUES
+        Crop.GROWTH_RATE_VALUES
       );
       assertValueOrMissing(
         object,
         'matureMeasurementUnit',
-        practicalplants.PP_MATURE_MEASUREMENT_UNIT_VALUES
+        Crop.MATURE_MEASUREMENT_UNIT_VALUES
       );
       assertValueOrMissing(
         object,
         'matureHeight',
-        practicalplants.PP_MATURE_HEIGHT_VALUES
+        Crop.MATURE_HEIGHT_VALUES
       );
       assertValueOrMissing(
         object,
         'matureWidth',
-        practicalplants.PP_MATURE_WIDTH_VALUES
+        Crop.MATURE_WIDTH_VALUES
       );
       assertValueOrMissing(
         object,
         'flowerType',
-        practicalplants.PP_FLOWER_TYPE_VALUES
+        Crop.FLOWER_TYPE_VALUES
       );
       assertValueOrMissing(
         object,
         'pollinators',
-        practicalplants.PP_POLLINATORS_VALUES
+        Crop.POLLINATORS_VALUES
       );
       assertValueOrMissing(
         object,
         'functions',
-        practicalplants.PP_FUNCTIONS_VALUES
+        Crop.FUNCTIONS_VALUES
       );
       assertValueOrMissing(
         object,
         'growFrom',
-        practicalplants.PP_GROW_FROM_VALUES
+        Crop.GROW_FROM_VALUES
       );
       assertValueOrMissing(
         object,
         'cuttingType',
-        practicalplants.PP_CUTTING_TYPE_VALUES
+        Crop.CUTTING_TYPE_VALUES
       );
       assertValueOrMissing(
         object,
         'fertility',
-        practicalplants.PP_FERTILITY_VALUES
+        Crop.FERTILITY_VALUES
       );
       assertValueOrMissing(
         object,
         'rootZone',
-        practicalplants.PP_ROOT_ZONE_VALUES
+        Crop.ROOT_ZONE_VALUES
       );
-      assertValueOrMissing(object, 'family', practicalplants.PP_FAMILY_VALUES);
-      assertValueOrMissing(object, 'genus', practicalplants.PP_GENUS_VALUES);
+      assertValueOrMissing(object, 'family', Crop.FAMILY_VALUES);
+      assertValueOrMissing(object, 'genus', Crop.GENUS_VALUES);
 
       assertNamedPropertyStartsWithUpperCase(object);
 
@@ -608,29 +609,29 @@ describe('practicalplants.json', () => {
   }).timeout(0);
 
   it('no duplicates in enum definitions', () => {
-    assertNoDuplicates(practicalplants.PP_BOOLEAN_VALUES);
-    assertNoDuplicates(practicalplants.PP_SOIL_TEXTURE_VALUES);
-    assertNoDuplicates(practicalplants.PP_SOIL_WATER_RETENTION_VALUES);
-    assertNoDuplicates(practicalplants.PP_SHADE_VALUES);
-    assertNoDuplicates(practicalplants.PP_SUN_VALUES);
-    assertNoDuplicates(practicalplants.PP_WATER_VALUES);
-    assertNoDuplicates(practicalplants.PP_DROUGHT_VALUES);
-    assertNoDuplicates(practicalplants.PP_ECOSYSTEM_NICHE_VALUES);
-    assertNoDuplicates(practicalplants.PP_LIFE_CYCLE_VALUES);
-    assertNoDuplicates(practicalplants.PP_HERBACEOUS_OR_WOODY_VALUES);
-    assertNoDuplicates(practicalplants.PP_DECIDUOUS_OR_EVERGREEN_VALUES);
-    assertNoDuplicates(practicalplants.PP_GROWTH_RATE_VALUES);
-    assertNoDuplicates(practicalplants.PP_MATURE_MEASUREMENT_UNIT_VALUES);
-    assertNoDuplicates(practicalplants.PP_FLOWER_TYPE_VALUES);
-    assertNoDuplicates(practicalplants.PP_POLLINATORS_VALUES);
-    assertNoDuplicates(practicalplants.PP_FUNCTIONS_VALUES);
-    assertNoDuplicates(practicalplants.PP_FUNCTIONS_VALUES);
-    assertNoDuplicates(practicalplants.PP_GROW_FROM_VALUES);
-    assertNoDuplicates(practicalplants.PP_CUTTING_TYPE_VALUES);
-    assertNoDuplicates(practicalplants.PP_FERTILITY_VALUES);
-    assertNoDuplicates(practicalplants.PP_ROOT_ZONE_VALUES);
-    assertNoDuplicates(practicalplants.PP_FAMILY_VALUES);
-    assertNoDuplicates(practicalplants.PP_GENUS_VALUES);
-    assertNoDuplicates(practicalplants.PP_SALINITY_VALUES);
+    assertNoDuplicates(Crop.BOOLEAN_VALUES);
+    assertNoDuplicates(Crop.SOIL_TEXTURE_VALUES);
+    assertNoDuplicates(Crop.SOIL_WATER_RETENTION_VALUES);
+    assertNoDuplicates(Crop.SHADE_VALUES);
+    assertNoDuplicates(Crop.SUN_VALUES);
+    assertNoDuplicates(Crop.WATER_VALUES);
+    assertNoDuplicates(Crop.DROUGHT_VALUES);
+    assertNoDuplicates(Crop.ECOSYSTEM_NICHE_VALUES);
+    assertNoDuplicates(Crop.LIFE_CYCLE_VALUES);
+    assertNoDuplicates(Crop.HERBACEOUS_OR_WOODY_VALUES);
+    assertNoDuplicates(Crop.DECIDUOUS_OR_EVERGREEN_VALUES);
+    assertNoDuplicates(Crop.GROWTH_RATE_VALUES);
+    assertNoDuplicates(Crop.MATURE_MEASUREMENT_UNIT_VALUES);
+    assertNoDuplicates(Crop.FLOWER_TYPE_VALUES);
+    assertNoDuplicates(Crop.POLLINATORS_VALUES);
+    assertNoDuplicates(Crop.FUNCTIONS_VALUES);
+    assertNoDuplicates(Crop.FUNCTIONS_VALUES);
+    assertNoDuplicates(Crop.GROW_FROM_VALUES);
+    assertNoDuplicates(Crop.CUTTING_TYPE_VALUES);
+    assertNoDuplicates(Crop.FERTILITY_VALUES);
+    assertNoDuplicates(Crop.ROOT_ZONE_VALUES);
+    assertNoDuplicates(Crop.FAMILY_VALUES);
+    assertNoDuplicates(Crop.GENUS_VALUES);
+    assertNoDuplicates(Crop.SALINITY_VALUES);
   });
 });

@@ -10,7 +10,7 @@ const PaginatedList = require('./shared/PaginatedList.js');
 const CropListItem = require('./CropListItem.js');
 const InputField = require('./shared/InputField.js');
 const { updateCropAndSynchronize } = require('./redux/complex-actions.js');
-const utils = require('../shared/utils.js');
+const Crop = require('../shared/crop.js');
 
 /**
  * CropsPage lists crops and lets the user to edit them.
@@ -34,8 +34,8 @@ class CropsPage extends React.Component {
     const { cropFilter, filteredCrops } = this.state;
 
     const sortedCrops = filteredCrops.sort((crop0, crop1) => {
-      const name0 = utils.getCropDisplayName(crop0);
-      const name1 = utils.getCropDisplayName(crop1);
+      const name0 = Crop.getDisplayName(crop0);
+      const name1 = Crop.getDisplayName(crop1);
 
       if (crop0.commonName && !crop1.commonName) {
         return -1;
@@ -46,7 +46,7 @@ class CropsPage extends React.Component {
       return name0.localeCompare(name1);
     });
 
-    const tagSet = utils.findTagSet(crops);
+    const tagSet = Crop.findTagSet(crops);
     const tagBadges = tagSet.map(tag => <Badge variant="info">{tag}</Badge>);
 
     return (
@@ -85,8 +85,8 @@ class CropsPage extends React.Component {
     const state = Object.assign({}, this.state, {
       cropFilter: value,
       filteredCrops: this.props.crops.filter(crop =>
-        utils
-          .getCropDisplayName(crop)
+        Crop
+          .getDisplayName(crop)
           .toLowerCase()
           .includes(value.toLowerCase())
       )

@@ -1,33 +1,179 @@
 /**
- * practicalplants.org definitions that are shared between client and server.
- *
- * @namespace practicalplants
+ * Module for managing the Crop type.
+ * 
+ * @namespace crop
  * @memberof shared
  */
 
+/**
+ * @typedef {Object} Crop
+ * @property {String} binomialName Binomial name. This exists for each crop.
+ * @property {String} commonName Common name. May not exist for each crop.
+ * @property {Boolean} poorNutrition
+ * @property {Number} hardinessZone TODO define range
+ * @property {Array} soilTexture TODO define enum values
+ * @property {Array} soilPh TODO define enum values
+ * @property {Array} soilWaterRetention TODO define enum values
+ * @property {Array} shade TODO define enum values
+ * @property {Array} sun TODO define enum values
+ * @property {Array} water TODO define enum values
+ * @property {Array} drought TODO define enum values
+ * @property {Array} ecosystemNiche TODO define enum values
+ * @property {Array} lifeCycle TODO define enum values
+ * @property {String} herbaceousOrWoody
+ * @property {String} deciduousOrEvergreen
+ * @property {String} growthRate
+ * @property {String} matureMeasurementUnit TODO remove from processed output
+ * @property {Number} matureHeight TODO convert always to meters
+ * @property {Number} matureWidth TODO convert always to meters
+ * @property {String} flowerType
+ * @property {Array} pollinators TODO define enum values
+ * @property {Boolean} wind Wind resistant
+ * @property {Boolean} maritime Maritime resistant
+ * @property {Boolean} pollution Pollution resistant
+ * @property {Array} functions TODO define enum values
+ * @property {String} growFrom
+ * @property {String} cuttingType
+ * @property {String} fertility
+ * @property {String} rootZone
+ * @property {String} family
+ * @property {String} genus
+ * @property {String} salinity
+ */
+
+/**
+ * @param {Crop[]} crops
+ * @return {Object}
+ */
+function mapCropsByBinomialName(crops) {
+  const binomialNameToCrop = {};
+  crops.forEach(crop => {
+    binomialNameToCrop[crop.binomialName] = crop;
+  });
+  return binomialNameToCrop;
+}
+
+/**
+ * @param {Crop[]} crops
+ * @return {String[]}
+ */
+function findTagSet(crops) {
+  let tagSet = [];
+  crops.forEach(crop => {
+    const newTags = getTagNames(crop).filter(tag => !tagSet.includes(tag));
+    tagSet = tagSet.concat(newTags);
+  });
+  return tagSet;
+}
+
+/**
+ * @param {Crop} crop
+ * @return {String[]}
+ */
+function getTagNames(crop) {
+  return crop.tags.map(tag => tag.name);
+}
+
+/**
+ * Every crop has a binomial name, common name is optional.
+ *
+ * @param {Crop} crop
+ * @return {String}
+ */
+function getDisplayName(crop) {
+  return crop.commonName
+    ? crop.commonName + ' (' + crop.binomialName + ')'
+    : crop.binomialName;
+}
+
+const PROPERTIES = [
+  'binomialName',
+  'commonName',
+  'poorNutrition',
+  'hardinessZone',
+  'soilTexture',
+  'soilPh',
+  'soilWaterRetention',
+  'shade',
+  'sun',
+  'water',
+  'drought',
+  'ecosystemNiche',
+  'lifeCycle',
+  'herbaceousOrWoody',
+  'deciduousOrEvergreen',
+  'growthRate',
+  'matureMeasurementUnit',
+  'matureHeight',
+  'matureWidth',
+  'flowerType',
+  'pollinators',
+  'wind',
+  'maritime',
+  'pollution',
+  'functions',
+  'growFrom',
+  'cuttingType',
+  'fertility',
+  'rootZone',
+  'family',
+  'genus',
+  'salinity'
+];
+
+const BOOLEAN_PROPERTIES = ['poorNutrition', 'wind', 'maritime', 'pollution'];
+
+const NUMBER_PROPERTIES = ['hardinessZone', 'matureHeight', 'matureWidth'];
+
+const ARRAY_PROPERTIES = [
+  'soilTexture',
+  'soilPh',
+  'soilWaterRetention',
+  'ecosystemNiche',
+  'lifeCycle',
+  'pollinators',
+  'growFrom',
+  'cuttingType',
+  'fertility',
+  'functions'
+];
+
+const NAME_PROPERTIES = ['binomialName', 'commonName', 'family', 'genus'];
+
 module.exports = {
-  PP_BOOLEAN_VALUES: ['false', 'true'],
-  PP_HARDINESS_ZONE_VALUES: 12,
-  PP_SOIL_TEXTURE_VALUES: ['sandy', 'loamy', 'clay', 'heavy clay'],
-  PP_SOIL_PH_VALUES: [
+  mapCropsByBinomialName,
+  findTagSet,
+  getTagNames,
+  getDisplayName,
+
+  PROPERTIES,
+  BOOLEAN_PROPERTIES,
+  NUMBER_PROPERTIES,
+  ARRAY_PROPERTIES,
+  NAME_PROPERTIES,
+
+  BOOLEAN_VALUES: ['false', 'true'],
+  HARDINESS_ZONE_VALUES: 12,
+  SOIL_TEXTURE_VALUES: ['sandy', 'loamy', 'clay', 'heavy clay'],
+  SOIL_PH_VALUES: [
     'very acid',
     'acid',
     'neutral',
     'alkaline',
     'very alkaline'
   ],
-  PP_SOIL_WATER_RETENTION_VALUES: ['well drained', 'moist', 'wet'],
-  PP_SHADE_VALUES: [
+  SOIL_WATER_RETENTION_VALUES: ['well drained', 'moist', 'wet'],
+  SHADE_VALUES: [
     'no shade',
     'light shade',
     'partial shade',
     'permanent shade',
     'permanent deep shade'
   ],
-  PP_SUN_VALUES: ['indirect sun', 'partial sun', 'full sun'],
-  PP_WATER_VALUES: ['low', 'moderate', 'high', 'aquatic'],
-  PP_DROUGHT_VALUES: ['dependent', 'tolerant', 'intolerant'],
-  PP_ECOSYSTEM_NICHE_VALUES: [
+  SUN_VALUES: ['indirect sun', 'partial sun', 'full sun'],
+  WATER_VALUES: ['low', 'moderate', 'high', 'aquatic'],
+  DROUGHT_VALUES: ['dependent', 'tolerant', 'intolerant'],
+  ECOSYSTEM_NICHE_VALUES: [
     'canopy',
     'climber',
     'secondary canopy',
@@ -36,15 +182,15 @@ module.exports = {
     'herbaceous',
     'rhizosphere'
   ],
-  PP_LIFE_CYCLE_VALUES: ['perennial', 'annual', 'biennial'],
-  PP_HERBACEOUS_OR_WOODY_VALUES: ['herbaceous', 'woody'],
-  PP_DECIDUOUS_OR_EVERGREEN_VALUES: ['deciduous', 'evergreen'],
-  PP_GROWTH_RATE_VALUES: ['slow', 'moderate', 'vigorous'],
-  PP_MATURE_MEASUREMENT_UNIT_VALUES: ['meters', 'feet'],
-  PP_MATURE_HEIGHT_VALUES: 110,
-  PP_MATURE_WIDTH_VALUES: 30,
-  PP_FLOWER_TYPE_VALUES: ['hermaphrodite', 'monoecious', 'dioecious'],
-  PP_POLLINATORS_VALUES: [
+  LIFE_CYCLE_VALUES: ['perennial', 'annual', 'biennial'],
+  HERBACEOUS_OR_WOODY_VALUES: ['herbaceous', 'woody'],
+  DECIDUOUS_OR_EVERGREEN_VALUES: ['deciduous', 'evergreen'],
+  GROWTH_RATE_VALUES: ['slow', 'moderate', 'vigorous'],
+  MATURE_MEASUREMENT_UNIT_VALUES: ['meters', 'feet'],
+  MATURE_HEIGHT_VALUES: 110,
+  MATURE_WIDTH_VALUES: 30,
+  FLOWER_TYPE_VALUES: ['hermaphrodite', 'monoecious', 'dioecious'],
+  POLLINATORS_VALUES: [
     'insects',
     'wind',
     'bees',
@@ -74,7 +220,7 @@ module.exports = {
     'dryoptera',
     'hymenoptera'
   ],
-  PP_FUNCTIONS_VALUES: [
+  FUNCTIONS_VALUES: [
     'nitrogen fixer',
     'ground cover',
     'hedge',
@@ -91,7 +237,7 @@ module.exports = {
     'soil conditioner',
     'pest repellent'
   ],
-  PP_GROW_FROM_VALUES: [
+  GROW_FROM_VALUES: [
     'seed',
     'cutting',
     'layering',
@@ -100,11 +246,11 @@ module.exports = {
     'graft',
     'bulb'
   ],
-  PP_CUTTING_TYPE_VALUES: ['semi-ripe', 'soft wood', 'root', 'hard wood'],
-  PP_FERTILITY_VALUES: ['self fertile', 'self sterile'],
-  PP_ROOT_ZONE_VALUES: ['shallow', 'deep', 'surface'],
-  PP_SALINITY_VALUES: ['tolerant', 'intolerant'],
-  PP_FAMILY_VALUES: [
+  CUTTING_TYPE_VALUES: ['semi-ripe', 'soft wood', 'root', 'hard wood'],
+  FERTILITY_VALUES: ['self fertile', 'self sterile'],
+  ROOT_ZONE_VALUES: ['shallow', 'deep', 'surface'],
+  SALINITY_VALUES: ['tolerant', 'intolerant'],
+  FAMILY_VALUES: [
     'Acanthaceae',
     'Aceraceae',
     'Actinidiaceae',
@@ -388,7 +534,7 @@ module.exports = {
     'Zosteraceae',
     'Zygophyllaceae'
   ],
-  PP_GENUS_VALUES: [
+  GENUS_VALUES: [
     'Abelia',
     'Abelmoschus',
     'Abies',
