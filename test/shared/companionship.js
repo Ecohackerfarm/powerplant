@@ -1,15 +1,15 @@
 const { assert } = require('chai');
-const practicalplants = require('../../db/practicalplants.js');
 const { companions } = require('../../db/matrix.js');
 const companionship = require('../../shared/companionship.js');
 const Crop = require('../../shared/crop.js');
+const PracticalplantsCrop = require('../../shared/practicalplants-crop.js');
 
 describe('Companionship algorithm', () => {
   let crops;
   let binomialNameToCrop;
 
   before(() => {
-    crops = practicalplants.readCrops();
+    crops = PracticalplantsCrop.convertToCrops(require('../../db/practicalplants-data.js'));
     binomialNameToCrop = Crop.mapCropsByBinomialName(crops);
   });
 

@@ -1,5 +1,5 @@
 const { assert } = require('chai');
-const practicalplants = require('../../db/practicalplants.js');
+const PracticalplantsCrop = require('../../shared/practicalplants-crop.js');
 const Crop = require('../../shared/crop.js');
 
 describe('practicalplants.json', () => {
@@ -34,7 +34,7 @@ describe('practicalplants.json', () => {
         ? object[property]['function']
         : object[property];
       assert.isTrue(
-        practicalplants
+        PracticalplantsCrop
           .getAsArray(array)
           .every(value => allowedValues.includes(value)),
         JSON.stringify(array)
@@ -52,7 +52,7 @@ describe('practicalplants.json', () => {
   function isFunctionsPropertyOfUnnormalizedObject(property, allowedValues) {
     return (
       property == 'functions' &&
-      allowedValues === practicalplants.ALL_FUNCTIONS_VALUES
+      allowedValues === PracticalplantsCrop.FUNCTIONS_VALUES
     );
   }
 
@@ -93,7 +93,7 @@ describe('practicalplants.json', () => {
 
   before(() => {
     practicalplantsCrops = require('../../db/practicalplants-data.js');
-    crops = practicalplants.readCrops();
+    crops = PracticalplantsCrop.convertToCrops(practicalplantsCrops);
   });
 
   it('set of crops that have salinity is analyzed', () => {
@@ -363,7 +363,7 @@ describe('practicalplants.json', () => {
 
       Object.keys(crop).forEach(property =>
         assert.isTrue(
-          practicalplants.ALL_PROPERTIES.includes(property),
+          PracticalplantsCrop.PROPERTIES.includes(property),
           'Unknown property: ' + property
         )
       );
@@ -406,7 +406,7 @@ describe('practicalplants.json', () => {
         missingCounts,
         object,
         'functions',
-        practicalplants.ALL_FUNCTIONS_VALUES
+        PracticalplantsCrop.FUNCTIONS_VALUES
       );
       updateMissingCount(missingCounts, object, 'grow from');
       updateMissingCount(missingCounts, object, 'cutting type');
@@ -594,15 +594,15 @@ describe('practicalplants.json', () => {
          */
         assertArrayPropertyOfRangeHasAllValuesInBetween(
           object.soilPh,
-          practicalplants.ALL_SOIL_PH_VALUES
+          PracticalplantsCrop.SOIL_PH_VALUES
         );
         assertArrayPropertyOfRangeHasAllValuesInBetween(
           object.soilTexture,
-          practicalplants.ALL_SOIL_TEXTURE_VALUES
+          PracticalplantsCrop.SOIL_TEXTURE_VALUES
         );
         assertArrayPropertyOfRangeHasAllValuesInBetween(
           object.soilWaterRetention,
-          practicalplants.ALL_SOIL_WATER_RETENTION_VALUES
+          PracticalplantsCrop.SOIL_WATER_RETENTION_VALUES
         );
       }
     });

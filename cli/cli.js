@@ -4,7 +4,7 @@
  */
 
 const PouchDB = require('pouchdb');
-const practicalplants = require('../db/practicalplants.js');
+const PracticalplantsCrop = require('../shared/practicalplants-crop.js');
 const { plants, companions } = require('../db/matrix.js');
 const { HTTP_SERVER_PORT, HTTP_SERVER_HOST } = require('../secrets.js');
 const {
@@ -269,7 +269,7 @@ async function pouchFind() {
 }
 
 function readCrops() {
-  const crops = practicalplants.readCrops();
+  const crops = PracticalplantsCrop.convertToCrops(require('../db/practicalplants-data.js'));
 
   crops.forEach(crop => {
     crop.tags = [];

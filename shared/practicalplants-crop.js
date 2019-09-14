@@ -1,233 +1,206 @@
 /**
- * Support code for the crop database exported from practicalplants.org wiki.
- *
- * @namespace practicalplants
- * @memberof db
+ * Module for managing the PracticalplantsCrop type, and for converting
+ * it to the powerplant Crop type. PracticalplantsCrop is symmetric to
+ * the practicalplants.org MediaWiki format, it should be easy to transfer
+ * data from a practicalplants wiki to powerplant.
+ * 
+ * @namespace practicalplants-crop
+ * @memberof shared
  */
-
-const readline = require('readline');
-const fs = require('fs');
-const Crop = require('../shared/crop.js');
-const utils = require('../shared/utils.js');
 
 /**
- * Read the mongoexport file and normalize its contents to ease
- * processing.
+ * @typedef {Object} PracticalplantsCrop
  *
- * @return {Crop[]} Crop objects
+ * TODO Document properties and possible quirks in their values.
  */
-function readCrops() {
-  return readCropsLower().map(inputObject => {
-    /*
-     * Select properties that are useful for powerplant. Nulls or empty
-     * arrays are used for missing values in normalized objects.
-     */
-    const object = {};
-    Object.values(PP_MAPPINGS).forEach(property => {
-      if (
-        !(property in inputObject) ||
-        [undefined, null, '', '\n'].includes(inputObject[property])
-      ) {
-        object[property] = Crop.ARRAY_PROPERTIES.includes(property) ? [] : null;
+
+const Crop = require('./crop.js');
+
+/**
+ * @param {PracticalplantsCrop[]} practicalplantsCrop
+ * @return {Crop[]}
+ */
+function convertToCrops(practicalplantsCrops) {
+  return practicalplantsCrops.map(crop => convertToCrop(crop));
+}
+
+/**
+ * @param {PracticalplantsCrop} practicalplantsCrop
+ * @return {Crop}
+ */
+function convertToCrop(practicalplantsCrop) {
+  const crop = {};
+
+  const BOOLEAN_CONVERSIONS = [
+    {practicalplantsValues: ['No', 'False'], cropValue: 'false'},
+    {practicalplantsValues: ['Yes', 'True'], cropValue: 'true'}
+  ];
+
+  copyProperty(practicalplantsCrop, crop, 'binomial', 'binomialName', []);
+  copyProperty(practicalplantsCrop, crop, 'common', 'commonName', [
+  {practicalplantsValues: ['common bean, string bean, field bean, flageolet bean, French bean, garden bean, haricot bean, pop bean, snap bean'], 
+    cropValue: 'Common bean, string bean, field bean, flageolet bean, French bean, garden bean, haricot bean, pop bean, snap bean'}]);
+  copyProperty(practicalplantsCrop, crop, 'family', 'family', []);
+  copyProperty(practicalplantsCrop, crop, 'genus', 'genus', []);
+  copyProperty(practicalplantsCrop, crop, 'hardiness zone', 'hardinessZone', []);
+  copyProperty(practicalplantsCrop, crop, 'mature height', 'matureHeight', []);
+  copyProperty(practicalplantsCrop, crop, 'mature width', 'matureWidth', []);
+  copyProperty(practicalplantsCrop, crop, 'poornutrition', 'poorNutrition', BOOLEAN_CONVERSIONS);
+  copyProperty(practicalplantsCrop, crop, 'wind', 'wind', BOOLEAN_CONVERSIONS);
+  copyProperty(practicalplantsCrop, crop, 'maritime', 'maritime', BOOLEAN_CONVERSIONS);
+  copyProperty(practicalplantsCrop, crop, 'pollution', 'pollution', BOOLEAN_CONVERSIONS);
+  copyProperty(practicalplantsCrop, crop, 'soil texture', 'soilTexture', []);
+  copyProperty(practicalplantsCrop, crop, 'soil ph', 'soilPh', []);
+  copyProperty(practicalplantsCrop, crop, 'soil water retention', 'soilWaterRetention', []);
+  copyProperty(practicalplantsCrop, crop, 'ecosystem niche', 'ecosystemNiche', []);
+  copyProperty(practicalplantsCrop, crop, 'life cycle', 'lifeCycle', []);
+  copyProperty(practicalplantsCrop, crop, 'pollinators', 'pollinators', [{practicalplantsValues: ['Bees. self'], cropValue: ['bees', 'self']},
+  {practicalplantsValues: ['Hover-flies', 'Hoverflies'], cropValue: ['hoverflies']},
+  {practicalplantsValues: ['Apomyctic', 'Apomixy', 'Apomictic'], cropValue: ['apomictic']},
+  {practicalplantsValues: ['Cleistogamous', 'Cleistogomous', 'Cleistogomy', 'Cleistogamy'], cropValue: ['cleistogamous']},
+  {practicalplantsValues: ['Flies and small bees'], cropValue: ['flies', 'bees']},
+  {practicalplantsValues: ['Bees. lepidoptera'], cropValue: ['bees', 'lepidoptera']},
+  {practicalplantsValues: ['Lepidoptera', 'lepdioptera', 'Lepdioptera'], cropValue: ['lepidoptera']},
+  {practicalplantsValues: ['Humble bees'], cropValue: ['bumblebees']},
+  {practicalplantsValues: ['Flies lepidoptera'], cropValue: ['flies', 'lepidoptera']},
+  {practicalplantsValues: ['Self. Occasionally flies'], cropValue: ['flies', 'self']},
+  {practicalplantsValues: ['Self. Occasionally bees'], cropValue: ['bees', 'self']},
+  {practicalplantsValues: ['Insects? Self'], cropValue: ['insects', 'self']},
+  {practicalplantsValues: ['Self?'], cropValue: ['self']},
+  {practicalplantsValues: ['Insect', 'Insects'], cropValue: ['insects']}]);
+  copyProperty(practicalplantsCrop, crop, 'grow from', 'growFrom', []);
+  copyProperty(practicalplantsCrop, crop, 'cutting type', 'cuttingType', []);
+  copyProperty(practicalplantsCrop, crop, 'fertility', 'fertility', []);
+  copyProperty(practicalplantsCrop, crop, 'functions', 'functions', [
+  {practicalplantsValues: ['Biogenic Decalcifier/Pioneer Species'], cropValue: ['biogenic decalcifier', 'pioneer']},
+  {practicalplantsValues: [''], cropValue: []}]);
+  copyProperty(practicalplantsCrop, crop, 'shade', 'shade', []);
+  copyProperty(practicalplantsCrop, crop, 'sun', 'sun', []);
+  copyProperty(practicalplantsCrop, crop, 'water', 'water', []);
+  copyProperty(practicalplantsCrop, crop, 'drought', 'drought', []);
+  copyProperty(practicalplantsCrop, crop, 'herbaceous or woody', 'herbaceousOrWoody', []);
+  copyProperty(practicalplantsCrop, crop, 'deciduous or evergreen', 'deciduousOrEvergreen', []);
+  copyProperty(practicalplantsCrop, crop, 'growth rate', 'growthRate', []);
+  copyProperty(practicalplantsCrop, crop, 'mature measurement unit', 'matureMeasurementUnit', [{practicalplantsValues: ['metres'], cropValue: 'meters'}]);
+  copyProperty(practicalplantsCrop, crop, 'flower type', 'flowerType', []);
+  copyProperty(practicalplantsCrop, crop, 'root zone', 'rootZone', []);
+  copyProperty(practicalplantsCrop, crop, 'salinity', 'salinity', []);
+
+  return crop;
+}
+
+/**
+ * Copy property from a PracticalplantsCrop to a Crop, normalizing its value.
+ * 
+ * @param {PracticalplantsCrop} practicalplantsCrop
+ * @param {Crop} crop
+ * @param {String} practicalplantsProperty
+ * @param {String} cropProperty
+ * @param {Object} conversions
+ */
+function copyProperty(practicalplantsCrop, crop, practicalplantsProperty, cropProperty, conversions) {
+  const practicalplantsValue = practicalplantsCrop[practicalplantsProperty];
+  const arrayProperty = Crop.ARRAY_PROPERTIES.includes(cropProperty);
+
+  /* First check if this property doesn't need conversion. */
+  const emptyValues = [undefined, null, '', '\n'];
+  if (emptyValues.includes(practicalplantsValue)) {
+    crop[cropProperty] = arrayProperty ? [] : null;
+    return;
+  }
+
+  if (Crop.NUMBER_PROPERTIES.includes(cropProperty)) {
+    /* TODO Sometimes the properties matureWidth and matureHeight contain a range, for these store the value always as a range and provide functions to access the value? */
+    crop[cropProperty] = parseFloat(practicalplantsCrop[practicalplantsProperty]);
+    return;
+  }
+
+  /* Apply conversion. */
+  let cropValue;
+  if (arrayProperty) {
+    let input;
+    if (cropProperty === 'functions' && !Array.isArray(practicalplantsValue)) {
+      input = practicalplantsValue['function'];
+    } else {
+      input = practicalplantsValue;
+    }
+    let practicalplantsArray = removeDuplicates(getAsArray(input));
+
+    let cropArray = [];
+    for (let i = 0; i < practicalplantsArray.length; i++) {
+      const cropArrayValue = convertToCropValue(conversions, practicalplantsArray[i], cropProperty);
+      if (Array.isArray(cropArrayValue)) {
+        cropArray.push(...cropArrayValue);
       } else {
-        object[property] = inputObject[property];
-      }
-    });
-
-    /*
-     * Parse objects to strings.
-     */
-    if (!Array.isArray(object['functions'])) {
-      object['functions'] = object['functions']['function'];
-    }
-
-    /*
-     * Convert numeric properties from strings to actual numbers.
-     *
-     * TODO Sometimes the value is given as a range ("1.5 - 3"),
-     * take average in such cases?
-     */
-    Crop.NUMBER_PROPERTIES.forEach(property => {
-      object[property] = object[property] ? parseFloat(object[property]) : null;
-    });
-
-    /*
-     * Values of these properties are sometimes arrays and
-     * sometimes CSV strings. Normalize all of them to arrays.
-     *
-     * TODO Where does this come from? From original
-     * practicalplants.org data, mediawiki_scraper, or the
-     * code here?
-     */
-    Crop.ARRAY_PROPERTIES.forEach(property => convertToArray(object, property));
-
-    /*
-     * Normalize values.
-     */
-    Crop.BOOLEAN_PROPERTIES.forEach(property => {
-      replaceValue(object, property, ['No', 'False'], 'false');
-      replaceValue(object, property, ['Yes', 'True'], 'true');
-    });
-
-    for (const property of Crop.NAME_PROPERTIES) {
-      if (object[property]) {
-        if (/[a-z]/.test(object[property][0])) {
-          console.error(JSON.stringify(object), '\n');
-          replaceValue(
-            object,
-            property,
-            [object[property]],
-            object[property][0].toUpperCase() + object[property].slice(1)
-          );
-        }
+        cropArray.push(cropArrayValue);
       }
     }
-
-    replaceValue(object, 'matureMeasurementUnit', ['metres'], 'meters');
-
-    replaceArrayValue(object['pollinators'], ['bees. self'], ['bees', 'self']);
-    replaceArrayValue(object['pollinators'], ['hover-flies'], ['hoverflies']);
-    replaceArrayValue(
-      object['pollinators'],
-      ['apomyctic', 'apomixy'],
-      ['apomictic']
-    );
-    replaceArrayValue(
-      object['pollinators'],
-      ['cleistogomous', 'cleistogomy', 'cleistogamy'],
-      ['cleistogamous']
-    );
-    replaceArrayValue(
-      object['pollinators'],
-      ['flies and small bees'],
-      ['flies', 'bees']
-    );
-    replaceArrayValue(
-      object['pollinators'],
-      ['bees. lepidoptera'],
-      ['bees', 'lepidoptera']
-    );
-    replaceArrayValue(object['pollinators'], ['lepdioptera'], ['lepidoptera']);
-    replaceArrayValue(object['pollinators'], ['humble bees'], ['bumblebees']);
-    replaceArrayValue(
-      object['pollinators'],
-      ['flies lepidoptera'],
-      ['flies', 'lepidoptera']
-    );
-    replaceArrayValue(
-      object['pollinators'],
-      ['self. occasionally flies'],
-      ['flies', 'self']
-    );
-    replaceArrayValue(
-      object['pollinators'],
-      ['self. occasionally bees'],
-      ['bees', 'self']
-    );
-    replaceArrayValue(
-      object['pollinators'],
-      ['insects? self'],
-      ['insects', 'self']
-    );
-    replaceArrayValue(object['pollinators'], ['self?'], ['self']);
-    replaceArrayValue(object['pollinators'], ['insect'], ['insects']);
-
-    replaceArrayValue(
-      object['functions'],
-      ['biogenic decalcifier/pioneer species'],
-      ['biogenic decalcifier', 'pioneer']
-    );
-    replaceArrayValue(object['functions'], [''], []);
-
-    Crop.PROPERTIES.forEach(property => {
-      if (
-        object[property] &&
-        !Crop.NUMBER_PROPERTIES.concat(
-          Crop.ARRAY_PROPERTIES,
-          Crop.BOOLEAN_PROPERTIES,
-          Crop.NAME_PROPERTIES
-        ).includes(property)
-      ) {
-        object[property] = object[property].toLowerCase();
-      }
-    });
-
-    return object;
-  });
+    cropValue = cropArray;
+  } else {
+    cropValue = convertToCropValue(conversions, practicalplantsValue, cropProperty);
+  }
+  crop[cropProperty] = cropValue;
 }
 
-function replaceArrayValue(array, from, to) {
-  from.forEach(fromValue => {
-    let index;
-    while ((index = array.findIndex(value => value == fromValue)) >= 0) {
-      array.splice(index, 1, ...to);
+/**
+ * @param {Object[]} conversions
+ * @param {Object} practicalplantsValue
+ * @param {String} cropProperty
+ * @return {Object}
+ */
+function convertToCropValue(conversions, practicalplantsValue, cropProperty) {
+  for (let i = 0; i < conversions.length; i++) {
+    const conversion = conversions[i];
+    if (conversion.practicalplantsValues.some(value => (value == practicalplantsValue))) {
+      return conversion.cropValue;
     }
-  });
+  }
+  return Crop.NAME_PROPERTIES.includes(cropProperty) ? practicalplantsValue : practicalplantsValue.toLowerCase();
 }
 
-function replaceValue(object, property, from, to) {
-  from.forEach(fromValue => {
-    if (object[property] == fromValue) {
-      object[property] = to;
-    }
-  });
+/**
+ * @param {String} line
+ * @return {Object[]}
+ */
+function getAsArray(value) {
+  return typeof value === 'object' ? value : parseCsvLine(value);
+}
+ 
+/**
+ * @param {String} line
+ * @return {Object[]}
+ */
+function parseCsvLine(line) {
+  return line.split(',').map(value => value.trim());
 }
 
-function convertToArray(object, property) {
-  object[property] = getAsArray(object[property]).map(value =>
-    value.toLowerCase()
-  );
-  object[property] = object[property].filter(
-    value => count(object[property], value) == 1
-  );
+/**
+ * @param {Object[]} array
+ * @return {Object[]}
+ */
+function removeDuplicates(array) {
+  return array.filter(value => (count(array, value) === 1));
 }
 
-function count(array, match) {
+/**
+ * @param {Object[]} array
+ * @param {Object} value
+ * @return {Number}
+ */
+function count(array, value) {
   let counter = 0;
-  array.forEach(value => {
-    if (value == match) {
+  array.forEach(element => {
+    if (element == value) {
       counter++;
     }
   });
   return counter;
 }
 
-function getAsArray(value) {
-  return typeof value === 'object' ? value : parseCsvLine(value);
-}
-
-function parseCsvLine(line) {
-  return line.split(',').map(value => value.trim());
-}
-
-/**
- * Read the whole mongoexport file to an array of crop objects.
- *
- * @return {Array} Crop objects
- */
-function readCropsLower() {
-  const crops = require('./practicalplants-data.js');
-
-  /*
-   * Rename property names to camelCase.
-   */
-  return crops.map(crop => {
-    const newCrop = Object.assign({}, crop);
-    Object.keys(PP_MAPPINGS).forEach(property => {
-      const renamedProperty = PP_MAPPINGS[property];
-      if (renamedProperty != property && crop[property] !== undefined) {
-        newCrop[renamedProperty] = crop[property];
-        delete newCrop[property];
-      }
-    });
-    return newCrop;
-  });
-}
-
 /*
  * All possible properties that may appear in raw practicalplants.org data.
  */
-const ALL_PROPERTIES = [
+const PROPERTIES = [
   'append to article summary',
   'article summary',
   'primary image',
@@ -355,71 +328,31 @@ const ALL_PROPERTIES = [
   ''
 ];
 
-function toCamelCase(property) {
-  return { [property]: utils.toCamelCase(property) };
-}
-
-const PP_MAPPINGS = {
-  binomial: 'binomialName',
-  common: 'commonName',
-  poornutrition: 'poorNutrition',
-  ...toCamelCase('hardiness zone'),
-  ...toCamelCase('soil texture'),
-  ...toCamelCase('soil ph'),
-  ...toCamelCase('soil water retention'),
-  ...toCamelCase('shade'),
-  ...toCamelCase('sun'),
-  ...toCamelCase('water'),
-  ...toCamelCase('drought'),
-  ...toCamelCase('ecosystem niche'),
-  ...toCamelCase('life cycle'),
-  ...toCamelCase('herbaceous or woody'),
-  ...toCamelCase('deciduous or evergreen'),
-  ...toCamelCase('growth rate'),
-  ...toCamelCase('mature measurement unit'),
-  ...toCamelCase('mature height'),
-  ...toCamelCase('mature width'),
-  ...toCamelCase('flower type'),
-  ...toCamelCase('pollinators'),
-  ...toCamelCase('wind'),
-  ...toCamelCase('maritime'),
-  ...toCamelCase('pollution'),
-  ...toCamelCase('functions'),
-  ...toCamelCase('grow from'),
-  ...toCamelCase('cutting type'),
-  ...toCamelCase('fertility'),
-  ...toCamelCase('root zone'),
-  ...toCamelCase('family'),
-  ...toCamelCase('genus'),
-  ...toCamelCase('salinity')
-};
-
 /*
- * Values that appear in raw practicalplants.org data, and the corresponding
- * normalized values.
+ * Values that appear in raw practicalplants.org data.
  */
-const ALL_BOOLEAN_VALUES = ['No', 'False', 'Yes', 'True'];
-const ALL_HARDINESS_ZONE_VALUES = 12;
-const ALL_SOIL_TEXTURE_VALUES = ['sandy', 'loamy', 'clay', 'heavy clay'];
-const ALL_SOIL_PH_VALUES = [
+const BOOLEAN_VALUES = ['No', 'False', 'Yes', 'True'];
+const HARDINESS_ZONE_VALUES = ['0', '1', '2', '3', '4', '5', '6', '7', '8', '9', '10', '12'];
+const SOIL_TEXTURE_VALUES = ['sandy', 'loamy', 'clay', 'heavy clay'];
+const SOIL_PH_VALUES = [
   'very acid',
   'acid',
   'neutral',
   'alkaline',
   'very alkaline'
 ];
-const ALL_SOIL_WATER_RETENTION_VALUES = ['well drained', 'moist', 'wet'];
-const ALL_SHADE_VALUES = [
+const SOIL_WATER_RETENTION_VALUES = ['well drained', 'moist', 'wet'];
+const SHADE_VALUES = [
   'no shade',
   'light shade',
   'partial shade',
   'permanent shade',
   'permanent deep shade'
 ];
-const ALL_SUN_VALUES = ['indirect sun', 'partial sun', 'full sun'];
-const ALL_WATER_VALUES = ['low', 'moderate', 'high', 'aquatic'];
-const ALL_DROUGHT_VALUES = ['dependent', 'tolerant', 'intolerant'];
-const ALL_ECOSYSTEM_NICHE_VALUES = [
+const SUN_VALUES = ['indirect sun', 'partial sun', 'full sun'];
+const WATER_VALUES = ['low', 'moderate', 'high', 'aquatic'];
+const DROUGHT_VALUES = ['dependent', 'tolerant', 'intolerant'];
+const ECOSYSTEM_NICHE_VALUES = [
   'Canopy',
   'Climber',
   'Secondary canopy',
@@ -429,15 +362,150 @@ const ALL_ECOSYSTEM_NICHE_VALUES = [
   'Herbaceous',
   'Rhizosphere'
 ];
-const ALL_LIFE_CYCLE_VALUES = ['perennial', 'annual', 'biennial'];
-const ALL_HERBACEOUS_OR_WOODY_VALUES = ['herbaceous', 'woody', ''];
-const ALL_DECIDUOUS_OR_EVERGREEN_VALUES = ['deciduous', 'evergreen', ''];
-const ALL_GROWTH_RATE_VALUES = ['slow', 'moderate', 'vigorous'];
-const ALL_MATURE_MEASUREMENT_UNIT_VALUES = ['meters', 'metres', 'feet'];
-const ALL_MATURE_HEIGHT_VALUES = 110;
-const ALL_MATURE_WIDTH_VALUES = 30;
-const ALL_FLOWER_TYPE_VALUES = ['hermaphrodite', 'monoecious', 'dioecious'];
-const ALL_POLLINATORS_VALUES = [
+const LIFE_CYCLE_VALUES = ['perennial', 'annual', 'biennial'];
+const HERBACEOUS_OR_WOODY_VALUES = ['herbaceous', 'woody', ''];
+const DECIDUOUS_OR_EVERGREEN_VALUES = ['deciduous', 'evergreen', ''];
+const GROWTH_RATE_VALUES = ['slow', 'moderate', 'vigorous'];
+const MATURE_MEASUREMENT_UNIT_VALUES = ['meters', 'metres', 'feet'];
+const MATURE_HEIGHT_VALUES = [ '3.5',
+  '1',
+  '2',
+  '45',
+  '30',
+  '15',
+  '36',
+  '20',
+  '25',
+  '75',
+  '60',
+  '50',
+  '35',
+  '40',
+  '0.6',
+  '0.1',
+  '4',
+  '5',
+  '2.4',
+  '3',
+  '0.9',
+  '8',
+  '12',
+  '9',
+  '6',
+  '0.45',
+  '1.2',
+  '10',
+  '21',
+  '4.5',
+  '0.2',
+  '0.3',
+  '0.75',
+  '0.15',
+  '2.5',
+  '1.5',
+  '1.4',
+  '0.8',
+  '0.5',
+  '7',
+  '7.5',
+  '13.5',
+  '0.25',
+  '1.8',
+  '0.7',
+  '0.4',
+  '5 - 12',
+  '0.12',
+  '0.35',
+  '18',
+  '22',
+  '1.3',
+  '0.22',
+  '0.05',
+  '0.18',
+  '0.08',
+  '24',
+  '0.02',
+  '2.7',
+  '3.6',
+  '5.4',
+  '33',
+  '7.25',
+  '5.5',
+  '1.7',
+  '1.6',
+  '4+',
+  '2.25',
+  '55',
+  '0.04',
+  '13',
+  '0.85',
+  '0.01',
+  '0',
+  '1.25',
+  '0.55',
+  '0.07',
+  '0.03',
+  '65',
+  '8-10',
+  '23',
+  '1.5 - 2',
+  '0.65',
+  '6 - 8',
+  '110',
+  '90',
+  '14',
+  '16',
+  '70',
+  '0.13' ];
+const MATURE_WIDTH_VALUES = [ '3',
+  '1',
+  '15',
+  '5',
+  '10',
+  '8',
+  '6',
+  '4',
+  '0.8',
+  '0.5',
+  '2',
+  '0.6',
+  '12',
+  '0.45',
+  '0.4',
+  '0.3',
+  '1.5',
+  '0.15',
+  '2.5',
+  '0.25',
+  '0.08',
+  '0.12',
+  '0.1',
+  '0.2',
+  '0.05',
+  '0.75',
+  '0.04',
+  '0.7',
+  '1.2',
+  '1.8',
+  '3.5',
+  '0.9',
+  '18',
+  '9',
+  '20',
+  '0.35',
+  '4.5',
+  '7',
+  '25',
+  '0.23',
+  '1.25',
+  '1.6',
+  '0',
+  '30',
+  '7.5',
+  '13',
+  '0.01' ];
+const FLOWER_TYPE_VALUES = ['hermaphrodite', 'monoecious', 'dioecious'];
+const POLLINATORS_VALUES = [
   'Insects',
   'Wind',
   'Bees',
@@ -487,7 +555,7 @@ const ALL_POLLINATORS_VALUES = [
   'Dryoptera',
   'Hymenoptera'
 ];
-const ALL_FUNCTIONS_VALUES = [
+const FUNCTIONS_VALUES = [
   'Nitrogen fixer',
   'Ground cover',
   'Hedge',
@@ -505,7 +573,7 @@ const ALL_FUNCTIONS_VALUES = [
   'Soil conditioner',
   'Pest Repellent'
 ];
-const ALL_GROW_FROM_VALUES = [
+const GROW_FROM_VALUES = [
   'seed',
   'cutting',
   'layering',
@@ -514,16 +582,16 @@ const ALL_GROW_FROM_VALUES = [
   'graft',
   'bulb'
 ];
-const ALL_CUTTING_TYPE_VALUES = [
+const CUTTING_TYPE_VALUES = [
   'semi-ripe',
   'soft wood',
   'root',
   'hard wood',
   ''
 ];
-const ALL_FERTILITY_VALUES = ['self fertile', 'self sterile'];
-const ALL_ROOT_ZONE_VALUES = ['shallow', 'deep', 'surface'];
-const ALL_FAMILY_VALUES = [
+const FERTILITY_VALUES = ['self fertile', 'self sterile'];
+const ROOT_ZONE_VALUES = ['shallow', 'deep', 'surface'];
+const FAMILY_VALUES = [
   'Acanthaceae',
   'Aceraceae',
   'Actinidiaceae',
@@ -807,7 +875,7 @@ const ALL_FAMILY_VALUES = [
   'Zosteraceae',
   'Zygophyllaceae'
 ];
-const ALL_GENUS_VALUES = [
+const GENUS_VALUES = [
   'Abelia',
   'Abelmoschus',
   'Abies',
@@ -2470,39 +2538,41 @@ const ALL_GENUS_VALUES = [
   'Zoysia',
   'Zygophyllum'
 ];
-const ALL_SALINITY_VALUES = ['tolerant', 'intolerant'];
+const SALINITY_VALUES = ['tolerant', 'intolerant'];
 
 module.exports = {
-  readCrops,
+  convertToCrops,
+  convertToCrop,
 
   getAsArray,
 
-  ALL_PROPERTIES,
-  ALL_BOOLEAN_VALUES,
-  ALL_HARDINESS_ZONE_VALUES,
-  ALL_SOIL_TEXTURE_VALUES,
-  ALL_SOIL_PH_VALUES,
-  ALL_SOIL_WATER_RETENTION_VALUES,
-  ALL_SHADE_VALUES,
-  ALL_SUN_VALUES,
-  ALL_WATER_VALUES,
-  ALL_DROUGHT_VALUES,
-  ALL_ECOSYSTEM_NICHE_VALUES,
-  ALL_LIFE_CYCLE_VALUES,
-  ALL_HERBACEOUS_OR_WOODY_VALUES,
-  ALL_DECIDUOUS_OR_EVERGREEN_VALUES,
-  ALL_GROWTH_RATE_VALUES,
-  ALL_MATURE_MEASUREMENT_UNIT_VALUES,
-  ALL_MATURE_HEIGHT_VALUES,
-  ALL_MATURE_WIDTH_VALUES,
-  ALL_FLOWER_TYPE_VALUES,
-  ALL_POLLINATORS_VALUES,
-  ALL_FUNCTIONS_VALUES,
-  ALL_GROW_FROM_VALUES,
-  ALL_CUTTING_TYPE_VALUES,
-  ALL_FERTILITY_VALUES,
-  ALL_ROOT_ZONE_VALUES,
-  ALL_FAMILY_VALUES,
-  ALL_GENUS_VALUES,
-  ALL_SALINITY_VALUES
+  PROPERTIES,
+
+  BOOLEAN_VALUES,
+  HARDINESS_ZONE_VALUES,
+  SOIL_TEXTURE_VALUES,
+  SOIL_PH_VALUES,
+  SOIL_WATER_RETENTION_VALUES,
+  SHADE_VALUES,
+  SUN_VALUES,
+  WATER_VALUES,
+  DROUGHT_VALUES,
+  ECOSYSTEM_NICHE_VALUES,
+  LIFE_CYCLE_VALUES,
+  HERBACEOUS_OR_WOODY_VALUES,
+  DECIDUOUS_OR_EVERGREEN_VALUES,
+  GROWTH_RATE_VALUES,
+  MATURE_MEASUREMENT_UNIT_VALUES,
+  MATURE_HEIGHT_VALUES,
+  MATURE_WIDTH_VALUES,
+  FLOWER_TYPE_VALUES,
+  POLLINATORS_VALUES,
+  FUNCTIONS_VALUES,
+  GROW_FROM_VALUES,
+  CUTTING_TYPE_VALUES,
+  FERTILITY_VALUES,
+  ROOT_ZONE_VALUES,
+  FAMILY_VALUES,
+  GENUS_VALUES,
+  SALINITY_VALUES
 };

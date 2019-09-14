@@ -4,15 +4,15 @@
 
 const { assert } = require('chai');
 const { filterAndSort } = require('../../shared/filter.js');
-const { readCrops } = require('../../db/practicalplants.js');
 const Crop = require('../../shared/crop.js');
+const PracticalplantsCrop = require('../../shared/practicalplants-crop.js');
 
 describe('Crop filtering', () => {
   let crops;
   let nameToCrop;
 
   before(() => {
-    crops = readCrops();
+    crops = PracticalplantsCrop.convertToCrops(require('../../db/practicalplants-data.js'));
     nameToCrop = Crop.mapCropsByBinomialName(crops);
   });
 
