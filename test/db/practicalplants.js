@@ -107,7 +107,6 @@ describe('practicalplants.json', () => {
     crops.forEach(crop => {
       const value = crop[property];
       if (value) {
-        if (property==='functions as'&&typeof value!=='string')console.log(value);
         assert.equal(typeof value, 'string');
       }
     });
