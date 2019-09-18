@@ -1,6 +1,7 @@
 const { assert } = require('chai');
 const PracticalplantsCrop = require('../../shared/practicalplants-crop.js');
 const Crop = require('../../shared/crop.js');
+const utils = require('../../shared/utils.js');
 
 describe('practicalplants.json', () => {
   function updateMissingCount(missingCounts, object, property, allowedValues) {
@@ -88,12 +89,225 @@ describe('practicalplants.json', () => {
     }
   }
 
+  /**
+   * @param {Object} setObject
+   * @param {Object[]} array
+   */
+  function assertSetAndArrayEqual(setObject, array) {
+    assert.isTrue(utils.areSetsEqual(setObject, new Set(array)));
+  }
+
+  /**
+   * @param {Object[]} crops
+   * @param {String} property
+   */
+  function assertPropertyIsString(crops, property) {
+    assert.isTrue(PracticalplantsCrop.PROPERTIES.includes(property));
+    assert.isTrue(!PracticalplantsCrop.ARRAY_PROPERTIES.includes(property));
+    crops.forEach(crop => {
+      const value = crop[property];
+      if (value) {
+        if (property==='functions as'&&typeof value!=='string')console.log(value);
+        assert.equal(typeof value, 'string');
+      }
+    });
+  }
+
+  /**
+   * Some parsers try to parse CSV-strings to arrays, sometimes returning an array
+   * and sometimes a string. We are fine with both representations.
+   * 
+   * @param {Object[]} crops
+   * @param {String} property
+   */
+  function assertPropertyIsArrayOrString(crops, property) {
+    assert.isTrue(PracticalplantsCrop.PROPERTIES.includes(property));
+    assert.isTrue(PracticalplantsCrop.ARRAY_PROPERTIES.includes(property));
+    crops.forEach(crop => {
+      const value = crop[property];
+      if (value) {
+        assert.isTrue(typeof value === 'string' || Array.isArray(value));
+      }
+    });
+  }
+
   let practicalplantsCrops;
   let crops;
 
   before(() => {
     practicalplantsCrops = require('../../db/practicalplants-data.js');
     crops = PracticalplantsCrop.convertToCrops(practicalplantsCrops);
+  });
+
+  it('is array of objects', () => {
+    assert.isTrue(Array.isArray(practicalplantsCrops));
+    practicalplantsCrops.forEach(crop => {
+      assert.isNotNull(crop);
+      assert.equal(typeof crop, 'object');
+    });
+  });
+
+  it('number of crops', () => {
+    assert.equal(practicalplantsCrops.length, 7416);
+  });
+
+  it('set of properties', () => {
+    const properties = new Set();
+    practicalplantsCrops.forEach(crop => {
+      utils.addAllToSet(properties, Object.keys(crop));
+    });
+    assertSetAndArrayEqual(properties, PracticalplantsCrop.PROPERTIES);
+  });
+
+  it('properties are either strings or arrays of objects', () => {
+    assertPropertyIsString(practicalplantsCrops, 'append to article summary');
+    assertPropertyIsString(practicalplantsCrops, 'article summary');
+    //assertPropertyIsString(practicalplantsCrops, 'primary image');
+    assertPropertyIsString(practicalplantsCrops, 'binomial');
+    assertPropertyIsString(practicalplantsCrops, 'genus');
+    assertPropertyIsString(practicalplantsCrops, 'family');
+    assertPropertyIsArrayOrString(practicalplantsCrops, 'life cycle');
+    assertPropertyIsString(practicalplantsCrops, 'herbaceous or woody');
+    assertPropertyIsString(practicalplantsCrops, 'deciduous or evergreen');
+    assertPropertyIsString(practicalplantsCrops, 'flower type');
+    assertPropertyIsString(practicalplantsCrops, 'growth rate');
+    assertPropertyIsString(practicalplantsCrops, 'mature height');
+    assertPropertyIsString(practicalplantsCrops, 'mature width');
+    assertPropertyIsString(practicalplantsCrops, 'sun');
+    assertPropertyIsString(practicalplantsCrops, 'shade');
+    assertPropertyIsString(practicalplantsCrops, 'hardiness zone');
+    assertPropertyIsString(practicalplantsCrops, 'water');
+    assertPropertyIsString(practicalplantsCrops, 'drought');
+    assertPropertyIsArrayOrString(practicalplantsCrops, 'soil texture');
+    assertPropertyIsArrayOrString(practicalplantsCrops, 'soil ph');
+    assertPropertyIsString(practicalplantsCrops, 'wind');
+    assertPropertyIsString(practicalplantsCrops, 'maritime');
+    assertPropertyIsString(practicalplantsCrops, 'pollution');
+    assertPropertyIsString(practicalplantsCrops, 'poornutrition');
+    //assertPropertyIsArrayOrString(practicalplantsCrops, 'edible part and use');
+    assertPropertyIsString(practicalplantsCrops, 'material use notes');
+    assertPropertyIsString(practicalplantsCrops, 'PFAF material use notes');
+    //assertPropertyIsArrayOrString(practicalplantsCrops, 'material part and use');
+    //assertPropertyIsArrayOrString(practicalplantsCrops, 'medicinal part and use');
+    //assertPropertyIsArrayOrString(practicalplantsCrops, 'toxic parts');
+    //assertPropertyIsArrayOrString(practicalplantsCrops, 'functions');
+    //assertPropertyIsArrayOrString(practicalplantsCrops, 'shelter');
+    //assertPropertyIsArrayOrString(practicalplantsCrops, 'forage');
+    assertPropertyIsString(practicalplantsCrops, 'propagation notes');
+    assertPropertyIsString(practicalplantsCrops, 'PFAF propagation notes');
+    assertPropertyIsString(practicalplantsCrops, 'seed requires stratification');
+    assertPropertyIsString(practicalplantsCrops, 'seed dormancy depth');
+    assertPropertyIsString(practicalplantsCrops, 'seed requires scarification');
+    assertPropertyIsString(practicalplantsCrops, 'seed requires smokification');
+    assertPropertyIsString(practicalplantsCrops, 'rootstocks');
+    assertPropertyIsString(practicalplantsCrops, 'cultivation notes');
+    assertPropertyIsString(practicalplantsCrops, 'PFAF cultivation notes');
+    //assertPropertyIsArrayOrString(practicalplantsCrops, 'crops');
+    assertPropertyIsString(practicalplantsCrops, 'interactions');
+    //assertPropertyIsString(practicalplantsCrops, 'botanical references');
+    assertPropertyIsString(practicalplantsCrops, 'material uses references');
+    assertPropertyIsString(practicalplantsCrops, 'range');
+    assertPropertyIsString(practicalplantsCrops, 'habitat');
+    assertPropertyIsString(practicalplantsCrops, 'enabled');
+    assertPropertyIsString(practicalplantsCrops, 'title irregular');
+    assertPropertyIsString(practicalplantsCrops, 'common');
+    assertPropertyIsArrayOrString(practicalplantsCrops, 'soil water retention');
+    assertPropertyIsString(practicalplantsCrops, 'medicinal use notes');
+    assertPropertyIsString(practicalplantsCrops, 'toxicity notes');
+    assertPropertyIsArrayOrString(practicalplantsCrops, 'grow from');
+    assertPropertyIsString(practicalplantsCrops, 'germination details');
+    assertPropertyIsString(practicalplantsCrops, 'cultivation');
+    assertPropertyIsString(practicalplantsCrops, 'edible uses references');
+    assertPropertyIsString(practicalplantsCrops, 'medicinal uses references');
+    assertPropertyIsString(practicalplantsCrops, 'mature measurement unit');
+    assertPropertyIsArrayOrString(practicalplantsCrops, 'pollinators');
+    assertPropertyIsString(practicalplantsCrops, 'edible use notes');
+    assertPropertyIsString(practicalplantsCrops, 'PFAF edible use notes');
+    assertPropertyIsString(practicalplantsCrops, 'PFAF medicinal use notes');
+    assertPropertyIsString(practicalplantsCrops, 'override summary');
+    assertPropertyIsArrayOrString(practicalplantsCrops, 'ecosystem niche');
+    assertPropertyIsString(practicalplantsCrops, 'problems');
+    assertPropertyIsString(practicalplantsCrops, 'infraspecific epithet');
+    assertPropertyIsString(practicalplantsCrops, 'cultivar of groups');
+    assertPropertyIsString(practicalplantsCrops, 'cultivar epithet');
+    assertPropertyIsString(practicalplantsCrops, 'cultivar group epithet');
+    assertPropertyIsArrayOrString(practicalplantsCrops, 'life references');
+    //assertPropertyIsArrayOrString(practicalplantsCrops, 'subspecies');
+    //assertPropertyIsArrayOrString(practicalplantsCrops, 'cultivar groups');
+    assertPropertyIsArrayOrString(practicalplantsCrops, 'cutting type');
+    assertPropertyIsString(practicalplantsCrops, 'cutting details');
+    assertPropertyIsString(practicalplantsCrops, 'problem notes');
+    assertPropertyIsString(practicalplantsCrops, 'salinity');
+    assertPropertyIsArrayOrString(practicalplantsCrops, 'fertility');
+    assertPropertyIsString(practicalplantsCrops, 'propagation');
+    assertPropertyIsString(practicalplantsCrops, 'common use description');
+    assertPropertyIsString(practicalplantsCrops, 'flower colour');
+    assertPropertyIsString(practicalplantsCrops, 'common habit description');
+    //assertPropertyIsArrayOrString(practicalplantsCrops, 'ungrouped cultivars');
+    assertPropertyIsString(practicalplantsCrops, 'functions notes');
+    assertPropertyIsString(practicalplantsCrops, 'botanical description');
+    assertPropertyIsString(practicalplantsCrops, 'crop notes');
+    assertPropertyIsString(practicalplantsCrops, 'classification references');
+    assertPropertyIsArrayOrString(practicalplantsCrops, 'environmental references');
+    assertPropertyIsArrayOrString(practicalplantsCrops, 'native range');
+    assertPropertyIsString(practicalplantsCrops, 'native environment');
+    assertPropertyIsString(practicalplantsCrops, 'ecosystems references');
+    assertPropertyIsString(practicalplantsCrops, 'uses intro');
+    assertPropertyIsString(practicalplantsCrops, 'seed saving details');
+    assertPropertyIsString(practicalplantsCrops, 'root zone');
+    assertPropertyIsString(practicalplantsCrops, 'taxonomic rank');
+    assertPropertyIsArrayOrString(practicalplantsCrops, 'functions as');
+    assertPropertyIsString(practicalplantsCrops, 'shelter notes');
+    assertPropertyIsString(practicalplantsCrops, 'forage notes');
+    assertPropertyIsString(practicalplantsCrops, 'material uses');
+    assertPropertyIsString(practicalplantsCrops, 'heat zone');
+    assertPropertyIsString(practicalplantsCrops, 'bulb type');
+    assertPropertyIsString(practicalplantsCrops, 'graft rootstock');
+    assertPropertyIsString(practicalplantsCrops, 'edible parts');
+    assertPropertyIsString(practicalplantsCrops, 'edible uses');
+    assertPropertyIsString(practicalplantsCrops, 'show cultivar group');
+    assertPropertyIsString(practicalplantsCrops, 'cultivar group');
+    assertPropertyIsString(practicalplantsCrops, 'is a variety');
+    assertPropertyIsString(practicalplantsCrops, 'variety type');
+    assertPropertyIsString(practicalplantsCrops, 'cultivar name');
+    assertPropertyIsString(practicalplantsCrops, 'cultivar of');
+    assertPropertyIsString(practicalplantsCrops, 'variety name');
+    assertPropertyIsString(practicalplantsCrops, 'variety of');
+    assertPropertyIsString(practicalplantsCrops, 'subspecies name');
+    assertPropertyIsString(practicalplantsCrops, 'subspecies of');
+    assertPropertyIsString(practicalplantsCrops, 'summary');
+    assertPropertyIsString(practicalplantsCrops, 'cultivar group of');
+    assertPropertyIsString(practicalplantsCrops, 'seed stratification instructions');
+    assertPropertyIsString(practicalplantsCrops, 'graft details');
+    assertPropertyIsString(practicalplantsCrops, 'bulb details');
+    assertPropertyIsString(practicalplantsCrops, 'subspecific epithet');
+    assertPropertyIsString(practicalplantsCrops, 'cultivar notes');
+    assertPropertyIsString(practicalplantsCrops, '');
+  });
+
+  it('TODO these properties should be strings', () => {
+    /*
+     * TODO Currently this is sometimes an array but should always be a string:
+     * https://practicalplants.org/w/api.php?action=query&prop=revisions&rvlimit=1&rvprop=content&format=json&titles=Iris%20sanguinea
+     * https://practicalplants.org/w/api.php?action=query&prop=revisions&rvlimit=1&rvprop=content&format=json&titles=Rubus%20occidentalis
+     */
+    assertPropertyIsString(practicalplantsCrops, 'primary image');
+    
+    assertPropertyIsString(practicalplantsCrops, 'botanical references');
+  });
+
+  it('TODO these properties should be arrays of objects', () => {
+    assertPropertyIsArrayOrString(practicalplantsCrops, 'edible part and use');
+    assertPropertyIsArrayOrString(practicalplantsCrops, 'medicinal part and use');
+    assertPropertyIsArrayOrString(practicalplantsCrops, 'material part and use');
+    assertPropertyIsArrayOrString(practicalplantsCrops, 'toxic parts');
+    assertPropertyIsArrayOrString(practicalplantsCrops, 'functions');
+    assertPropertyIsArrayOrString(practicalplantsCrops, 'shelter');
+    assertPropertyIsArrayOrString(practicalplantsCrops, 'forage');
+    assertPropertyIsArrayOrString(practicalplantsCrops, 'crops');
+    assertPropertyIsArrayOrString(practicalplantsCrops, 'subspecies');
+    assertPropertyIsArrayOrString(practicalplantsCrops, 'cultivar groups');
+    assertPropertyIsArrayOrString(practicalplantsCrops, 'ungrouped cultivars');
   });
 
   it('set of crops that have salinity is analyzed', () => {
@@ -351,22 +565,6 @@ describe('practicalplants.json', () => {
 
     actualCropsThatHaveSalinity.forEach(crop => {
       assert.equal(expectedCropsThatHaveSalinity.includes(crop.binomial), true);
-    });
-  });
-
-  it('basic checks', () => {
-    assert.equal(practicalplantsCrops.length, 7416);
-
-    practicalplantsCrops.forEach(crop => {
-      assert.isNotNull(crop);
-      assert.equal(typeof crop, 'object');
-
-      Object.keys(crop).forEach(property =>
-        assert.isTrue(
-          PracticalplantsCrop.PROPERTIES.includes(property),
-          'Unknown property: ' + property
-        )
-      );
     });
   });
 

@@ -275,7 +275,6 @@ const PROPERTIES = [
   'cultivar group epithet',
   'life references',
   'subspecies',
-  'subspecies',
   'cultivar groups',
   'cutting type',
   'cutting details',
@@ -326,6 +325,35 @@ const PROPERTIES = [
   'subspecific epithet',
   'cultivar notes',
   ''
+];
+
+/**
+ * Looking at raw practicalplants.org MediaWiki data it seems that every property
+ * is either a string or an array of objects, but then a string is sometimes an
+ * array coded in CSV-format. This variable includes both types of arrays.
+ */
+const ARRAY_PROPERTIES = [
+  'soil texture',
+  'soil ph',
+  'soil water retention',
+  'ecosystem niche',
+  'life cycle',
+  'pollinators',
+  'grow from',
+  'cutting type',
+  'fertility',
+  'functions',
+  'shelter',
+  'forage',
+  'crops',
+  'grow from',
+  'life references',
+  'subspecies',
+  'cultivar groups',
+  'ungrouped cultivars',
+  'environmental references',
+  'native range',
+  'functions as'
 ];
 
 /*
@@ -2547,6 +2575,7 @@ module.exports = {
   getAsArray,
 
   PROPERTIES,
+  ARRAY_PROPERTIES,
 
   BOOLEAN_VALUES,
   HARDINESS_ZONE_VALUES,

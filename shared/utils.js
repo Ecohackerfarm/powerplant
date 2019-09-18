@@ -5,6 +5,29 @@
 
 const secrets = require('../secrets.js');
 
+/**
+ * @param {Set} set0
+ * @param {Set} set1
+ */
+function areSetsEqual(set0, set1) {
+  if (set0.size !== set1.size) {
+    return false;
+  }
+  for (let value of set0) {
+    if (!set1.has(value)) {
+      return false;
+    }
+  }
+  return true;
+}
+
+/**
+ * @param {Set} setObject
+ * @param {Object[]} array
+ */
+function addAllToSet(setObject, array) {
+  array.forEach(value => setObject.add(value));
+}
 
 /**
  * @param {String} name
@@ -46,6 +69,8 @@ function getHttpServerUrl() {
 }
 
 module.exports = {
+  areSetsEqual,
+  addAllToSet,
   toCamelCase,
   getPouchDatabaseUrl,
   getPouchAdminDatabaseUrl,
