@@ -3,7 +3,7 @@
  * it to the powerplant Crop type. PracticalplantsCrop is symmetric to
  * the practicalplants.org MediaWiki format, it should be easy to transfer
  * data from a practicalplants wiki to powerplant.
- * 
+ *
  * @namespace practicalplants-crop
  * @memberof shared
  */
@@ -32,56 +32,157 @@ function convertToCrop(practicalplantsCrop) {
   const crop = {};
 
   const BOOLEAN_CONVERSIONS = [
-    {practicalplantsValues: ['No', 'False'], cropValue: 'false'},
-    {practicalplantsValues: ['Yes', 'True'], cropValue: 'true'}
+    { practicalplantsValues: ['No', 'False'], cropValue: 'false' },
+    { practicalplantsValues: ['Yes', 'True'], cropValue: 'true' }
   ];
 
   copyProperty(practicalplantsCrop, crop, 'binomial', 'binomialName', []);
   copyProperty(practicalplantsCrop, crop, 'common', 'commonName', [
-  {practicalplantsValues: ['common bean, string bean, field bean, flageolet bean, French bean, garden bean, haricot bean, pop bean, snap bean'], 
-    cropValue: 'Common bean, string bean, field bean, flageolet bean, French bean, garden bean, haricot bean, pop bean, snap bean'}]);
+    {
+      practicalplantsValues: [
+        'common bean, string bean, field bean, flageolet bean, French bean, garden bean, haricot bean, pop bean, snap bean'
+      ],
+      cropValue:
+        'Common bean, string bean, field bean, flageolet bean, French bean, garden bean, haricot bean, pop bean, snap bean'
+    }
+  ]);
   copyProperty(practicalplantsCrop, crop, 'family', 'family', []);
   copyProperty(practicalplantsCrop, crop, 'genus', 'genus', []);
-  copyProperty(practicalplantsCrop, crop, 'hardiness zone', 'hardinessZone', []);
+  copyProperty(
+    practicalplantsCrop,
+    crop,
+    'hardiness zone',
+    'hardinessZone',
+    []
+  );
   copyProperty(practicalplantsCrop, crop, 'mature height', 'matureHeight', []);
   copyProperty(practicalplantsCrop, crop, 'mature width', 'matureWidth', []);
-  copyProperty(practicalplantsCrop, crop, 'poornutrition', 'poorNutrition', BOOLEAN_CONVERSIONS);
+  copyProperty(
+    practicalplantsCrop,
+    crop,
+    'poornutrition',
+    'poorNutrition',
+    BOOLEAN_CONVERSIONS
+  );
   copyProperty(practicalplantsCrop, crop, 'wind', 'wind', BOOLEAN_CONVERSIONS);
-  copyProperty(practicalplantsCrop, crop, 'maritime', 'maritime', BOOLEAN_CONVERSIONS);
-  copyProperty(practicalplantsCrop, crop, 'pollution', 'pollution', BOOLEAN_CONVERSIONS);
+  copyProperty(
+    practicalplantsCrop,
+    crop,
+    'maritime',
+    'maritime',
+    BOOLEAN_CONVERSIONS
+  );
+  copyProperty(
+    practicalplantsCrop,
+    crop,
+    'pollution',
+    'pollution',
+    BOOLEAN_CONVERSIONS
+  );
   copyProperty(practicalplantsCrop, crop, 'soil texture', 'soilTexture', []);
   copyProperty(practicalplantsCrop, crop, 'soil ph', 'soilPh', []);
-  copyProperty(practicalplantsCrop, crop, 'soil water retention', 'soilWaterRetention', []);
-  copyProperty(practicalplantsCrop, crop, 'ecosystem niche', 'ecosystemNiche', []);
+  copyProperty(
+    practicalplantsCrop,
+    crop,
+    'soil water retention',
+    'soilWaterRetention',
+    []
+  );
+  copyProperty(
+    practicalplantsCrop,
+    crop,
+    'ecosystem niche',
+    'ecosystemNiche',
+    []
+  );
   copyProperty(practicalplantsCrop, crop, 'life cycle', 'lifeCycle', []);
-  copyProperty(practicalplantsCrop, crop, 'pollinators', 'pollinators', [{practicalplantsValues: ['Bees. self'], cropValue: ['bees', 'self']},
-  {practicalplantsValues: ['Hover-flies', 'Hoverflies'], cropValue: ['hoverflies']},
-  {practicalplantsValues: ['Apomyctic', 'Apomixy', 'Apomictic'], cropValue: ['apomictic']},
-  {practicalplantsValues: ['Cleistogamous', 'Cleistogomous', 'Cleistogomy', 'Cleistogamy'], cropValue: ['cleistogamous']},
-  {practicalplantsValues: ['Flies and small bees'], cropValue: ['flies', 'bees']},
-  {practicalplantsValues: ['Bees. lepidoptera'], cropValue: ['bees', 'lepidoptera']},
-  {practicalplantsValues: ['Lepidoptera', 'lepdioptera', 'Lepdioptera'], cropValue: ['lepidoptera']},
-  {practicalplantsValues: ['Humble bees'], cropValue: ['bumblebees']},
-  {practicalplantsValues: ['Flies lepidoptera'], cropValue: ['flies', 'lepidoptera']},
-  {practicalplantsValues: ['Self. Occasionally flies'], cropValue: ['flies', 'self']},
-  {practicalplantsValues: ['Self. Occasionally bees'], cropValue: ['bees', 'self']},
-  {practicalplantsValues: ['Insects? Self'], cropValue: ['insects', 'self']},
-  {practicalplantsValues: ['Self?'], cropValue: ['self']},
-  {practicalplantsValues: ['Insect', 'Insects'], cropValue: ['insects']}]);
+  copyProperty(practicalplantsCrop, crop, 'pollinators', 'pollinators', [
+    { practicalplantsValues: ['Bees. self'], cropValue: ['bees', 'self'] },
+    {
+      practicalplantsValues: ['Hover-flies', 'Hoverflies'],
+      cropValue: ['hoverflies']
+    },
+    {
+      practicalplantsValues: ['Apomyctic', 'Apomixy', 'Apomictic'],
+      cropValue: ['apomictic']
+    },
+    {
+      practicalplantsValues: [
+        'Cleistogamous',
+        'Cleistogomous',
+        'Cleistogomy',
+        'Cleistogamy'
+      ],
+      cropValue: ['cleistogamous']
+    },
+    {
+      practicalplantsValues: ['Flies and small bees'],
+      cropValue: ['flies', 'bees']
+    },
+    {
+      practicalplantsValues: ['Bees. lepidoptera'],
+      cropValue: ['bees', 'lepidoptera']
+    },
+    {
+      practicalplantsValues: ['Lepidoptera', 'lepdioptera', 'Lepdioptera'],
+      cropValue: ['lepidoptera']
+    },
+    { practicalplantsValues: ['Humble bees'], cropValue: ['bumblebees'] },
+    {
+      practicalplantsValues: ['Flies lepidoptera'],
+      cropValue: ['flies', 'lepidoptera']
+    },
+    {
+      practicalplantsValues: ['Self. Occasionally flies'],
+      cropValue: ['flies', 'self']
+    },
+    {
+      practicalplantsValues: ['Self. Occasionally bees'],
+      cropValue: ['bees', 'self']
+    },
+    {
+      practicalplantsValues: ['Insects? Self'],
+      cropValue: ['insects', 'self']
+    },
+    { practicalplantsValues: ['Self?'], cropValue: ['self'] },
+    { practicalplantsValues: ['Insect', 'Insects'], cropValue: ['insects'] }
+  ]);
   copyProperty(practicalplantsCrop, crop, 'grow from', 'growFrom', []);
   copyProperty(practicalplantsCrop, crop, 'cutting type', 'cuttingType', []);
   copyProperty(practicalplantsCrop, crop, 'fertility', 'fertility', []);
   copyProperty(practicalplantsCrop, crop, 'functions', 'functions', [
-  {practicalplantsValues: ['Biogenic Decalcifier/Pioneer Species'], cropValue: ['biogenic decalcifier', 'pioneer']},
-  {practicalplantsValues: [''], cropValue: []}]);
+    {
+      practicalplantsValues: ['Biogenic Decalcifier/Pioneer Species'],
+      cropValue: ['biogenic decalcifier', 'pioneer']
+    },
+    { practicalplantsValues: [''], cropValue: [] }
+  ]);
   copyProperty(practicalplantsCrop, crop, 'shade', 'shade', []);
   copyProperty(practicalplantsCrop, crop, 'sun', 'sun', []);
   copyProperty(practicalplantsCrop, crop, 'water', 'water', []);
   copyProperty(practicalplantsCrop, crop, 'drought', 'drought', []);
-  copyProperty(practicalplantsCrop, crop, 'herbaceous or woody', 'herbaceousOrWoody', []);
-  copyProperty(practicalplantsCrop, crop, 'deciduous or evergreen', 'deciduousOrEvergreen', []);
+  copyProperty(
+    practicalplantsCrop,
+    crop,
+    'herbaceous or woody',
+    'herbaceousOrWoody',
+    []
+  );
+  copyProperty(
+    practicalplantsCrop,
+    crop,
+    'deciduous or evergreen',
+    'deciduousOrEvergreen',
+    []
+  );
   copyProperty(practicalplantsCrop, crop, 'growth rate', 'growthRate', []);
-  copyProperty(practicalplantsCrop, crop, 'mature measurement unit', 'matureMeasurementUnit', [{practicalplantsValues: ['metres'], cropValue: 'meters'}]);
+  copyProperty(
+    practicalplantsCrop,
+    crop,
+    'mature measurement unit',
+    'matureMeasurementUnit',
+    [{ practicalplantsValues: ['metres'], cropValue: 'meters' }]
+  );
   copyProperty(practicalplantsCrop, crop, 'flower type', 'flowerType', []);
   copyProperty(practicalplantsCrop, crop, 'root zone', 'rootZone', []);
   copyProperty(practicalplantsCrop, crop, 'salinity', 'salinity', []);
@@ -91,14 +192,20 @@ function convertToCrop(practicalplantsCrop) {
 
 /**
  * Copy property from a PracticalplantsCrop to a Crop, normalizing its value.
- * 
+ *
  * @param {PracticalplantsCrop} practicalplantsCrop
  * @param {Crop} crop
  * @param {String} practicalplantsProperty
  * @param {String} cropProperty
  * @param {Object} conversions
  */
-function copyProperty(practicalplantsCrop, crop, practicalplantsProperty, cropProperty, conversions) {
+function copyProperty(
+  practicalplantsCrop,
+  crop,
+  practicalplantsProperty,
+  cropProperty,
+  conversions
+) {
   const practicalplantsValue = practicalplantsCrop[practicalplantsProperty];
   const arrayProperty = Crop.ARRAY_PROPERTIES.includes(cropProperty);
 
@@ -111,7 +218,9 @@ function copyProperty(practicalplantsCrop, crop, practicalplantsProperty, cropPr
 
   if (Crop.NUMBER_PROPERTIES.includes(cropProperty)) {
     /* TODO Sometimes the properties matureWidth and matureHeight contain a range, for these store the value always as a range and provide functions to access the value? */
-    crop[cropProperty] = parseFloat(practicalplantsCrop[practicalplantsProperty]);
+    crop[cropProperty] = parseFloat(
+      practicalplantsCrop[practicalplantsProperty]
+    );
     return;
   }
 
@@ -128,7 +237,11 @@ function copyProperty(practicalplantsCrop, crop, practicalplantsProperty, cropPr
 
     let cropArray = [];
     for (let i = 0; i < practicalplantsArray.length; i++) {
-      const cropArrayValue = convertToCropValue(conversions, practicalplantsArray[i], cropProperty);
+      const cropArrayValue = convertToCropValue(
+        conversions,
+        practicalplantsArray[i],
+        cropProperty
+      );
       if (Array.isArray(cropArrayValue)) {
         cropArray.push(...cropArrayValue);
       } else {
@@ -137,7 +250,11 @@ function copyProperty(practicalplantsCrop, crop, practicalplantsProperty, cropPr
     }
     cropValue = cropArray;
   } else {
-    cropValue = convertToCropValue(conversions, practicalplantsValue, cropProperty);
+    cropValue = convertToCropValue(
+      conversions,
+      practicalplantsValue,
+      cropProperty
+    );
   }
   crop[cropProperty] = cropValue;
 }
@@ -151,11 +268,17 @@ function copyProperty(practicalplantsCrop, crop, practicalplantsProperty, cropPr
 function convertToCropValue(conversions, practicalplantsValue, cropProperty) {
   for (let i = 0; i < conversions.length; i++) {
     const conversion = conversions[i];
-    if (conversion.practicalplantsValues.some(value => (value == practicalplantsValue))) {
+    if (
+      conversion.practicalplantsValues.some(
+        value => value == practicalplantsValue
+      )
+    ) {
       return conversion.cropValue;
     }
   }
-  return Crop.NAME_PROPERTIES.includes(cropProperty) ? practicalplantsValue : practicalplantsValue.toLowerCase();
+  return Crop.NAME_PROPERTIES.includes(cropProperty)
+    ? practicalplantsValue
+    : practicalplantsValue.toLowerCase();
 }
 
 /**
@@ -165,7 +288,7 @@ function convertToCropValue(conversions, practicalplantsValue, cropProperty) {
 function getAsArray(value) {
   return typeof value === 'object' ? value : parseCsvLine(value);
 }
- 
+
 /**
  * @param {String} line
  * @return {Object[]}
@@ -179,7 +302,7 @@ function parseCsvLine(line) {
  * @return {Object[]}
  */
 function removeDuplicates(array) {
-  return array.filter(value => (count(array, value) === 1));
+  return array.filter(value => count(array, value) === 1);
 }
 
 /**
@@ -360,7 +483,20 @@ const ARRAY_PROPERTIES = [
  * Values that appear in raw practicalplants.org data.
  */
 const BOOLEAN_VALUES = ['No', 'False', 'Yes', 'True'];
-const HARDINESS_ZONE_VALUES = ['0', '1', '2', '3', '4', '5', '6', '7', '8', '9', '10', '12'];
+const HARDINESS_ZONE_VALUES = [
+  '0',
+  '1',
+  '2',
+  '3',
+  '4',
+  '5',
+  '6',
+  '7',
+  '8',
+  '9',
+  '10',
+  '12'
+];
 const SOIL_TEXTURE_VALUES = ['sandy', 'loamy', 'clay', 'heavy clay'];
 const SOIL_PH_VALUES = [
   'very acid',
@@ -395,7 +531,8 @@ const HERBACEOUS_OR_WOODY_VALUES = ['herbaceous', 'woody', ''];
 const DECIDUOUS_OR_EVERGREEN_VALUES = ['deciduous', 'evergreen', ''];
 const GROWTH_RATE_VALUES = ['slow', 'moderate', 'vigorous'];
 const MATURE_MEASUREMENT_UNIT_VALUES = ['meters', 'metres', 'feet'];
-const MATURE_HEIGHT_VALUES = [ '3.5',
+const MATURE_HEIGHT_VALUES = [
+  '3.5',
   '1',
   '2',
   '45',
@@ -484,8 +621,10 @@ const MATURE_HEIGHT_VALUES = [ '3.5',
   '14',
   '16',
   '70',
-  '0.13' ];
-const MATURE_WIDTH_VALUES = [ '3',
+  '0.13'
+];
+const MATURE_WIDTH_VALUES = [
+  '3',
   '1',
   '15',
   '5',
@@ -531,7 +670,8 @@ const MATURE_WIDTH_VALUES = [ '3',
   '30',
   '7.5',
   '13',
-  '0.01' ];
+  '0.01'
+];
 const FLOWER_TYPE_VALUES = ['hermaphrodite', 'monoecious', 'dioecious'];
 const POLLINATORS_VALUES = [
   'Insects',
@@ -610,13 +750,7 @@ const GROW_FROM_VALUES = [
   'graft',
   'bulb'
 ];
-const CUTTING_TYPE_VALUES = [
-  'semi-ripe',
-  'soft wood',
-  'root',
-  'hard wood',
-  ''
-];
+const CUTTING_TYPE_VALUES = ['semi-ripe', 'soft wood', 'root', 'hard wood', ''];
 const FERTILITY_VALUES = ['self fertile', 'self sterile'];
 const ROOT_ZONE_VALUES = ['shallow', 'deep', 'surface'];
 const FAMILY_VALUES = [

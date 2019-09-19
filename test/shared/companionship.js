@@ -9,7 +9,9 @@ describe('Companionship algorithm', () => {
   let binomialNameToCrop;
 
   before(() => {
-    crops = PracticalplantsCrop.convertToCrops(require('../../db/practicalplants-data.js'));
+    crops = PracticalplantsCrop.convertToCrops(
+      require('../../db/practicalplants-data.js')
+    );
     binomialNameToCrop = Crop.mapCropsByBinomialName(crops);
   });
 

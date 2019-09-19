@@ -269,7 +269,9 @@ async function pouchFind() {
 }
 
 function readCrops() {
-  const crops = PracticalplantsCrop.convertToCrops(require('../db/practicalplants-data.js'));
+  const crops = PracticalplantsCrop.convertToCrops(
+    require('../db/practicalplants-data.js')
+  );
 
   crops.forEach(crop => {
     crop.tags = [];

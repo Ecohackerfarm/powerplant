@@ -1,6 +1,6 @@
 /**
  * Module for managing the Crop type.
- * 
+ *
  * @namespace crop
  * @memberof shared
  */
@@ -155,13 +155,7 @@ module.exports = {
   BOOLEAN_VALUES: ['false', 'true'],
   HARDINESS_ZONE_VALUES: 12,
   SOIL_TEXTURE_VALUES: ['sandy', 'loamy', 'clay', 'heavy clay'],
-  SOIL_PH_VALUES: [
-    'very acid',
-    'acid',
-    'neutral',
-    'alkaline',
-    'very alkaline'
-  ],
+  SOIL_PH_VALUES: ['very acid', 'acid', 'neutral', 'alkaline', 'very alkaline'],
   SOIL_WATER_RETENTION_VALUES: ['well drained', 'moist', 'wet'],
   SHADE_VALUES: [
     'no shade',

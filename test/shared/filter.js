@@ -12,7 +12,9 @@ describe('Crop filtering', () => {
   let nameToCrop;
 
   before(() => {
-    crops = PracticalplantsCrop.convertToCrops(require('../../db/practicalplants-data.js'));
+    crops = PracticalplantsCrop.convertToCrops(
+      require('../../db/practicalplants-data.js')
+    );
     nameToCrop = Crop.mapCropsByBinomialName(crops);
   });
 

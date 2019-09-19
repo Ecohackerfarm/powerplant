@@ -85,8 +85,7 @@ class CropsPage extends React.Component {
     const state = Object.assign({}, this.state, {
       cropFilter: value,
       filteredCrops: this.props.crops.filter(crop =>
-        Crop
-          .getDisplayName(crop)
+        Crop.getDisplayName(crop)
           .toLowerCase()
           .includes(value.toLowerCase())
       )

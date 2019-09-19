@@ -35,9 +35,9 @@ describe('practicalplants.json', () => {
         ? object[property]['function']
         : object[property];
       assert.isTrue(
-        PracticalplantsCrop
-          .getAsArray(array)
-          .every(value => allowedValues.includes(value)),
+        PracticalplantsCrop.getAsArray(array).every(value =>
+          allowedValues.includes(value)
+        ),
         JSON.stringify(array)
       );
     } else if (Crop.NUMBER_PROPERTIES.includes(property)) {
@@ -115,7 +115,7 @@ describe('practicalplants.json', () => {
   /**
    * Some parsers try to parse CSV-strings to arrays, sometimes returning an array
    * and sometimes a string. We are fine with both representations.
-   * 
+   *
    * @param {Object[]} crops
    * @param {String} property
    */
@@ -194,7 +194,10 @@ describe('practicalplants.json', () => {
     //assertPropertyIsArrayOrString(practicalplantsCrops, 'forage');
     assertPropertyIsString(practicalplantsCrops, 'propagation notes');
     assertPropertyIsString(practicalplantsCrops, 'PFAF propagation notes');
-    assertPropertyIsString(practicalplantsCrops, 'seed requires stratification');
+    assertPropertyIsString(
+      practicalplantsCrops,
+      'seed requires stratification'
+    );
     assertPropertyIsString(practicalplantsCrops, 'seed dormancy depth');
     assertPropertyIsString(practicalplantsCrops, 'seed requires scarification');
     assertPropertyIsString(practicalplantsCrops, 'seed requires smokification');
@@ -247,7 +250,10 @@ describe('practicalplants.json', () => {
     assertPropertyIsString(practicalplantsCrops, 'botanical description');
     assertPropertyIsString(practicalplantsCrops, 'crop notes');
     assertPropertyIsString(practicalplantsCrops, 'classification references');
-    assertPropertyIsArrayOrString(practicalplantsCrops, 'environmental references');
+    assertPropertyIsArrayOrString(
+      practicalplantsCrops,
+      'environmental references'
+    );
     assertPropertyIsArrayOrString(practicalplantsCrops, 'native range');
     assertPropertyIsString(practicalplantsCrops, 'native environment');
     assertPropertyIsString(practicalplantsCrops, 'ecosystems references');
@@ -276,7 +282,10 @@ describe('practicalplants.json', () => {
     assertPropertyIsString(practicalplantsCrops, 'subspecies of');
     assertPropertyIsString(practicalplantsCrops, 'summary');
     assertPropertyIsString(practicalplantsCrops, 'cultivar group of');
-    assertPropertyIsString(practicalplantsCrops, 'seed stratification instructions');
+    assertPropertyIsString(
+      practicalplantsCrops,
+      'seed stratification instructions'
+    );
     assertPropertyIsString(practicalplantsCrops, 'graft details');
     assertPropertyIsString(practicalplantsCrops, 'bulb details');
     assertPropertyIsString(practicalplantsCrops, 'subspecific epithet');
@@ -291,14 +300,20 @@ describe('practicalplants.json', () => {
      * https://practicalplants.org/w/api.php?action=query&prop=revisions&rvlimit=1&rvprop=content&format=json&titles=Rubus%20occidentalis
      */
     assertPropertyIsString(practicalplantsCrops, 'primary image');
-    
+
     assertPropertyIsString(practicalplantsCrops, 'botanical references');
   });
 
   it('TODO these properties should be arrays of objects', () => {
     assertPropertyIsArrayOrString(practicalplantsCrops, 'edible part and use');
-    assertPropertyIsArrayOrString(practicalplantsCrops, 'medicinal part and use');
-    assertPropertyIsArrayOrString(practicalplantsCrops, 'material part and use');
+    assertPropertyIsArrayOrString(
+      practicalplantsCrops,
+      'medicinal part and use'
+    );
+    assertPropertyIsArrayOrString(
+      practicalplantsCrops,
+      'material part and use'
+    );
     assertPropertyIsArrayOrString(practicalplantsCrops, 'toxic parts');
     assertPropertyIsArrayOrString(practicalplantsCrops, 'functions');
     assertPropertyIsArrayOrString(practicalplantsCrops, 'shelter');
@@ -662,16 +677,8 @@ describe('practicalplants.json', () => {
         )
       );
 
-      assertValueOrMissing(
-        object,
-        'hardinessZone',
-        Crop.HARDINESS_ZONE_VALUES
-      );
-      assertValueOrMissing(
-        object,
-        'soilTexture',
-        Crop.SOIL_TEXTURE_VALUES
-      );
+      assertValueOrMissing(object, 'hardinessZone', Crop.HARDINESS_ZONE_VALUES);
+      assertValueOrMissing(object, 'soilTexture', Crop.SOIL_TEXTURE_VALUES);
       assertValueOrMissing(object, 'soilPh', Crop.SOIL_PH_VALUES);
       assertValueOrMissing(
         object,
@@ -681,37 +688,17 @@ describe('practicalplants.json', () => {
       assertValueOrMissing(object, 'shade', Crop.SHADE_VALUES);
       assertValueOrMissing(object, 'sun', Crop.SUN_VALUES);
       assertValueOrMissing(object, 'water', Crop.WATER_VALUES);
-      assertValueOrMissing(
-        object,
-        'drought',
-        Crop.DROUGHT_VALUES
-      );
-      assertValueOrMissing(
-        object,
-        'poorNutrition',
-        Crop.BOOLEAN_VALUES
-      );
+      assertValueOrMissing(object, 'drought', Crop.DROUGHT_VALUES);
+      assertValueOrMissing(object, 'poorNutrition', Crop.BOOLEAN_VALUES);
       assertValueOrMissing(object, 'wind', Crop.BOOLEAN_VALUES);
-      assertValueOrMissing(
-        object,
-        'maritime',
-        Crop.BOOLEAN_VALUES
-      );
-      assertValueOrMissing(
-        object,
-        'pollution',
-        Crop.BOOLEAN_VALUES
-      );
+      assertValueOrMissing(object, 'maritime', Crop.BOOLEAN_VALUES);
+      assertValueOrMissing(object, 'pollution', Crop.BOOLEAN_VALUES);
       assertValueOrMissing(
         object,
         'ecosystemNiche',
         Crop.ECOSYSTEM_NICHE_VALUES
       );
-      assertValueOrMissing(
-        object,
-        'lifeCycle',
-        Crop.LIFE_CYCLE_VALUES
-      );
+      assertValueOrMissing(object, 'lifeCycle', Crop.LIFE_CYCLE_VALUES);
       assertValueOrMissing(
         object,
         'herbaceousOrWoody',
@@ -722,61 +709,21 @@ describe('practicalplants.json', () => {
         'deciduousOrEvergreen',
         Crop.DECIDUOUS_OR_EVERGREEN_VALUES
       );
-      assertValueOrMissing(
-        object,
-        'growthRate',
-        Crop.GROWTH_RATE_VALUES
-      );
+      assertValueOrMissing(object, 'growthRate', Crop.GROWTH_RATE_VALUES);
       assertValueOrMissing(
         object,
         'matureMeasurementUnit',
         Crop.MATURE_MEASUREMENT_UNIT_VALUES
       );
-      assertValueOrMissing(
-        object,
-        'matureHeight',
-        Crop.MATURE_HEIGHT_VALUES
-      );
-      assertValueOrMissing(
-        object,
-        'matureWidth',
-        Crop.MATURE_WIDTH_VALUES
-      );
-      assertValueOrMissing(
-        object,
-        'flowerType',
-        Crop.FLOWER_TYPE_VALUES
-      );
-      assertValueOrMissing(
-        object,
-        'pollinators',
-        Crop.POLLINATORS_VALUES
-      );
-      assertValueOrMissing(
-        object,
-        'functions',
-        Crop.FUNCTIONS_VALUES
-      );
-      assertValueOrMissing(
-        object,
-        'growFrom',
-        Crop.GROW_FROM_VALUES
-      );
-      assertValueOrMissing(
-        object,
-        'cuttingType',
-        Crop.CUTTING_TYPE_VALUES
-      );
-      assertValueOrMissing(
-        object,
-        'fertility',
-        Crop.FERTILITY_VALUES
-      );
-      assertValueOrMissing(
-        object,
-        'rootZone',
-        Crop.ROOT_ZONE_VALUES
-      );
+      assertValueOrMissing(object, 'matureHeight', Crop.MATURE_HEIGHT_VALUES);
+      assertValueOrMissing(object, 'matureWidth', Crop.MATURE_WIDTH_VALUES);
+      assertValueOrMissing(object, 'flowerType', Crop.FLOWER_TYPE_VALUES);
+      assertValueOrMissing(object, 'pollinators', Crop.POLLINATORS_VALUES);
+      assertValueOrMissing(object, 'functions', Crop.FUNCTIONS_VALUES);
+      assertValueOrMissing(object, 'growFrom', Crop.GROW_FROM_VALUES);
+      assertValueOrMissing(object, 'cuttingType', Crop.CUTTING_TYPE_VALUES);
+      assertValueOrMissing(object, 'fertility', Crop.FERTILITY_VALUES);
+      assertValueOrMissing(object, 'rootZone', Crop.ROOT_ZONE_VALUES);
       assertValueOrMissing(object, 'family', Crop.FAMILY_VALUES);
       assertValueOrMissing(object, 'genus', Crop.GENUS_VALUES);
 

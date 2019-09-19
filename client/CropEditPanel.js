@@ -156,11 +156,7 @@ class CropEditPanel extends React.Component {
             Crop.SHADE_VALUES,
             initialShade
           ),
-          this.getSingleDropdownElement(
-            'Sun',
-            Crop.SUN_VALUES,
-            initialSun
-          ),
+          this.getSingleDropdownElement('Sun', Crop.SUN_VALUES, initialSun),
           this.getSingleDropdownElement(
             'Water',
             Crop.WATER_VALUES,

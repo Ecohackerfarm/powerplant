@@ -357,8 +357,7 @@ function getFertilityDiversity(crops) {
  */
 function getRootZoneDiversity(crops) {
   return (
-    getNumberOfDifferentValues(crops, 'rootZone') /
-    Crop.ROOT_ZONE_VALUES.length
+    getNumberOfDifferentValues(crops, 'rootZone') / Crop.ROOT_ZONE_VALUES.length
   );
 }
 
