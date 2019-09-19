@@ -150,13 +150,20 @@ function convertToCrop(practicalplantsCrop) {
   copyProperty(practicalplantsCrop, crop, 'grow from', 'growFrom', []);
   copyProperty(practicalplantsCrop, crop, 'cutting type', 'cuttingType', []);
   copyProperty(practicalplantsCrop, crop, 'fertility', 'fertility', []);
-  copyProperty(practicalplantsCrop, crop, 'functions', 'functions', [
-    {
-      practicalplantsValues: ['Biogenic Decalcifier/Pioneer Species'],
-      cropValue: ['biogenic decalcifier', 'pioneer']
-    },
-    { practicalplantsValues: [''], cropValue: [] }
-  ]);
+  copyProperty(
+    practicalplantsCrop,
+    crop,
+    'functions',
+    'functions',
+    [
+      {
+        practicalplantsValues: ['Biogenic Decalcifier/Pioneer Species'],
+        cropValue: ['biogenic decalcifier', 'pioneer']
+      },
+      { practicalplantsValues: [''], cropValue: [] }
+    ],
+    'function'
+  );
   copyProperty(practicalplantsCrop, crop, 'shade', 'shade', []);
   copyProperty(practicalplantsCrop, crop, 'sun', 'sun', []);
   copyProperty(practicalplantsCrop, crop, 'water', 'water', []);
@@ -198,20 +205,21 @@ function convertToCrop(practicalplantsCrop) {
  * @param {String} practicalplantsProperty
  * @param {String} cropProperty
  * @param {Object} conversions
+ * @param {String} elementProperty
  */
 function copyProperty(
   practicalplantsCrop,
   crop,
   practicalplantsProperty,
   cropProperty,
-  conversions
+  conversions,
+  elementProperty
 ) {
   const practicalplantsValue = practicalplantsCrop[practicalplantsProperty];
   const arrayProperty = Crop.ARRAY_PROPERTIES.includes(cropProperty);
 
   /* First check if this property doesn't need conversion. */
-  const emptyValues = [undefined, null, '', '\n'];
-  if (emptyValues.includes(practicalplantsValue)) {
+  if (isUndefined(practicalplantsCrop, practicalplantsProperty)) {
     crop[cropProperty] = arrayProperty ? [] : null;
     return;
   }
@@ -228,8 +236,8 @@ function copyProperty(
   let cropValue;
   if (arrayProperty) {
     let input;
-    if (cropProperty === 'functions' && !Array.isArray(practicalplantsValue)) {
-      input = practicalplantsValue['function'];
+    if (OBJECT_ARRAY_PROPERTIES.includes(practicalplantsProperty)) {
+      input = practicalplantsValue.map(element => element[elementProperty]);
     } else {
       input = practicalplantsValue;
     }
@@ -279,6 +287,15 @@ function convertToCropValue(conversions, practicalplantsValue, cropProperty) {
   return Crop.NAME_PROPERTIES.includes(cropProperty)
     ? practicalplantsValue
     : practicalplantsValue.toLowerCase();
+}
+
+/**
+ * @param {PracticalplantsCrop} crop
+ * @param {String} property
+ * @return {Boolean}
+ */
+function isUndefined(crop, property) {
+  return [undefined, null, '', '\n'].includes(crop[property]);
 }
 
 /**
@@ -456,6 +473,10 @@ const PROPERTIES = [
  * array coded in CSV-format. This variable includes both types of arrays.
  */
 const ARRAY_PROPERTIES = [
+  'edible part and use',
+  'medicinal part and use',
+  'material part and use',
+  'toxic parts',
   'soil texture',
   'soil ph',
   'soil water retention',
@@ -477,6 +498,24 @@ const ARRAY_PROPERTIES = [
   'environmental references',
   'native range',
   'functions as'
+];
+
+/**
+ * Properties that are arrays of objects, this doesn't include properties
+ * that are CSV-encoded arrays of strings.
+ */
+const OBJECT_ARRAY_PROPERTIES = [
+  'edible part and use',
+  'medicinal part and use',
+  'material part and use',
+  'toxic parts',
+  'functions',
+  'shelter',
+  'forage',
+  'crops',
+  'subspecies',
+  'cultivar groups',
+  'ungrouped cultivars'
 ];
 
 /*
@@ -2706,10 +2745,12 @@ module.exports = {
   convertToCrops,
   convertToCrop,
 
+  isUndefined,
   getAsArray,
 
   PROPERTIES,
   ARRAY_PROPERTIES,
+  OBJECT_ARRAY_PROPERTIES,
 
   BOOLEAN_VALUES,
   HARDINESS_ZONE_VALUES,

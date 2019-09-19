@@ -324,6 +324,28 @@ describe('practicalplants.json', () => {
     assertPropertyIsArrayOrString(practicalplantsCrops, 'ungrouped cultivars');
   });
 
+  it.skip('for debugging, output a modified and filtered version of the PracticalplantsCrop dataset', () => {
+    /* stderr has less noise than stdout */
+    console.error('module.exports = [');
+    practicalplantsCrops
+      .map(crop => {
+        PracticalplantsCrop.OBJECT_ARRAY_PROPERTIES.forEach(property => {
+          if (!PracticalplantsCrop.isUndefined(crop, property)) {
+            crop[property] = [crop[property]];
+          }
+        });
+        return crop;
+      })
+      .filter(crop => {
+        return true;
+      })
+      .forEach(crop => {
+        console.error(crop);
+        console.error(',');
+      });
+    console.error('];');
+  });
+
   it('set of crops that have salinity is analyzed', () => {
     const expectedCropsThatHaveSalinity = [
       'Acacia farnesiana', // Sweet Acacia
@@ -614,12 +636,6 @@ describe('practicalplants.json', () => {
       updateMissingCount(missingCounts, object, 'wind');
       updateMissingCount(missingCounts, object, 'maritime');
       updateMissingCount(missingCounts, object, 'pollution');
-      updateMissingCount(
-        missingCounts,
-        object,
-        'functions',
-        PracticalplantsCrop.FUNCTIONS_VALUES
-      );
       updateMissingCount(missingCounts, object, 'grow from');
       updateMissingCount(missingCounts, object, 'cutting type');
       updateMissingCount(missingCounts, object, 'fertility');
@@ -653,7 +669,6 @@ describe('practicalplants.json', () => {
     assert.equal(missingCounts['wind'], 6237);
     assert.equal(missingCounts['maritime'], 6767);
     assert.equal(missingCounts['pollution'], 7257);
-    assert.equal(missingCounts['functions'], 6964);
     assert.equal(missingCounts['grow from'], 7354);
     assert.equal(missingCounts['cutting type'], 7385);
     assert.equal(missingCounts['fertility'], 5337);
@@ -719,7 +734,6 @@ describe('practicalplants.json', () => {
       assertValueOrMissing(object, 'matureWidth', Crop.MATURE_WIDTH_VALUES);
       assertValueOrMissing(object, 'flowerType', Crop.FLOWER_TYPE_VALUES);
       assertValueOrMissing(object, 'pollinators', Crop.POLLINATORS_VALUES);
-      assertValueOrMissing(object, 'functions', Crop.FUNCTIONS_VALUES);
       assertValueOrMissing(object, 'growFrom', Crop.GROW_FROM_VALUES);
       assertValueOrMissing(object, 'cuttingType', Crop.CUTTING_TYPE_VALUES);
       assertValueOrMissing(object, 'fertility', Crop.FERTILITY_VALUES);
