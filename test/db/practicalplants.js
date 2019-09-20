@@ -90,6 +90,23 @@ describe('practicalplants.json', () => {
   }
 
   /**
+   * @param {PracticalplantsCrop[]} crops
+   * @param {String} property
+   * @param {String[]} expectedSet
+   */
+  function assertObjectArrayElementPropertySet(crops, property, expectedSet) {
+    const properties = new Set();
+    crops.forEach(crop => {
+      if (!PracticalplantsCrop.isUndefined(crop, property)) {
+        crop[property].forEach(element => {
+          utils.addAllToSet(properties, Object.keys(element));
+        });
+      }
+    });
+    assertSetAndArrayEqual(properties, expectedSet);
+  }
+
+  /**
    * @param {Object} setObject
    * @param {Object[]} array
    */
@@ -317,6 +334,68 @@ describe('practicalplants.json', () => {
         }
       });
     });
+  });
+
+  it('sets of properties of object array elements', () => {
+    assertObjectArrayElementPropertySet(
+      practicalplantsCrops,
+      'edible part and use',
+      ['part used', 'preparation', 'part used for', 'part use details']
+    );
+    assertObjectArrayElementPropertySet(
+      practicalplantsCrops,
+      'medicinal part and use',
+      ['part used', 'preparation', 'part used for', 'part use details']
+    );
+    assertObjectArrayElementPropertySet(
+      practicalplantsCrops,
+      'material part and use',
+      ['part used', 'preparation', 'part used for', 'part use details']
+    );
+    assertObjectArrayElementPropertySet(practicalplantsCrops, 'toxic parts', [
+      'part',
+      'level',
+      'details',
+      'compounds'
+    ]);
+    assertObjectArrayElementPropertySet(practicalplantsCrops, 'functions', [
+      'function',
+      'details'
+    ]);
+    assertObjectArrayElementPropertySet(practicalplantsCrops, 'shelter', [
+      'shelter',
+      'details'
+    ]);
+    assertObjectArrayElementPropertySet(practicalplantsCrops, 'forage', [
+      'forage',
+      'details'
+    ]);
+    assertObjectArrayElementPropertySet(practicalplantsCrops, 'crops', [
+      'part of plant',
+      'harvest',
+      'requires processing',
+      'processing',
+      'is storable',
+      'storage'
+    ]);
+    assertObjectArrayElementPropertySet(practicalplantsCrops, 'subspecies', [
+      'rank',
+      'name',
+      'synonyms',
+      'common names',
+      'cultivar group',
+      'details'
+    ]);
+    assertObjectArrayElementPropertySet(
+      practicalplantsCrops,
+      'cultivar groups',
+      ['name', 'common names', 'details']
+    );
+    assertObjectArrayElementPropertySet(
+      practicalplantsCrops,
+      'ungrouped cultivars',
+      ['name', 'description']
+    );
   });
 
   it.skip('for debugging, output a modified and filtered version of the PracticalplantsCrop dataset', () => {
