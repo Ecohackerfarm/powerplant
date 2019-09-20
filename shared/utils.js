@@ -6,6 +6,56 @@
 const secrets = require('../secrets.js');
 
 /**
+ * TODO Is there an easier native way to do this?
+ * TODO Note that a cycle results in infinite recursion.
+ * TODO Make output pretty.
+ *
+ * @param {Object} object
+ * @return {String}
+ */
+function convertObjectToString(object) {
+  let string = '{';
+  for (let property in object) {
+    string +=
+      "'" + property + "':" + convertValueToString(object[property]) + ',\n';
+  }
+  string += '}';
+  return string;
+}
+
+/**
+ * @param {Object} value
+ * @return {String}
+ */
+function convertValueToString(value) {
+  let string = '';
+  if (value === null || value === undefined) {
+    string += '' + value;
+  } else if (Array.isArray(value)) {
+    string += '[';
+    value.forEach(element => {
+      string += convertValueToString(element);
+      string += ',';
+    });
+    string += ']';
+  } else if (typeof value === 'object') {
+    string += convertObjectToString(value);
+  } else if (typeof value === 'string') {
+    string +=
+      "'" +
+      value
+        .split("'")
+        .join("\\'")
+        .split('\n')
+        .join('\\n') +
+      "'";
+  } else {
+    string += '' + value;
+  }
+  return string;
+}
+
+/**
  * @param {Set} set0
  * @param {Set} set1
  */
@@ -69,6 +119,7 @@ function getHttpServerUrl() {
 }
 
 module.exports = {
+  convertObjectToString,
   areSetsEqual,
   addAllToSet,
   toCamelCase,

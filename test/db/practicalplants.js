@@ -123,11 +123,17 @@ describe('practicalplants.json', () => {
     assert.isTrue(PracticalplantsCrop.PROPERTIES.includes(property));
     assert.isTrue(PracticalplantsCrop.ARRAY_PROPERTIES.includes(property));
     crops.forEach(crop => {
-      const value = crop[property];
-      if (value) {
-        assert.isTrue(typeof value === 'string' || Array.isArray(value));
-      }
+      assertValueIsArrayOrString(crop[property]);
     });
+  }
+
+  /**
+   * @param {Object} value
+   */
+  function assertValueIsArrayOrString(value) {
+    if (value) {
+      assert.isTrue(typeof value === 'string' || Array.isArray(value));
+    }
   }
 
   let practicalplantsCrops;
@@ -299,6 +305,20 @@ describe('practicalplants.json', () => {
     assertPropertyIsString(practicalplantsCrops, '');
   });
 
+  it('object array element properties are always strings', () => {
+    practicalplantsCrops.forEach(crop => {
+      PracticalplantsCrop.OBJECT_ARRAY_PROPERTIES.forEach(property => {
+        if (!PracticalplantsCrop.isUndefined(crop, property)) {
+          crop[property].forEach(element =>
+            Object.keys(element).forEach(elementProperty => {
+              assertValueIsArrayOrString(element[elementProperty]);
+            })
+          );
+        }
+      });
+    });
+  });
+
   it.skip('for debugging, output a modified and filtered version of the PracticalplantsCrop dataset', () => {
     /* stderr has less noise than stdout */
     console.error('module.exports = [');
@@ -315,7 +335,7 @@ describe('practicalplants.json', () => {
         return true;
       })
       .forEach(crop => {
-        console.error(crop);
+        console.error(utils.convertObjectToString(crop));
         console.error(',');
       });
     console.error('];');
