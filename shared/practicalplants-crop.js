@@ -463,8 +463,7 @@ const PROPERTIES = [
   'graft details',
   'bulb details',
   'subspecific epithet',
-  'cultivar notes',
-  ''
+  'cultivar notes'
 ];
 
 /**

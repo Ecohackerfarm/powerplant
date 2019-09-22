@@ -319,7 +319,6 @@ describe('practicalplants.json', () => {
     assertPropertyIsString(practicalplantsCrops, 'bulb details');
     assertPropertyIsString(practicalplantsCrops, 'subspecific epithet');
     assertPropertyIsString(practicalplantsCrops, 'cultivar notes');
-    assertPropertyIsString(practicalplantsCrops, '');
   });
 
   it('object array element properties are always strings', () => {
