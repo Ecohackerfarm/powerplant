@@ -1,3 +1,8 @@
+/**
+ *
+ * @namespace shared
+ */
+
 require('dotenv').config();
 
 const DarkSky = require('dark-sky');
@@ -8,7 +13,12 @@ const googleMapsClient = require('@google/maps').createClient({
   Promise: Promise
 });
 
-async function getWeatherWarnings(location) {
+/**
+ *
+ * @param {Object} location Longitude and latitude
+ * @return {Array} All frost and rain warnings for a given location
+ */
+async function getFrostAndRainWarnings(location) {
   try {
     if (!location) {
       throw new Error('must specify location');
@@ -20,7 +30,7 @@ async function getWeatherWarnings(location) {
           throw new Error('coordinates cannot be empty');
         }
       } else {
-        throw new Error('location is not an address or set of coordinates');
+        throw new Error('location is not an address or a coordinate');
       }
     }
 
@@ -32,46 +42,66 @@ async function getWeatherWarnings(location) {
     return data.alerts.filter(alert => {
       return (
         alert.severity.search(/warning/i) > -1 &&
-        alert.title.search(/frost|freeze|flood|thunder/i) > -1
+        alert.title.search(/frost|freeze|rain|flood|thunder/i) > -1
       );
     });
   } catch (error) {
-    console.error(error.stack);
+    throw new Error(error);
   }
 }
 
+/**
+ *
+ * @param {String} address
+ * @return {Object} Longitude and latitude of the address
+ */
 async function getCoordinates(address) {
-  if (typeof address !== 'string') {
-    throw new Error('address must be a string');
-  }
+  try {
+    if (typeof address !== 'string') {
+      throw new Error('address must be a string');
+    }
 
-  if (address === '') {
-    throw new Error('address cannot be empty');
-  }
+    if (address === '') {
+      throw new Error('address cannot be empty');
+    }
 
-  const data = await googleMapsClient.geocode({ address: address }).asPromise();
-  return data.json.results[0].geometry.location;
+    const data = await googleMapsClient
+      .geocode({ address: address })
+      .asPromise();
+    return data.json.results[0].geometry.location;
+  } catch (error) {
+    throw new Error(error);
+  }
 }
 
+/**
+ *
+ * @param {Array} locationArray Array with longitude and latitude
+ * @return {String} Address of given location
+ */
 async function getAddress(locationArray) {
-  if (!Array.isArray(locationArray)) {
-    throw new Error('location must be array');
-  }
+  try {
+    if (!Array.isArray(locationArray)) {
+      throw new Error('location must be array');
+    }
 
-  if (locationArray.length < 2) {
-    throw new Error('array must have 2 elements');
-  }
+    if (locationArray.length < 2) {
+      throw new Error('array must have 2 elements');
+    }
 
-  if (!locationArray.every(elem => typeof elem === 'number')) {
-    throw new Error('location array has non-numeric element');
-  }
+    if (!locationArray.every(elem => typeof elem === 'number')) {
+      throw new Error('location array has non-numeric element');
+    }
 
-  const data = await googleMapsClient
-    .reverseGeocode({ coordinates: locationArray })
-    .asPromise();
-  return data.json.results[0].formatted_address;
+    const data = await googleMapsClient
+      .reverseGeocode({ coordinates: locationArray })
+      .asPromise();
+    return data.json.results[0].formatted_address;
+  } catch (error) {
+    throw new Error(error);
+  }
 }
 
 module.exports = {
-  getWeatherWarnings
+  getFrostAndRainWarnings
 };
