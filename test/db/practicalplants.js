@@ -153,6 +153,21 @@ describe('practicalplants.json', () => {
     }
   }
 
+  /**
+   * @param {PracticalplantsCrop[]} crops
+   * @param {String} property
+   * @return {Set} Set of binomial names.
+   */
+  function getCropsThatHaveProperty(crops, property) {
+    const subset = new Set();
+    crops.forEach(crop => {
+      if (!PracticalplantsCrop.isUndefined(crop, property)) {
+        subset.add(crop.binomial);
+      }
+    });
+    return subset;
+  }
+
   let practicalplantsCrops;
   let crops;
 
@@ -658,23 +673,11 @@ describe('practicalplants.json', () => {
       'Zannichellia palustris', // Horned Pondweed
       'Zostera marina' // Eel Grass
     ];
-
-    const actualCropsThatHaveSalinity = [];
-    practicalplantsCrops.forEach(crop => {
-      if (crop.salinity) {
-        actualCropsThatHaveSalinity.push(crop);
-      }
-    });
-
-    assert.equal(expectedCropsThatHaveSalinity.length, 236);
-    assert.equal(
-      actualCropsThatHaveSalinity.length,
-      expectedCropsThatHaveSalinity.length
+    assertSetAndArrayEqual(
+      getCropsThatHaveProperty(practicalplantsCrops, 'salinity'),
+      expectedCropsThatHaveSalinity
     );
-
-    actualCropsThatHaveSalinity.forEach(crop => {
-      assert.equal(expectedCropsThatHaveSalinity.includes(crop.binomial), true);
-    });
+    assert.equal(expectedCropsThatHaveSalinity.length, 236);
   });
 
   it('missing counts', () => {
