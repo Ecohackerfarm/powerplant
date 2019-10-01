@@ -143,10 +143,11 @@ describe('practicalplants.json', () => {
    * @param {Number} count
    */
   function assertNumberOfCropsThatHaveProperty(property, count) {
-    assert.isTrue(PracticalplantsCrop.PROPERTIES.includes(property));
+    assert.isTrue(PracticalplantsCrop.PROPERTIES.includes(property), property);
     assert.equal(
       getCropsThatHaveProperty(practicalplantsCrops, property).size,
-      count
+      count,
+      property
     );
   }
 
@@ -694,13 +695,134 @@ describe('practicalplants.json', () => {
 
   it('number of crops that have property', () => {
     /*
-     * TODO Assert counts for every property.
+     * TODO What are these properties that are used in 0 crops?
      */
     assertNumberOfCropsThatHaveProperty('append to article summary', 22);
     assertNumberOfCropsThatHaveProperty('article summary', 0);
     assertNumberOfCropsThatHaveProperty('primary image', 2889);
     assertNumberOfCropsThatHaveProperty('binomial', 7414);
+    assertNumberOfCropsThatHaveProperty('genus', 7408);
+    assertNumberOfCropsThatHaveProperty('family', 7409);
+    assertNumberOfCropsThatHaveProperty('life cycle', 6662);
+    assertNumberOfCropsThatHaveProperty('herbaceous or woody', 3066);
+    assertNumberOfCropsThatHaveProperty('deciduous or evergreen', 3402);
+    assertNumberOfCropsThatHaveProperty('flower type', 7287);
+    assertNumberOfCropsThatHaveProperty('growth rate', 1238);
+    assertNumberOfCropsThatHaveProperty('mature height', 6409);
+    assertNumberOfCropsThatHaveProperty('mature width', 2517);
+    assertNumberOfCropsThatHaveProperty('sun', 7134);
+    assertNumberOfCropsThatHaveProperty('shade', 7412);
+    assertNumberOfCropsThatHaveProperty('hardiness zone', 4881);
+    assertNumberOfCropsThatHaveProperty('water', 7413);
+    assertNumberOfCropsThatHaveProperty('drought', 7412);
+    assertNumberOfCropsThatHaveProperty('soil texture', 7411);
+    assertNumberOfCropsThatHaveProperty('soil ph', 7412);
+    assertNumberOfCropsThatHaveProperty('wind', 1177);
+    assertNumberOfCropsThatHaveProperty('maritime', 647);
+    assertNumberOfCropsThatHaveProperty('pollution', 157);
+    assertNumberOfCropsThatHaveProperty('poornutrition', 7408);
+    assertNumberOfCropsThatHaveProperty('edible part and use', 5764);
+    assertNumberOfCropsThatHaveProperty('material use notes', 95);
+    assertNumberOfCropsThatHaveProperty('PFAF material use notes', 3777);
+    assertNumberOfCropsThatHaveProperty('material part and use', 3227);
+    assertNumberOfCropsThatHaveProperty('medicinal part and use', 3720);
+    assertNumberOfCropsThatHaveProperty('toxic parts', 15);
+    assertNumberOfCropsThatHaveProperty('functions', 452);
+    assertNumberOfCropsThatHaveProperty('shelter', 2);
+    assertNumberOfCropsThatHaveProperty('forage', 12);
+    assertNumberOfCropsThatHaveProperty('propagation notes', 1);
+    assertNumberOfCropsThatHaveProperty('PFAF propagation notes', 7132);
+    assertNumberOfCropsThatHaveProperty('seed requires stratification', 156);
+    assertNumberOfCropsThatHaveProperty('seed dormancy depth', 6);
+    assertNumberOfCropsThatHaveProperty('seed requires scarification', 156);
+    assertNumberOfCropsThatHaveProperty('seed requires smokification', 156);
+    assertNumberOfCropsThatHaveProperty('rootstocks', 0);
+    assertNumberOfCropsThatHaveProperty('cultivation notes', 0);
+    assertNumberOfCropsThatHaveProperty('PFAF cultivation notes', 7253);
+    assertNumberOfCropsThatHaveProperty('crops', 12);
+    assertNumberOfCropsThatHaveProperty('interactions', 0);
+    assertNumberOfCropsThatHaveProperty('botanical references', 626);
+    assertNumberOfCropsThatHaveProperty('material uses references', 0);
+    assertNumberOfCropsThatHaveProperty('range', 7382);
+    assertNumberOfCropsThatHaveProperty('habitat', 7392);
+    assertNumberOfCropsThatHaveProperty('enabled', 7329);
+    assertNumberOfCropsThatHaveProperty('title irregular', 7392);
+    assertNumberOfCropsThatHaveProperty('common', 4531);
+    assertNumberOfCropsThatHaveProperty('soil water retention', 4418);
+    assertNumberOfCropsThatHaveProperty('medicinal use notes', 115);
+    assertNumberOfCropsThatHaveProperty('toxicity notes', 103);
+    assertNumberOfCropsThatHaveProperty('grow from', 61);
+    assertNumberOfCropsThatHaveProperty('germination details', 39);
+    assertNumberOfCropsThatHaveProperty('cultivation', 138);
+    assertNumberOfCropsThatHaveProperty('edible uses references', 0);
+    assertNumberOfCropsThatHaveProperty('medicinal uses references', 0);
+    assertNumberOfCropsThatHaveProperty('mature measurement unit', 7275);
+    assertNumberOfCropsThatHaveProperty('pollinators', 5538);
+    assertNumberOfCropsThatHaveProperty('edible use notes', 113);
+    assertNumberOfCropsThatHaveProperty('PFAF edible use notes', 5738);
+    assertNumberOfCropsThatHaveProperty('PFAF medicinal use notes', 3983);
+    assertNumberOfCropsThatHaveProperty('override summary', 37);
+    assertNumberOfCropsThatHaveProperty('ecosystem niche', 1717);
+    assertNumberOfCropsThatHaveProperty('problems', 2);
+    assertNumberOfCropsThatHaveProperty('PFAF toxicity notes', 2353);
+    assertNumberOfCropsThatHaveProperty('infraspecific epithet', 0);
+    assertNumberOfCropsThatHaveProperty('cultivar of groups', 0);
+    assertNumberOfCropsThatHaveProperty('cultivar epithet', 0);
+    assertNumberOfCropsThatHaveProperty('cultivar group epithet', 0);
+    assertNumberOfCropsThatHaveProperty('life references', 10);
+    assertNumberOfCropsThatHaveProperty('subspecies', 2);
+    assertNumberOfCropsThatHaveProperty('cultivar groups', 1);
+    assertNumberOfCropsThatHaveProperty('cutting type', 25);
+    assertNumberOfCropsThatHaveProperty('cutting details', 23);
+    assertNumberOfCropsThatHaveProperty('problem notes', 10);
     assertNumberOfCropsThatHaveProperty('salinity', 236);
+    assertNumberOfCropsThatHaveProperty('fertility', 2079);
+    assertNumberOfCropsThatHaveProperty('propagation', 131);
+    assertNumberOfCropsThatHaveProperty('common use description', 45);
+    assertNumberOfCropsThatHaveProperty('flower colour', 47);
+    assertNumberOfCropsThatHaveProperty('common habit description', 45);
+    assertNumberOfCropsThatHaveProperty('ungrouped cultivars', 1);
+    assertNumberOfCropsThatHaveProperty('functions notes', 16);
+    assertNumberOfCropsThatHaveProperty('botanical description', 27);
+    assertNumberOfCropsThatHaveProperty('crop notes', 7);
+    assertNumberOfCropsThatHaveProperty('classification references', 5);
+    assertNumberOfCropsThatHaveProperty('environmental references', 7);
+    assertNumberOfCropsThatHaveProperty('native range', 24);
+    assertNumberOfCropsThatHaveProperty('native environment', 16);
+    assertNumberOfCropsThatHaveProperty('ecosystems references', 9);
+    assertNumberOfCropsThatHaveProperty('uses intro', 3);
+    assertNumberOfCropsThatHaveProperty('seed saving details', 6);
+    assertNumberOfCropsThatHaveProperty('root zone', 11);
+    assertNumberOfCropsThatHaveProperty('taxonomic rank', 18);
+    assertNumberOfCropsThatHaveProperty('functions as', 26);
+    assertNumberOfCropsThatHaveProperty('shelter notes', 4);
+    assertNumberOfCropsThatHaveProperty('forage notes', 3);
+    assertNumberOfCropsThatHaveProperty('material uses', 2);
+    assertNumberOfCropsThatHaveProperty('heat zone', 4);
+    assertNumberOfCropsThatHaveProperty('bulb type', 1);
+    assertNumberOfCropsThatHaveProperty('graft rootstock', 2);
+    assertNumberOfCropsThatHaveProperty('edible parts', 2);
+    assertNumberOfCropsThatHaveProperty('edible uses', 3);
+    assertNumberOfCropsThatHaveProperty('show cultivar group', 7);
+    assertNumberOfCropsThatHaveProperty('cultivar group', 2);
+    assertNumberOfCropsThatHaveProperty('is a variety', 7);
+    assertNumberOfCropsThatHaveProperty('variety type', 1);
+    assertNumberOfCropsThatHaveProperty('cultivar name', 1);
+    assertNumberOfCropsThatHaveProperty('is a variety', 7);
+    assertNumberOfCropsThatHaveProperty('variety type', 1);
+    assertNumberOfCropsThatHaveProperty('cultivar name', 1);
+    assertNumberOfCropsThatHaveProperty('cultivar of', 1);
+    assertNumberOfCropsThatHaveProperty('variety name', 0);
+    assertNumberOfCropsThatHaveProperty('variety of', 0);
+    assertNumberOfCropsThatHaveProperty('subspecies name', 0);
+    assertNumberOfCropsThatHaveProperty('subspecies of', 0);
+    assertNumberOfCropsThatHaveProperty('summary', 0);
+    assertNumberOfCropsThatHaveProperty('cultivar group of', 1);
+    assertNumberOfCropsThatHaveProperty('seed stratification instructions', 0);
+    assertNumberOfCropsThatHaveProperty('graft details', 1);
+    assertNumberOfCropsThatHaveProperty('bulb details', 1);
+    assertNumberOfCropsThatHaveProperty('subspecific epithet', 2);
+    assertNumberOfCropsThatHaveProperty('cultivar notes', 1);
   }).timeout(0);
 
   it('normalized data passes integrity checks', () => {
