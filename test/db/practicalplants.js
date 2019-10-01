@@ -182,7 +182,7 @@ describe('practicalplants.json', () => {
   });
 
   it('number of crops', () => {
-    assert.equal(practicalplantsCrops.length, 7416);
+    assert.equal(practicalplantsCrops.length, 7414);
   });
 
   it('property binomial is unique', () => {
@@ -696,15 +696,15 @@ describe('practicalplants.json', () => {
     /*
      * TODO Assert counts for every property.
      */
-    assertNumberOfCropsThatHaveProperty('append to article summary', 21);
+    assertNumberOfCropsThatHaveProperty('append to article summary', 22);
     assertNumberOfCropsThatHaveProperty('article summary', 0);
-    assertNumberOfCropsThatHaveProperty('primary image', 2888);
-    assertNumberOfCropsThatHaveProperty('binomial', 7416);
+    assertNumberOfCropsThatHaveProperty('primary image', 2889);
+    assertNumberOfCropsThatHaveProperty('binomial', 7414);
     assertNumberOfCropsThatHaveProperty('salinity', 236);
   }).timeout(0);
 
   it('normalized data passes integrity checks', () => {
-    assert.equal(crops.length, 7416);
+    assert.equal(crops.length, 7414);
 
     crops.forEach(object => {
       assert.isNotNull(object);
