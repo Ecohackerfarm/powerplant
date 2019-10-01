@@ -4,21 +4,6 @@ const Crop = require('../../shared/crop.js');
 const utils = require('../../shared/utils.js');
 
 describe('practicalplants.json', () => {
-  function updateMissingCount(missingCounts, object, property, allowedValues) {
-    if (
-      !(property in object) ||
-      (isFunctionsPropertyOfUnnormalizedObject(property, allowedValues) &&
-        object[property]['function'] === undefined)
-    ) {
-      if (!(property in missingCounts)) {
-        missingCounts[property] = 0;
-      }
-      missingCounts[property]++;
-      return false;
-    }
-    return true;
-  }
-
   function assertValueOrMissing(object, property, allowedValues) {
     const value = object[property];
     if (!(value === null || (Array.isArray(value) && value.length === 0))) {
@@ -154,6 +139,18 @@ describe('practicalplants.json', () => {
   }
 
   /**
+   * @param {String} property
+   * @param {Number} count
+   */
+  function assertNumberOfCropsThatHaveProperty(property, count) {
+    assert.isTrue(PracticalplantsCrop.PROPERTIES.includes(property));
+    assert.equal(
+      getCropsThatHaveProperty(practicalplantsCrops, property).size,
+      count
+    );
+  }
+
+  /**
    * @param {PracticalplantsCrop[]} crops
    * @param {String} property
    * @return {Set} Set of binomial names.
@@ -186,6 +183,21 @@ describe('practicalplants.json', () => {
 
   it('number of crops', () => {
     assert.equal(practicalplantsCrops.length, 7416);
+  });
+
+  it('property binomial is unique', () => {
+    const values = new Set();
+    const duplicates = [];
+    practicalplantsCrops.forEach(crop => {
+      assert.isTrue(!PracticalplantsCrop.isUndefined(crop, 'binomial'));
+      const binomial = crop.binomial;
+      if (values.has(binomial)) {
+        duplicates.push(binomial);
+      } else {
+        values.add(binomial);
+      }
+    });
+    assert.equal(duplicates.length, 0, duplicates);
   });
 
   it('set of properties', () => {
@@ -680,78 +692,15 @@ describe('practicalplants.json', () => {
     assert.equal(expectedCropsThatHaveSalinity.length, 236);
   });
 
-  it('missing counts', () => {
+  it('number of crops that have property', () => {
     /*
-     * TODO Assert counts instead of missing counts.
      * TODO Assert counts for every property.
      */
-    let missingCounts = {};
-
-    practicalplantsCrops.forEach(object => {
-      updateMissingCount(missingCounts, object, 'common');
-      updateMissingCount(missingCounts, object, 'binomial');
-      updateMissingCount(missingCounts, object, 'hardiness zone');
-      updateMissingCount(missingCounts, object, 'soil texture');
-      updateMissingCount(missingCounts, object, 'soil ph');
-      updateMissingCount(missingCounts, object, 'soil water retention');
-      updateMissingCount(missingCounts, object, 'shade');
-      updateMissingCount(missingCounts, object, 'sun');
-      updateMissingCount(missingCounts, object, 'water');
-      updateMissingCount(missingCounts, object, 'drought');
-      updateMissingCount(missingCounts, object, 'poornutrition');
-      updateMissingCount(missingCounts, object, 'ecosystem niche');
-      updateMissingCount(missingCounts, object, 'life cycle');
-      updateMissingCount(missingCounts, object, 'herbaceous or woody');
-      updateMissingCount(missingCounts, object, 'deciduous or evergreen');
-      updateMissingCount(missingCounts, object, 'growth rate');
-      updateMissingCount(missingCounts, object, 'mature measurement unit');
-      updateMissingCount(missingCounts, object, 'mature height');
-      updateMissingCount(missingCounts, object, 'mature width');
-      updateMissingCount(missingCounts, object, 'flower type');
-      updateMissingCount(missingCounts, object, 'pollinators');
-      updateMissingCount(missingCounts, object, 'wind');
-      updateMissingCount(missingCounts, object, 'maritime');
-      updateMissingCount(missingCounts, object, 'pollution');
-      updateMissingCount(missingCounts, object, 'grow from');
-      updateMissingCount(missingCounts, object, 'cutting type');
-      updateMissingCount(missingCounts, object, 'fertility');
-      updateMissingCount(missingCounts, object, 'root zone');
-      updateMissingCount(missingCounts, object, 'family');
-      updateMissingCount(missingCounts, object, 'genus');
-      updateMissingCount(missingCounts, object, 'salinity');
-    });
-
-    assert.equal(missingCounts['common'], 2884);
-    assert.equal(missingCounts['binomial'], undefined);
-    assert.equal(missingCounts['hardiness zone'], 2534);
-    assert.equal(missingCounts['soil texture'], 3);
-    assert.equal(missingCounts['soil ph'], 2);
-    assert.equal(missingCounts['soil water retention'], 2997);
-    assert.equal(missingCounts['shade'], 2);
-    assert.equal(missingCounts['sun'], 280);
-    assert.equal(missingCounts['water'], 1);
-    assert.equal(missingCounts['drought'], 2);
-    assert.equal(missingCounts['poornutrition'], 6);
-    assert.equal(missingCounts['ecosystem niche'], 5699);
-    assert.equal(missingCounts['life cycle'], 752);
-    assert.equal(missingCounts['herbaceous or woody'], 4306);
-    assert.equal(missingCounts['deciduous or evergreen'], 3924);
-    assert.equal(missingCounts['growth rate'], 6177);
-    assert.equal(missingCounts['mature measurement unit'], 141);
-    assert.equal(missingCounts['mature height'], 1005);
-    assert.equal(missingCounts['mature width'], 4898);
-    assert.equal(missingCounts['flower type'], 127);
-    assert.equal(missingCounts['pollinators'], 1878);
-    assert.equal(missingCounts['wind'], 6237);
-    assert.equal(missingCounts['maritime'], 6767);
-    assert.equal(missingCounts['pollution'], 7257);
-    assert.equal(missingCounts['grow from'], 7354);
-    assert.equal(missingCounts['cutting type'], 7385);
-    assert.equal(missingCounts['fertility'], 5337);
-    assert.equal(missingCounts['root zone'], 7405);
-    assert.equal(missingCounts['family'], 5);
-    assert.equal(missingCounts['genus'], 6);
-    assert.equal(missingCounts['salinity'], 7180);
+    assertNumberOfCropsThatHaveProperty('append to article summary', 21);
+    assertNumberOfCropsThatHaveProperty('article summary', 0);
+    assertNumberOfCropsThatHaveProperty('primary image', 2888);
+    assertNumberOfCropsThatHaveProperty('binomial', 7416);
+    assertNumberOfCropsThatHaveProperty('salinity', 236);
   }).timeout(0);
 
   it('normalized data passes integrity checks', () => {
