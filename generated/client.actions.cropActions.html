@@ -1,0 +1,652 @@
+<!DOCTYPE html>
+
+<html lang="en">
+<head>
+	<meta charset="utf-8">
+	<meta name="viewport" content="width=device-width">
+	<title>powerplant Namespace: cropActions</title>
+
+	<!--[if lt IE 9]>
+	<script src="//html5shiv.googlecode.com/svn/trunk/html5.js"></script>
+	<![endif]-->
+	<link type="text/css" rel="stylesheet" href="styles/sunlight.default.css">
+
+	<link type="text/css" rel="stylesheet" href="styles/site.flatly.css">
+
+</head>
+
+<body>
+
+<div class="navbar navbar-default navbar-fixed-top ">
+<div class="container">
+	<div class="navbar-header">
+		<a class="navbar-brand" href="index.html">powerplant</a>
+		<button class="navbar-toggle" type="button" data-toggle="collapse" data-target="#topNavigation">
+			<span class="icon-bar"></span>
+			<span class="icon-bar"></span>
+			<span class="icon-bar"></span>
+        </button>
+	</div>
+	<div class="navbar-collapse collapse" id="topNavigation">
+		<ul class="nav navbar-nav">
+			
+			<li class="dropdown">
+				<a href="namespaces.list.html" class="dropdown-toggle" data-toggle="dropdown">Namespaces<b class="caret"></b></a>
+				<ul class="dropdown-menu ">
+					<li><a href="cli.html">cli</a></li><li><a href="cli.cli.html">cli.cli</a></li><li><a href="client.html">client</a></li><li><a href="client.actions.html">client.actions</a></li><li><a href="client.actions.actionHelpers.html">client.actions.actionHelpers</a></li><li><a href="client.actions.bedActions.html">client.actions.bedActions</a></li><li><a href="client.actions.cropActions.html">client.actions.cropActions</a></li><li><a href="client.actions.headerActions.html">client.actions.headerActions</a></li><li><a href="client.actions.locationActions.html">client.actions.locationActions</a></li><li><a href="client.actions.userActions.html">client.actions.userActions</a></li><li><a href="client.components.html">client.components</a></li><li><a href="client.components.about.html">client.components.about</a></li><li><a href="client.components.about.AboutPage.html">client.components.about.AboutPage</a></li><li><a href="client.components.App.html">client.components.App</a></li><li><a href="client.components.beds.html">client.components.beds</a></li><li><a href="client.components.beds.AddBedForm.html">client.components.beds.AddBedForm</a></li><li><a href="client.components.beds.AddBedsForm.html">client.components.beds.AddBedsForm</a></li><li><a href="client.components.beds.BedItem.html">client.components.beds.BedItem</a></li><li><a href="client.components.beds.BedPage.html">client.components.beds.BedPage</a></li><li><a href="client.components.beds.BedsPage.html">client.components.beds.BedsPage</a></li><li><a href="client.components.beds.EditBedForm.html">client.components.beds.EditBedForm</a></li><li><a href="client.components.crops.html">client.components.crops</a></li><li><a href="client.components.crops.ChooseCrops.html">client.components.crops.ChooseCrops</a></li><li><a href="client.components.crops.CropGroup.html">client.components.crops.CropGroup</a></li><li><a href="client.components.crops.CropGroups.html">client.components.crops.CropGroups</a></li><li><a href="client.components.header.html">client.components.header</a></li><li><a href="client.components.header.Header.html">client.components.header.Header</a></li><li><a href="client.components.header.HeaderBrand.html">client.components.header.HeaderBrand</a></li><li><a href="client.components.header.HeaderLoginNav.html">client.components.header.HeaderLoginNav</a></li><li><a href="client.components.header.HeaderLogoutNav.html">client.components.header.HeaderLogoutNav</a></li><li><a href="client.components.locations.html">client.components.locations</a></li><li><a href="client.components.locations.AddLocationForm.html">client.components.locations.AddLocationForm</a></li><li><a href="client.components.locations.LocationItem.html">client.components.locations.LocationItem</a></li><li><a href="client.components.locations.LocationPage.html">client.components.locations.LocationPage</a></li><li><a href="client.components.locations.LocationsPage.html">client.components.locations.LocationsPage</a></li><li><a href="client.components.login.html">client.components.login</a></li><li><a href="client.components.login.LoginForm.html">client.components.login.LoginForm</a></li><li><a href="client.components.login.LoginPage.html">client.components.login.LoginPage</a></li><li><a href="client.components.Main.html">client.components.Main</a></li><li><a href="client.components.register.html">client.components.register</a></li><li><a href="client.components.register.RegisterForm.html">client.components.register.RegisterForm</a></li><li><a href="client.components.register.RegisterPage.html">client.components.register.RegisterPage</a></li><li><a href="client.components.shared.html">client.components.shared</a></li><li><a href="client.components.shared.CrudableList.html">client.components.shared.CrudableList</a></li><li><a href="client.components.shared.CrudableList.AddItemPage.html">client.components.shared.CrudableList.AddItemPage</a></li><li><a href="client.components.shared.CrudableList.CrudableListPage.html">client.components.shared.CrudableList.CrudableListPage</a></li><li><a href="client.components.shared.CrudableList.CrudableListPage.AddItemForm.html">client.components.shared.CrudableList.CrudableListPage.AddItemForm</a></li><li><a href="client.components.shared.CrudableList.CrudableListPage.ItemListView.html">client.components.shared.CrudableList.CrudableListPage.ItemListView</a></li><li><a href="client.reducers.html">client.reducers</a></li><li><a href="client.reducers.app.html">client.reducers.app</a></li><li><a href="client.reducers.auth.html">client.reducers.auth</a></li><li><a href="client.reducers.crops.html">client.reducers.crops</a></li><li><a href="client.reducers.currLocation.html">client.reducers.currLocation</a></li><li><a href="client.reducers.locations.html">client.reducers.locations</a></li><li><a href="client.reducers.title.html">client.reducers.title</a></li><li><a href="client.styles.html">client.styles</a></li><li><a href="client.utils.html">client.utils</a></li><li><a href="db.companions.html">db.companions</a></li><li><a href="db.practicalplants.html">db.practicalplants</a></li><li><a href="processor.html">processor</a></li><li><a href="server.html">server</a></li><li><a href="server.middleware.html">server.middleware</a></li><li><a href="server.models.html">server.models</a></li><li><a href="server.server.html">server.server</a></li><li><a href="server.utils.html">server.utils</a></li><li><a href="shared.html">shared</a></li><li><a href="shared.api-client.html">shared.api-client</a></li><li><a href="shared.combinations.html">shared.combinations</a></li><li><a href="shared.companionship.html">shared.companionship</a></li>
+				</ul>
+			</li>
+			
+			<li class="dropdown">
+				<a href="classes.list.html" class="dropdown-toggle" data-toggle="dropdown">Classes<b class="caret"></b></a>
+				<ul class="dropdown-menu ">
+					<li><a href="client.AppProvider.html">client.AppProvider</a></li><li><a href="client.components.about.AboutPage.AboutPage.html">client.components.about.AboutPage.AboutPage</a></li><li><a href="client.components.App.App.html">client.components.App.App</a></li><li><a href="client.components.beds.AddBedForm.AddBedForm.html">client.components.beds.AddBedForm.AddBedForm</a></li><li><a href="client.components.beds.AddBedsForm.AddBedForm.html">client.components.beds.AddBedsForm.AddBedForm</a></li><li><a href="client.components.beds.BedItem.BedItem.html">client.components.beds.BedItem.BedItem</a></li><li><a href="client.components.beds.BedPage.BedPage.html">client.components.beds.BedPage.BedPage</a></li><li><a href="client.components.beds.BedsPage.BedsPage.html">client.components.beds.BedsPage.BedsPage</a></li><li><a href="client.components.beds.EditBedForm.EditBedForm.html">client.components.beds.EditBedForm.EditBedForm</a></li><li><a href="client.components.crops.ChooseCrops.ChooseCrops.html">client.components.crops.ChooseCrops.ChooseCrops</a></li><li><a href="client.components.crops.CropGroup.CropGroup.html">client.components.crops.CropGroup.CropGroup</a></li><li><a href="client.components.crops.CropGroups.CropGroups.html">client.components.crops.CropGroups.CropGroups</a></li><li><a href="client.components.header.Header.Header.html">client.components.header.Header.Header</a></li><li><a href="client.components.header.HeaderBrand.HeaderBrand.html">client.components.header.HeaderBrand.HeaderBrand</a></li><li><a href="client.components.header.HeaderLoginNav.HeaderLoginNav.html">client.components.header.HeaderLoginNav.HeaderLoginNav</a></li><li><a href="client.components.header.HeaderLogoutNav.HeaderLogoutNav.html">client.components.header.HeaderLogoutNav.HeaderLogoutNav</a></li><li><a href="client.components.locations.AddLocationForm.AddLocationForm.html">client.components.locations.AddLocationForm.AddLocationForm</a></li><li><a href="client.components.locations.LocationItem.LocationItem.html">client.components.locations.LocationItem.LocationItem</a></li><li><a href="client.components.locations.LocationPage.LocationPage.html">client.components.locations.LocationPage.LocationPage</a></li><li><a href="client.components.locations.LocationsPage.LocationsPage.html">client.components.locations.LocationsPage.LocationsPage</a></li><li><a href="client.components.login.LoginForm.LoginForm.html">client.components.login.LoginForm.LoginForm</a></li><li><a href="client.components.login.LoginPage.Login.html">client.components.login.LoginPage.Login</a></li><li><a href="client.components.Main.Main.html">client.components.Main.Main</a></li><li><a href="client.components.Recover.html">client.components.Recover</a></li><li><a href="client.components.register.RegisterForm.RegisterForm.html">client.components.register.RegisterForm.RegisterForm</a></li><li><a href="client.components.register.RegisterPage.RegisterPage.html">client.components.register.RegisterPage.RegisterPage</a></li><li><a href="client.components.shared.SetHeaderTitle.html">client.components.shared.SetHeaderTitle</a></li><li><a href="client.components.shared.TextFieldGroup.html">client.components.shared.TextFieldGroup</a></li><li><a href="processor.ProcessorException.html">processor.ProcessorException</a></li><li><a href="server.models.Crop.html">server.models.Crop</a></li><li><a href="server.models.CropRelationship.html">server.models.CropRelationship</a></li><li><a href="server.models.Location.html">server.models.Location</a></li><li><a href="server.models.PHRange.html">server.models.PHRange</a></li><li><a href="server.models.User.html">server.models.User</a></li><li><a href="shared.combinations.Combinations.html">shared.combinations.Combinations</a></li>
+				</ul>
+			</li>
+			
+		</ul>
+        
+            <div class="col-sm-3 col-md-3">
+                <form class="navbar-form" role="search">
+                    <div class="input-group">
+                        <input type="text" class="form-control" placeholder="Search" name="q" id="search-input">
+                        <div class="input-group-btn">
+                            <button class="btn btn-default" id="search-submit"><i class="glyphicon glyphicon-search"></i></button>
+                        </div>
+                    </div>
+                </form>
+            </div>
+        
+	</div>
+
+</div>
+</div>
+
+
+<div class="container" id="toc-content">
+<div class="row">
+
+	
+	<div class="col-md-8">
+	
+		<div id="main">
+			
+
+	<h1 class="page-title">Namespace: cropActions</h1>
+<section>
+
+<header>
+    
+        <h2>
+            <span class="ancestors"><a href="client.html">client</a><a href="client.actions.html">.actions</a>.</span>
+        
+        cropActions
+        </h2>
+        
+    
+</header>
+
+
+<article>
+    <div class="container-overview">
+    
+        
+
+        
+<dl class="details">
+    
+
+	
+
+	
+
+	
+
+    
+
+    
+
+    
+
+    
+
+	
+
+	
+
+	
+
+	
+
+	
+
+
+
+	
+
+	
+
+	
+
+	
+</dl>
+
+
+        
+    
+    </div>
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+        <h3 class="subsection-title">Methods</h3>
+
+        <dl>
+            
+<hr>
+<dt>
+    <h4 class="name" id=".fetchCrops"><span class="type-signature">&lt;static> </span>fetchCrops()</h4>
+    
+    
+</dt>
+<dd>
+
+    
+    <div class="description">
+        Fetches crops from server if not existent or old data
+    </div>
+    
+
+    
+
+    
+
+    
+    
+
+    
+<dl class="details">
+    
+
+	
+
+	
+
+	
+
+    
+
+    
+
+    
+
+    
+
+	
+
+	
+
+	
+
+	
+
+	
+
+
+
+	
+
+	
+
+	
+
+	
+</dl>
+
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+    <h5>Returns:</h5>
+    
+            
+<div class="param-desc">
+    function for dispatch
+</div>
+
+
+
+<dl>
+    <dt>
+        Type
+    </dt>
+    <dd>
+        
+<span class="param-type">function</span>
+
+
+
+    </dd>
+</dl>
+
+
+        
+
+    
+</dd>
+
+        
+            
+<hr>
+<dt>
+    <h4 class="name" id=".fetchRelationships"><span class="type-signature">&lt;static> </span>fetchRelationships()</h4>
+    
+    
+</dt>
+<dd>
+
+    
+    <div class="description">
+        Fetches Relationship from server if not existent or old data
+    </div>
+    
+
+    
+
+    
+
+    
+    
+
+    
+<dl class="details">
+    
+
+	
+
+	
+
+	
+
+    
+
+    
+
+    
+
+    
+
+	
+
+	
+
+	
+
+	
+
+	
+
+
+
+	
+
+	
+
+	
+
+	
+</dl>
+
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+    <h5>Returns:</h5>
+    
+            
+<div class="param-desc">
+    function for dispatch
+</div>
+
+
+
+<dl>
+    <dt>
+        Type
+    </dt>
+    <dd>
+        
+<span class="param-type">function</span>
+
+
+
+    </dd>
+</dl>
+
+
+        
+
+    
+</dd>
+
+        
+            
+<hr>
+<dt>
+    <h4 class="name" id=".updateNeeded"><span class="type-signature">&lt;static> </span>updateNeeded(lastUpdated)</h4>
+    
+    
+</dt>
+<dd>
+
+    
+    <div class="description">
+        decides if an update is needed
+TODO: is still dumb and doesn't make decisions
+    </div>
+    
+
+    
+
+    
+
+    
+    
+        <h5>Parameters:</h5>
+        
+
+<table class="params table table-striped">
+    <thead>
+    <tr>
+        
+        <th>Name</th>
+        
+
+        <th>Type</th>
+
+        
+
+        
+
+        <th class="last">Description</th>
+    </tr>
+    </thead>
+
+    <tbody>
+    
+
+        <tr>
+            
+                <td class="name"><code>lastUpdated</code></td>
+            
+
+            <td class="type">
+            
+                
+<span class="param-type">number</span>
+
+
+
+            
+            </td>
+
+            
+
+            
+
+            <td class="description last">millisec from the date of the last update</td>
+        </tr>
+
+    
+    </tbody>
+</table>
+
+    
+
+    
+<dl class="details">
+    
+
+	
+
+	
+
+	
+
+    
+
+    
+
+    
+
+    
+
+	
+
+	
+
+	
+
+	
+
+	
+
+
+
+	
+
+	
+
+	
+
+	
+</dl>
+
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+    <h5>Returns:</h5>
+    
+            
+<div class="param-desc">
+    true if update is neccessary, false if not
+</div>
+
+
+
+<dl>
+    <dt>
+        Type
+    </dt>
+    <dd>
+        
+<span class="param-type">boolean</span>
+
+
+
+    </dd>
+</dl>
+
+
+        
+
+    
+</dd>
+
+        </dl>
+    
+
+    
+
+    
+</article>
+
+</section>
+
+
+
+
+		</div>
+	</div>
+
+	<div class="clearfix"></div>
+
+	
+		<div class="col-md-3">
+			<div id="toc" class="col-md-3 hidden-xs hidden-sm hidden-md"></div>
+		</div>
+	
+
+</div>
+</div>
+
+
+    <div class="modal fade" id="searchResults">
+      <div class="modal-dialog">
+        <div class="modal-content">
+          <div class="modal-header">
+            <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+            <h4 class="modal-title">Search results</h4>
+          </div>
+          <div class="modal-body"></div>
+          <div class="modal-footer">
+            <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+          </div>
+        </div><!-- /.modal-content -->
+      </div><!-- /.modal-dialog -->
+    </div>
+
+
+<footer>
+
+
+<span class="jsdoc-message">
+	Documentation generated by <a href="https://github.com/jsdoc3/jsdoc">JSDoc 3.5.5</a>
+	
+		on Friday, December 28th 2018, 5:05:50 pm
+	
+	using the <a href="https://github.com/docstrap/docstrap">DocStrap template</a>.
+</span>
+</footer>
+
+<script src="scripts/docstrap.lib.js"></script>
+<script src="scripts/toc.js"></script>
+
+    <script type="text/javascript" src="scripts/fulltext-search-ui.js"></script>
+
+
+<script>
+$( function () {
+	$( "[id*='$']" ).each( function () {
+		var $this = $( this );
+
+		$this.attr( "id", $this.attr( "id" ).replace( "$", "__" ) );
+	} );
+
+	$( ".tutorial-section pre, .readme-section pre, pre.prettyprint.source" ).each( function () {
+		var $this = $( this );
+
+		var example = $this.find( "code" );
+		exampleText = example.html();
+		var lang = /{@lang (.*?)}/.exec( exampleText );
+		if ( lang && lang[1] ) {
+			exampleText = exampleText.replace( lang[0], "" );
+			example.html( exampleText );
+			lang = lang[1];
+		} else {
+			var langClassMatch = example.parent()[0].className.match(/lang\-(\S+)/);
+			lang = langClassMatch ? langClassMatch[1] : "javascript";
+		}
+
+		if ( lang ) {
+
+			$this
+			.addClass( "sunlight-highlight-" + lang )
+			.addClass( "linenums" )
+			.html( example.html() );
+
+		}
+	} );
+
+	Sunlight.highlightAll( {
+		lineNumbers : false,
+		showMenu : true,
+		enableDoclinks : true
+	} );
+
+	$.catchAnchorLinks( {
+        navbarOffset: 10
+	} );
+	$( "#toc" ).toc( {
+		anchorName  : function ( i, heading, prefix ) {
+			return $( heading ).attr( "id" ) || ( prefix + i );
+		},
+		selectors   : "#toc-content h1,#toc-content h2,#toc-content h3,#toc-content h4",
+		showAndHide : false,
+		smoothScrolling: true
+	} );
+
+	$( "#main span[id^='toc']" ).addClass( "toc-shim" );
+	$( '.dropdown-toggle' ).dropdown();
+
+    $( "table" ).each( function () {
+      var $this = $( this );
+      $this.addClass('table');
+    } );
+
+} );
+</script>
+
+
+
+<!--Navigation and Symbol Display-->
+
+
+<!--Google Analytics-->
+
+
+
+    <script type="text/javascript">
+        $(document).ready(function() {
+            SearcherDisplay.init();
+        });
+    </script>
+
+
+</body>
+</html>
