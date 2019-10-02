@@ -166,6 +166,31 @@ describe('practicalplants.json', () => {
     return subset;
   }
 
+  /**
+   * @param {String} property
+   * @param {Number} expectedCount
+   */
+  function assertUniqueValueCount(property, expectedCount) {
+    assert.isTrue(
+      !PracticalplantsCrop.OBJECT_ARRAY_PROPERTIES.includes(property),
+      property
+    );
+    const values = new Set();
+    practicalplantsCrops.forEach(crop => {
+      if (!PracticalplantsCrop.isUndefined(crop, property)) {
+        if (PracticalplantsCrop.ARRAY_PROPERTIES.includes(property)) {
+          utils.addAllToSet(
+            values,
+            PracticalplantsCrop.getAsArray(crop[property])
+          );
+        } else {
+          values.add(crop[property]);
+        }
+      }
+    });
+    assert.equal(values.size, expectedCount, property);
+  }
+
   let practicalplantsCrops;
   let crops;
 
@@ -184,21 +209,6 @@ describe('practicalplants.json', () => {
 
   it('number of crops', () => {
     assert.equal(practicalplantsCrops.length, 7414);
-  });
-
-  it('property binomial is unique', () => {
-    const values = new Set();
-    const duplicates = [];
-    practicalplantsCrops.forEach(crop => {
-      assert.isTrue(!PracticalplantsCrop.isUndefined(crop, 'binomial'));
-      const binomial = crop.binomial;
-      if (values.has(binomial)) {
-        duplicates.push(binomial);
-      } else {
-        values.add(binomial);
-      }
-    });
-    assert.equal(duplicates.length, 0, duplicates);
   });
 
   it('set of properties', () => {
@@ -808,9 +818,6 @@ describe('practicalplants.json', () => {
     assertNumberOfCropsThatHaveProperty('is a variety', 7);
     assertNumberOfCropsThatHaveProperty('variety type', 1);
     assertNumberOfCropsThatHaveProperty('cultivar name', 1);
-    assertNumberOfCropsThatHaveProperty('is a variety', 7);
-    assertNumberOfCropsThatHaveProperty('variety type', 1);
-    assertNumberOfCropsThatHaveProperty('cultivar name', 1);
     assertNumberOfCropsThatHaveProperty('cultivar of', 1);
     assertNumberOfCropsThatHaveProperty('variety name', 0);
     assertNumberOfCropsThatHaveProperty('variety of', 0);
@@ -824,6 +831,136 @@ describe('practicalplants.json', () => {
     assertNumberOfCropsThatHaveProperty('subspecific epithet', 2);
     assertNumberOfCropsThatHaveProperty('cultivar notes', 1);
   }).timeout(0);
+
+  it('unique value counts', () => {
+    assertUniqueValueCount('append to article summary', 22);
+    assertUniqueValueCount('article summary', 0);
+    assertUniqueValueCount('primary image', 2887);
+    assertUniqueValueCount('binomial', 7414);
+    assertUniqueValueCount('genus', 1660);
+    assertUniqueValueCount('family', 282);
+    assertUniqueValueCount('life cycle', 3);
+    assertUniqueValueCount('herbaceous or woody', 2);
+    assertUniqueValueCount('deciduous or evergreen', 2);
+    assertUniqueValueCount('flower type', 3);
+    assertUniqueValueCount('growth rate', 3);
+    assertUniqueValueCount('mature height', 90);
+    assertUniqueValueCount('mature width', 47);
+    assertUniqueValueCount('sun', 3);
+    assertUniqueValueCount('shade', 5);
+    assertUniqueValueCount('hardiness zone', 12);
+    assertUniqueValueCount('water', 4);
+    assertUniqueValueCount('drought', 3);
+    assertUniqueValueCount('soil texture', 4);
+    assertUniqueValueCount('soil ph', 5);
+    assertUniqueValueCount('wind', 4);
+    assertUniqueValueCount('maritime', 4);
+    assertUniqueValueCount('pollution', 4);
+    assertUniqueValueCount('poornutrition', 4);
+    assertUniqueValueCount('material use notes', 91);
+    assertUniqueValueCount('PFAF material use notes', 2764);
+    assertUniqueValueCount('propagation notes', 1);
+    assertUniqueValueCount('PFAF propagation notes', 2332);
+    assertUniqueValueCount('seed requires stratification', 4);
+    assertUniqueValueCount('seed dormancy depth', 2);
+    assertUniqueValueCount('seed requires scarification', 3);
+    assertUniqueValueCount('seed requires smokification', 2);
+    assertUniqueValueCount('rootstocks', 0);
+    assertUniqueValueCount('cultivation notes', 0);
+    assertUniqueValueCount('PFAF cultivation notes', 6283);
+    assertUniqueValueCount('interactions', 0);
+    assertUniqueValueCount('botanical references', 6);
+    assertUniqueValueCount('material uses references', 0);
+    assertUniqueValueCount('range', 4000);
+    assertUniqueValueCount('habitat', 5955);
+    assertUniqueValueCount('enabled', 1);
+    assertUniqueValueCount('title irregular', 2);
+    assertUniqueValueCount('common', 4206);
+    assertUniqueValueCount('soil water retention', 3);
+    assertUniqueValueCount('medicinal use notes', 102);
+    assertUniqueValueCount('toxicity notes', 50);
+    assertUniqueValueCount('grow from', 7);
+    assertUniqueValueCount('germination details', 39);
+    assertUniqueValueCount('cultivation', 135);
+    assertUniqueValueCount('edible uses references', 0);
+    assertUniqueValueCount('medicinal uses references', 0);
+    assertUniqueValueCount('mature measurement unit', 3);
+    assertUniqueValueCount('pollinators', 48);
+    assertUniqueValueCount('edible use notes', 102);
+    assertUniqueValueCount('PFAF edible use notes', 3765);
+    assertUniqueValueCount('PFAF medicinal use notes', 3209);
+    assertUniqueValueCount('override summary', 2);
+    assertUniqueValueCount('ecosystem niche', 7);
+    assertUniqueValueCount('problems', 2);
+    assertUniqueValueCount('PFAF toxicity notes', 681);
+    assertUniqueValueCount('infraspecific epithet', 0);
+    assertUniqueValueCount('cultivar of groups', 0);
+    assertUniqueValueCount('cultivar epithet', 0);
+    assertUniqueValueCount('cultivar group epithet', 0);
+    assertUniqueValueCount('life references', 12);
+    assertUniqueValueCount('cutting type', 4);
+    assertUniqueValueCount('cutting details', 23);
+    assertUniqueValueCount('problem notes', 10);
+    assertUniqueValueCount('salinity', 2);
+    assertUniqueValueCount('fertility', 2);
+    assertUniqueValueCount('propagation', 99);
+    assertUniqueValueCount('common use description', 6);
+    assertUniqueValueCount('flower colour', 16);
+    assertUniqueValueCount('common habit description', 9);
+    assertUniqueValueCount('functions notes', 16);
+    assertUniqueValueCount('botanical description', 27);
+    assertUniqueValueCount('crop notes', 7);
+    assertUniqueValueCount('classification references', 5);
+    assertUniqueValueCount('environmental references', 6);
+    assertUniqueValueCount('native range', 29);
+    assertUniqueValueCount('native environment', 14);
+    assertUniqueValueCount('ecosystems references', 9);
+    assertUniqueValueCount('uses intro', 3);
+    assertUniqueValueCount('seed saving details', 6);
+    assertUniqueValueCount('root zone', 3);
+    assertUniqueValueCount('taxonomic rank', 2);
+    assertUniqueValueCount('functions as', 8);
+    assertUniqueValueCount('shelter notes', 4);
+    assertUniqueValueCount('forage notes', 3);
+    assertUniqueValueCount('material uses', 2);
+    assertUniqueValueCount('heat zone', 3);
+    assertUniqueValueCount('bulb type', 1);
+    assertUniqueValueCount('graft rootstock', 2);
+    assertUniqueValueCount('edible parts', 2);
+    assertUniqueValueCount('edible uses', 3);
+    assertUniqueValueCount('show cultivar group', 2);
+    assertUniqueValueCount('cultivar group', 2);
+    assertUniqueValueCount('is a variety', 2);
+    assertUniqueValueCount('variety type', 1);
+    assertUniqueValueCount('cultivar name', 1);
+    assertUniqueValueCount('cultivar of', 1);
+    assertUniqueValueCount('variety name', 0);
+    assertUniqueValueCount('variety of', 0);
+    assertUniqueValueCount('subspecies name', 0);
+    assertUniqueValueCount('subspecies of', 0);
+    assertUniqueValueCount('summary', 0);
+    assertUniqueValueCount('cultivar group of', 1);
+    assertUniqueValueCount('seed stratification instructions', 0);
+    assertUniqueValueCount('graft details', 1);
+    assertUniqueValueCount('bulb details', 1);
+    assertUniqueValueCount('subspecific epithet', 2);
+    assertUniqueValueCount('cultivar notes', 1);
+
+    /*
+     * TODO Assert unique value counts for the array element properties.
+     */
+    //assertUniqueValueCount('edible part and use', 5764);
+    //assertUniqueValueCount('material part and use', 3227);
+    //assertUniqueValueCount('medicinal part and use', 3720);
+    //assertUniqueValueCount('toxic parts', 15);
+    //assertUniqueValueCount('functions', 452);
+    //assertUniqueValueCount('shelter', 2);
+    //assertUniqueValueCount('forage', 12);
+    //assertUniqueValueCount('crops', 12);
+    //assertUniqueValueCount('subspecies', 2);
+    //assertUniqueValueCount('cultivar groups', 1);
+    //assertUniqueValueCount('ungrouped cultivars', 1);
+  });
 
   it('normalized data passes integrity checks', () => {
     assert.equal(crops.length, 7414);
