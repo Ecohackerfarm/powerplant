@@ -80,6 +80,18 @@ function addAllToSet(setObject, array) {
 }
 
 /**
+ * @param {String[]} array0
+ * @param {String[]} array1
+ * @return {Boolean}
+ */
+function areArraysEqual(array0, array1) {
+  return (
+    array0.length === array1.length &&
+    array0.every((element, index) => element === array1[index])
+  );
+}
+
+/**
  * @param {String} name
  * @return {String}
  */
@@ -122,6 +134,7 @@ module.exports = {
   convertObjectToString,
   areSetsEqual,
   addAllToSet,
+  areArraysEqual,
   toCamelCase,
   getPouchDatabaseUrl,
   getPouchAdminDatabaseUrl,

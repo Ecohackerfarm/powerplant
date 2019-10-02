@@ -15,6 +15,7 @@
  */
 
 const Crop = require('./crop.js');
+const utils = require('./utils.js');
 
 /**
  * @param {PracticalplantsCrop[]} practicalplantsCrop
@@ -290,6 +291,22 @@ function convertToCropValue(conversions, practicalplantsValue, cropProperty) {
 }
 
 /**
+ * @param {Object[]} propertySet
+ * @param {String|String[]} property
+ */
+function propertySetIncludes(propertySet, property) {
+  let result = false;
+  if (Array.isArray(property)) {
+    result = propertySet.some(element =>
+      utils.areArraysEqual(element, property)
+    );
+  } else {
+    result = propertySet.includes(property);
+  }
+  return result;
+}
+
+/**
  * @param {PracticalplantsCrop} crop
  * @param {String} property
  * @return {Boolean}
@@ -515,6 +532,22 @@ const OBJECT_ARRAY_PROPERTIES = [
   'subspecies',
   'cultivar groups',
   'ungrouped cultivars'
+];
+
+const ELEMENT_ARRAY_PROPERTIES = [
+  ['edible part and use', 'preparation'],
+  ['edible part and use', 'part used for'],
+  ['medicinal part and use', 'preparation'],
+  ['medicinal part and use', 'part used for'],
+  ['material part and use', 'preparation'],
+  ['material part and use', 'part used for'],
+  ['toxic parts', 'part'],
+  ['toxic parts', 'compounds'],
+  ['functions', 'function'],
+  ['shelter', 'shelter'],
+  ['forage', 'forage'],
+  ['subspecies', 'synonyms'],
+  ['subspecies', 'common names']
 ];
 
 /*
@@ -2743,13 +2776,14 @@ const SALINITY_VALUES = ['tolerant', 'intolerant'];
 module.exports = {
   convertToCrops,
   convertToCrop,
-
+  propertySetIncludes,
   isUndefined,
   getAsArray,
 
   PROPERTIES,
   ARRAY_PROPERTIES,
   OBJECT_ARRAY_PROPERTIES,
+  ELEMENT_ARRAY_PROPERTIES,
 
   BOOLEAN_VALUES,
   HARDINESS_ZONE_VALUES,

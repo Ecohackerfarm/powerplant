@@ -171,24 +171,63 @@ describe('practicalplants.json', () => {
    * @param {Number} expectedCount
    */
   function assertUniqueValueCount(property, expectedCount) {
-    assert.isTrue(
-      !PracticalplantsCrop.OBJECT_ARRAY_PROPERTIES.includes(property),
-      property
-    );
+    let cropProperty;
+    let elementProperty;
+    if (Array.isArray(property)) {
+      cropProperty = property[0];
+      elementProperty = property[1];
+
+      assert.isTrue(
+        PracticalplantsCrop.OBJECT_ARRAY_PROPERTIES.includes(cropProperty),
+        property
+      );
+    } else {
+      cropProperty = property;
+      elementProperty = undefined;
+
+      assert.isTrue(
+        !PracticalplantsCrop.OBJECT_ARRAY_PROPERTIES.includes(cropProperty),
+        property
+      );
+    }
+
     const values = new Set();
     practicalplantsCrops.forEach(crop => {
-      if (!PracticalplantsCrop.isUndefined(crop, property)) {
-        if (PracticalplantsCrop.ARRAY_PROPERTIES.includes(property)) {
-          utils.addAllToSet(
-            values,
-            PracticalplantsCrop.getAsArray(crop[property])
-          );
+      if (!PracticalplantsCrop.isUndefined(crop, cropProperty)) {
+        if (PracticalplantsCrop.ARRAY_PROPERTIES.includes(cropProperty)) {
+          if (
+            PracticalplantsCrop.OBJECT_ARRAY_PROPERTIES.includes(cropProperty)
+          ) {
+            crop[cropProperty].forEach(element => {
+              if (!PracticalplantsCrop.isUndefined(element, elementProperty)) {
+                if (
+                  PracticalplantsCrop.propertySetIncludes(
+                    PracticalplantsCrop.ELEMENT_ARRAY_PROPERTIES,
+                    property
+                  )
+                ) {
+                  utils.addAllToSet(
+                    values,
+                    PracticalplantsCrop.getAsArray(element[elementProperty])
+                  );
+                } else {
+                  values.add(element[elementProperty]);
+                }
+              }
+            });
+          } else {
+            utils.addAllToSet(
+              values,
+              PracticalplantsCrop.getAsArray(crop[cropProperty])
+            );
+          }
         } else {
-          values.add(crop[property]);
+          values.add(crop[cropProperty]);
         }
       }
     });
-    assert.equal(values.size, expectedCount, property);
+
+    assert.equal(values.size, expectedCount, Array.from(values));
   }
 
   let practicalplantsCrops;
@@ -946,20 +985,54 @@ describe('practicalplants.json', () => {
     assertUniqueValueCount('subspecific epithet', 2);
     assertUniqueValueCount('cultivar notes', 1);
 
-    /*
-     * TODO Assert unique value counts for the array element properties.
-     */
-    //assertUniqueValueCount('edible part and use', 5764);
-    //assertUniqueValueCount('material part and use', 3227);
-    //assertUniqueValueCount('medicinal part and use', 3720);
-    //assertUniqueValueCount('toxic parts', 15);
-    //assertUniqueValueCount('functions', 452);
-    //assertUniqueValueCount('shelter', 2);
-    //assertUniqueValueCount('forage', 12);
-    //assertUniqueValueCount('crops', 12);
-    //assertUniqueValueCount('subspecies', 2);
-    //assertUniqueValueCount('cultivar groups', 1);
-    //assertUniqueValueCount('ungrouped cultivars', 1);
+    assertUniqueValueCount(['edible part and use', 'part used'], 26);
+    assertUniqueValueCount(['edible part and use', 'preparation'], 22);
+    assertUniqueValueCount(['edible part and use', 'part used for'], 48);
+    assertUniqueValueCount(['edible part and use', 'part use details'], 90);
+
+    assertUniqueValueCount(['material part and use', 'part used'], 26);
+    assertUniqueValueCount(['material part and use', 'preparation'], 8);
+    assertUniqueValueCount(['material part and use', 'part used for'], 95);
+    assertUniqueValueCount(['material part and use', 'part use details'], 48);
+
+    assertUniqueValueCount(['medicinal part and use', 'part used'], 24);
+    assertUniqueValueCount(['medicinal part and use', 'preparation'], 8);
+    assertUniqueValueCount(['medicinal part and use', 'part used for'], 200);
+    assertUniqueValueCount(['medicinal part and use', 'part use details'], 49);
+
+    assertUniqueValueCount(['toxic parts', 'part'], 10);
+    assertUniqueValueCount(['toxic parts', 'level'], 4);
+    assertUniqueValueCount(['toxic parts', 'details'], 14);
+    assertUniqueValueCount(['toxic parts', 'compounds'], 18);
+
+    assertUniqueValueCount(['functions', 'function'], 16);
+    assertUniqueValueCount(['functions', 'details'], 19);
+
+    assertUniqueValueCount(['shelter', 'shelter'], 2);
+    assertUniqueValueCount(['shelter', 'details'], 2);
+
+    assertUniqueValueCount(['forage', 'forage'], 8);
+    assertUniqueValueCount(['forage', 'details'], 7);
+
+    assertUniqueValueCount(['crops', 'part of plant'], 5);
+    assertUniqueValueCount(['crops', 'harvest'], 12);
+    assertUniqueValueCount(['crops', 'requires processing'], 4);
+    assertUniqueValueCount(['crops', 'is storable'], 4);
+    assertUniqueValueCount(['crops', 'storage'], 7);
+
+    assertUniqueValueCount(['subspecies', 'rank'], 1);
+    assertUniqueValueCount(['subspecies', 'name'], 2);
+    assertUniqueValueCount(['subspecies', 'synonyms'], 2);
+    assertUniqueValueCount(['subspecies', 'common names'], 3);
+    assertUniqueValueCount(['subspecies', 'cultivar groups'], 0);
+    assertUniqueValueCount(['subspecies', 'details'], 1);
+
+    assertUniqueValueCount(['cultivar groups', 'name'], 1);
+    assertUniqueValueCount(['cultivar groups', 'common names'], 1);
+    assertUniqueValueCount(['cultivar groups', 'details'], 0);
+
+    assertUniqueValueCount(['ungrouped cultivars', 'name'], 1);
+    assertUniqueValueCount(['ungrouped cultivars', 'description'], 1);
   });
 
   it('normalized data passes integrity checks', () => {
