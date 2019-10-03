@@ -5,7 +5,7 @@ const Crop = require('../../shared/crop.js');
  * @param {Object[]} values
  */
 function assertNoDuplicates(values) {
-  assert.isTrue(new Set(values).size === values.length);
+  assert.equal(new Set(values).size, values.length, values);
 }
 
 describe('Crop', () => {
