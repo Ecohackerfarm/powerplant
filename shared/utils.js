@@ -6,48 +6,89 @@
 const secrets = require('../secrets.js');
 
 /**
- * @param {Crop[]} crops
- * @return {Object}
- */
-function mapCropsByBinomialName(crops) {
-  const binomialNameToCrop = {};
-  crops.forEach(crop => {
-    binomialNameToCrop[crop.binomialName] = crop;
-  });
-  return binomialNameToCrop;
-}
-
-/**
- * @param {Crop[]} crops
- * @return {String[]}
- */
-function findTagSet(crops) {
-  let tagSet = [];
-  crops.forEach(crop => {
-    const newTags = getCropTagNames(crop).filter(tag => !tagSet.includes(tag));
-    tagSet = tagSet.concat(newTags);
-  });
-  return tagSet;
-}
-
-/**
- * @param {Crop} crop
- * @return {String[]}
- */
-function getCropTagNames(crop) {
-  return crop.tags.map(tag => tag.name);
-}
-
-/**
- * Every crop has a binomial name, common name is optional.
+ * TODO Is there an easier native way to do this?
+ * TODO Note that a cycle results in infinite recursion.
+ * TODO Make output pretty.
  *
- * @param {Crop} crop
+ * @param {Object} object
  * @return {String}
  */
-function getCropDisplayName(crop) {
-  return crop.commonName
-    ? crop.commonName + ' (' + crop.binomialName + ')'
-    : crop.binomialName;
+function convertObjectToString(object) {
+  let string = '{';
+  for (let property in object) {
+    string +=
+      "'" + property + "':" + convertValueToString(object[property]) + ',\n';
+  }
+  string += '}';
+  return string;
+}
+
+/**
+ * @param {Object} value
+ * @return {String}
+ */
+function convertValueToString(value) {
+  let string = '';
+  if (value === null || value === undefined) {
+    string += '' + value;
+  } else if (Array.isArray(value)) {
+    string += '[';
+    value.forEach(element => {
+      string += convertValueToString(element);
+      string += ',';
+    });
+    string += ']';
+  } else if (typeof value === 'object') {
+    string += convertObjectToString(value);
+  } else if (typeof value === 'string') {
+    string +=
+      "'" +
+      value
+        .split("'")
+        .join("\\'")
+        .split('\n')
+        .join('\\n') +
+      "'";
+  } else {
+    string += '' + value;
+  }
+  return string;
+}
+
+/**
+ * @param {Set} set0
+ * @param {Set} set1
+ */
+function areSetsEqual(set0, set1) {
+  if (set0.size !== set1.size) {
+    return false;
+  }
+  for (let value of set0) {
+    if (!set1.has(value)) {
+      return false;
+    }
+  }
+  return true;
+}
+
+/**
+ * @param {Set} setObject
+ * @param {Object[]} array
+ */
+function addAllToSet(setObject, array) {
+  array.forEach(value => setObject.add(value));
+}
+
+/**
+ * @param {String[]} array0
+ * @param {String[]} array1
+ * @return {Boolean}
+ */
+function areArraysEqual(array0, array1) {
+  return (
+    array0.length === array1.length &&
+    array0.every((element, index) => element === array1[index])
+  );
 }
 
 /**
@@ -90,10 +131,10 @@ function getHttpServerUrl() {
 }
 
 module.exports = {
-  mapCropsByBinomialName,
-  findTagSet,
-  getCropTagNames,
-  getCropDisplayName,
+  convertObjectToString,
+  areSetsEqual,
+  addAllToSet,
+  areArraysEqual,
   toCamelCase,
   getPouchDatabaseUrl,
   getPouchAdminDatabaseUrl,

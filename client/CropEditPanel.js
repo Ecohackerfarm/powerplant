@@ -10,7 +10,7 @@ const SelectDropdownWithSearch = require('./shared/SelectDropdownWithSearch.js')
 const SelectDropdown = require('./shared/SelectDropdown.js');
 const InputField = require('./shared/InputField.js');
 const EditPanel = require('./shared/EditPanel.js');
-const practicalplants = require('../shared/practicalplants.js');
+const Crop = require('../shared/crop.js');
 const utils = require('../shared/utils.js');
 
 /**
@@ -36,7 +36,7 @@ class CropEditPanel extends React.Component {
     const { handleSave, handleCancel, crops } = this.props;
     const { crop } = this.state;
 
-    const initialTags = utils.getCropTagNames(crop);
+    const initialTags = Crop.getTagNames(crop);
     const initialCuttingType = crop.cuttingType ? [crop.cuttingType] : [];
     const initialDeciduousOrEvergreen = crop.deciduousOrEvergreen
       ? [crop.deciduousOrEvergreen]
@@ -69,17 +69,17 @@ class CropEditPanel extends React.Component {
       ? crop.soilWaterRetention
       : [];
 
-    const initialMatureMeasurementUnit = practicalplants.PP_MATURE_MEASUREMENT_UNIT_VALUES.includes(
+    const initialMatureMeasurementUnit = Crop.MATURE_MEASUREMENT_UNIT_VALUES.includes(
       crop.matureMeasurementUnit
     )
       ? [crop.matureMeasurementUnit]
       : [];
 
-    const tagSet = utils.findTagSet(crops);
+    const tagSet = Crop.findTagSet(crops);
 
     return (
       <EditPanel
-        title={utils.getCropDisplayName(crop)}
+        title={Crop.getDisplayName(crop)}
         handleSave={() => handleSave(crop)}
         handleCancel={handleCancel}
       >
@@ -88,12 +88,12 @@ class CropEditPanel extends React.Component {
           this.getNameInputElement(crop, 'Common name'),
           this.getSingleDropdownElement(
             'Family',
-            practicalplants.PP_FAMILY_VALUES,
+            Crop.FAMILY_VALUES,
             initialFamily
           ),
           this.getSingleDropdownElement(
             'Genus',
-            practicalplants.PP_GENUS_VALUES,
+            Crop.GENUS_VALUES,
             initialGenus
           )
         ]}
@@ -103,7 +103,7 @@ class CropEditPanel extends React.Component {
           this.getNumberInputElement(crop, 'Mature width'),
           this.getSingleDropdownElement(
             'Mature measurement unit',
-            practicalplants.PP_MATURE_MEASUREMENT_UNIT_VALUES,
+            Crop.MATURE_MEASUREMENT_UNIT_VALUES,
             initialMatureMeasurementUnit
           )
         ]}
@@ -118,104 +118,100 @@ class CropEditPanel extends React.Component {
         {[
           this.getSingleDropdownElement(
             'Cutting type',
-            practicalplants.PP_CUTTING_TYPE_VALUES,
+            Crop.CUTTING_TYPE_VALUES,
             initialCuttingType
           ),
           this.getSingleDropdownElement(
             'Deciduous or evergreen',
-            practicalplants.PP_DECIDUOUS_OR_EVERGREEN_VALUES,
+            Crop.DECIDUOUS_OR_EVERGREEN_VALUES,
             initialDeciduousOrEvergreen
           ),
           this.getSingleDropdownElement(
             'Drought',
-            practicalplants.PP_DROUGHT_VALUES,
+            Crop.DROUGHT_VALUES,
             initialDrought
           ),
           this.getSingleDropdownElement(
             'Flower type',
-            practicalplants.PP_FLOWER_TYPE_VALUES,
+            Crop.FLOWER_TYPE_VALUES,
             initialFlowerType
           ),
           this.getSingleDropdownElement(
             'Growth rate',
-            practicalplants.PP_GROWTH_RATE_VALUES,
+            Crop.GROWTH_RATE_VALUES,
             initialGrowthRate
           ),
           this.getSingleDropdownElement(
             'Herbaceous or woody',
-            practicalplants.PP_HERBACEOUS_OR_WOODY_VALUES,
+            Crop.HERBACEOUS_OR_WOODY_VALUES,
             initialHerbaceousOrWoody
           ),
           this.getSingleDropdownElement(
             'Root zone',
-            practicalplants.PP_ROOT_ZONE_VALUES,
+            Crop.ROOT_ZONE_VALUES,
             initialRootZone
           ),
           this.getSingleDropdownElement(
             'Shade',
-            practicalplants.PP_SHADE_VALUES,
+            Crop.SHADE_VALUES,
             initialShade
           ),
-          this.getSingleDropdownElement(
-            'Sun',
-            practicalplants.PP_SUN_VALUES,
-            initialSun
-          ),
+          this.getSingleDropdownElement('Sun', Crop.SUN_VALUES, initialSun),
           this.getSingleDropdownElement(
             'Water',
-            practicalplants.PP_WATER_VALUES,
+            Crop.WATER_VALUES,
             initialWater
           ),
           this.getSingleDropdownElement(
             'Salinity',
-            practicalplants.PP_SALINITY_VALUES,
+            Crop.SALINITY_VALUES,
             initialSalinity
           )
         ]}
         {[
           this.getMultiDropdownElement(
             'Ecosystem niche',
-            practicalplants.PP_ECOSYSTEM_NICHE_VALUES,
+            Crop.ECOSYSTEM_NICHE_VALUES,
             initialEcosystemNiche
           ),
           this.getMultiDropdownElement(
             'Fertility',
-            practicalplants.PP_FERTILITY_VALUES,
+            Crop.FERTILITY_VALUES,
             initialFertility
           ),
           this.getMultiDropdownElement(
             'Functions',
-            practicalplants.PP_FUNCTIONS_VALUES,
+            Crop.FUNCTIONS_VALUES,
             initialFunctions
           ),
           this.getMultiDropdownElement(
             'Grow from',
-            practicalplants.PP_GROW_FROM_VALUES,
+            Crop.GROW_FROM_VALUES,
             initialGrowFrom
           ),
           this.getMultiDropdownElement(
             'Life cycle',
-            practicalplants.PP_LIFE_CYCLE_VALUES,
+            Crop.LIFE_CYCLE_VALUES,
             initialLifeCycle
           ),
           this.getMultiDropdownElement(
             'Pollinators',
-            practicalplants.PP_POLLINATORS_VALUES,
+            Crop.POLLINATORS_VALUES,
             initialPollinators
           ),
           this.getMultiDropdownElement(
             'Soil pH',
-            practicalplants.PP_SOIL_PH_VALUES,
+            Crop.SOIL_PH_VALUES,
             initialSoilPh
           ), // TODO validate consecutiveness
           this.getMultiDropdownElement(
             'Soil texture',
-            practicalplants.PP_SOIL_TEXTURE_VALUES,
+            Crop.SOIL_TEXTURE_VALUES,
             initialSoilTexture
           ), // TODO validate consecutiveness
           this.getMultiDropdownElement(
             'Soil water retention',
-            practicalplants.PP_SOIL_WATER_RETENTION_VALUES,
+            Crop.SOIL_WATER_RETENTION_VALUES,
             initialSoilWaterRetention
           )
         ]}

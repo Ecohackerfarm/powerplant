@@ -4,14 +4,14 @@
  */
 
 const PouchDB = require('pouchdb');
-const practicalplants = require('../db/practicalplants.js');
+const PracticalplantsCrop = require('../shared/practicalplants-crop.js');
 const { plants, companions } = require('../db/matrix.js');
 const { HTTP_SERVER_PORT, HTTP_SERVER_HOST } = require('../secrets.js');
 const {
-  mapCropsByBinomialName,
   getHttpServerUrl,
   getPouchAdminDatabaseUrl
 } = require('../shared/utils.js');
+const { mapCropsByBinomialName } = require('../shared/crop.js');
 const { filter } = require('../shared/filter.js');
 const axios = require('axios');
 
@@ -269,7 +269,9 @@ async function pouchFind() {
 }
 
 function readCrops() {
-  const crops = practicalplants.readCrops();
+  const crops = PracticalplantsCrop.convertToCrops(
+    require('../db/practicalplants-data.js')
+  );
 
   crops.forEach(crop => {
     crop.tags = [];
