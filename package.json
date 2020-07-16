@@ -55,7 +55,7 @@
     "jsonwebtoken": "^8.3.0",
     "jwt-decode": "^2.2.0",
     "localforage": "1.7.3",
-    "lodash": "^4.17.11",
+    "lodash": "^4.17.19",
     "lodash.isempty": "^4.4.0",
     "pouchdb": "7.1.1",
     "react": "16.8.4",
