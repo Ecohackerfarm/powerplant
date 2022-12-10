@@ -50,7 +50,7 @@
     "bcrypt": "^3.0.2",
     "body-parser": "^1.17.2",
     "cors": "2.8.5",
-    "express": "^4.15.3",
+    "express": "^4.17.3",
     "express-pouchdb": "4.1.0",
     "jsonwebtoken": "^8.3.0",
     "jwt-decode": "^2.2.0",
